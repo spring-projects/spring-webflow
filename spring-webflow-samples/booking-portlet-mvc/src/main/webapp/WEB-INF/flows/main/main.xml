@@ -9,7 +9,9 @@
 		<on-render>
 			<evaluate expression="bookingService.findBookings(currentUser.name)" result="requestScope.bookings" />
 		</on-render>
-		<transition on="search" to="reviewHotels" />
+		<transition on="search" to="reviewHotels" >
+			<evaluate expression="searchCriteria.resetPage()" />
+		</transition>
 		<transition on="cancelBooking" to="cancelBooking" bind="false" />
 	</view-state>
 

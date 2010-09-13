@@ -11,6 +11,7 @@
     	<form:errors path="*"/>
     </span>
 	<fieldset> 
+		<label for="searchString">Search For:</label>
 		<form:input path="searchString"/>
 		<label for="pageSize">Maximum results:</label>
 		<form:select path="pageSize">

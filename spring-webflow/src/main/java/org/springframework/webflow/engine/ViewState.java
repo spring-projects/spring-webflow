@@ -232,7 +232,9 @@ public class ViewState extends TransitionableState {
 							context.getFlashScope().put(View.USER_EVENT_STATE_ATTRIBUTE, view.getUserEventState());
 							externalContext.requestFlowExecutionRedirect();
 						} else {
-							render(context, view);
+							if (externalContext.isResponseAllowed()) {
+								render(context, view);
+							}
 						}
 					}
 				}

@@ -16,7 +16,6 @@
 		<conf name="mojarra12" visibility="public"/>
 		<conf name="myfaces12" visibility="public"/>
 		<conf name="jsf11" visibility="public"/>
-		<conf name="myfacesPortlet20" visibility="public"/>
 	</configurations>
 
 	<publications>
@@ -29,6 +28,7 @@
 		<dependency org="com.sun.facelets" name="com.springsource.com.sun.facelets" rev="1.1.14" conf="optional->runtime" />
 		<dependency org="javax.el" name="com.springsource.javax.el" rev="1.0.0" conf="provided->runtime" />		
 		<dependency org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->runtime" />
+		<dependency org="javax.portlet" name="com.springsource.javax.portlet" rev="2.0.0" conf="provided->runtime" />
 		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.logging" rev="1.1.1" conf="compile->runtime"/>
 		<dependency org="org.richfaces" name="com.springsource.org.richfaces" rev="3.1.4.GA" conf="optional->runtime" />
 		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.4.RELEASE" conf="compile->runtime"/>
@@ -36,6 +36,7 @@
 		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.4.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.4.RELEASE" conf="compile->runtime" />
 		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.4.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web.portlet" rev="3.0.4.RELEASE" conf="optional->runtime" />
 		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.4.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.core" rev="3.0.2.RELEASE" conf="optional->runtime" />
 		<dependency org="org.springframework.security" name="org.springframework.security.web" rev="3.0.2.RELEASE" conf="optional->runtime" />
@@ -62,10 +63,6 @@
 		<!-- JSF 1.1 MyFaces dependencies -->
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces.javax.faces" rev="1.1.5" conf="jsf11->runtime" />
 		<dependency org="org.apache.myfaces" name="com.springsource.org.apache.myfaces" rev="1.1.5" conf="jsf11->runtime" />
-
-		<!--  MyFaces JSF-Portlet Bridge for Portlet 2.0 and JSF 1.2 -->    	
-		<dependency org="org.apache.myfaces.portlet-bridge" name="portlet-bridge-api" rev="2.0.0-alpha-2" conf="myfacesPortlet20->default" />
-		<dependency org="org.apache.myfaces.portlet-bridge" name="portlet-bridge-impl" rev="2.0.0-alpha-2" conf="myfacesPortlet20->default" />
 
 		<!-- test time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime" />

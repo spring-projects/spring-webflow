@@ -16,7 +16,7 @@
 	<factory>
 		<application-factory>org.springframework.faces.webflow.FlowApplicationFactory</application-factory>
 	</factory>
-	
+
 	<lifecycle>
 		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
 	</lifecycle>

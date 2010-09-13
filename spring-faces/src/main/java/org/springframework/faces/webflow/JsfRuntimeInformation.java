@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Helper class to provide information about the JSF runtime environment such as JSF version and implementation.
@@ -63,12 +64,17 @@ public class JsfRuntimeInformation {
 		return jsfVersion < JSF_20;
 	}
 
-	protected static boolean isMyFacesPresent() {
+	public static boolean isMyFacesPresent() {
 		return myFacesPresent;
 	}
 
 	public static boolean isPortletRequest(FacesContext context) {
 		return context.getExternalContext().getContext().getClass().getName().indexOf("Portlet") != -1;
+	}
+
+	public static boolean isPortletRequest(RequestContext context) {
+		return (null != ClassUtils.getMethodIfAvailable(context.getExternalContext().getNativeContext().getClass(),
+				"getPortletContextName"));
 	}
 
 }

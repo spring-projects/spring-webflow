@@ -2,8 +2,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
-	  			xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:sf="http://www.springframework.org/tags/faces">
+	  			xmlns:f="http://java.sun.com/jsf/core">
 
 <f:view contentType="text/html">
 
@@ -45,11 +44,9 @@
 					<h:outputLabel for="checkinDate">Check In Date:</h:outputLabel>
 				</td>
 				<td class="input">
-					<sf:clientDateValidator required="true" >
-			        	<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
-		                	<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
-		                </h:inputText>
-	               	</sf:clientDateValidator>
+		        	<h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true">
+	                	<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
+	                </h:inputText>
 				</td>
 			</tr>
 			<tr class="field">
@@ -57,11 +54,9 @@
 					<h:outputLabel for="checkoutDate">Check Out Date:</h:outputLabel>
 				</td>
 				<td class="input">
-					<sf:clientDateValidator required="true">
-						<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
-							<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
-						</h:inputText>
-					</sf:clientDateValidator>
+					<h:inputText id="checkoutDate" value="#{booking.checkoutDate}" required="true">
+						<f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/>
+					</h:inputText>
 				</td>
 			</tr>
 			<tr class="field">
@@ -89,9 +84,7 @@
 					<h:outputLabel for="creditCard">Credit Card #:</h:outputLabel>
 				</td>
 				<td class="input">
-					<sf:clientTextValidator required="true" regExp="[0-9]{16}" invalidMessage="A 16-digit credit card number is required.">
-						<h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
-					</sf:clientTextValidator>
+					<h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/>
 				</td>
 			</tr>
 			<tr class="field">
@@ -99,9 +92,7 @@
 					<h:outputLabel for="creditCardName">Credit Card Name:</h:outputLabel>
 				</td>
 				<td class="input">
-					<sf:clientTextValidator required="true">
-						<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
-					</sf:clientTextValidator>
+					<h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/>
 				</td>
 			</tr>
 			<tr class="field">
@@ -119,9 +110,7 @@
 			</tr>
 			<tr>
 				<td colspan="2" class="buttonGroup">
-					<sf:validateAllOnClick>
-						<h:commandButton id="proceed" action="proceed" value="Proceed"/>&#160;
-					</sf:validateAllOnClick>
+					<h:commandButton id="proceed" action="proceed" value="Proceed"/>&#160;
 					<h:commandButton id="cancel" immediate="true" value="Cancel" action="cancel"/>
 				</td>
 			</tr>

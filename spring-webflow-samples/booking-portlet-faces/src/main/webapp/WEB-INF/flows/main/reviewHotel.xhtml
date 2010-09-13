@@ -2,8 +2,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
-	  			xmlns:f="http://java.sun.com/jsf/core"
-	  			xmlns:sf="http://www.springframework.org/tags/faces">
+	  			xmlns:f="http://java.sun.com/jsf/core">
 
 <f:view contentType="text/html">
 
@@ -45,10 +44,8 @@
 
 <h:form id="hotel">
 	<input name="execution" type="hidden" value="${flowExecutionContext.key}"/>
-	<fieldset class="buttonGroup">
-		<sf:commandButton id="book" ajaxEnabled="false" action="book" value="Book Hotel"/>&#160;
-		<sf:commandButton id="cancel" ajaxEnabled="false" action="cancel" value="Back to Search"/>
-	</fieldset>
+	<h:commandButton id="book" action="book" value="Book Hotel"/>&#160;
+	<h:commandButton id="cancel" action="cancel" value="Back to Search"/>
 </h:form>
 
 </f:view>

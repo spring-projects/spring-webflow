@@ -30,8 +30,12 @@ import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 import org.springframework.context.MessageSource;
+import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -66,11 +70,18 @@ public class FlowFacesContext extends FacesContext {
 	private FacesContext delegate;
 
 	public static FlowFacesContext newInstance(RequestContext context, Lifecycle lifecycle) {
-		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
-				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-		FacesContext defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext()
-				.getNativeContext(), context.getExternalContext().getNativeRequest(), context.getExternalContext()
-				.getNativeResponse(), lifecycle);
+		FacesContext defaultFacesContext = null;
+		if (JsfRuntimeInformation.isPortletRequest(context)) {
+			defaultFacesContext = new PortletFacesContextImpl((PortletContext) context.getExternalContext()
+					.getNativeContext(), (PortletRequest) context.getExternalContext().getNativeRequest(),
+					(PortletResponse) context.getExternalContext().getNativeResponse());
+		} else {
+			FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
+					.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			defaultFacesContext = facesContextFactory.getFacesContext(context.getExternalContext().getNativeContext(),
+					context.getExternalContext().getNativeRequest(), context.getExternalContext().getNativeResponse(),
+					lifecycle);
+		}
 		return (JsfRuntimeInformation.isAtLeastJsf20()) ? new Jsf2FlowFacesContext(context, defaultFacesContext)
 				: new FlowFacesContext(context, defaultFacesContext);
 	}

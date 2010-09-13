@@ -12,7 +12,6 @@
 		<transition on="search" to="reviewHotels" />
 		<transition on="cancelBooking">
 			<evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" />
-			<render fragments="bookingsFragment"/>
 		</transition>
 	</view-state>
 	 
@@ -22,14 +21,12 @@
 		</on-render>
 		<transition on="previous">
 			<evaluate expression="searchCriteria.previousPage()" />
-			<render fragments="hotels:searchResultsFragment" />
 		</transition>
 		<transition on="next">
 			<evaluate expression="searchCriteria.nextPage()" />
-			<render fragments="hotels:searchResultsFragment" />
 		</transition>
 		<transition on="select" to="reviewHotel" />
-		<transition on="changeSearch" to="changeSearchCriteria" />
+		<transition on="changeSearch" to="enterSearchCriteria" />
 	</view-state>
 	
 	<view-state id="reviewHotel">
@@ -46,15 +43,6 @@
 		<transition on="bookingCancelled" to="enterSearchCriteria" />
 	</subflow-state>
 
-	<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
-		<on-entry>
-			<render fragments="hotelSearchFragment" />
-		</on-entry>
-		<transition on="search" to="reviewHotels">
-			<evaluate expression="searchCriteria.resetPage()"/>
-		</transition>
-	</view-state>
-			
 	<end-state id="finish" />
 			
 </flow>
