@@ -31,7 +31,7 @@ public class ResourceServletTests extends TestCase {
 
 	public final void testExecute() throws Exception {
 
-		String requestPath = "/spring/Spring.js";
+		String requestPath = "/org/springframework/js/resource/TestResource1.js";
 		request.setPathInfo(requestPath);
 		servlet.doGet(request, response);
 
@@ -41,10 +41,10 @@ public class ResourceServletTests extends TestCase {
 
 	public final void testExecute_CombinedResources() throws Exception {
 
-		String requestPath = "/spring/Spring.js";
+		String requestPath = "/org/springframework/js/resource/TestResource1.js";
 		request.setPathInfo(requestPath);
 		Map params = new HashMap();
-		params.put("appended", "/spring/Spring-Dojo.js");
+		params.put("appended", "/org/springframework/js/resource/TestResource2.js");
 		request.setParameters(params);
 		servlet.doGet(request, response);
 
@@ -53,7 +53,7 @@ public class ResourceServletTests extends TestCase {
 
 	public final void testExecute_CompressedResponse() throws Exception {
 
-		String requestPath = "/spring/Spring.js";
+		String requestPath = "/org/springframework/js/resource/TestResource1.js";
 		request.setPathInfo(requestPath);
 		request.addHeader("Accept-Encoding", "gzip");
 		servlet.doGet(request, response);
