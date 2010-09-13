@@ -475,16 +475,21 @@ public class DefaultConversionServiceTests extends TestCase {
 		try {
 			DefaultConversionService service = new DefaultConversionService();
 			ConversionExecutor executor = service.getConversionExecutor(Collection.class, Integer[].class);
-			fail("Remove try-catch block when this works: https://jira.springframework.org/browse/SPR-7496");
-			List list = new ArrayList();
-			list.add("1");
-			list.add("2");
-			list.add("3");
-			Integer[] result = (Integer[]) executor.execute(list);
-			assertEquals(new Integer(1), result[0]);
-			assertEquals(new Integer(2), result[1]);
-			assertEquals(new Integer(3), result[2]);
+
+			// This test case is no longer supported:
+			// https://jira.springframework.org/browse/SPR-7496
+
+			// List list = new ArrayList();
+			// list.add("1");
+			// list.add("2");
+			// list.add("3");
+			// Integer[] result = (Integer[]) executor.execute(list);
+			// assertEquals(new Integer(1), result[0]);
+			// assertEquals(new Integer(2), result[1]);
+			// assertEquals(new Integer(3), result[2]);
+
 		} catch (ConversionExecutorNotFoundException e) {
+			// This is expected
 		}
 	}
 
