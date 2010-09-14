@@ -34,7 +34,7 @@ import org.springframework.web.context.support.WebApplicationObjectSupport;
  * @author Rossen Stoyanchev
  * @see ResourceHandler
  */
-public class FacesJsfResourceRequestHandler extends WebApplicationObjectSupport implements HttpRequestHandler {
+public class JsfResourceRequestHandler extends WebApplicationObjectSupport implements HttpRequestHandler {
 
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {

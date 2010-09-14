@@ -73,4 +73,25 @@ When set to true, changes to a flow definition will be auto-detected and will re
 			</xsd:complexContent>
 		</xsd:complexType>
 	</xsd:element>
+
+	<xsd:element name="resources">
+		<xsd:annotation>
+			<xsd:documentation
+				source="java:org.springframework.faces.webflow.JsfResourceRequestHandler"><![CDATA[
+	Configures a handler that uses the JSF ResourceHandler API introduced in JSF 2 to serve web application and 
+	classpath resources such as images, CSS and JavaScript files from well-known locations. 
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="order" type="xsd:int">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+	Specifies the order of the HandlerMapping for the resource handler. The default order is 0.
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
 </xsd:schema>

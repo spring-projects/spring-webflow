@@ -4,17 +4,14 @@
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xmlns:faces="http://www.springframework.org/schema/faces"
        xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-           http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
-           http://www.springframework.org/schema/faces
-           http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/webflow-config http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+           http://www.springframework.org/schema/faces http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
 
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor">
 		<webflow:flow-execution-listeners>
-			<webflow:listener ref="facesContextLifecycleListener"/>
+			<webflow:listener ref="facesContextListener"/>
 			<webflow:listener ref="jpaFlowExecutionListener" />
 			<webflow:listener ref="securityFlowExecutionListener" />
 		</webflow:flow-execution-listeners>
@@ -29,7 +26,7 @@
 	<faces:flow-builder-services id="facesFlowBuilderServices" development="true" />
 
 	<!-- Installs a listener that creates and releases the FacesContext for each request. -->
-	<bean id="facesContextLifecycleListener" class="org.springframework.faces.webflow.FlowFacesContextLifecycleListener"/>
+	<bean id="facesContextListener" class="org.springframework.faces.webflow.FlowFacesContextLifecycleListener"/>
 
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">

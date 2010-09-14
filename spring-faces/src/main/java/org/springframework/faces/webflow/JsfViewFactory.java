@@ -72,6 +72,12 @@ public class JsfViewFactory implements ViewFactory {
 	 */
 	public View getView(RequestContext context) {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		if (facesContext == null) {
+			throw new IllegalStateException(
+					"FacesContext has not been initialized within the current Web Flow request."
+							+ " Check the configuration for your <webflow:flow-executor>."
+							+ " For JSF you will need FlowFacesContextLifecycleListener configured as one of its flow execution listeners.");
+		}
 		if (isAtLeastJsf20()) {
 			facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
 		}

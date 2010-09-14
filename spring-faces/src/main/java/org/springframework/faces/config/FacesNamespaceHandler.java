@@ -25,5 +25,6 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class FacesNamespaceHandler extends NamespaceHandlerSupport {
 	public void init() {
 		registerBeanDefinitionParser("flow-builder-services", new FacesFlowBuilderServicesBeanDefinitionParser());
+		registerBeanDefinitionParser("resources", new ResourcesBeanDefinitionParser());
 	}
 }

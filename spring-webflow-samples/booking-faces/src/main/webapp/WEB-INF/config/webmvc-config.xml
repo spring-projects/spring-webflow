@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+       xmlns:faces="http://www.springframework.org/schema/faces"
+       xsi:schemaLocation="
+       	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       	http://www.springframework.org/schema/faces http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
 
-	<!-- Maps JSF 2 resource requests to an instance of org.springframework.faces.webflow.FacesJsfResourceRequestHandler  -->
-	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="order" value="0"/>
-		<property name="mappings" value="/javax.faces.resource/**=jsfResourceHandler"/>
-	</bean>
+	<faces:resources />
 
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
@@ -30,17 +29,8 @@
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
 
 	<!-- Dispatches requests mapped to flows to FlowHandler implementations -->
-	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+	<bean class="org.springframework.faces.webflow.JsfFlowHandlerAdapter">
 		<property name="flowExecutor" ref="flowExecutor" />
-		<property name="ajaxHandler">
-			<bean class="org.springframework.faces.webflow.JsfAjaxHandler"/>
-		</property>
 	</bean>
 
-	<!-- Dispatches requests mapped to org.springframework.web.HttpRequestHandler implementations -->	
-	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
-
-	<!-- Delegates to the JSF ResourceHandler to serve web application resources such as images, .css and .js files. -->	
-	<bean id="jsfResourceHandler" class="org.springframework.faces.webflow.FacesJsfResourceRequestHandler"/>
-				
 </beans>
