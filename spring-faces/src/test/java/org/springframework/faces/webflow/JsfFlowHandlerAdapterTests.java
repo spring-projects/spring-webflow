@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -15,7 +17,10 @@ public class JsfFlowHandlerAdapterTests extends TestCase {
 	private JsfFlowHandlerAdapter handlerAdapter;
 
 	protected void setUp() throws Exception {
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		context.setServletContext(new MockServletContext());
 		handlerAdapter = new JsfFlowHandlerAdapter();
+		handlerAdapter.setApplicationContext(context);
 		handlerAdapter.setFlowExecutor(new StubFlowExecutor());
 	}
 
