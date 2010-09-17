@@ -280,6 +280,10 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 				}
 				return response;
 			}
+		} else if ((dojo.string.trim(response).length == 0) && (ioArgs.xhr.status != 204) && (ioArgs.xhr.status != 205)) {
+			if (Spring.debug) {
+				Spring.remoting.showError('Received empty response with no Spring redirect headers. If this is intentional set the response status code to 204 or 205.');
+			}
 		}
 		
 		//Extract and store all <script> elements from the response
@@ -338,22 +342,32 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 	
 	handleError: function(response, ioArgs) {
 		dojo.require("dijit.Dialog");
-		
+
 		console.error("HTTP status code: ", ioArgs.xhr.status);
 		
 		if (Spring.debug && ioArgs.xhr.status != 200) {
-			var dialog = new dijit.Dialog({});
+			var dialog = new dijit.Dialog({ title: 'Ajax Request Error' });
 			dojo.connect(dialog, "hide", dialog, function(){
 				this.destroyRecursive(false);
 			});
-			dialog.domNode.style.width = "80%";
-			dialog.domNode.style.height = "80%";
-			dialog.domNode.style.textAlign = "left";
+			dialog.domNode.style.overflow = "auto";
 			dialog.setContent(ioArgs.xhr.responseText);
 			dialog.show();
 		}
 		
 		return response;
+	},
+	
+	showError: function(message) {
+		dojo.require("dijit.Dialog");
+		
+		var dialog = new dijit.Dialog({ title: 'Error Message' });
+		dojo.connect(dialog, "hide", dialog, function(){
+			this.destroyRecursive(false);
+		});
+		dialog.domNode.style.width = "500px";
+		dialog.setContent(message);
+		dialog.show();
 	},
 	
 	_renderURLToModalDialog: function(url) {

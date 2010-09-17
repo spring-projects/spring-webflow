@@ -8,11 +8,7 @@
 	<!-- Enables controllers mapped with @RequestMapping annotations, formatting annotations @NumberFormat @DateTimeFormat, and JSR 303 style validation -->
 	<mvc:annotation-driven/>
 
-	<mvc:resources location="classpath:/META-INF/dojo/" mapping="/resources/dojo/**" />
-	<mvc:resources location="classpath:/META-INF/dijit/" mapping="/resources/dijit/**" />
-	<mvc:resources location="classpath:/META-INF/spring/" mapping="/resources/spring/**" />
-	<mvc:resources location="/" mapping="/resources/**" />
-
+	<mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/web-resources/" />
 	<mvc:default-servlet-handler />
     
 	<!-- Maps request paths to flows in the flowRegistry; e.g. a path of /hotels/booking looks for a flow with id "hotels/booking". -->
