@@ -77,4 +77,11 @@ public class JsfRuntimeInformation {
 				"getPortletContextName"));
 	}
 
+	/**
+	 * Returns true if Web Flow supports partial state saving in the current runtime environment.
+	 */
+	public static boolean isPartialStateSavingSupported() {
+		return (JsfRuntimeInformation.isAtLeastJsf20() && (!JsfRuntimeInformation.isMyFacesPresent()));
+	}
+
 }

@@ -20,6 +20,9 @@ package org.springframework.faces.webflow;
  * writing JSF state and manages that in Web Flow's view scope. The FlowViewResponseStateManager is plugged in only in a 
  * JSF 2 environment.
  * 
+ * Note that partial state saving in Apache MyFaces is not yet supported. Use the javax.faces.PARTIAL_STATE_SAVING context 
+ * parameter in web.xml to disable it.
+ * 
  * @author Rossen Stoyanchev
  * @since 2.2.0
  */
@@ -49,7 +52,8 @@ public class FlowRenderKit extends RenderKitWrapper {
 	 * ResponseStateManager instance otherwise.
 	 */
 	public ResponseStateManager getResponseStateManager() {
-		return (JsfRuntimeInformation.isAtLeastJsf20()) ? responseStateManager : delegate.getResponseStateManager();
+		return (JsfRuntimeInformation.isPartialStateSavingSupported()) ? responseStateManager : delegate
+				.getResponseStateManager();
 	}
 
 }

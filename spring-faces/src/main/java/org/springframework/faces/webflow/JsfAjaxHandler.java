@@ -16,19 +16,19 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.faces.FactoryFinder;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextWrapper;
 import javax.faces.context.PartialResponseWriter;
+import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.js.ajax.AbstractAjaxHandler;
-
-import com.sun.faces.context.PartialViewContextImpl;
 
 /**
  * Ajax handler for JSF 2 requests that can identify JSF 2 Ajax requests and send redirect instructions back to the
@@ -66,9 +66,7 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 		FacesContextHelper helper = new FacesContextHelper();
 		try {
 			FacesContext facesContext = helper.getFacesContext(getServletContext(), request, response);
-			facesContext = new FixedRenderKitFacesContext(facesContext, determineRenderKitId(request, response));
-			PartialViewContextImpl partialViewContext = new PartialViewContextImpl(facesContext);
-			PartialResponseWriter writer = partialViewContext.getPartialResponseWriter();
+			PartialResponseWriter writer = createPartialResponseWriter(facesContext);
 			writer.startDocument();
 			writer.redirect(targetUrl);
 			writer.endDocument();
@@ -77,29 +75,21 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 		}
 	}
 
-	protected String determineRenderKitId(HttpServletRequest request, HttpServletResponse response) {
-		return RenderKitFactory.HTML_BASIC_RENDER_KIT;
-	}
-
-	private class FixedRenderKitFacesContext extends FacesContextWrapper {
-
-		private FacesContext delegate;
-		private String renderKitId;
-
-		public FixedRenderKitFacesContext(FacesContext delegate, String renderKitId) {
-			this.delegate = delegate;
-			this.renderKitId = renderKitId;
-		}
-
-		@Override
-		public FacesContext getWrapped() {
-			return this.delegate;
-		}
-
-		@Override
-		public RenderKit getRenderKit() {
+	private PartialResponseWriter createPartialResponseWriter(FacesContext context) throws IOException {
+		ExternalContext externalContext = context.getExternalContext();
+		String encoding = externalContext.getRequestCharacterEncoding();
+		externalContext.setResponseCharacterEncoding(encoding);
+		ResponseWriter responseWriter = null;
+		Writer out = externalContext.getResponseOutputWriter();
+		if (out != null) {
 			RenderKitFactory factory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-			return factory.getRenderKit(this, renderKitId);
+			RenderKit renderKit = factory.getRenderKit(context, RenderKitFactory.HTML_BASIC_RENDER_KIT);
+			responseWriter = renderKit.createResponseWriter(out, "text/xml", encoding);
+		}
+		if (responseWriter instanceof PartialResponseWriter) {
+			return (PartialResponseWriter) responseWriter;
+		} else {
+			return new PartialResponseWriter(responseWriter);
 		}
 	}
 

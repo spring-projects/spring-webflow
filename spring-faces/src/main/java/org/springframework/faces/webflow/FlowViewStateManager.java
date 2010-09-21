@@ -15,8 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
-
 import java.io.IOException;
 
 import javax.faces.application.StateManager;
@@ -165,7 +163,7 @@ public class FlowViewStateManager extends StateManager {
 		if (context.getViewRoot().isTransient()) {
 			return null;
 		}
-		if ((!JsfUtils.isFlowRequest()) || isAtLeastJsf20()) {
+		if ((!JsfUtils.isFlowRequest()) || JsfRuntimeInformation.isPartialStateSavingSupported()) {
 			return delegate.saveView(context);
 		} else {
 			RequestContext requestContext = RequestContextHolder.getRequestContext();
@@ -188,7 +186,7 @@ public class FlowViewStateManager extends StateManager {
 	 * </p>
 	 */
 	public UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId) {
-		if ((!JsfUtils.isFlowRequest()) || isAtLeastJsf20()) {
+		if ((!JsfUtils.isFlowRequest()) || JsfRuntimeInformation.isPartialStateSavingSupported()) {
 			return delegate.restoreView(context, viewId, renderKitId);
 		} else {
 			UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
