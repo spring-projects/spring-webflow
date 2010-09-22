@@ -2,11 +2,31 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.2.0.RELEASE ()
------------------------------------
-* Add support for handling JSF 2 resource requests (SWF-1366)
-* Add support for JSF 2 Ajax requests (SWF-1367)
+Changes in version 2.2.0.RC1 (Sep 22)
+-------------------------------------
+[SWF-1333] - Spring security tag support for JSF/Facelets
+[SWF-1368] - Build the Web Flow booking reference application with PrimeFaces components
+[SWF-1379] - Provide support for Portlet API 2.0 and JSF 1.2
+[SWF-1386] - Split org.springframework.js-[version].jar into two artifacts
+[SWF-1387] - Upgrade to dojo 1.5.0 and include dojox
+[SWF-1375] - Provide custom namespace element(s) to simplify configuration for JSF 2
+[SWF-1373] - Upgrade to Spring 3.0.4 and update the booking-mvc sample
+[SWF-1376] - Handle missing spring headers for ajax redirect
+[SWF-1388] - Move client-side resources (.js, .css) to META-INF/web-resources instead of META-INF
+[SWF-1381] - FlowExecutionImpl: handleException ignores result of another handleException
+[SWF-1383] - Spring Faces throws NPE when writing flow state
+[SWF-1385] - servletRelative redirects don't work with default-servlet-handler
+[SWF-1389] - MessageContextErrors doesn't obey the Errors contract
+[SWF-1378] - org.springframework.faces.webflow.FlowResourceResolver incompatible with JSF 1.2
 
+Changes in version 2.2.0.M1 (Aug 5)
+-----------------------------------
+
+[SWF-1365] - Add support for partial state saving in JSF 2
+[SWF-1366] - Add support for handling JSF 2 resource requests
+[SWF-1367] - Add support for JSF 2 Ajax requests
+[SWF-1313] - <sf:commandLink /> and <sf:commandButton />: "disabled" attribute not working
+[SWF-1364] - Changelog version typo
 
 Changes in version 2.1.1.RELEASE (July 19, 2010)
 ------------------------------------------------
