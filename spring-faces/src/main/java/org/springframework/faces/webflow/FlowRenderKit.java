@@ -52,8 +52,8 @@ public class FlowRenderKit extends RenderKitWrapper {
 	 * ResponseStateManager instance otherwise.
 	 */
 	public ResponseStateManager getResponseStateManager() {
-		return (JsfRuntimeInformation.isPartialStateSavingSupported()) ? responseStateManager : delegate
-				.getResponseStateManager();
+		return (JsfUtils.isFlowRequest() && JsfRuntimeInformation.isPartialStateSavingSupported()) ? responseStateManager
+				: delegate.getResponseStateManager();
 	}
 
 }

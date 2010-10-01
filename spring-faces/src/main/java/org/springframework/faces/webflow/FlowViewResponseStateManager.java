@@ -18,6 +18,7 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.faces.application.StateManager.SerializedView;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKitFactory;
@@ -129,16 +130,24 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 
 	// ------------------- Delegation methods ------------------//
 
-	@SuppressWarnings( { "deprecation" })
+	@Override
+	public boolean isPostback(FacesContext context) {
+		return delegate.isPostback(context);
+	}
+
 	@Override
 	public Object getTreeStructureToRestore(FacesContext context, String viewId) {
 		return delegate.getTreeStructureToRestore(context, viewId);
 	}
 
-	@SuppressWarnings( { "deprecation" })
 	@Override
 	public Object getComponentStateToRestore(FacesContext context) {
 		return delegate.getComponentStateToRestore(context);
+	}
+
+	@Override
+	public void writeState(FacesContext context, SerializedView state) throws IOException {
+		delegate.writeState(context, state);
 	}
 
 	// ------------------- Private helper methods ------------------//
