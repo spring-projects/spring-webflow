@@ -15,7 +15,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
@@ -34,12 +38,17 @@ public class Booking implements Serializable {
 
     private Hotel hotel;
 
+    @NotNull
     private Date checkinDate;
 
+    @Future
+    @NotNull
     private Date checkoutDate;
 
+    @Pattern(regexp = "[0-9]{16}", message = "is not a 16 digit card number")
     private String creditCard;
 
+    @NotEmpty
     private String creditCardName;
 
     private int creditCardExpiryMonth;
