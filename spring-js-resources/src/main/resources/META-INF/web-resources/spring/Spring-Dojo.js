@@ -44,15 +44,31 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 			console.error("Could not apply " + this.widgetType + " decoration.  Element with id '" + this.elementId + "' not found in the DOM.");
 		}
 		else {
+			/*
+			 * dijit.form.DateTextBox uses locale information when displaying a date and a 
+			 * fixed date format when parsing or serializing date values coming from the 
+			 * server-side. There is no way configure it to use a single date pattern,
+			 * which is the reason for the code below.
+			 */
 			var datePattern = this.widgetAttrs['datePattern'];
 			if (datePattern && this.widgetType == 'dijit.form.DateTextBox') {
 				if (!this.widgetAttrs['value']) {
+					// Help dijit.form.DateTextBox parse the server side date value.
 					this.widgetAttrs['value'] = dojo.date.locale.parse(this.element.value, {selector : "date", datePattern : datePattern});
 				}
 				if (!this.widgetAttrs['serialize']) {
+					// Help dijit.form.DateTextBox format the date to send to the server side.
 					this.widgetAttrs['serialize'] = function(d, options){
 						return dojo.date.locale.format(d, {selector : "date", datePattern : datePattern});
 					}
+				}
+				// Add a constraint that specifies the date pattern to use when displaying a date
+				// but don't interfere with any constraints that may have been specified. 
+				if (!this.widgetAttrs['constraints']) {
+					this.widgetAttrs['constraints'] = {};
+				}
+				if (!this.widgetAttrs['constraints'].datePattern) {
+					this.widgetAttrs['constraints'].datePattern = datePattern;
 				}
 			}
 			for (var copyField in this.copyFields) {
