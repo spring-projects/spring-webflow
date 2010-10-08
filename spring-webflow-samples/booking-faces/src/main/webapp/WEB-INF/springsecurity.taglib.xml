@@ -23,4 +23,9 @@
 		<function-class>org.springframework.faces.security.FaceletsAuthorizeTagUtils</function-class>
 		<function-signature>boolean areNotGranted(java.lang.String)</function-signature>
 	</function>
+	<function>
+		<function-name>isAllowed</function-name>
+		<function-class>org.springframework.faces.security.FaceletsAuthorizeTagUtils</function-class>
+		<function-signature>boolean isAllowed(java.lang.String, java.lang.String)</function-signature>
+	</function>
 </facelet-taglib>

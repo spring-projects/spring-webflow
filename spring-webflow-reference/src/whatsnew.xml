@@ -2,105 +2,122 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="whatsnew">
-	<title>What's New In Spring Web Flow 2.1</title>
+	<title>What's New In Spring Web Flow 2.2.0</title>
+	<sect1 id="whatsnew-jsf2">
+		<title>JSF 2 Support</title>
+		<sect2>
+			<title>Comprehensive JSF 2 Support</title>
+			<para>
+				Building on 2.1, Spring Web Flow version 2.2 adds support for core JSF 2 features 
+				The following features that were not supported in 2.1 are now available: 
+				partial state saving, JSF 2 resource request, handling, and JSF 2 Ajax requests. 
+				At this point support for JSF 2 is considered 
+				comprehensive although not covering every JSF 2 feature -- 
+				excluded are mostly features that overlap with the core value Web Flow provides
+				such as those relating to navigation and state management. 
+			</para>
+			<para>
+				See <xref linkend="spring-faces-webflow-config"/> for important configuration changes.
+				Note that partial state saving is only supported with Sun Mojarra 2.0.3 or later.
+				It is not yet supported with Apache MyFaces. This is due to the
+				fact MyFaces was not as easy to customize with regards to how component state is stored. 
+				We will work with Apache MyFaces to provide this support. In the mean time you will need to use
+				the <code>javax.faces.PARTIAL_STATE_SAVING</code> context parameter in <code>web.xml</code>
+				to disable partial state saving with Apache MyFaces.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Travel Sample With the PrimeFaces Components</title>
+			<para>
+				The main Spring Travel sample demonstrating Spring Web Flow and JSF support 
+				is now built on JSF 2 and components from the PrimeFaces component library.
+				Please check out the booking-faces sample in the distribution.
+			</para>
+			<para>
+				Additional samples can be found at the Spring Web Flow - Prime Faces 
+				<ulink url="https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase">
+					Showcase</ulink>, an SVN repository within the 
+					<ulink url="https://src.springframework.org/svn/spring-samples">spring-samples</ulink> 
+					repository. Use these commands to check out and build:
+			</para>
+<programlisting><![CDATA[svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
+cd webflow-primefaces-showcase
+mvn package
+]]></programlisting>					
+
+		</sect2>
+	</sect1>
+	<sect1 id="whatsnew-sec">
+		<title>Spring Security Facelets Tag Library</title>
+		<para>
+			A new Spring Security tag library is available for use with with JSF 2.0 or with JSF 1.2 Facelets views.
+			It provides an &lt;authorize&gt; tag as well as several EL functions. 
+			See <xref linkend="spring-faces-security-taglib"/> for more details. 
+		</para>
+	</sect1>
 	<sect1 id="whatsnew-versions">
-		<title>Version Upgrades</title>
+		<title>Spring JavaScript Updates</title>
 		<sect2>
-			<title>Spring Version Changes</title>
+			<title>Deprecated ResourcesServlet</title>
 			<para>
-				Spring Web Flow 2.1 is built on Spring 3 that in turn requires Java 5. 
+				Starting with Spring 3.0.4, the Spring Framework includes
+				a replacement for the ResourcesServlet. Please see 
+				the Spring Framework documentation for details on the custom mvc namespace,
+				specifically the new 
+				<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">"resources"</ulink>
+				element.
 			</para>
 		</sect2>
 		<sect2>
-			<title>Spring Security Version Changes</title>
+			<title>Dojo 1.5 and dojox</title>
 			<para>
-				Spring Web Flow 2.1 is built on Spring Security 3.
-				Due to package changes in Spring Security this release is not backwards compatible with prior versions of Spring Security.
+				The bundled custom Dojo build is upgraded to version 1.5. It now includes dojox.
+			</para>
+			<para>
+				Note that applications are generally encouraged to prepare their own custom
+				Dojo build for optimized performance depending on what parts of Dojo are
+				commonly used together. For examples see the 
+				<ulink url="https://src.springframework.org/svn/spring-webflow/branches/spring-webflow-2.2-maintenance/spring-js-resources/scripts/dojo">scripts</ulink>
+				used by Spring Web Flow to prepare its own custom Dojo build.
 			</para>
 		</sect2>
 		<sect2>
-			<title>Tiles Version Changes</title>
+			<title>Two Spring JS artifacts</title>
 			<para>
-				Spring Web Flow 2.1 is built on Spring 3, which in turn requires Tiles 2.1.2 (or higher).
-				Due to incompatible API changes in Tiles 2.1.2 this release is not backwards compatible with prior versions of Tiles.
+				The <code>spring-js</code> artifact has been split in two -- the new artifact 
+				(<code>spring-js-resources</code>) contains client side resource (.js, .css, etc.) while
+				the existing artifact (<code>spring-js</code>) contains server-side Java code only.
+			</para>
+			<para>
+				Applications preparing their own custom Dojo build have an option now to
+				avoid including <code>spring-js-resources</code> and put <code>Spring.js</code> and 
+				<code>Spring-Dojo.js</code> directly under the root of their web application.
 			</para>
 		</sect2>
 		<sect2>
-			<title>JSF Version Changes</title>
+			<title>Client resources moved into META-INF/web-resources</title>
 			<para>
-				Spring Web Flow 2.1 provides initial support for JSF 2 and aims to maintains backwards compatibility with JSF 1.2 while JSF 1.1 will no longer be officially targeted.
-			</para>
-			<para>
-				Initial support for JSF 2 means the ability use Mojarra or Apache MyFaces JSF 2 dependencies along with the Faceletes implementation officially bundled with JSF 2 jars.
-				That means any separate Facelets libraries such as <code>com.sun.facelets</code> (the one containing <code>com.sun.facelets.FaceletViewHandler</code>) can be removed from the project dependencies.
-				Please see the <code>booking-faces</code> Web Flow sample, which is configured to run with Mojarra 2.0.
-				The <code>ivy.xml</code> included in the sample has configuration and notes on how to recompile for Mojarra 1.2 or with Apache MyFaces.  
-				The recommended version of Apache MyFaces 2 to use is 2.0.1.SNAPSHOT due to <ulink url="https://issues.apache.org/jira/browse/MYFACES-2686">MYFACES-2686</ulink>.
-			</para>
-			<para>
-				Partial state saving is a new feature that is enabled by default in JSF 2.
-				This feature is not yet supported in Spring Web Flow and must be disabled through a servlet configuration parameter as is shown the <code>booking-faces</code> sample.  
-			</para>
-			<para>
-				In version 2.1 Spring Web Flow doesn't explicitly target any JSF 2 features.
-				Some features such as composite components, JSR 303 validation, and others may work while others such as the new Ajax support probably won't.
-				The goal of this release is to be an intermediate step with more meaningful JSF 2 support to follow in subsequent releases.
-			</para>
-			<para>
-				What this does is it allows applications to begin the migration to JSF 2 (if they wish to do so) and the Web Flow to team to work and test effectively in a JSF 2 environment.
-			</para>
-		</sect2>
-		<sect2>
-			<title>Portlet Version Changes</title>
-			<para>
-				Spring Web Flow 2.1 is built on Spring 3, which in turn requires Portlet API 2.0.
-				There are no significant changes in Web Flow relating to this upgrade.
-				The programming model for Spring Portlet MVC applications is  mostly backwards compatible with applications running on Portlet API 1.0.
-				The implications of this change are mostly with regards to runtime version requirements.
-			</para>
-			<para>
-				The <code>booking-portlet-mvc</code> sample has been tested with Apache Pluto 2.0.1 with a nightly build update due to <ulink url="https://issues.apache.org/jira/browse/PLUTO-591">PLUTO-591</ulink>.
-				Apache Pluto 2.0.2 or higher will give you that fix.
-			</para>
-			<para>
-				The <code>booking-portlet-faces</code> sample unfortunately has not been tested successfully with the combination of JSF 1.2, Portlet 2.0, and Facelets.
-				See the readme in the sample for more information.
+				Bundled client resources (.js, .css, etc.) 
+				have been moved to <code>META-INF/web-resources</code> from their previous location
+				under <code>META-INF</code>. This change is transparent for applications but will result
+				in simpler and safer configuration when using the new resource handling
+				mechanism available in Spring 3.0.4.
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="whatsnew-spring3">
-		<title>Spring 3 Changes</title>
+	<sect1 id="whatsnew-jsf-portlet">
+		<title>JFS Portlet Support</title>
 		<sect2>
-			<title>Spring EL</title>
+			<title>Portlet API 2.0 and JSF 1.2 support</title>
 			<para>
-				The Spring Expression language is now the default implementation used in Spring Web Flow.
-				Existing applications can still choose to plug in the Unified EL or OGNL if they wish to do so.
-				Spring EL however is the recommended approach.
-				It offers advantages such as close integration with the Spring 3 Type Conversion and Formatting system and is also used in other Spring projects. 
-				For more information see <xref linkend="el"/>.
+				In previous versions of Spring Web Flow support for JSF Portlets relied on 
+				a Portlet Bridge for JSF implementation and was considered experimental. 
+				Spring Web Flow 2.2 adds support for JSF Portlets based on its own internal 
+				Portlet integration targeting Portlet API 2.0 and JSF 1.2 environments.
+				See <xref linkend="portlet-jsf"/> for more details.
+				The Spring Web Flow Travel JSF Portlets sample has been successfully 
+				tested on the Apache Pluto portal container.
 			</para>
 		</sect2>
-		<sect2>
-			<title>Spring 3 Type Conversion</title>
-			<para>
-				Spring Web Flow now uses the new Spring 3 type conversion and formatting mechanism that includes use of formatting annotations such as <code>NumberFormat</code> and <code>DateTimeFormat</code>.
-				The Spring 3 type conversion was influenced by the existing mechanism used in Spring Web Flow.
-				Hence Web Flow users should find this to be a logical step forward.
-			</para>
-			<para>
-				Existing applications can continue to use the custom converters they currently have.
-				With the new approach however, they can now use a single mechanism across Spring MVC controllers and flow definitions.
-				For more information see <xref linkend="view-type-conversion"/>.
-			</para>
-		</sect2>
-	</sect1>	
-	<sect1 id="whatsnew-tiles">
-		<title>Tiles Updates</title>
-			<para>
-				Spring Web Flow 2.1 provides support for Tiles 2.1.2.
-				It has contains important features that can help reduce Tiles related configuration.
-				This includes wildcard support when listing Tiles definition files or when defining Tiles definitions, anonymous and cascaded nested definitions among others.
-				See <ulink url="http://tiles.apache.org/2.1/framework/whats-new.html">What's new in Tiles 2.1</ulink> for more details.  				
-			</para>
-	</sect1>	
+	</sect1>
 </chapter>
