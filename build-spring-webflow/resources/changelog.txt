@@ -2,8 +2,16 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.2.0.RC1 (Sep 22)
--------------------------------------
+Changes in version 2.2.0.RELEASE (Oct 11, 2010)
+-----------------------------------------------
+[SWF-1374] - Update documentation for 2.2.0 release
+[SWF-1382] - Clarify documentation in regards to file upload support.
+[SWF-1404] - Deprecate the ResourcesServlet
+[SWF-1271] - datePattern attribute not honored in Spring JS decorator for Dojo DateTextBox
+[SWF-1402] - FlowViewResponseStateManager should call delegate isPostback()
+
+Changes in version 2.2.0.RC1 (Sep 22, 2010)
+-------------------------------------------
 [SWF-1333] - Spring security tag support for JSF/Facelets
 [SWF-1368] - Build the Web Flow booking reference application with PrimeFaces components
 [SWF-1379] - Provide support for Portlet API 2.0 and JSF 1.2
@@ -19,8 +27,8 @@ Changes in version 2.2.0.RC1 (Sep 22)
 [SWF-1389] - MessageContextErrors doesn't obey the Errors contract
 [SWF-1378] - org.springframework.faces.webflow.FlowResourceResolver incompatible with JSF 1.2
 
-Changes in version 2.2.0.M1 (Aug 5)
------------------------------------
+Changes in version 2.2.0.M1 (Aug 5, 2010)
+-----------------------------------------
 
 [SWF-1365] - Add support for partial state saving in JSF 2
 [SWF-1366] - Add support for handling JSF 2 resource requests
