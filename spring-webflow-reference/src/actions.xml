@@ -408,7 +408,14 @@ public class PrintBoardingPassAction extends AbstractAction {
 				Another common task is to use Web Flow to handle multipart file uploads in combination with Spring MVC's 
 				<code>MultipartResolver</code>.  Once the resolver is set up correctly <ulink url="http://static.springsource.org/spring/docs/2.5.x/reference/mvc.html#mvc-multipart">as described here</ulink> and the submitting
 				HTML form is configured with <code>enctype="multipart/form-data"</code>, you can easily handle the file upload in a 
-				transition action.  Given a form such as:     
+				transition action.  
+			</para>
+			<para>
+				Note that the File Upload example below below is not relevant when using Web Flow with JSF.
+				Check the documentation of your JSF component library to see what file upload components it provides. 
+			</para>
+			<para>
+				Given a form such as:     
 			</para>
 			<programlisting language="xml"><![CDATA[
 <form:form modelAttribute="fileUploadHandler" enctype="multipart/form-data">

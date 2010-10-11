@@ -20,7 +20,7 @@ It is a powerful controller engine that addresses the "C" in MVC.
 
 2. RELEASE NOTES
 ----------------
-Spring Web Flow 2.1.x requires Java SE 1.5 and Spring Framework 3.0.0 or above to run.
+Spring Web Flow 2.2.x requires Java SE 1.5 and Spring Framework 3.0.0 or above to run.
 
 Java SE 5.0 with Ant 1.7 is also required to build.
 
@@ -35,7 +35,8 @@ Release distribution contents:
 "projects/spring-build" is the master build system used by all Spring projects, including Spring Web Flow
 "projects/spring-binding" contains buildable Spring Data Binding project sources, a utility library used by SWF
 "projects/spring-faces" contains buildable Spring Faces project sources, a library containing SWF's JSF integration
-"projects/spring-js" contains buildable Spring JavaScript project sources, a library containing client-side Ajax and Dojo integration
+"projects/spring-js" contains buildable Spring JavaScript project sources
+"projects/spring-js-resources" bundles library containing client-side Ajax and Dojo integration
 "projects/spring-webflow" contains buildable Spring Web Flow project sources
 "projects/spring-webflow-samples" contains buildable Spring Web Flow sample application sources
 
@@ -51,7 +52,7 @@ Dependencies in [brackets] are optional, and are just necessary for certain func
 
 * org.springframework.webflow-2.2.0.RELEASE.jar
 - Contents: The Spring Web Flow system
-- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-expression, spring-binding, spring-web, spring-webmvc-servlet, spring-js
+- Dependencies: Commons Logging, spring-core, spring-beans, spring-context, spring-expression, spring-binding, spring-web, spring-web-servlet, spring-js
                 [Log4J, Xerces, XML APIs, OGNL, EL API, JPA API, Hibernate, Spring Security, Servlet API, Portlet API, JUnit]
               
 * org.springframework.binding-2.2.0.RELEASE.jar
@@ -60,12 +61,16 @@ Dependencies in [brackets] are optional, and are just necessary for certain func
                 [Log4J, OGNL, EL API]
 
 * org.springframework.js-2.2.0.RELEASE.jar
-- Contents: The Spring JavaScript module, containing Spring's Dojo integration and additional JavaScript functionality.
-- Dependencies: Dojo Toolkit
+- Contents: The Spring JavaScript module
+- Dependencies: spring-beans, spring-core, spring-context, spring-web, spring-web-servlet
+
+* org.springframework.js.resources-2.2.0.RELEASE.jar
+- Contents: Spring's custom Dojo build and client-side Dojo integration files.
+- Dependencies: 
 
 * org.springframework.faces-2.2.0.RELEASE.jar
 - Contents: The Spring Faces module, containing Spring's integration with Java Server Faces (JSF) and additional JSF functionality.
-- Dependencies: spring-webflow, spring-js, JSF API
+- Dependencies: spring-webflow, spring-js, spring-js-resources, JSF API
                                 
 For an exact list of project dependencies, see each project's ivy file at "projects/${project_name}/ivy.xml".
 
@@ -97,7 +102,9 @@ To access jars using Maven, add the following repositories to your Maven pom:
     <url>http://repository.springsource.com/maven/bundles/external</url>
 </repository>
 
-Then declare the following dependencies:
+Then declare the following dependencies (note that many times it's sufficient to include
+org.springframework.webflow only, which will give you org.springframework.binding, 
+org.springframework.js, and org.springframework.js via transitive dependencies):
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
@@ -117,7 +124,7 @@ Then declare the following dependencies:
     <version>2.2.0.RELEASE</version>
 </dependency> 
 
-If using JavaServerFaces:
+If using JavaServerFaces all you need to include is:
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>

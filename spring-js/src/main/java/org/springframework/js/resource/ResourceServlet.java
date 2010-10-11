@@ -48,6 +48,9 @@ import org.springframework.web.servlet.HttpServletBean;
  * 
  * @author Jeremy Grelle
  * @author Scott Andrews
+ * 
+ * @deprecated Deprecated in favor of the new resource handling mechanism available in Spring 3.0.4. See the
+ * documentation on the custom mvc namespace, specifically the new resources element.
  */
 public class ResourceServlet extends HttpServletBean {
 

@@ -6,11 +6,24 @@
     <sect1 id="spring-faces-introduction">
         <title>Introduction</title>
         <para>
-            Spring Web Flow provides an integration that simplifies using JSF with Spring. It lets you use the
-            JSF UI Component Model with Spring MVC and Spring Web Flow controllers.
+            Spring Web Flow provides an integration that simplifies using with Spring. It lets you use the
+            JSF UI Component Model with Spring MVC and Spring Web Flow controllers. As of Spring Web Flow
+            2.2 the JSF integration is supported with JSF 1.2 and JSF 2.0 including Sun Mojarra and Apache 
+            MyFaces. Please, note however that JSF 2 partial state saving is not yet supported with 
+            Apache MyFaces and needs to be disabled with the <code>javax.faces.PARTIAL_STATE_SAVING</code> 
+            context parameter in <code>web.xml</code>
         </para>
         <para>
-            A small Facelets component library that provides Ajax and client-side validation capabilities is also shipped with Web Flow. 
+        	Spring Web Flow provides a Spring Security tag library for JSF 2 and JSF 1.2 environments.
+			It provides an &lt;authorize&gt; tag as well as several EL functions.
+        	See <xref linkend="spring-faces-security-taglib"/> for more details.
+        </para>
+        <para>
+            A small Facelets component library that provides Ajax and client-side validation capabilities 
+            in JSF 1.2 environments only is also shipped with Web Flow. Note that this library will not 
+            be upgraded to JSF 2.0 in favor of 3rd party component libraries such as PrimeFaces 
+            and RichFaces. The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution
+            is built on JSF 2 and PrimeFaces components. 
         </para>
     </sect1>
     <sect1 id="spring-faces-integration">
@@ -87,7 +100,7 @@
 </servlet-mapping>]]>
         </programlisting>
         <para>
-            When using the Spring Faces components, you also need to configure a servlet for serving
+            When using the Spring Faces components (JSF 1.2 only), you also need to configure a servlet for serving
             CSS and JavaScript resources. This servlet must be mapped
             to /resources/* in order for the URL's rendered by the components to function correctly.
         </para>
@@ -118,7 +131,8 @@
         </programlisting>
 		<para>
 			For optimal page-loading performance use the Spring Faces components
-			<code>includeStyles</code> and <code>includeScripts</code>.  These components will eagerly load the necessary
+			<code>includeStyles</code> and <code>includeScripts</code> (JSF 1.2 only).  
+			These components will eagerly load the necessary
 			CSS stylesheets and JavaScript files at the position they are placed in your JSF view template.  In accordance
 			with the recommendations of the Yahoo Performance Guildlines, these two tags should be placed in the <code>head</code>
 			section of any page that uses the Spring Faces components.  For example:
@@ -163,48 +177,89 @@
 	</para>
     </sect1>
     <sect1 id="spring-faces-webflow-config">
-        <title>Configuring Web Flow to render JSF views</title>
+        <title>Configuring Web Flow for use with JSF</title>
         <para>
-            The next step is to configure Web Flow to render JSF views. To do this, in your Spring Web Flow
-            configuration include the
-            <code>faces</code>
-            namespace and link in the 
-            <code>flow-builder-services</code> element from the faces custom namespace.
-            :
+        	This section explains how to configure Web Flow with JSF.
+        	The next section provides more details specific to using Web Flow with JSF 2.
+        	The following is sample configuration for Web Flow and JSF:
+        </para>
+        <programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+    xmlns:faces="http://www.springframework.org/schema/faces"
+    si:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/webflow-config
+        http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
+        http://www.springframework.org/schema/faces
+        http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
+
+    <!-- Executes flows: the central entry point into the Spring Web Flow system -->
+    <webflow:flow-executor id="flowExecutor">
+        <webflow:flow-execution-listeners>
+            <webflow:listener ref="facesContextListener"/>
+        </webflow:flow-execution-listeners>
+    </webflow:flow-executor>
+	
+    <!-- The registry of executable flow definitions -->
+    <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/WEB-INF">
+        <webflow:flow-location-pattern value="**/*-flow.xml" />
+    </webflow:flow-registry>
+
+    <!-- Configures the Spring Web Flow JSF integration -->
+    <faces:flow-builder-services id="flowBuilderServices" />
+
+    <!-- A listener maintain one FacesContext instance per Web Flow request. -->
+    <bean id="facesContextListener" 
+        class="org.springframework.faces.webflow.FlowFacesContextLifecycleListener" />	
+
+</beans>]]>
+        </programlisting>
+        <para>
+        	The main points are the installation of a <code>FlowFacesContextLifecycleListener</code> that 
+        	manages a single FacesContext for the duration of Web Flow request and the
+        	use of the <code>flow-builder-services</code> element from the <code>faces</code> custom 
+        	namespace to configure rendering for a JSF environment.
+        </para>
+        <para>
+            See the swf-booking-faces reference application in the distribution for a complete working example.
+       	</para>
+    </sect1>
+    <sect1 id="spring-faces-webflow-config-jsf2">
+        <title>Configuring Spring MVC for use with JSF 2</title>
+        <para>
+        	In a JSF 2 environment you'll also need this Spring MVC related configuration:
         </para>
         <programlisting language="xml"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xmlns:faces="http://www.springframework.org/schema/faces"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-           http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd
            http://www.springframework.org/schema/faces
            http://www.springframework.org/schema/faces/spring-faces-2.0.xsd">
 
-	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
-	<webflow:flow-executor id="flowExecutor" />
-
-	<!-- The registry of executable flow definitions -->
-	<webflow:flow-registry id="flowRegistry" flow-builder-services="facesFlowBuilderServices" base-path="/WEB-INF">
-		<webflow:flow-location-pattern value="**/*-flow.xml" />
-	</webflow:flow-registry>
-
-	<!-- Configures the Spring Web Flow JSF integration -->
-	<faces:flow-builder-services id="facesFlowBuilderServices" />
+    <faces:resources />
+    
+    <bean class="org.springframework.faces.webflow.JsfFlowHandlerAdapter">
+        <property name="flowExecutor" ref="flowExecutor" />
+    </bean>
 
 </beans>]]>
         </programlisting>
         <para>
-        	The <code>faces:flow-builder-services</code> tag also configures several other defaults appropriate for a JSF environment.
+        	The <code>resources</code> custom namespace element delegates JSF 2 resource
+        	requests to the JSF 2 resource API. The <code>JsfFlowHandlerAdapter</code> 
+        	is a replacement for the <code>FlowHandlerAdapter</code> normally used with
+        	Web Flow. This adapter initializes itself with a <code>JsfAjaxHandler</code> instead 
+        	of the <code>SpringJavaSciprtAjaxHandler</code> previously used with Spring
+        	Faces components. 
         </para>
-        <para>
-            See the swf-booking-faces reference application in the distribution for a complete working example.
-       	</para>
     </sect1>
     <sect1 id="spring-faces-config">
         <title>Configuring faces-config.xml</title>
@@ -626,6 +681,118 @@
             </para>
         </sect2>
     </sect1>
+    <sect1 id="spring-faces-security-taglib">
+        <title>Using the Spring Security Facelets Tag Library</title>
+        <para>
+        	To use the library you'll need to create a <code>.taglib.xml</code> file and register it in <code>web.xml</code>. 
+        	Unfortunately Spring Web Flow cannot easily do this automatically without causing issues for
+        	either JSF 2 or JSF 1.2 users. In a future release we will consider splitting the security tag
+        	library into a separate artifact with JSF 1.2 and 2.0 versions to make the library easier to add.
+        </para>
+        <para>
+        	Note: all instructions you will see in this section assume you already know how 
+        	to configure Spring Security itself.
+        </para>
+        <para>
+        	For JSF 2 save the following as <code>/WEB-INF/springsecurity.taglib.xml</code>:  
+        </para>
+            <programlisting language="xml"><![CDATA[<?xml version="1.0"?>
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+<facelet-taglib>
+	<namespace>http://www.springframework.org/security/tags</namespace>
+	<tag>
+		<tag-name>authorize</tag-name>
+		<handler-class>org.springframework.faces.security.FaceletsAuthorizeTagHandler</handler-class>
+	</tag>
+	<function>
+		<function-name>areAllGranted</function-name>
+		<function-class>org.springframework.faces.security.FaceletsAuthorizeTagUtils</function-class>
+		<function-signature>boolean areAllGranted(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<function-name>areAnyGranted</function-name>
+		<function-class>org.springframework.faces.security.FaceletsAuthorizeTagUtils</function-class>
+		<function-signature>boolean areAnyGranted(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<function-name>areNotGranted</function-name>
+		<function-class>org.springframework.faces.security.FaceletsAuthorizeTagUtils</function-class>
+		<function-signature>boolean areNotGranted(java.lang.String)</function-signature>
+	</function>
+	<function>
+		<function-name>isAllowed</function-name>
+		<function-class>org.springframework.faces.security.FaceletsAuthorizeTagUtils</function-class>
+		<function-signature>boolean isAllowed(java.lang.String, java.lang.String)</function-signature>
+	</function>
+</facelet-taglib>
+]]></programlisting>
+        <para>
+        	For JSF 1.2 use the same content as shown above but replace <code>FaceletsAuthorizeTagHandler</code> with 
+        	<code>Jsf12FaceletsAuthorizeTagHandler</code> and <code>FaceletsAuthorizeTagUtils</code> wiht
+        	<code>Jsf12FaceletsAuthorizeTagUtils</code>.
+        </para>
+        <para>
+        	Register the above file in web.xml:
+        </para>
+<programlisting language="xml"><![CDATA[<context-param>
+    <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+    <param-value>/WEB-INF/springsecurity.taglib.xml</param-value>
+</context-param>
+]]></programlisting>
+		<para>
+			Now you are ready to use the tag library in your views.
+			You can use the authorize tag to include nested content conditionally:
+		</para>
+<programlisting language="xml"><![CDATA[<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<sec:authorize ifAllGranted="ROLE_FOO, ROLE_BAR">
+		Lorem ipsum dolor sit amet
+	</sec:authorize>
+
+	<sec:authorize ifNotGranted="ROLE_FOO, ROLE_BAR">
+		Lorem ipsum dolor sit amet
+	</sec:authorize>
+
+	<sec:authorize ifAnyGranted="ROLE_FOO, ROLE_BAR">
+		Lorem ipsum dolor sit amet
+	</sec:authorize>
+
+</ui:composition>				
+]]></programlisting>
+
+		<para>
+			You can also use one of several EL functions in the rendered or other 
+			attribute of any JSF component: 
+		</para>
+
+<programlisting language="xml"><![CDATA[<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<!-- Rendered only if user has all of the listed roles -->
+	<h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areAllGranted('ROLE_FOO, ROLE_BAR')}"/>	
+	
+	<!-- Rendered only if user does not have any of the listed roles -->
+	<h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areNotGranted('ROLE_FOO, ROLE_BAR')}"/>	
+	
+	<!-- Rendered only if user has any of the listed roles -->
+	<h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areAnyGranted('ROLE_FOO, ROLE_BAR')}"/>	
+	
+	<!-- Rendered only if user has access to given HTTP method/URL as defined in Spring Security configuration -->
+	<h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:isAllowed('/secured/foo', 'POST')}"/>	
+
+</ui:composition>				
+]]></programlisting>
+
+	</sect1>
     <sect1 id="spring-faces-ui-controls">
         <title>Enhancing The User Experience With Rich Web Forms</title>
         <para>

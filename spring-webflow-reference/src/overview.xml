@@ -52,21 +52,9 @@
 			This allows you to easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
 		</para>
 		<para>
-			To access Web Flow jars from Maven Central, declare the following dependencies in your pom:			
+			To access Web Flow jars from Maven Central, declare the following dependency in your pom (also adds "spring-binding", "spring-js", and "spring-js-resources"):			
 		</para>
 		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-binding</artifactId>
-    <version>2.2.0.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-js</artifactId>
-    <version>2.2.0.RELEASE</version>
-</dependency> 
-
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
@@ -75,7 +63,7 @@
 ]]>
 		</programlisting>
 		<para>
-			And if using JavaServerFaces:
+			If using JavaServer Faces, declare the following dependency in your pom (also adds the above dependencies):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
@@ -112,21 +100,9 @@
 </repository>]]>
 			</programlisting>
 			<para>
-				Then declare the following dependencies:			
+				Then declare the following dependency:			
 			</para>
 			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
-    <version>2.2.0.RELEASE</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
-    <version>2.2.0.RELEASE</version>
-</dependency> 
-
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
@@ -134,7 +110,7 @@
 </dependency>]]>
 			</programlisting>
 			<para>
-				And if using JavaServerFaces:
+				And if using JavaServer Faces:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <dependency>
@@ -169,13 +145,10 @@
 </url>]]>
 			</programlisting>
 			<para>
-				Then declare the following dependencies:			
+				Then declare the following dependencies (also adds "org.springframework.binding", 
+					"org.springframework.js", and "org.springframework.spring.js"):			
 			</para>
 			<programlisting language="xml"><![CDATA[
-<dependency org="org.springframework.webflow" name="org.springframework.binding"
-            rev="2.2.0.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js"
-            rev="2.2.0.RELEASE" conf="compile->runtime" />
 <dependency org="org.springframework.webflow" name="org.springframework.webflow"
             rev="2.2.0.RELEASE" conf="compile->runtime" />]]>
 			</programlisting>

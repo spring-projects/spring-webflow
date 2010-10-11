@@ -13,48 +13,45 @@
 	</p>
 </ui:define>
 <ui:define name="content">
-	<div class="span-5">
-		<h3>${booking.hotel.name}</h3>
-		<address>
-			${booking.hotel.address}
-			<br/>
-			${booking.hotel.city}, ${booking.hotel.state}, ${booking.hotel.zip}
-			<br/>
-			${booking.hotel.country}
-		</address>
-	</div>
 	<h:form id="bookingForm">
-		<p:fieldset legend="Book Hotel">
+		<p:fieldset legend="Hotel Reservation Form">
 			<p:messages />
+			<div class="large">
+				${booking.hotel.name},
+				${booking.hotel.address}
+				${booking.hotel.city}, ${booking.hotel.state}, ${booking.hotel.zip}
+				${booking.hotel.country}
+			</div>
+			<hr/>
 			<div>
 				<div class="span-4 label">
-					Nightly rate:	
+					<h:outputLabel for="price">Nightly Rate:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-14 last">
 					<p>
-						<h:outputText value="#{booking.hotel.price}">
+						<h:outputText id="price" value="#{booking.hotel.price}">
 							<f:convertNumber type="currency" currencySymbol="$"/>
 						</h:outputText>
 					</p>
 				</div>					
 			</div>
-			<div>
+			<div class="field">
 				<div class="span-4">
 					<h:outputLabel for="checkinDate">Check In:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-5">
 					<p>
-						<p:calendar id="checkinDate" value="#{booking.checkinDate}" pattern="MM-dd-yyyy" timeZone="EST" required="true" />
+						<p:calendar id="checkinDate" label="Check in date" 
+							value="#{booking.checkinDate}" pattern="MM-dd-yyyy" timeZone="EST" required="true" />
 	               	</p>
 				</div>
-			</div>
-			<div class="field">
 				<div class="span-4">
 					<h:outputLabel for="checkoutDate">Check Out:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-5 last">
 					<p>
-						<p:calendar id="checkoutDate" value="#{booking.checkoutDate}" pattern="MM-dd-yyyy" timeZone="EST" required="true" />
+						<p:calendar id="checkoutDate" label="Check out date" 
+							value="#{booking.checkoutDate}" pattern="MM-dd-yyyy" timeZone="EST" required="true" />
 					</p>
 				</div>
 			</div>
@@ -62,19 +59,17 @@
 				<div class="span-4">
 					<h:outputLabel for="beds">Room Preference:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-5">
 					<p>
 						<h:selectOneMenu id="beds" value="#{booking.beds}">
 							<f:selectItems value="#{referenceData.bedOptions}"/>
 						</h:selectOneMenu>
 					</p>	
 				</div>
-			</div>
-			<div class="field">
 				<div class="span-4">
-					<h:outputLabel for="smoking">Smoking Preference:</h:outputLabel>
+					<h:outputLabel for="smoking">Smoking:</h:outputLabel>
 				</div>
-				<div id="radio" class="span-7 last">
+				<div id="radio" class="span-5 last">
 					<h:selectOneRadio id="smoking" value="#{booking.smoking}" layout="pageDirection">
 						<f:selectItems value="#{referenceData.smokingOptions}"/>
 					</h:selectOneRadio>
@@ -91,7 +86,7 @@
 				<div class="span-4">
 					<h:outputLabel for="amenities">Amenities:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-11 last">
 					<h:selectManyCheckbox id="amenities" value="#{booking.amenities}" layout="pageDirection">
 						<f:selectItem itemValue="OCEAN_VIEW" itemLabel="Ocean View" />
 						<f:selectItem itemValue="LATE_CHECKOUT" itemLabel="Late Checkout" />
@@ -103,27 +98,21 @@
 			-->
 			<div class="field">
 				<div class="span-4">
-					<h:outputLabel for="creditCard">Credit Card #:</h:outputLabel>
+					<h:outputLabel for="creditCard">Credit Card Number:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-5">
 					<p>
-						<h:inputText id="creditCard" value="#{booking.creditCard}">
-							<f:validateRegex pattern="[0-9]{16}" />
-						</h:inputText>
+						<h:inputText id="creditCard" label="Credit card number" value="#{booking.creditCard}" />
 						<p:tooltip for="creditCard" value="16-digit credit card number." style="cream" position="bottomLeft" />
 					</p>
 				</div>
-			</div>
-			<div class="field">
 				<div class="span-4">
 					<h:outputLabel for="creditCardName">Credit Card Name:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-5 last">
 					<p>
-						<h:inputText id="creditCardName" value="#{booking.creditCardName}">
-							<f:validateLength minimum="3" /> 
-						</h:inputText>
-						<p:tooltip for="creditCardName" value="The name as it appears on the credit card" style="cream" position="bottomLeft" />
+						<h:inputText id="creditCardName" label="Credit card name" value="#{booking.creditCardName}"/>
+						<p:tooltip for="creditCardName" value="The name as it appears on the credit card" style="cream" />
 					</p>
 				</div>
 			</div>
@@ -131,11 +120,11 @@
 				<div class="span-4">
 					<h:outputLabel for="creditCardExpiryMonth">Expiration Date:</h:outputLabel>
 				</div>
-				<div class="span-7 last">
+				<div class="span-14 last">
 					<p>
 						<h:selectOneMenu id="creditCardExpiryMonth" value="#{booking.creditCardExpiryMonth}">
 							<f:selectItems value="#{referenceData.creditCardExpMonths}" />
-						</h:selectOneMenu>
+						</h:selectOneMenu>&nbsp;
 						<h:selectOneMenu id="creditCardExpiryYear" value="#{booking.creditCardExpiryYear}">
 							<f:selectItems value="#{referenceData.creditCardExpYears}"/>
 						</h:selectOneMenu>

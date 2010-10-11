@@ -185,6 +185,58 @@ externalContext.requestMap.portletMode
 			]]></programlisting>
 		</sect2>
 	</sect1>
+	<sect1 id="portlet-jsf">
+		<title>Using Portlets with JSF</title>
+		<sect2 id="portlet-jsf-using-portlet-jsf">
+			<para>
+				Prior to version 2.1 of Spring Web Flow, support for JSF Portlets was considered 
+				experimental and relied on a Portlet Bridge for JSF implementation. 
+				Furthermore JSR-329 (the latest specification in this area), which targets 
+				Portlet API 2.0 and JSF 1.2 environments at the time of writing is not yet
+				final causing portlet bridge implementations to also remain incomplete.
+			</para>
+			<para>
+				A closer comparison of Spring Web Flow and a Portlet Bridge for JSF shows
+				the two have significant overlap. They both drive the 
+				JSF lifecycle and they both shield JSF from knowledge about Portlet action
+				and render requests.     
+			</para>
+			<para>
+				Considering all of the above, starting with version 2.2, Spring Web Flow 
+				provides support for JSF Portlets using its own internal Portlet integration rather
+				than a Portlet Bridge for JSF. We believe this will provide value for Web Flow users
+				by reducing the number of dependencies in what is already a fairly complex
+				combination of technologies with specifications lagging behind.
+			</para>
+			<para>
+				What this practically means is the configuration required for JSF Portlets is 
+				very similar to what is alread documented in the rest of this chapter
+				with the exception of <xref linkend="portlet-views"/>, which is not necessary 
+				with JSF.
+			</para>
+			<para>
+				Review the <code>swf-booking-portlet-faces</code> sample in the Web Flow distribution
+				for a working JSF Portlets example with complete configuration details. The main thing
+				you'll need to notice in addition to what has already been described in this
+				chapter is the <code>faces-config.xml</code> configuration:
+			</para>
+
+<programlisting language="java"><![CDATA[<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+    <application>
+        <view-handler>
+            org.springframework.faces.webflow.application.portlet.PortletFaceletViewHandler
+        </view-handler>  
+    </application>
+</faces-config>
+]]></programlisting>
+
+		</sect2>
+	</sect1>
 	<sect1 id="portlet-issues">
 		<title>Issues in a Portlet Environment</title>
 		<sect2 id="portlet-issues-redirects">
@@ -211,18 +263,6 @@ externalContext.requestMap.portletMode
 			</para>
 			<para>
 				One way to start a new flow is to create a URL targeting the mode without the execution key.
-			</para>
-		</sect2>
-		<sect2 id="portlet-issues-jsf">
-			<title>Portlets and JSF</title>
-			<para>
-				Web Flow supports JSF as the view technology for a portlet.
-				However, a jsf-portlet bridge (JSR-301) must be provided.
-				At the time of this writing, no feature complete jsf-portlet bridge exists.
-				Some of the existing bridge implementations may appear to work, however, side effect may occur.
-			</para>
-			<para>
-				JSF portlets are considered experimental at this time.
 			</para>
 		</sect2>
 	</sect1>
