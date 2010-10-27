@@ -63,6 +63,42 @@ public class FlowFacesContextTests extends TestCase {
 
 	}
 
+	public final void testGetGlobalMessagesOnly() {
+		messageContext = new DefaultMessageContext();
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
+
+		facesContext.addMessage("foo", new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "bar"));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "FOO", "BAR"));
+
+		int iterationCount = 0;
+		Iterator i = facesContext.getMessages(null);
+		while (i.hasNext()) {
+			FacesMessage message = (FacesMessage) i.next();
+			assertNotNull(message);
+			iterationCount++;
+		}
+		assertEquals(1, iterationCount);
+	}
+
+	public final void testGetAllMessages() {
+		messageContext = new DefaultMessageContext();
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
+
+		facesContext.addMessage("foo", new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "bar"));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "FOO", "BAR"));
+
+		int iterationCount = 0;
+		Iterator i = facesContext.getMessages();
+		while (i.hasNext()) {
+			FacesMessage message = (FacesMessage) i.next();
+			assertNotNull(message);
+			iterationCount++;
+		}
+		assertEquals(2, iterationCount);
+	}
+
 	public final void testAddMessages_MultipleNullIds() {
 		messageContext = new DefaultMessageContext();
 		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
@@ -232,14 +268,14 @@ public class FlowFacesContextTests extends TestCase {
 				.build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("foo").info()
 				.build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary").defaultText(
-				"componentId_summary1").warning().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail").defaultText(
-				"componentId_detail1").warning().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary").defaultText(
-				"componentId_summary2").warning().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail").defaultText(
-				"componentId_detail2").warning().build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary")
+				.defaultText("componentId_summary1").warning().build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail")
+				.defaultText("componentId_detail1").warning().build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary")
+				.defaultText("componentId_summary2").warning().build());
+		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail")
+				.defaultText("componentId_detail2").warning().build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("userMessage").defaultText("userMessage")
 				.info().build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("baz").error()

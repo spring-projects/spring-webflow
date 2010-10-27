@@ -118,45 +118,17 @@ public class FlowFacesContextMessageDelegate {
 	 * @see Jsf2FlowFacesContext#getMessageList()
 	 */
 	public List<FacesMessage> getMessageList() {
-		return getMessageList(null);
+		return new FacesMessageIterator().asList();
 	}
 
 	/**
 	 * @see Jsf2FlowFacesContext#getMessageList(String)
 	 */
 	public List<FacesMessage> getMessageList(String clientId) {
-		List<FacesMessage> messages = getFacesMessages(clientId);
-		if (null == messages) {
-			return Collections.unmodifiableList(Collections.<FacesMessage> emptyList());
-		} else {
-			return Collections.unmodifiableList(messages);
-		}
+		return new FacesMessageIterator(clientId).asList();
 	}
 
 	// ------------------ Private helper methods ----------------------//
-
-	private List<FacesMessage> getFacesMessages() {
-		return getFacesMessages(null);
-	}
-
-	private List<FacesMessage> getFacesMessages(String clientId) {
-		List<FacesMessage> translatedMessages = new ArrayList<FacesMessage>();
-
-		Message[] summaryMessages = context.getMessageContext().getMessagesByCriteria(
-				new MatchBySuffixCriteria(clientId, SUMMARY_MESSAGE_KEY));
-		Message[] detailMessages = context.getMessageContext().getMessagesByCriteria(
-				new MatchBySuffixCriteria(clientId, DETAIL_MESSAGE_KEY));
-		for (int i = 0; i < summaryMessages.length; i++) {
-			translatedMessages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
-		}
-
-		Message[] userMessages = context.getMessageContext().getMessagesByCriteria(new UserMessageCriteria(clientId));
-		for (int z = 0; z < userMessages.length; z++) {
-			translatedMessages.add(toFacesMessage(userMessages[z], userMessages[z]));
-		}
-
-		return translatedMessages;
-	}
 
 	private FacesMessage toFacesMessage(Message summaryMessage, Message detailMessage) {
 
@@ -182,29 +154,57 @@ public class FlowFacesContextMessageDelegate {
 
 	private class FacesMessageIterator implements Iterator<FacesMessage> {
 
-		private FacesMessage[] messages;
+		private List<FacesMessage> messages;
 
 		private int currentIndex = -1;
 
 		protected FacesMessageIterator() {
-			this.messages = getFacesMessages().toArray(new FacesMessage[] {});
+			Message[] summaryMessages = context.getMessageContext().getMessagesByCriteria(new SummaryMessageCriteria());
+			Message[] detailMessages = context.getMessageContext().getMessagesByCriteria(new DetailMessageCriteria());
+			Message[] userMessages = context.getMessageContext().getMessagesByCriteria(new UserMessageCriteria());
+
+			messages = new ArrayList<FacesMessage>();
+			for (int i = 0; i < summaryMessages.length; i++) {
+				messages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
+			}
+			for (int z = 0; z < userMessages.length; z++) {
+				messages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			}
 		}
 
 		protected FacesMessageIterator(String clientId) {
-			this.messages = getFacesMessages(clientId).toArray(new FacesMessage[] {});
+			Message[] summaryMessages = context.getMessageContext().getMessagesBySource(clientId + SUMMARY_MESSAGE_KEY);
+			Message[] detailMessages = context.getMessageContext().getMessagesBySource(clientId + DETAIL_MESSAGE_KEY);
+			Message[] userMessages = context.getMessageContext().getMessagesBySource(clientId);
+
+			this.messages = new ArrayList<FacesMessage>();
+			for (int i = 0; i < summaryMessages.length; i++) {
+				messages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
+			}
+			for (int z = 0; z < userMessages.length; z++) {
+				messages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			}
 		}
 
 		public boolean hasNext() {
-			return messages.length > currentIndex + 1;
+			return messages.size() > currentIndex + 1;
 		}
 
 		public FacesMessage next() {
 			currentIndex++;
-			return messages[currentIndex];
+			return messages.get(currentIndex);
 		}
 
 		public void remove() {
 			throw new UnsupportedOperationException("Messages cannot be removed through this iterator.");
+		}
+
+		public List<FacesMessage> asList() {
+			if (null == messages) {
+				return Collections.unmodifiableList(Collections.<FacesMessage> emptyList());
+			} else {
+				return Collections.unmodifiableList(messages);
+			}
 		}
 
 	}
@@ -240,46 +240,34 @@ public class FlowFacesContextMessageDelegate {
 
 	}
 
-	private class MatchBySuffixCriteria implements MessageCriteria {
-
-		private String clientId;
-		private String suffix;
-
-		public MatchBySuffixCriteria(String clientId, String suffix) {
-			this.clientId = clientId;
-			this.suffix = suffix;
-		}
+	private class SummaryMessageCriteria implements MessageCriteria {
 
 		public boolean test(Message message) {
-			boolean result = false;
-			if (message.getSource() != null) {
-				if (clientId != null) {
-					result = message.getSource().toString().equals(clientId + suffix);
-				} else {
-					result = message.getSource().toString().endsWith(suffix);
-				}
+			if (message.getSource() == null) {
+				return false;
 			}
-			return result;
+			return message.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY);
+		}
+	}
+
+	private class DetailMessageCriteria implements MessageCriteria {
+
+		public boolean test(Message message) {
+			if (message.getSource() == null) {
+				return false;
+			}
+			return message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY);
 		}
 	}
 
 	private class UserMessageCriteria implements MessageCriteria {
 
-		private String clientId;
-
-		public UserMessageCriteria(String clientId) {
-			this.clientId = clientId;
-		}
-
 		public boolean test(Message message) {
-			boolean result = false;
-			if (clientId != null) {
-				result = new MatchBySuffixCriteria(clientId, "").test(message);
-			} else {
-				result = (!new MatchBySuffixCriteria(clientId, SUMMARY_MESSAGE_KEY).test(message))
-						&& (!new MatchBySuffixCriteria(clientId, DETAIL_MESSAGE_KEY).test(message));
+			if (message.getSource() == null) {
+				return true;
 			}
-			return result;
+			return !message.getSource().toString().endsWith(SUMMARY_MESSAGE_KEY)
+					&& !message.getSource().toString().endsWith(DETAIL_MESSAGE_KEY);
 		}
 	}
 
