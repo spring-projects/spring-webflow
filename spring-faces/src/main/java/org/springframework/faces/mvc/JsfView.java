@@ -32,6 +32,7 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.faces.webflow.FacesContextHelper;
 import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -55,7 +56,8 @@ public class JsfView extends AbstractUrlBasedView {
 	protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		FacesContext facesContext = createFacesContext(request, response);
+		FacesContextHelper facesContextHelper = new FacesContextHelper();
+		FacesContext facesContext = facesContextHelper.getFacesContext(getServletContext(), request, response);
 
 		populateRequestMap(facesContext, model);
 
@@ -83,8 +85,7 @@ public class JsfView extends AbstractUrlBasedView {
 			facesLifecycle.render(facesContext);
 		} finally {
 			logger.debug("View rendering complete");
-			facesContext.responseComplete();
-			facesContext.release();
+			facesContextHelper.releaseIfNecessary();
 		}
 	}
 
