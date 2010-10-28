@@ -26,8 +26,6 @@ public class TestBean {
 
 	private Set addresses = new HashSet();
 
-	private int count;
-
 	public TestBean() {
 
 	}
@@ -64,13 +62,4 @@ public class TestBean {
 	public void setAddresses(Set addresses) {
 		this.addresses = addresses;
 	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void incrementCount() {
-		this.count++;
-	}
-
 }

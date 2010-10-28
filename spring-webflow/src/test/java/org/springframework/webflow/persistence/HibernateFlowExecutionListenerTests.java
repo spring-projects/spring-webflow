@@ -122,6 +122,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
+		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testFlowCommitsAfterMultipleRequests() {
@@ -152,8 +153,11 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.sessionEnding(context, flowSession, "success", null);
 		hibernateListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have three rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
 		assertSessionNotBound();
+		assertFalse(flowSession.getScope().contains("hibernate.session"));
+
 	}
 
 	public void testCancelEndState() {
@@ -176,6 +180,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.sessionEnded(context, flowSession, "cancel", null);
 		assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
+		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testNoCommitAttributeSetOnEndState() {
@@ -193,8 +198,10 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.sessionEnding(context, flowSession, "success", null);
 		hibernateListener.sessionEnded(context, flowSession, "cancel", null);
 		assertEquals("Table should only have three rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
+		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
 		assertSessionNotBound();
+		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testExceptionThrown() {

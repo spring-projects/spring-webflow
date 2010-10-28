@@ -95,16 +95,13 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
-		boolean reusePersistenceContext = false;
-		if (isParentPersistenceContext(session)) {
-			if (isPersistenceContext(session.getDefinition())) {
-				setEntityManager(session, getEntityManager(session.getParent()));
-				reusePersistenceContext = true;
-			} else {
-				unbind(getEntityManager(session.getParent()));
+		if (!session.isRoot()) {
+			FlowSession parent = session.getParent();
+			if (isPersistenceContext(parent.getDefinition())) {
+				unbind(getEntityManager(parent));
 			}
 		}
-		if (isPersistenceContext(session.getDefinition()) && (!reusePersistenceContext)) {
+		if (isPersistenceContext(session.getDefinition())) {
 			EntityManager em = entityManagerFactory.createEntityManager();
 			session.getScope().put(PERSISTENCE_CONTEXT_ATTRIBUTE, em);
 			bind(em);
@@ -124,9 +121,6 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output) {
-		if (isParentPersistenceContext(session)) {
-			return;
-		}
 		if (isPersistenceContext(session.getDefinition())) {
 			final EntityManager em = getEntityManager(session);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
@@ -143,9 +137,10 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 	}
 
 	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
-		if (isParentPersistenceContext(session)) {
-			if (!isPersistenceContext(session.getDefinition())) {
-				bind(getEntityManager(session.getParent()));
+		if (!session.isRoot()) {
+			FlowSession parent = session.getParent();
+			if (isPersistenceContext(parent.getDefinition())) {
+				bind(getEntityManager(parent));
 			}
 		}
 	}
@@ -164,16 +159,8 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
 	}
 
-	private boolean isParentPersistenceContext(FlowSession flowSession) {
-		return ((!flowSession.isRoot()) && isPersistenceContext(flowSession.getParent().getDefinition()));
-	}
-
 	private EntityManager getEntityManager(FlowSession session) {
 		return (EntityManager) session.getScope().get(PERSISTENCE_CONTEXT_ATTRIBUTE);
-	}
-
-	private void setEntityManager(FlowSession session, EntityManager em) {
-		session.getScope().put(PERSISTENCE_CONTEXT_ATTRIBUTE, em);
 	}
 
 	private void bind(EntityManager em) {
