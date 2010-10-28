@@ -2,6 +2,10 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.3.0.RELEASE 
+-----------------------------------------------
+
+
 Changes in version 2.2.1.RELEASE (Oct 28, 2010)
 -----------------------------------------------
 [SWF-1406] - Regression in showing global messages only
