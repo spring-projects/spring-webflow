@@ -2,6 +2,14 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.2.1.RELEASE (Oct 28, 2010)
+-----------------------------------------------
+[SWF-1406] - Regression in showing global messages only
+[SWF-1407] - Webflow 2.2 problem when using MVC view resolver
+[SWF-1159] - SQL injection in example application
+[SWF-1411] - Documentation for JSF integration references deprecated ResourceServlet
+[SWF-1409] - Reference Documentation for Spring Web Flow 2.2 needs to be fixed to correct versions
+
 Changes in version 2.2.0.RELEASE (Oct 11, 2010)
 -----------------------------------------------
 [SWF-1374] - Update documentation for 2.2.0 release

@@ -12,8 +12,10 @@ DIRECTORIES
 
 4. spring-webflow - The Spring Web Flow project.  Contains the Web Flow engine.
 
-5. spring-js - Spring's JavaScript abstraction framework, which includes Dojo integration.
+5. spring-js - Server side support for Spring's JavaScript abstraction framework.
 
-6. spring-faces - Spring's JavaServerFaces integration module, which includes Web Flow & JavaScript support.
+6. spring-js-resources - Client-side resources for Spring's JavaScript abstraction framework including the Dojo Toolkit.
 
-7. spring-webflow-samples - The Spring Web Flow sample applications, illustrating the framework in action.
+7. spring-faces - Spring's JavaServerFaces integration module, which includes Web Flow & JavaScript support.
+
+8. spring-webflow-samples - The Spring Web Flow sample applications, illustrating the framework in action.
