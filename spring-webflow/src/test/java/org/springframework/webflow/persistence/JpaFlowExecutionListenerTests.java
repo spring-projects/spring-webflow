@@ -1,15 +1,15 @@
 package org.springframework.webflow.persistence;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -72,7 +72,6 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have two rows", 2, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
-		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testFlowCommitsAfterMultipleRequests() {
@@ -103,10 +102,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		jpaListener.sessionEnding(context, flowSession, "success", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have three rows", 3, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
 		assertSessionNotBound();
-		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testCancelEndState() {
@@ -129,7 +126,6 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have two rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionNotBound();
-		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testNoCommitAttributeSetOnEndState() {
@@ -147,10 +143,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		jpaListener.sessionEnding(context, flowSession, "cancel", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
 		assertEquals("Table should only have three rows", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
-		assertFalse(flowSession.getScope().contains("hibernate.session"));
 
 		assertSessionNotBound();
-		assertFalse(flowSession.getScope().contains("hibernate.session"));
 	}
 
 	public void testExceptionThrown() {
@@ -190,33 +184,13 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		return dataSource;
 	}
 
-	private void populateDataBase(DataSource dataSource) {
-		Connection connection = null;
-		try {
-			connection = dataSource.getConnection();
-			connection.createStatement().execute("drop table T_ADDRESS if exists;");
-			connection.createStatement().execute("drop table T_BEAN if exists;");
-			connection.createStatement().execute(
-					"create table T_BEAN (ID integer primary key, NAME varchar(50) not null);");
-			connection.createStatement().execute(
-					"create table T_ADDRESS (ID integer primary key, BEAN_ID integer, VALUE varchar(50) not null);");
-			connection
-					.createStatement()
-					.execute(
-							"alter table T_ADDRESS add constraint FK_BEAN_ADDRESS foreign key (BEAN_ID) references T_BEAN(ID) on delete cascade");
-			connection.createStatement().execute("insert into T_BEAN (ID, NAME) values (0, 'Ben Hale');");
-			connection.createStatement().execute(
-					"insert into T_ADDRESS (ID, BEAN_ID, VALUE) values (0, 0, 'Melbourne')");
-		} catch (SQLException e) {
-			throw new RuntimeException("SQL exception occurred acquiring connection", e);
-		} finally {
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
+	private void populateDataBase(DataSource dataSource) throws Exception {
+		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
+		databasePopulator.addScript(new ClassPathResource("test-data.sql", this.getClass()));
+		DataSourceInitializer initializer = new DataSourceInitializer();
+		initializer.setDataSource(dataSource);
+		initializer.setDatabasePopulator(databasePopulator);
+		initializer.afterPropertiesSet();
 	}
 
 	private EntityManagerFactory getEntityManagerFactory(DataSource dataSource) throws Exception {

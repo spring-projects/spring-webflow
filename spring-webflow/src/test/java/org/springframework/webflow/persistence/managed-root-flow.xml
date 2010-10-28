@@ -6,35 +6,29 @@
 	<persistence-context/>
 
 	<on-start>
-		<evaluate expression="loadTestBean" />
+		<evaluate expression="incrementCountAction" />
 	</on-start>
 	
 	<view-state id="view">
 		<transition on="view2" to="view2"/>
-		<transition on="subflow" to="subflow"/>
+		<transition on="managed" to="managed"/>
 		<transition on="notmanaged" to="notmanaged"/>
-		<transition on="cancel" to="cancel"/>
-		<transition on="finish" to="finish"/>
 	</view-state>
 	
-	<subflow-state id="subflow" subflow="foo">
+	<subflow-state id="managed" subflow="managed-child-flow">
 		<transition on="finish" to="view2">
-			<evaluate expression="loadTestBean" />
+			<evaluate expression="incrementCountAction" />
+			<evaluate expression="assertCountAction.execute(flowRequestContext,3)" />
 		</transition>
 	</subflow-state>
 
-	<subflow-state id="notmanaged" subflow="notmanaged">
+	<subflow-state id="notmanaged" subflow="notmanaged-child-flow">
 		<transition on="finish" to="view2">
-			<evaluate expression="loadTestBean" />
+			<evaluate expression="incrementCountAction" />
+			<evaluate expression="assertCountAction.execute(flowRequestContext,2)" />
 		</transition>
 	</subflow-state>
-
 	
-	<view-state id="view2">
-		<transition on="finish" to="finish"/>
-	</view-state>
+	<view-state id="view2"/>
 	
-	<end-state id="finish" commit="true"/>
-	<end-state id="cancel"/>
-		
 </flow>

@@ -16,6 +16,9 @@
 			<basic name="name">
 				<column name="NAME" />
 			</basic>
+			<basic name="count">
+				<column name="counter" />
+			</basic>
 			<one-to-many name="addresses" target-entity="TestAddress">
 				<join-column name="BEAN_ID"/>
 			</one-to-many>
