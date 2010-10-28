@@ -105,15 +105,18 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
-		if (!session.isRoot()) {
-			FlowSession parent = session.getParent();
-			if (isPersistenceContext(parent.getDefinition())) {
-				unbind(getHibernateSession(parent));
+		boolean reusePersistenceContext = false;
+		if (isParentPersistenceContext(session)) {
+			if (isPersistenceContext(session.getDefinition())) {
+				setHibernateSession(session, getHibernateSession(session.getParent()));
+				reusePersistenceContext = true;
+			} else {
+				unbind(getHibernateSession(session.getParent()));
 			}
 		}
-		if (isPersistenceContext(session.getDefinition())) {
+		if (isPersistenceContext(session.getDefinition()) && (!reusePersistenceContext)) {
 			Session hibernateSession = createSession(context);
-			session.getScope().put(PERSISTENCE_CONTEXT_ATTRIBUTE, hibernateSession);
+			setHibernateSession(session, hibernateSession);
 			bind(hibernateSession);
 		}
 	}
@@ -133,6 +136,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output) {
+		if (isParentPersistenceContext(session)) {
+			return;
+		}
 		if (isPersistenceContext(session.getDefinition())) {
 			final Session hibernateSession = getHibernateSession(session);
 			Boolean commitStatus = session.getState().getAttributes().getBoolean("commit");
@@ -151,10 +157,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
-		if (!session.isRoot()) {
-			FlowSession parent = session.getParent();
-			if (isPersistenceContext(parent.getDefinition())) {
-				bind(getHibernateSession(parent));
+		if (isParentPersistenceContext(session)) {
+			if (!isPersistenceContext(session.getDefinition())) {
+				bind(getHibernateSession(session.getParent()));
 			}
 		}
 	}
@@ -173,6 +178,10 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 		return flow.getAttributes().contains(PERSISTENCE_CONTEXT_ATTRIBUTE);
 	}
 
+	private boolean isParentPersistenceContext(FlowSession flowSession) {
+		return ((!flowSession.isRoot()) && isPersistenceContext(flowSession.getParent().getDefinition()));
+	}
+
 	private Session createSession(RequestContext context) {
 		Session session = (entityInterceptor != null ? sessionFactory.openSession(entityInterceptor) : sessionFactory
 				.openSession());
@@ -182,6 +191,10 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 
 	private Session getHibernateSession(FlowSession session) {
 		return (Session) session.getScope().get(PERSISTENCE_CONTEXT_ATTRIBUTE);
+	}
+
+	private void setHibernateSession(FlowSession session, Session hibernateSession) {
+		session.getScope().put(PERSISTENCE_CONTEXT_ATTRIBUTE, hibernateSession);
 	}
 
 	private void bind(Session session) {
