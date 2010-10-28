@@ -41,10 +41,13 @@ public class JpaBookingService implements BookingService {
     @SuppressWarnings("unchecked")
     public List<Hotel> findHotels(SearchCriteria criteria) {
 	String pattern = getSearchPattern(criteria);
-	return em.createQuery(
-		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
-			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
-		criteria.getPageSize()).setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
+	int startIndex = criteria.getPage() * criteria.getPageSize();
+	return em
+		.createQuery(
+			"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+				+ " or lower(h.zip) like :pattern or lower(h.address) like :pattern")
+		.setParameter("pattern", pattern).setFirstResult(startIndex).setMaxResults(criteria.getPageSize())
+		.getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -73,15 +76,15 @@ public class JpaBookingService implements BookingService {
 
     private String getSearchPattern(SearchCriteria criteria) {
 	if (StringUtils.hasText(criteria.getSearchString())) {
-	    return "'%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	    return "%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%";
 	} else {
-	    return "'%'";
+	    return "%";
 	}
     }
 
     private User findUser(String username) {
-	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
-		username).getSingleResult();
+	return (User) em.createQuery("select u from User u where u.username = :username")
+		.setParameter("username", username).getSingleResult();
     }
 
 }

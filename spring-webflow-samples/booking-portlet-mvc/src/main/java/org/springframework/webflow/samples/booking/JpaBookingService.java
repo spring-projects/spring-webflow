@@ -28,8 +28,8 @@ public class JpaBookingService implements BookingService {
 
     @Transactional(readOnly = true)
     public User findUser(String username) {
-	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
-		username).getSingleResult();
+	return (User) em.createQuery("select u from User u where u.username = :username")
+		.setParameter("username", username).getSingleResult();
     }
 
     @Transactional(readOnly = true)
@@ -47,10 +47,12 @@ public class JpaBookingService implements BookingService {
     @SuppressWarnings("unchecked")
     public List<Hotel> findHotels(SearchCriteria criteria) {
 	String pattern = getSearchPattern(criteria);
-	return em.createQuery(
-		"select h from Hotel h where lower(h.name) like " + pattern + " or lower(h.city) like " + pattern
-			+ " or lower(h.zip) like " + pattern + " or lower(h.address) like " + pattern).setMaxResults(
-		criteria.getPageSize()).setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
+	return em
+		.createQuery(
+			"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+				+ " or lower(h.zip) like :pattern or lower(h.address) like :pattern")
+		.setParameter("pattern", pattern).setMaxResults(criteria.getPageSize())
+		.setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
     }
 
     @Transactional(readOnly = true)
@@ -77,9 +79,9 @@ public class JpaBookingService implements BookingService {
 
     private String getSearchPattern(SearchCriteria criteria) {
 	if (StringUtils.hasText(criteria.getSearchString())) {
-	    return "'%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%'";
+	    return "%" + criteria.getSearchString().toLowerCase().replace('*', '%') + "%";
 	} else {
-	    return "'%'";
+	    return "%";
 	}
     }
 
