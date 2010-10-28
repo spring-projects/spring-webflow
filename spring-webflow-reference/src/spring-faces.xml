@@ -11,7 +11,7 @@
             2.2 the JSF integration is supported with JSF 1.2 and JSF 2.0 including Sun Mojarra and Apache 
             MyFaces. Please, note however that JSF 2 partial state saving is not yet supported with 
             Apache MyFaces and needs to be disabled with the <code>javax.faces.PARTIAL_STATE_SAVING</code> 
-            context parameter in <code>web.xml</code>
+            context parameter in <code>web.xml</code>.
         </para>
         <para>
         	Spring Web Flow provides a Spring Security tag library for JSF 2 and JSF 1.2 environments.
@@ -24,6 +24,12 @@
             be upgraded to JSF 2.0 in favor of 3rd party component libraries such as PrimeFaces 
             and RichFaces. The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution
             is built on JSF 2 and PrimeFaces components. 
+        </para>
+        <para>
+        	Spring Web Flow also supports using JSF in a portlet environment. 
+        	Spring Web Flow's portlet integration supports Portlets API 2.0 and JSF 1.2 only. 
+        	Currently JSF 2 is not supported in combination with portlets.
+        	See <xref linkend="portlet"/> for more on Spring Web Flow's portlet integration.
         </para>
     </sect1>
     <sect1 id="spring-faces-integration">
@@ -100,9 +106,13 @@
 </servlet-mapping>]]>
         </programlisting>
         <para>
-            When using the Spring Faces components (JSF 1.2 only), you also need to configure a servlet for serving
+            When using the JSF 1.2 Spring Faces components, you also need to configure a servlet for serving
             CSS and JavaScript resources. This servlet must be mapped
             to /resources/* in order for the URL's rendered by the components to function correctly.
+        </para>
+        <para>
+			Note that while the <code>ResourceServlet</code> is deprected in favor of the Spring 3 <code>resources</code>
+            element, it is still required for use with JSF 1.2 Spring Faces components.
         </para>
         <programlisting language="xml"><![CDATA[
 <!-- Serves static resource content from .jar files such as spring-faces.jar -->

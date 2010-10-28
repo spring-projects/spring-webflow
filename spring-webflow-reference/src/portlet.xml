@@ -7,7 +7,7 @@
 		<title>Introduction</title>
 		<para>
 			This chapter shows how to use Web Flow in a Portlet environment.
-			Web Flow has full support for JSR-168 portlets.
+			Spring Web Flow requires Portlet API 2.0 to run with. 
 			The <code>booking-portlet-mvc</code> sample application is a good reference for using Web Flow within a portlet.
 			This application is a simplified travel site that allows users to search for and book hotel rooms.
 		</para>
@@ -16,7 +16,7 @@
 		<title>Configuring web.xml and portlet.xml</title>
 		<para>
 			The configuration for a portlet depends on the portlet container used.
-			The sample applications, included with Web Flow, are both configured to use <ulink url="http://portals.apache.org/pluto/">Apache Pluto</ulink>, the JSR-168 reference implementation.
+			The sample applications, included with Web Flow, are both configured to use <ulink url="http://portals.apache.org/pluto/">Apache Pluto</ulink>.
 		</para>
 		<para>
 			In general, the configuration requires adding a servlet mapping in the <code>web.xml</code> file to dispatch request to the portlet container.
