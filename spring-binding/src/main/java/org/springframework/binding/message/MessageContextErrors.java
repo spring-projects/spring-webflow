@@ -74,9 +74,9 @@ public class MessageContextErrors extends AbstractErrors {
 	}
 
 	public void reject(String errorCode, Object[] errorArgs, String defaultMessage) {
-		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(errorCode, defaultMessage);
-		messageContext.addMessage(new MessageBuilder().error().codes(messageCodes).args(errorArgs).defaultText(
-				defaultMessage).build());
+		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(errorCode, objectName);
+		messageContext.addMessage(new MessageBuilder().error().codes(messageCodes).args(errorArgs)
+				.defaultText(defaultMessage).build());
 	}
 
 	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
@@ -88,8 +88,13 @@ public class MessageContextErrors extends AbstractErrors {
 		} else {
 			fieldType = null;
 		}
-		String[] messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(errorCode, defaultMessage, field,
-				fieldType);
+		String[] messageCodes;
+		if (StringUtils.hasLength(field)) {
+			messageCodes = bindingErrorMessageCodesResolver
+					.resolveMessageCodes(errorCode, objectName, field, fieldType);
+		} else {
+			messageCodes = bindingErrorMessageCodesResolver.resolveMessageCodes(errorCode, objectName);
+		}
 		messageContext.addMessage(new MessageBuilder().error().source(field).codes(messageCodes).args(errorArgs)
 				.defaultText(defaultMessage).build());
 	}
