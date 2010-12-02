@@ -30,6 +30,9 @@ import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoun
 /**
  * The default flow execution repository implementation. Takes <i>one to {@link #getMaxSnapshots() max}</i> flow
  * execution snapshots, where each snapshot represents a copy of a {@link FlowExecution} taken at a point in time.
+ * Snapshots are created via a {@link FlowExecutionSnapshotFactory} and that may or may not involve creating a copy of a
+ * flow execution through Java serialization. In particular when the flow-execution-repository element is configured
+ * with max-execution-snapshots="0", creating snapshot copies is effectively turned off.
  * <p>
  * The set of active flow executions are managed by a {@link ConversationManager} implementation, which this repository
  * delegates to.

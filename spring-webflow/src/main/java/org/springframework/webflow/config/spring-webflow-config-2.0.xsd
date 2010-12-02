@@ -311,7 +311,8 @@ The maximum number of persistent flow executions allowed per user session.  The 
 			<xsd:annotation>
 				<xsd:documentation>
 				<![CDATA[
-The maximum number of history snapshots allowed per flow execution.  The default is 30.
+The maximum number of history snapshots allowed per flow execution.  The default is 30. 
+Setting this value to 0 disables the creation of snapshot copies altogether.  
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
