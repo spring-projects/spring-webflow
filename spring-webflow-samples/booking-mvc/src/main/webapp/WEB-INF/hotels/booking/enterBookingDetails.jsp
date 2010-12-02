@@ -22,7 +22,7 @@
 			<div class="error">
 				<spring:bind path="booking.*">
 					<c:forEach items="${status.errorMessages}" var="error">
-						<c:out value="${error}"/><br>
+						<span><c:out value="${error}"/></span><br>
 					</c:forEach>
 				</spring:bind>
 			</div>

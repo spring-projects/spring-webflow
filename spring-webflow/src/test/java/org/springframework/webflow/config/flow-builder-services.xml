@@ -4,16 +4,18 @@
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
 	
 	<webflow:flow-builder-services id="flowBuilderServicesDefault"/>
 	
 	<webflow:flow-builder-services id="flowBuilderServicesAllCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
-		conversion-service="customConversionService" development="true" />
+		conversion-service="customConversionService" 
+		validator="customValidator"
+		development="true" />
 
 	<webflow:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService" />
@@ -27,5 +29,7 @@
 	<bean id="customViewFactoryCreator" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestViewFactoryCreator"/>
 	
 	<bean id="customConversionService" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestConversionService"/>
+	
+	<bean id="customValidator" class="org.springframework.webflow.config.EmptySpringValidator" />
 	
 </beans>

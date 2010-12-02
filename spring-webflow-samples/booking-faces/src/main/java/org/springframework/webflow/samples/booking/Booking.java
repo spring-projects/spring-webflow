@@ -38,17 +38,12 @@ public class Booking implements Serializable {
 
     private Hotel hotel;
 
-    @NotNull
     private Date checkinDate;
 
-    @Future
-    @NotNull
     private Date checkoutDate;
 
-    @Pattern(regexp = "[0-9]{16}", message = "is not a 16 digit card number")
     private String creditCard;
 
-    @NotEmpty
     private String creditCardName;
 
     private int creditCardExpiryMonth;
@@ -68,6 +63,7 @@ public class Booking implements Serializable {
 	this.hotel = hotel;
 	this.user = user;
 	Calendar calendar = Calendar.getInstance();
+	calendar.add(Calendar.DAY_OF_MONTH, 1);
 	setCheckinDate(calendar.getTime());
 	calendar.add(Calendar.DAY_OF_MONTH, 1);
 	setCheckoutDate(calendar.getTime());
@@ -99,6 +95,8 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
+    @Future
+    @NotNull
     public Date getCheckinDate() {
 	return checkinDate;
     }
@@ -127,6 +125,8 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
+    @Future
+    @NotNull
     public Date getCheckoutDate() {
 	return checkoutDate;
     }
@@ -135,6 +135,7 @@ public class Booking implements Serializable {
 	this.checkoutDate = checkoutDate;
     }
 
+    @Pattern(regexp = "[0-9]{16}", message = "{invalidCreditCardPattern}")
     public String getCreditCard() {
 	return creditCard;
     }
@@ -166,6 +167,7 @@ public class Booking implements Serializable {
 	this.beds = beds;
     }
 
+    @NotEmpty
     public String getCreditCardName() {
 	return creditCardName;
     }
@@ -202,11 +204,11 @@ public class Booking implements Serializable {
     public void validateEnterBookingDetails(ValidationContext context) {
 	MessageContext messages = context.getMessageContext();
 	if (checkinDate.before(today())) {
-	    messages.addMessage(new MessageBuilder().error().source("checkinDate").code(
-		    "booking.checkinDate.beforeToday").build());
+	    messages.addMessage(new MessageBuilder().error().source("checkinDate")
+		    .code("booking.checkinDate.beforeToday").build());
 	} else if (checkoutDate.before(checkinDate)) {
-	    messages.addMessage(new MessageBuilder().error().source("checkoutDate").code(
-		    "booking.checkoutDate.beforeCheckinDate").build());
+	    messages.addMessage(new MessageBuilder().error().source("checkoutDate")
+		    .code("booking.checkoutDate.beforeCheckinDate").build());
 	}
     }
 

@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MessageCodesResolver;
+import org.springframework.validation.Validator;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
@@ -169,7 +170,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
 		if (useSpringBeanBinding) {
 			expressionParser = new BeanWrapperExpressionParser(conversionService);
 		}
@@ -181,6 +182,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		if (StringUtils.hasText(fieldMarkerPrefix)) {
 			viewFactory.setFieldMarkerPrefix(fieldMarkerPrefix);
 		}
+		viewFactory.setValidator(validator);
 		return viewFactory;
 	}
 

@@ -9,8 +9,16 @@
 	<portlet:param name="execution" value="${flowExecutionKey}" />
 </portlet:actionURL>
 <form:form id="booking" modelAttribute="booking" action="${actionUrl}">
-	<form:errors path="*" cssClass="errors" />
-	<fieldset>
+		<spring:hasBindErrors name="booking">
+			<div class="error">
+				<spring:bind path="booking.*">
+					<c:forEach items="${status.errorMessages}" var="error">
+						<span><c:out value="${error}"/></span><br>
+					</c:forEach>
+				</spring:bind>
+			</div>
+		</spring:hasBindErrors>
+		<fieldset>
 		<table>
 			<tr class="field">
 				<td class="label">Name:</td>

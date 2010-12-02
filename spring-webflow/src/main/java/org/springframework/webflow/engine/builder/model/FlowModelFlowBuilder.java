@@ -68,9 +68,9 @@ import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.engine.VariableValueFactory;
 import org.springframework.webflow.engine.ViewVariable;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
+import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
-import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.engine.builder.support.AbstractFlowBuilder;
 import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractMappingModel;
@@ -372,8 +372,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				if (isFlowInDevelopment()) {
 					builder.addPropertyValue("cacheSeconds", "0");
 				}
-				flowContext.registerBeanDefinition(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME, builder
-						.getBeanDefinition());
+				flowContext.registerBeanDefinition(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME,
+						builder.getBeanDefinition());
 			}
 		}
 	}
@@ -537,8 +537,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 		MutableAttributeMap attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
-			attributes.put("model", getLocalContext().getExpressionParser().parseExpression(state.getModel(),
-					new FluentParserContext().evaluate(RequestContext.class)));
+			attributes.put(
+					"model",
+					getLocalContext().getExpressionParser().parseExpression(state.getModel(),
+							new FluentParserContext().evaluate(RequestContext.class)));
 		}
 		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
@@ -626,7 +628,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private ViewFactory createViewFactory(Expression viewId, BinderModel binderModel) {
 		BinderConfiguration binderConfiguration = createBinderConfiguration(binderModel);
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
-				getLocalContext().getExpressionParser(), getLocalContext().getConversionService(), binderConfiguration);
+				getLocalContext().getExpressionParser(), getLocalContext().getConversionService(), binderConfiguration,
+				getLocalContext().getValidator());
 	}
 
 	private BinderConfiguration createBinderConfiguration(BinderModel binderModel) {
@@ -868,8 +871,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Action parseRenderAction(RenderModel render) {
 		String[] fragmentExpressionStrings = StringUtils.commaDelimitedListToStringArray(render.getFragments());
 		fragmentExpressionStrings = StringUtils.trimArrayElements(fragmentExpressionStrings);
-		ParserContext context = new FluentParserContext().template().evaluate(RequestContext.class).expectResult(
-				String.class);
+		ParserContext context = new FluentParserContext().template().evaluate(RequestContext.class)
+				.expectResult(String.class);
 		Expression[] fragments = new Expression[fragmentExpressionStrings.length];
 		for (int i = 0; i < fragmentExpressionStrings.length; i++) {
 			String fragment = fragmentExpressionStrings[i];

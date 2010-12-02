@@ -18,6 +18,7 @@ package org.springframework.webflow.engine.builder;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ApplicationContext;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 
@@ -69,6 +70,12 @@ public interface FlowBuilderContext {
 	 * @return the expression parser
 	 */
 	public ExpressionParser getExpressionParser();
+
+	/**
+	 * Returns the Validator instance to use for validating a model.
+	 * @return the validator
+	 */
+	public Validator getValidator();
 
 	/**
 	 * Returns the application context hosting the flow system.

@@ -45,6 +45,7 @@ import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.MessageCodesResolver;
+import org.springframework.validation.Validator;
 import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
@@ -77,6 +78,8 @@ public abstract class AbstractMvcView implements View {
 	private ExpressionParser expressionParser;
 
 	private ConversionService conversionService;
+
+	private Validator validator;
 
 	private String fieldMarkerPrefix = "_";
 
@@ -116,6 +119,10 @@ public abstract class AbstractMvcView implements View {
 	 */
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;
+	}
+
+	public void setValidator(Validator validator) {
+		this.validator = validator;
 	}
 
 	/**
@@ -534,12 +541,12 @@ public abstract class AbstractMvcView implements View {
 
 	private Map flowScopes() {
 		if (requestContext.getCurrentState().isViewState()) {
-			return requestContext.getConversationScope().union(requestContext.getFlowScope()).union(
-					requestContext.getViewScope()).union(requestContext.getFlashScope()).union(
-					requestContext.getRequestScope()).asMap();
+			return requestContext.getConversationScope().union(requestContext.getFlowScope())
+					.union(requestContext.getViewScope()).union(requestContext.getFlashScope())
+					.union(requestContext.getRequestScope()).asMap();
 		} else {
-			return requestContext.getConversationScope().union(requestContext.getFlowScope()).union(
-					requestContext.getFlashScope()).union(requestContext.getRequestScope()).asMap();
+			return requestContext.getConversationScope().union(requestContext.getFlowScope())
+					.union(requestContext.getFlashScope()).union(requestContext.getRequestScope()).asMap();
 		}
 	}
 
@@ -605,8 +612,8 @@ public abstract class AbstractMvcView implements View {
 		String field = error.getMapping().getTargetExpression().getExpressionString();
 		Class fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
 		String[] messageCodes = messageCodesResolver.resolveMessageCodes(error.getCode(), model, field, fieldType);
-		return new MessageBuilder().error().source(field).codes(messageCodes).resolvableArg(field).defaultText(
-				error.getCode() + " on " + field).build();
+		return new MessageBuilder().error().source(field).codes(messageCodes).resolvableArg(field)
+				.defaultText(error.getCode() + " on " + field).build();
 	}
 
 	private Boolean getValidateAttribute(TransitionDefinition transition) {
@@ -621,8 +628,10 @@ public abstract class AbstractMvcView implements View {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Validating model");
 		}
-		new ValidationHelper(model, requestContext, eventId, getModelExpression().getExpressionString(),
-				expressionParser, messageCodesResolver, mappingResults).validate();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, getModelExpression()
+				.getExpressionString(), expressionParser, messageCodesResolver, mappingResults);
+		helper.setValidator(validator);
+		helper.validate();
 	}
 
 	private static class PropertyNotFoundError implements MappingResultsCriteria {

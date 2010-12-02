@@ -15,13 +15,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * A Hotel Booking made by a User.
  */
 @Entity
+@BookingDateRange
 public class Booking implements Serializable {
     private Long id;
 
@@ -49,6 +53,7 @@ public class Booking implements Serializable {
 
     public Booking() {
 	Calendar calendar = Calendar.getInstance();
+	calendar.add(Calendar.DAY_OF_MONTH, 1);
 	setCheckinDate(calendar.getTime());
 	calendar.add(Calendar.DAY_OF_MONTH, 1);
 	setCheckoutDate(calendar.getTime());
@@ -82,6 +87,8 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
+    @NotNull
+    @Future
     public Date getCheckinDate() {
 	return checkinDate;
     }
@@ -110,6 +117,8 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
+    @NotNull
+    @Future
     public Date getCheckoutDate() {
 	return checkoutDate;
     }
@@ -118,6 +127,7 @@ public class Booking implements Serializable {
 	this.checkoutDate = checkoutDate;
     }
 
+    @NotEmpty
     public String getCreditCard() {
 	return creditCard;
     }
@@ -149,6 +159,7 @@ public class Booking implements Serializable {
 	this.beds = beds;
     }
 
+    @NotEmpty
     public String getCreditCardName() {
 	return creditCardName;
     }

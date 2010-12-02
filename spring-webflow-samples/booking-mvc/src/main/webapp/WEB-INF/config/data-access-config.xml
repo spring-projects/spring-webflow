@@ -22,8 +22,13 @@
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 		</property>
+		<property name="jpaProperties">
+			<value>
+				hibernate.session_factory_name=mySessionFactory
+			</value>
+		</property>
 	</bean>
-
+	
 	<!-- Deploys a in-memory "booking" datasource populated -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />

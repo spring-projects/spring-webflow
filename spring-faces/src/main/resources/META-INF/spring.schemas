@@ -1,1 +1,3 @@
 http\://www.springframework.org/schema/faces/spring-faces-2.0.xsd=org/springframework/faces/config/spring-faces-2.0.xsd
+http\://www.springframework.org/schema/faces/spring-faces-2.2.xsd=org/springframework/faces/config/spring-faces-2.2.xsd
+http\://www.springframework.org/schema/faces/spring-faces.xsd=org/springframework/faces/config/spring-faces-2.2.xsd

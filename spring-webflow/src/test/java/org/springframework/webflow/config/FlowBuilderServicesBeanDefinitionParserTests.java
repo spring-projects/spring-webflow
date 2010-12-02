@@ -14,6 +14,7 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -35,6 +36,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof DefaultConversionService);
+		assertNull(builderServices.getValidator());
 		assertFalse(builderServices.getDevelopment());
 	}
 
@@ -44,6 +46,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getValidator() instanceof EmptySpringValidator);
 		assertTrue(builderServices.getDevelopment());
 	}
 
@@ -54,13 +57,14 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 		assertTrue(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
+		assertNull(builderServices.getValidator());
 		assertFalse(builderServices.getDevelopment());
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
 		public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-				ConversionService conversionService, BinderConfiguration binderConfiguration) {
+				ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

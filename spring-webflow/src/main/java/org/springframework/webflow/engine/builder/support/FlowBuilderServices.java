@@ -22,6 +22,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
@@ -66,6 +67,12 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 	private ExpressionParser expressionParser;
 
 	/**
+	 * A Validator instance to use for validating a model declared on a view state. A JSR-303 validation adapter is
+	 * installed by default if a JSR-303 provider is present on the classpath.
+	 */
+	private Validator validator;
+
+	/**
 	 * The Spring application context that provides access to the services of the application.
 	 */
 	private ApplicationContext applicationContext;
@@ -105,6 +112,14 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 
 	public void setExpressionParser(ExpressionParser expressionParser) {
 		this.expressionParser = expressionParser;
+	}
+
+	public Validator getValidator() {
+		return validator;
+	}
+
+	public void setValidator(Validator validator) {
+		this.validator = validator;
 	}
 
 	public boolean getDevelopment() {

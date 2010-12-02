@@ -16,17 +16,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.binding.message.MessageBuilder;
-import org.springframework.binding.message.MessageContext;
-import org.springframework.binding.validation.ValidationContext;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * A Hotel Booking made by a User.
  */
 @Entity
+@BookingDateRange
 public class Booking implements Serializable {
+
     private Long id;
 
     private User user;
@@ -55,6 +57,7 @@ public class Booking implements Serializable {
 
     public Booking() {
 	Calendar calendar = Calendar.getInstance();
+	calendar.add(Calendar.DAY_OF_MONTH, 1);
 	setCheckinDate(calendar.getTime());
 	calendar.add(Calendar.DAY_OF_MONTH, 1);
 	setCheckoutDate(calendar.getTime());
@@ -92,6 +95,8 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
+    @NotNull
+    @Future
     public Date getCheckinDate() {
 	return checkinDate;
     }
@@ -120,6 +125,8 @@ public class Booking implements Serializable {
 
     @Basic
     @Temporal(TemporalType.DATE)
+    @NotNull
+    @Future
     public Date getCheckoutDate() {
 	return checkoutDate;
     }
@@ -128,6 +135,7 @@ public class Booking implements Serializable {
 	this.checkoutDate = checkoutDate;
     }
 
+    @NotEmpty
     public String getCreditCard() {
 	return creditCard;
     }
@@ -159,6 +167,7 @@ public class Booking implements Serializable {
 	this.beds = beds;
     }
 
+    @NotEmpty
     public String getCreditCardName() {
 	return creditCardName;
     }
@@ -190,17 +199,6 @@ public class Booking implements Serializable {
 
     public void setAmenities(Set<Amenity> amenities) {
 	this.amenities = amenities;
-    }
-
-    public void validateEnterBookingDetails(ValidationContext context) {
-	MessageContext messages = context.getMessageContext();
-	if (checkinDate.before(today())) {
-	    messages.addMessage(new MessageBuilder().error().source("checkinDate").code(
-		    "booking.checkinDate.beforeToday").build());
-	} else if (checkoutDate.before(checkinDate)) {
-	    messages.addMessage(new MessageBuilder().error().source("checkoutDate").code(
-		    "booking.checkoutDate.beforeCheckinDate").build());
-	}
     }
 
     private Date today() {

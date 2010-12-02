@@ -15,7 +15,11 @@
  */
 package org.springframework.faces.webflow;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.js.ajax.AjaxHandler;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 
 /**
@@ -37,6 +41,11 @@ public class JsfFlowHandlerAdapter extends FlowHandlerAdapter {
 				setAjaxHandler(ajaxHandler);
 			}
 		}
+	}
+
+	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		return super.handle(request, response, handler);
 	}
 
 }

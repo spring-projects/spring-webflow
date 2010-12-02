@@ -157,6 +157,27 @@
 			<artifactId>org.springframework.webflow</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- Bean Validation -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>com.springsource.org.hibernate.validator</artifactId>
+			<version>4.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>com.springsource.slf4j.log4j</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+		<!--
+			JAXB is needed when running on Java 5. In this environment these dependencies have to be added 
+			(unless xml	configuration is explicitly disabled via Configuration.ignoreXmlConfiguration) 
+			On Java 6 jaxb is part of the runtime environment.
+		-->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>com.springsource.javax.xml.bind</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 		<!-- Build time only dependencies -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

@@ -4,9 +4,9 @@
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.0.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
 
 	<!-- Maps portlet modes to handlers -->	
 	<bean id="portletModeHandlerMapping" class="org.springframework.web.portlet.handler.PortletModeHandlerMapping">
@@ -38,16 +38,22 @@
 	</webflow:flow-executor>
 	
 	<!-- The registry of executable flow definitions -->
-	<webflow:flow-registry id="flowRegistry">
+	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
 		<webflow:flow-location path="/WEB-INF/flows/view/view.xml" />
 		<webflow:flow-location path="/WEB-INF/flows/main/main.xml" />
 		<webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />
 	</webflow:flow-registry>	
+
+	<!-- Plugs in Spring's JSR-303 validator adapter -->
+	<webflow:flow-builder-services id="flowBuilderServices" development="true" validator="validator" />
 		
 	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
 	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
 		<constructor-arg ref="entityManagerFactory" />
 		<constructor-arg ref="transactionManager" />
 	</bean>
+		
+	<!-- Bootstraps JSR-303 validation and adapts it to Spring's Validator interface -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 		
 </beans>

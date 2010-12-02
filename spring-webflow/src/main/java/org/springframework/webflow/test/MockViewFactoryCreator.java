@@ -22,6 +22,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.Event;
@@ -38,7 +39,7 @@ import org.springframework.webflow.execution.ViewFactory;
 class MockViewFactoryCreator implements ViewFactoryCreator {
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
 		return new MockViewFactory(viewId);
 	}
 

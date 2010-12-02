@@ -15,15 +15,15 @@
 	
 	<view-state id="enterBookingDetails" model="booking">
 		<binder>
-			<binding property="checkinDate" required="true" />
-			<binding property="checkoutDate" required="true" />
-			<binding property="beds" required="true" />
-			<binding property="smoking" required="true" />
-			<binding property="creditCard" required="true" />
-			<binding property="creditCardName" required="true" />
-			<binding property="creditCardExpiryMonth" required="true" />
-			<binding property="creditCardExpiryYear" required="true" />
-			<binding property="amenities" required="false" />
+			<binding property="checkinDate" />
+			<binding property="checkoutDate" />
+			<binding property="beds" />
+			<binding property="smoking" />
+			<binding property="creditCard" />
+			<binding property="creditCardName" />
+			<binding property="creditCardExpiryMonth" />
+			<binding property="creditCardExpiryYear" />
+			<binding property="amenities" />
 		</binder>
 		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />

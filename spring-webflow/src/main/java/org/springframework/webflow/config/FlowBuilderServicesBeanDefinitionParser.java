@@ -45,12 +45,14 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	private static final String DEVELOPMENT_ATTR = "development";
 	private static final String EXPRESSION_PARSER_ATTR = "expression-parser";
 	private static final String VIEW_FACTORY_CREATOR_ATTR = "view-factory-creator";
+	private static final String VALIDATOR_ATTR = "validator";
 
 	// --------------------------- Bean Configuration Properties --------------------- //
 	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
 	private static final String DEVELOPMENT_PROPERTY = "development";
 	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
 	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
+	private static final String VALIDATOR_PROPERTY = "validator";
 
 	protected String getBeanClassName(Element element) {
 		return FLOW_BUILDER_SERVICES_CLASS_NAME;
@@ -65,6 +67,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		parseConversionService(element, parserContext, builder);
 		parseExpressionParser(element, parserContext, builder);
 		parseViewFactoryCreator(element, parserContext, builder);
+		parseValidator(element, parserContext, builder);
 		parseDevelopment(element, builder);
 
 		parserContext.popAndRegisterContainingComponent();
@@ -103,6 +106,13 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 			viewFactoryCreator = registerInfrastructureComponent(element, context, viewFactoryCreatorBuilder);
 		}
 		definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
+	}
+
+	private void parseValidator(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
+		String validator = element.getAttribute(VALIDATOR_ATTR);
+		if (StringUtils.hasText(validator)) {
+			definitionBuilder.addPropertyReference(VALIDATOR_PROPERTY, validator);
+		}
 	}
 
 	private void parseDevelopment(Element element, BeanDefinitionBuilder definitionBuilder) {

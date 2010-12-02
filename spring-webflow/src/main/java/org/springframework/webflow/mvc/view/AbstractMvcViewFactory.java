@@ -20,6 +20,7 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.MessageCodesResolver;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -39,6 +40,8 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 	private ExpressionParser expressionParser;
 
 	private ConversionService conversionService;
+
+	private Validator validator;
 
 	private BinderConfiguration binderConfiguration;
 
@@ -75,6 +78,10 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		this.fieldMarkerPrefix = fieldMarkerPrefix;
 	}
 
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
+
 	public View getView(RequestContext context) {
 		String viewId = (String) this.viewId.getValue(context);
 		org.springframework.web.servlet.View view = viewResolver.resolveView(viewId, context);
@@ -83,6 +90,7 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		mvcView.setConversionService(conversionService);
 		mvcView.setBinderConfiguration(binderConfiguration);
 		mvcView.setMessageCodesResolver(messageCodesResolver);
+		mvcView.setValidator(validator);
 		if (StringUtils.hasText(eventIdParameterName)) {
 			mvcView.setEventIdParameterName(eventIdParameterName);
 		}

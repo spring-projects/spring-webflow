@@ -19,6 +19,7 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
@@ -55,7 +56,7 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	public FlowDefinitionLocator getFlowDefinitionLocator() {
 		if (localFlowContext.containsLocalBean("flowRegistry")) {
-			return (FlowDefinitionLocator) localFlowContext.getBean("flowRegistry", FlowDefinitionLocator.class);
+			return localFlowContext.getBean("flowRegistry", FlowDefinitionLocator.class);
 		} else {
 			return parent.getFlowDefinitionLocator();
 		}
@@ -63,7 +64,7 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	public FlowArtifactFactory getFlowArtifactFactory() {
 		if (localFlowContext.containsLocalBean("flowArtifactFactory")) {
-			return (FlowArtifactFactory) localFlowContext.getBean("flowArtifactFactory", FlowArtifactFactory.class);
+			return localFlowContext.getBean("flowArtifactFactory", FlowArtifactFactory.class);
 		} else {
 			return parent.getFlowArtifactFactory();
 		}
@@ -71,7 +72,7 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	public ConversionService getConversionService() {
 		if (localFlowContext.containsLocalBean("conversionService")) {
-			return (ConversionService) localFlowContext.getBean("conversionService", ConversionService.class);
+			return localFlowContext.getBean("conversionService", ConversionService.class);
 		} else {
 			return parent.getConversionService();
 		}
@@ -79,7 +80,7 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	public ViewFactoryCreator getViewFactoryCreator() {
 		if (localFlowContext.containsLocalBean("viewFactoryCreator")) {
-			return (ViewFactoryCreator) localFlowContext.getBean("viewFactoryCreator", ViewFactoryCreator.class);
+			return localFlowContext.getBean("viewFactoryCreator", ViewFactoryCreator.class);
 		} else {
 			return parent.getViewFactoryCreator();
 		}
@@ -87,9 +88,17 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 
 	public ExpressionParser getExpressionParser() {
 		if (localFlowContext.containsLocalBean("expressionParser")) {
-			return (ExpressionParser) localFlowContext.getBean("expressionParser", ExpressionParser.class);
+			return localFlowContext.getBean("expressionParser", ExpressionParser.class);
 		} else {
 			return parent.getExpressionParser();
+		}
+	}
+
+	public Validator getValidator() {
+		if (localFlowContext.containsLocalBean("validator")) {
+			return localFlowContext.getBean("validator", Validator.class);
+		} else {
+			return parent.getValidator();
 		}
 	}
 

@@ -24,6 +24,7 @@ import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
@@ -102,6 +103,10 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	public ApplicationContext getApplicationContext() {
 		return flowBuilderServices.getApplicationContext();
+	}
+
+	public Validator getValidator() {
+		return flowBuilderServices.getValidator();
 	}
 
 	/**

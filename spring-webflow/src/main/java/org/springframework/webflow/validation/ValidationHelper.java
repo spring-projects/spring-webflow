@@ -64,6 +64,8 @@ public class ValidationHelper {
 
 	private final MappingResults mappingResults;
 
+	private Validator validator;
+
 	/**
 	 * Create a throwaway validation helper object. Validation is invoked by the {@link #validate()} method.
 	 * <p>
@@ -95,13 +97,23 @@ public class ValidationHelper {
 	}
 
 	/**
+	 * Configure a {@link Validator} to apply to the model.
+	 */
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
+
+	/**
 	 * Invoke the validators available by convention.
 	 */
 	public void validate() {
+		if (this.validator != null) {
+			invokeValidatorDefaultValidateMethod(model, this.validator);
+		}
 		invokeModelValidationMethod(model);
-		Object validator = getModelValidator();
-		if (validator != null) {
-			invokeModelValidator(model, validator);
+		Object modelValidator = getModelValidator();
+		if (modelValidator != null) {
+			invokeModelValidator(model, modelValidator);
 		}
 	}
 
@@ -215,8 +227,8 @@ public class ValidationHelper {
 		// web flow 2.0.0 to 2.0.3 compatibility only [to remove in web flow 3]
 		validateMethod = findValidationMethod(model, validator, methodName, MessageContext.class);
 		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-					requestContext.getMessageContext() });
+			ReflectionUtils.invokeMethod(validateMethod, validator,
+					new Object[] { model, requestContext.getMessageContext() });
 			return true;
 		}
 		return false;
@@ -224,13 +236,21 @@ public class ValidationHelper {
 
 	private boolean invokeValidatorDefaultValidateMethod(Object model, Object validator) {
 		if (validator instanceof Validator) {
-			// supports existing validators
+			// Spring Framework Validator type
+			Validator springValidator = (Validator) validator;
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking Spring Validator '" + ClassUtils.getShortName(validator.getClass()) + "'");
 			}
-			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
-					model, expressionParser, messageCodesResolver, mappingResults);
-			((Validator) validator).validate(model, errors);
+			if (springValidator.supports(model.getClass())) {
+				MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
+						model, expressionParser, messageCodesResolver, mappingResults);
+				springValidator.validate(model, errors);
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Spring Validator '" + ClassUtils.getShortName(validator.getClass())
+							+ "' doesn't support model class " + model.getClass());
+				}
+			}
 			return true;
 		}
 		// preferred

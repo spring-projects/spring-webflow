@@ -5,8 +5,8 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	targetNamespace="http://www.springframework.org/schema/webflow-config"
 	elementFormDefault="qualified" attributeFormDefault="unqualified"
-	version="2.0">
-	
+	version="2.3">
+
 	<xsd:annotation>
 		<xsd:documentation>
 			<![CDATA[
@@ -18,7 +18,7 @@ A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
 
 	<xsd:element name="flow-registry">
 		<xsd:annotation>
@@ -219,6 +219,17 @@ The custom ExpressionParser implementation to use to compile expression strings 
 							<xsd:documentation>
 								<![CDATA[
 The custom ViewFactoryCreator implementation to use produce ViewFactories capable of rendering Views.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="validator">
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.validation.Validator">
+								<![CDATA[
+The bean name of the Validator that is to be used for validating a model declared on a view state.
+This attribute is not required, and only needs to be specified explicitly if a custom Validator needs to be configured.
+If not specified, JSR-303 validation will be installed if a JSR-303 provider is present on the classpath.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>
