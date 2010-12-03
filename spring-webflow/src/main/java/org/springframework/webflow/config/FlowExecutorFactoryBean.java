@@ -72,6 +72,8 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private FlowExecutionListenerLoader flowExecutionListenerLoader;
 
+	private ConversationManager conversationManager;
+
 	private ConversionService conversionService;
 
 	private FlowExecutor flowExecutor;
@@ -119,6 +121,14 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 	 */
 	public void setFlowExecutionListenerLoader(FlowExecutionListenerLoader flowExecutionListenerLoader) {
 		this.flowExecutionListenerLoader = flowExecutionListenerLoader;
+	}
+
+	/**
+	 * Sets the service type that manages conversations and effectively controls how state is stored physically when a
+	 * flow execution is paused.
+	 */
+	public void setConversationManager(ConversationManager conversationManager) {
+		this.conversationManager = conversationManager;
 	}
 
 	// implementing ApplicationContextAware
@@ -194,11 +204,14 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 	}
 
 	private ConversationManager createConversationManager() {
-		SessionBindingConversationManager conversationManager = new SessionBindingConversationManager();
-		if (maxFlowExecutions != null) {
-			conversationManager.setMaxConversations(maxFlowExecutions.intValue());
+		if (conversationManager == null) {
+			conversationManager = new SessionBindingConversationManager();
+			if (maxFlowExecutions != null) {
+				((SessionBindingConversationManager) conversationManager).setMaxConversations(maxFlowExecutions
+						.intValue());
+			}
 		}
-		return conversationManager;
+		return this.conversationManager;
 	}
 
 	private FlowExecutionSnapshotFactory createFlowExecutionSnapshotFactory(FlowExecutionFactory executionFactory) {

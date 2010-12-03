@@ -62,6 +62,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		Element repositoryElement = DomUtils.getChildElementByTagName(element, "flow-execution-repository");
 		if (repositoryElement != null) {
 			addMaxExecutions(repositoryElement, definitionBuilder, parserContext);
+			addConversationManager(repositoryElement, definitionBuilder, parserContext);
 			addMaxSnapshots(repositoryElement, definitionBuilder, parserContext);
 		}
 	}
@@ -70,6 +71,14 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		String maxConversations = element.getAttribute("max-executions");
 		if (StringUtils.hasText(maxConversations)) {
 			definitionBuilder.addPropertyValue("maxFlowExecutions", maxConversations);
+		}
+	}
+
+	private void addConversationManager(Element element, BeanDefinitionBuilder definitionBuilder,
+			ParserContext parserContext) {
+		String conversationManager = element.getAttribute("conversation-manager");
+		if (StringUtils.hasText(conversationManager)) {
+			definitionBuilder.addPropertyReference("conversationManager", conversationManager);
 		}
 	}
 

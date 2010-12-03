@@ -9,7 +9,7 @@
            http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
 
 	<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
-		<webflow:flow-execution-repository max-executions="1" max-execution-snapshots="2"/>
+		<webflow:flow-execution-repository max-executions="1" max-execution-snapshots="2" conversation-manager="conversationManager" />
 		<webflow:flow-execution-attributes>
 			<webflow:always-redirect-on-pause value="false"/>
 			<webflow:attribute name="foo" value="bar"/>		
@@ -21,6 +21,8 @@
 	</webflow:flow-executor>
 	
 	<bean id="listener" class="org.springframework.webflow.config.FlowExecutorBeanDefinitionParserTests$ConfigurationListener" />
+
+	<bean id="conversationManager" class="org.springframework.webflow.config.FlowExecutorBeanDefinitionParserTests.ExceptionThrowingConversationManager" />
 	
 	<webflow:flow-registry id="flowRegistry">
 		<webflow:flow-location path="org/springframework/webflow/config/flow.xml" />

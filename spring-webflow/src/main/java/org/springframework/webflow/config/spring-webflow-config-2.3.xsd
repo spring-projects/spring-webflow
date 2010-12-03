@@ -3,6 +3,7 @@
 	xmlns="http://www.springframework.org/schema/webflow-config"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:tool="http://www.springframework.org/schema/tool"
 	targetNamespace="http://www.springframework.org/schema/webflow-config"
 	elementFormDefault="qualified" attributeFormDefault="unqualified"
 	version="2.3">
@@ -19,6 +20,7 @@ A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 	</xsd:annotation>
 
 	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd" />
 
 	<xsd:element name="flow-registry">
 		<xsd:annotation>
@@ -323,11 +325,27 @@ The maximum number of persistent flow executions allowed per user session.  The 
 				<xsd:documentation>
 				<![CDATA[
 The maximum number of history snapshots allowed per flow execution.  The default is 30. 
-Setting this value to 0 disables the creation of snapshot copies altogether.  
+Setting the value to 0 disables the creation of snapshot copies altogether.
+Note that this attribute is meaningless when a custom ConversationManager is provided.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+		<xsd:attribute name="conversation-manager" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation source="java:org.springframework.webflow.conversation.ConversationManager"><![CDATA[
+The bean name of the ConversationManager to use to manage conversations.
+The default implementation stores conversations in the session.
+Note that when this attribute is provided, the "max-execution-snapshots" attribute is meaningless. 
+				]]></xsd:documentation>
+				<xsd:appinfo>
+					<tool:annotation kind="ref">
+						<tool:expected-type type="java:org.springframework.webflow.conversation.ConversationManager" />
+					</tool:annotation>
+				</xsd:appinfo>
+			</xsd:annotation>
+		</xsd:attribute>
+		
 	</xsd:complexType>
 
 	<xsd:complexType name="flowExecutionListenersType">
