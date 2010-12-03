@@ -27,7 +27,7 @@
 				<h:selectOneMenu id="pageSize" value="#{searchCriteria.pageSize}">
 					<f:selectItems value="#{referenceData.pageSizeOptions}" />
 				</h:selectOneMenu>
-				<p:commandButton id="findHotels" value="Find Hotels" action="search" update="@form" ajax="false" />
+				<p:commandButton id="findHotels" value="Find Hotels" action="search" update="@form" />
 			</h:panelGrid>
 			<p:tooltip for="searchString" targetPosition="topRight" position="bottomLeft"
 				value="Search hotels by name, address, city, or zip." style="cream" />

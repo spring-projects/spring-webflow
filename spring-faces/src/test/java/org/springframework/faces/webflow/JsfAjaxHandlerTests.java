@@ -26,6 +26,7 @@ public class JsfAjaxHandlerTests extends TestCase {
 		assertEquals(
 				"<?xml version='1.0' encoding='utf-8'?>\n<partial-response><redirect url=\"/target\"/></partial-response>",
 				jsfMock.contentAsString());
+		assertEquals("application/xml", jsfMock.response().getContentType());
 	}
 
 }

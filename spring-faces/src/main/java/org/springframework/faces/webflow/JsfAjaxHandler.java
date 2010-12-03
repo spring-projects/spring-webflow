@@ -78,6 +78,7 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 	private PartialResponseWriter createPartialResponseWriter(FacesContext context) throws IOException {
 		ExternalContext externalContext = context.getExternalContext();
 		String encoding = externalContext.getRequestCharacterEncoding();
+		externalContext.setResponseContentType("application/xml");
 		externalContext.setResponseCharacterEncoding(encoding);
 		ResponseWriter responseWriter = null;
 		Writer out = externalContext.getResponseOutputWriter();
