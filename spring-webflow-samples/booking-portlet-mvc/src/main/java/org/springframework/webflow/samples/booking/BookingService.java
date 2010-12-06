@@ -45,6 +45,12 @@ public interface BookingService {
     public Booking createBooking(Long hotelId, String userName);
 
     /**
+     * Persist the booking to the database
+     * @param booking the booking
+     */
+    public void persistBooking(Booking booking);
+
+    /**
      * Cancel an existing booking.
      * @param id the booking id
      */

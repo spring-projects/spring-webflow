@@ -11,7 +11,6 @@
 	<!-- Executes flows: the entry point into the Spring Web Flow system -->
 	<webflow:flow-executor id="flowExecutor">
 		<webflow:flow-execution-listeners>
-			<webflow:listener ref="jpaFlowExecutionListener" />
 			<webflow:listener ref="securityFlowExecutionListener" />
 		</webflow:flow-execution-listeners>
 	</webflow:flow-executor>
@@ -20,7 +19,7 @@
 	<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/WEB-INF">
 		<webflow:flow-location-pattern value="/**/*-flow.xml" />
 	</webflow:flow-registry>
-		
+
 	<!-- Plugs in a custom creator for Web Flow views -->
 	<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator" 
 		development="true" validator="validator" />
@@ -31,16 +30,10 @@
 		<property name="useSpringBeanBinding" value="true" />
 	</bean>
 	
-	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
-	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
-		<constructor-arg ref="entityManagerFactory" />
-		<constructor-arg ref="transactionManager" />
-	</bean>
-	
 	<!-- Installs a listener to apply Spring Security authorities -->
 	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
 
-	<!-- Bootstraps JSR-303 validation and adapts it to Spring's Validator interface -->
+	<!-- Bootstraps JSR-303 validation and exposes it through Spring's Validator interface -->
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
 </beans>

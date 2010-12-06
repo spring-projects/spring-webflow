@@ -3,8 +3,6 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-	<persistence-context/>
-	
 	<input name="hotelId" value="flowScope.hotelId"/>
 
 	<on-start>
@@ -20,13 +18,13 @@
 	
 	<view-state id="reviewBooking">
 		<transition on="confirm" to="bookingConfirmed">
-			<evaluate expression="persistenceContext.persist(booking)" />
+			<evaluate expression="bookingService.persistBooking(booking)" />
 		</transition>
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="bookingCancelled" />
 	</view-state>
 	
-	<end-state id="bookingConfirmed" commit="true" />
+	<end-state id="bookingConfirmed" />
 
 	<end-state id="bookingCancelled" />
 		

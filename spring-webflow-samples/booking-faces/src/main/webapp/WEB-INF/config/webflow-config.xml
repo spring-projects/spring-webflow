@@ -12,7 +12,6 @@
 	<webflow:flow-executor id="flowExecutor">
 		<webflow:flow-execution-listeners>
 			<webflow:listener ref="facesContextListener"/>
-			<webflow:listener ref="jpaFlowExecutionListener" />
 			<webflow:listener ref="securityFlowExecutionListener" />
 		</webflow:flow-execution-listeners>
 	</webflow:flow-executor>
@@ -27,12 +26,6 @@
 
 	<!-- Installs a listener that creates and releases the FacesContext for each request. -->
 	<bean id="facesContextListener" class="org.springframework.faces.webflow.FlowFacesContextLifecycleListener"/>
-
-	<!-- Installs a listener that manages JPA persistence contexts for flows that require them -->
-	<bean id="jpaFlowExecutionListener" class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
-		<constructor-arg ref="entityManagerFactory" />
-		<constructor-arg ref="transactionManager" />
-	</bean>
 	
 	<!-- Installs a listener to apply Spring Security authorities -->
 	<bean id="securityFlowExecutionListener" class="org.springframework.webflow.security.SecurityFlowExecutionListener" />

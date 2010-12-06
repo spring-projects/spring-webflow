@@ -46,20 +46,22 @@ public class JpaBookingService implements BookingService, Serializable {
 	String pattern = getSearchPattern(criteria);
 	orderBy = (orderBy != null) ? orderBy : "name";
 	String orderDirection = (ascending) ? " ASC" : " DESC";
-	return em.createQuery(
-		"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
-			+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern order by h." + orderBy
-			+ orderDirection).setParameter("pattern", pattern).setMaxResults(criteria.getPageSize())
-		.setFirstResult(firstResult).getResultList();
+	return em
+		.createQuery(
+			"select h from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+				+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern order by h."
+				+ orderBy + orderDirection).setParameter("pattern", pattern)
+		.setMaxResults(criteria.getPageSize()).setFirstResult(firstResult).getResultList();
     }
 
     @Transactional(readOnly = true)
     public int getNumberOfHotels(SearchCriteria criteria) {
 	String pattern = getSearchPattern(criteria);
-	Long count = (Long) em.createQuery(
-		"select count(h.id) from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
-			+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern").setParameter("pattern",
-		pattern).getSingleResult();
+	Long count = (Long) em
+		.createQuery(
+			"select count(h.id) from Hotel h where lower(h.name) like :pattern or lower(h.city) like :pattern "
+				+ "or lower(h.zip) like :pattern or lower(h.address) like :pattern")
+		.setParameter("pattern", pattern).getSingleResult();
 	return count.intValue();
     }
 
@@ -73,11 +75,14 @@ public class JpaBookingService implements BookingService, Serializable {
 	Hotel hotel = em.find(Hotel.class, hotelId);
 	User user = findUser(username);
 	Booking booking = new Booking(hotel, user);
-	em.persist(booking);
 	return booking;
     }
 
-    // read-write transactional methods
+    @Transactional
+    public void persistBooking(Booking booking) {
+	em.persist(booking);
+    }
+
     @Transactional
     public void cancelBooking(Booking booking) {
 	booking = em.find(Booking.class, booking.getId());
@@ -97,8 +102,8 @@ public class JpaBookingService implements BookingService, Serializable {
     }
 
     private User findUser(String username) {
-	return (User) em.createQuery("select u from User u where u.username = :username").setParameter("username",
-		username).getSingleResult();
+	return (User) em.createQuery("select u from User u where u.username = :username")
+		.setParameter("username", username).getSingleResult();
     }
 
 }

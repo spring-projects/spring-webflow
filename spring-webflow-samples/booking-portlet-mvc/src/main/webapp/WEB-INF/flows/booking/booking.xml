@@ -5,8 +5,6 @@
 
 	<secured attributes="ROLE_USER" />
 
-	<persistence-context/>
-	
 	<input name="hotelId" />
 	
 	<on-start>
@@ -20,7 +18,7 @@
 	
 	<view-state id="reviewBooking" model="booking">
 		<transition on="confirm" to="bookingConfirmed">
-			<evaluate expression="persistenceContext.persist(booking)" />
+			<evaluate expression="bookingService.persistBooking(booking)" />
 		</transition>
 		<transition on="revise" to="enterBookingDetails" />
 		<transition on="cancel" to="cancel" />

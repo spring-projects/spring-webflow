@@ -67,7 +67,11 @@ public class JpaBookingService implements BookingService {
 		return new Booking(hotel, user);
 	}
 
-	// read-write transactional methods
+	@Transactional
+	public void persistBooking(Booking booking) {
+		em.persist(booking);
+	}
+
 	@Transactional
 	public void cancelBooking(Booking booking) {
 		booking = em.find(Booking.class, booking.getId());

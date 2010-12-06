@@ -60,8 +60,12 @@ public class JpaBookingService implements BookingService {
 	Hotel hotel = em.find(Hotel.class, hotelId);
 	User user = findUser(username);
 	Booking booking = new Booking(hotel, user);
-	em.persist(booking);
 	return booking;
+    }
+
+    @Transactional
+    public void persistBooking(Booking booking) {
+	em.persist(booking);
     }
 
     @Transactional

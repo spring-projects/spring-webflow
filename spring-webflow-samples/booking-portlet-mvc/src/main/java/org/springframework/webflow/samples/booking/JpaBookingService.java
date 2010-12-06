@@ -68,6 +68,11 @@ public class JpaBookingService implements BookingService {
     }
 
     @Transactional
+    public void persistBooking(Booking booking) {
+	em.persist(booking);
+    }
+
+    @Transactional
     public void cancelBooking(Long id) {
 	Booking booking = em.find(Booking.class, id);
 	if (booking != null) {
