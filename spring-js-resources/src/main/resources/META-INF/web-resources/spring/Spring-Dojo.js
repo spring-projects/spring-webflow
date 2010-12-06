@@ -33,6 +33,7 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 		if(this.widgetModule == "") {
 			this.widgetModule = this.widgetType;
 		}
+		dojo.require(this.widgetModule);
 	},
 	
 	apply : function(){
@@ -82,7 +83,6 @@ dojo.declare("Spring.ElementDecoration", [Spring.AbstractElementDecoration, Spri
 			if(this.element['style'] && this.element['style'].cssText){
 				this.widgetAttrs['style'] = this.element['style'].cssText;
 			}
-			dojo.require(this.widgetModule);
 			var widgetConstructor = dojo.eval(this.widgetType);
 			this.widget = new widgetConstructor(this.widgetAttrs, this.element);
 			this.widget.startup();
