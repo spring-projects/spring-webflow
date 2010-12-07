@@ -49,7 +49,7 @@
 		<dependency org="org.apache.openjpa" name="com.springsource.org.apache.openjpa.lib.java5" rev="1.0.2" conf="test->runtime"/>
 		<dependency org="org.apache.openjpa" name="com.springsource.org.apache.openjpa.persistence" rev="1.0.2" conf="test->runtime"/>
 		<dependency org="org.apache.openjpa" name="com.springsource.org.apache.openjpa.persistence.jdbc" rev="1.0.2" conf="test->runtime"/>
-		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime" />
+		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.5.2" conf="test->runtime" />
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="test->runtime" />
 		<dependency org="org.jboss.el" name="com.springsource.org.jboss.el" rev="2.0.0.GA" conf="test->runtime"/>
 		<dependency org="org.springframework" name="org.springframework.aop" rev="3.0.4.RELEASE" conf="test->runtime" />		

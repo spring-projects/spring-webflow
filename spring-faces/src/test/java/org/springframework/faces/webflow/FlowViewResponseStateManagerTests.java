@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.springframework.web.context.support.StaticWebApplicationContext;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -38,7 +37,7 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 
 	public void testWriteFlowSerializedView() throws Exception {
 		EasyMock.expect(flowExecutionContext.getKey()).andReturn(new MockFlowExecutionKey("e1s1"));
-		AttributeMap viewMap = new LocalAttributeMap();
+		LocalAttributeMap viewMap = new LocalAttributeMap();
 		EasyMock.expect(requestContext.getViewScope()).andStubReturn(viewMap);
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andReturn(flowExecutionContext);
 		EasyMock.replay(requestContext, flowExecutionContext);

@@ -23,7 +23,6 @@ import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.execution.RequestContext;
@@ -75,7 +74,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 		ext.setNativeRequest(new MockHttpServletRequest());
 		ext.setNativeResponse(new MockHttpServletResponse());
 		EasyMock.expect(context.getExternalContext()).andStubReturn(ext);
-		AttributeMap requestMap = new LocalAttributeMap();
+		LocalAttributeMap requestMap = new LocalAttributeMap();
 		EasyMock.expect(context.getFlashScope()).andStubReturn(requestMap);
 		EasyMock.expect(context.getRequestParameters()).andStubReturn(new LocalParameterMap(new HashMap()));
 	}
@@ -121,15 +120,15 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.", phaseCallbacks
-					.contains(phaseCallback));
+			assertFalse("Phase callback " + phaseCallback + " already executed.",
+					phaseCallbacks.contains(phaseCallback));
 			phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.", phaseCallbacks
-					.contains(phaseCallback));
+			assertFalse("Phase callback " + phaseCallback + " already executed.",
+					phaseCallbacks.contains(phaseCallback));
 			phaseCallbacks.add(phaseCallback);
 		}
 

@@ -25,7 +25,6 @@ import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -46,9 +45,9 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = (RequestContext) EasyMock.createMock(RequestContext.class);
+	private RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	private AttributeMap flashMap = new LocalAttributeMap();
+	private LocalAttributeMap flashMap = new LocalAttributeMap();
 
 	private ViewHandler viewHandler = new MockViewHandler();
 
@@ -95,8 +94,9 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Create() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
+				lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -120,8 +120,9 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
+				lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -151,8 +152,9 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_RestoreWithBindings() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
+				lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -197,8 +199,9 @@ public class JsfViewFactoryTests extends TestCase {
 	public final void testGetView_Restore_Ajax() {
 
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
+				lifecycle);
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -227,8 +230,9 @@ public class JsfViewFactoryTests extends TestCase {
 	 */
 	public final void testGetView_ExternalViewRoot() {
 		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class)), lifecycle);
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
+				lifecycle);
 
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
@@ -263,15 +267,15 @@ public class JsfViewFactoryTests extends TestCase {
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.", phaseCallbacks
-					.contains(phaseCallback));
+			assertFalse("Phase callback " + phaseCallback + " already executed.",
+					phaseCallbacks.contains(phaseCallback));
 			phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.", phaseCallbacks
-					.contains(phaseCallback));
+			assertFalse("Phase callback " + phaseCallback + " already executed.",
+					phaseCallbacks.contains(phaseCallback));
 			phaseCallbacks.add(phaseCallback);
 		}
 

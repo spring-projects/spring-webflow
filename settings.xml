@@ -1,0 +1,68 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<profiles>
+		<profile>
+			<id>fast</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<repositories>
+				<!-- Maven Central -->
+				<repository>
+					<id>org.maven.central</id>
+					<name>Maven Central Repository</name>
+					<url>http://repo1.maven.org/maven2</url>
+					<snapshots><enabled>false</enabled></snapshots>
+				</repository>
+				<!-- Spring snapshots -->
+				<repository>
+					<id>org.springframework.maven.snapshot</id>
+					<name>Spring Maven Snapshot Repository</name>
+					<url>http://maven.springframework.org/snapshot</url>
+					<releases><enabled>false</enabled></releases>
+					<snapshots><enabled>true</enabled></snapshots>
+				</repository>
+				<!-- Spring milestones -->
+		        <repository>
+					<id>org.springframework.maven.milestone</id>
+					<name>Spring Maven Milestone Repository</name>
+					<url>http://maven.springframework.org/milestone</url>
+					<snapshots><enabled>false</enabled></snapshots>
+				</repository>
+				<!-- Hibernate, RichFaces -->
+				<repository>
+					<id>org.jboss.repository</id>
+					<name>JBoss Maven Repository</name>
+		            <url>http://repository.jboss.org/maven2</url>
+			   		<snapshots><enabled>false</enabled></snapshots>
+				</repository>
+				<!-- Sun Mojarra JSF 2.x -->
+				<repository>
+					<id>java.net.release</id>
+					<name>Repository for Projects On Hosted on java.net</name>
+					<url>http://download.java.net/maven/2</url>
+				</repository>
+				<!-- Sun Mojarra JSF 1.x, Facelets -->
+				<repository>
+					<id>maven1.java.net</id>
+					<url>http://download.java.net/maven/1</url>
+					<layout>legacy</layout>
+				</repository>
+				<!-- PrimeFaces -->
+				<repository>
+					<id>primefaces</id>
+					<name>Prime Technology Maven Repository</name>
+					<url>http://repository.prime.com.tr</url>
+					<layout>default</layout>
+				</repository>		
+			</repositories>
+		</profile>
+	</profiles>
+</settings>

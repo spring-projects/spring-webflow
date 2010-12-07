@@ -10,7 +10,6 @@ import javax.faces.event.ActionEvent;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
@@ -32,7 +31,7 @@ public class FlowActionListenerTests extends TestCase {
 
 		listener = new FlowActionListener(jsfMock.application().getActionListener());
 		RequestContextHolder.setRequestContext(context);
-		AttributeMap flash = new LocalAttributeMap();
+		LocalAttributeMap flash = new LocalAttributeMap();
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flash);
 		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
 		EasyMock.replay(new Object[] { context });
@@ -52,10 +51,10 @@ public class FlowActionListenerTests extends TestCase {
 
 		listener.processAction(event);
 
-		assertTrue("The event was not signaled", jsfMock.externalContext().getRequestMap().containsKey(
-				JsfView.EVENT_KEY));
-		assertEquals("The event should be " + outcome, outcome, jsfMock.externalContext().getRequestMap().get(
-				JsfView.EVENT_KEY));
+		assertTrue("The event was not signaled",
+				jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
+		assertEquals("The event should be " + outcome, outcome,
+				jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
 	}
 
 	public final void testProcessAction_NullOutcome() {
@@ -68,8 +67,8 @@ public class FlowActionListenerTests extends TestCase {
 
 		listener.processAction(event);
 
-		assertFalse("An unexpected event was signaled", jsfMock.externalContext().getRequestMap().containsKey(
-				JsfView.EVENT_KEY));
+		assertFalse("An unexpected event was signaled",
+				jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
 	}
 
 	private class MethodBindingStub extends MethodBinding {
