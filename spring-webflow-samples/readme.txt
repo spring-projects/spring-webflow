@@ -1,10 +1,10 @@
 /*
- * spring-webflow-samples
- * ----------------------
- * booking-mvc: Hotel Booking Reference App (Spring MVC + Web Flow + JSP version)
- * booking-faces: Hotel Booking Reference App (Spring MVC + Web Flow + JavaServerFaces version)
- * booking-portlet-mvc: Hotel Booking Reference App (Spring Portlet MVC + Web Flow + JSP version)
- * booking-portlet-faces: Hotel Booking Reference App (Spring Portlet MVC + Web Flow + JavaServerFaces version)
+ * Hotel Booking Reference App Versions
+ * ------------------------------------
+ * booking-mvc: Spring MVC + Web Flow + JSP 
+ * booking-faces: Spring MVC + Web Flow + JavaServerFaces 
+ * booking-portlet-mvc: Spring Portlet MVC + Web Flow + JSP version
+ * booking-portlet-faces: Spring Portlet MVC + Web Flow + JavaServerFaces version
  * jsf-booking: Traditional JSF-based implementation; here to support comparison with "booking-faces"
  */
 
@@ -15,20 +15,17 @@ Sample pre-requisites:
 
 To build the samples:
 ---------------------
-1. cd into the directory of the sample you are interested in building.
+Running 'mvn package' from the this directory builds all samples.
+You can find .war files under the appropriate '<sample>/target' directory.
+Samples can be built individually by running 'mvn package' from the sample sub-directory.
 
-2. run 'ant jar' to build the sample.  The built .war file is placed in the 'target/artifacts' directory.
+To import the samples into Eclipse:
+-----------------------------------
+Fulfill the requirements below and then import all existing projects found under this directory:
 
-To import Web Flow projects into Eclipse:
------------------------------------------
-1. Use the SpringSource Tool Suite or Eclipse IDE for Java EE Developers
-   Creating a dedicated workspace for importing Web Flow projects is recommended.
+1. Run 'mvn test' once from the command line in order to download required dependencies via Maven.
 
-2. Use the 'File -> Import -> Existing Projects into Workspace' wizard to import the Web Flow projects into Eclipse.
+2. Define an M2_REPO classpath variable in your Eclipse preferences pointing to your local Maven 
+repository. Note that this step can be skipped if using the SpringSource Tool Suite.
 
-3. The projects will not compile initially as Eclipse will not be able to find dependent libraries.
-   To compile, define a IVY_CACHE classpath variable pointing to the local artifact repository created by the Web Flow build.
-   To do this, access 'Preferences -> Java -> Build Path -> Classpath Variables'.
-   Then select 'New...'; enter IVY_CACHE for the Name and select the 'projects/ivy-cache/repository' Folder as the path.
-
-3. After the projects compile within Eclipse, run a sample web project on your local server by right-clicking on it and selecting 'Run on Server'.
+To deploy a project, right-click on it and select 'Run on Server'.
