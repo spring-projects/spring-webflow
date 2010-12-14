@@ -18,15 +18,19 @@ package org.springframework.binding.expression.spel;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.PropertyNotFoundException;
 import org.springframework.binding.expression.ValueCoercionException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelMessage;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.expression.spel.support.StandardTypeConverter;
 import org.springframework.util.Assert;
 
 /**
@@ -42,11 +46,13 @@ public class SpringELExpression implements Expression {
 
 	private org.springframework.expression.Expression expression;
 
-	private StandardEvaluationContext evaluationContext;
-
-	private Class expectedType;
+	private Class<?> expectedType;
 
 	private Map expressionVariables;
+
+	private ConversionService conversionService;
+
+	private List<PropertyAccessor> propertyAccessors;
 
 	/**
 	 * Constructor for SpringELExpression.
@@ -56,16 +62,17 @@ public class SpringELExpression implements Expression {
 	 * This parameter is optional (may be null).
 	 * @param expectedType the target type expected from the evaluation of the expression or null. This parameter is
 	 * optional (may be null).
-	 * @param evaluationContext a Spring EL evaluation context.
+	 * @param conversionService the Spring ConversionService instance to use for type conversion
+	 * @param propertyAccessors propertyAccessors for Spring EL to use when evaluating expressions
 	 */
 	public SpringELExpression(org.springframework.expression.Expression expression, Map expressionVariables,
-			Class expectedType, StandardEvaluationContext evaluationContext) {
+			Class expectedType, ConversionService conversionService, List<PropertyAccessor> propertyAccessors) {
 		Assert.notNull(expression, "The SpelExpression is required for evaluation");
-		Assert.notNull(evaluationContext, "The StandardEvaluationContext is required for evaluation");
 		this.expression = expression;
 		this.expressionVariables = expressionVariables;
 		this.expectedType = expectedType;
-		this.evaluationContext = evaluationContext;
+		this.conversionService = conversionService;
+		this.propertyAccessors = propertyAccessors;
 	}
 
 	public String getExpressionString() {
@@ -74,8 +81,7 @@ public class SpringELExpression implements Expression {
 
 	public Object getValue(Object rootObject) throws EvaluationException {
 		try {
-			updateEvaluationContext(rootObject);
-			return expression.getValue(evaluationContext, expectedType);
+			return expression.getValue(newEvaluationContext(rootObject), expectedType);
 		} catch (SpelEvaluationException e) {
 			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE)) {
 				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
@@ -91,8 +97,7 @@ public class SpringELExpression implements Expression {
 
 	public Class getValueType(Object rootObject) throws EvaluationException {
 		try {
-			evaluationContext.setRootObject(rootObject);
-			return expression.getValueType(evaluationContext);
+			return expression.getValueType(newEvaluationContext(rootObject));
 		} catch (SpelEvaluationException e) {
 			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE)) {
 				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
@@ -105,8 +110,7 @@ public class SpringELExpression implements Expression {
 
 	public void setValue(Object rootObject, Object value) throws EvaluationException {
 		try {
-			updateEvaluationContext(rootObject);
-			expression.setValue(evaluationContext, value);
+			expression.setValue(newEvaluationContext(rootObject), value);
 		} catch (SpelEvaluationException e) {
 			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_WRITABLE)) {
 				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
@@ -124,10 +128,14 @@ public class SpringELExpression implements Expression {
 	 * Updates the Spring EL evaluation context to reflect the given rootObject.
 	 * 
 	 * @param rootObject the object for the evaluation.
+	 * @return
 	 */
-	private void updateEvaluationContext(Object rootObject) {
-		evaluationContext.setRootObject(rootObject);
-		evaluationContext.setVariables(getVariableValues(rootObject));
+	private StandardEvaluationContext newEvaluationContext(Object rootObject) {
+		StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
+		context.setVariables(getVariableValues(rootObject));
+		context.setTypeConverter(new StandardTypeConverter(conversionService));
+		context.getPropertyAccessors().addAll(propertyAccessors);
+		return context;
 	}
 
 	/**
@@ -137,14 +145,14 @@ public class SpringELExpression implements Expression {
 	 * @param rootObject the Object to evaluate variable expressions against.
 	 * @return a mapping between variables names and plain Object's.
 	 */
-	private Map getVariableValues(Object rootObject) {
+	private Map<String, Object> getVariableValues(Object rootObject) {
 		if (expressionVariables == null) {
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		}
-		Map variableValues = new HashMap(expressionVariables.size());
+		Map<String, Object> variableValues = new HashMap<String, Object>(expressionVariables.size());
 		for (Iterator iterator = expressionVariables.entrySet().iterator(); iterator.hasNext();) {
 			Map.Entry var = (Map.Entry) iterator.next();
-			variableValues.put(var.getKey(), ((Expression) var.getValue()).getValue(rootObject));
+			variableValues.put((String) var.getKey(), ((Expression) var.getValue()).getValue(rootObject));
 		}
 		return variableValues;
 	}

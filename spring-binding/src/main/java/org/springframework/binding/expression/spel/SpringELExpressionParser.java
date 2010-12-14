@@ -32,8 +32,6 @@ import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.expression.spel.support.StandardTypeConverter;
 import org.springframework.util.Assert;
 
 /**
@@ -50,7 +48,7 @@ public class SpringELExpressionParser implements ExpressionParser {
 
 	private ConversionService conversionService;
 
-	private List propertyAccessors = new ArrayList();
+	private List<PropertyAccessor> propertyAccessors = new ArrayList<PropertyAccessor>();
 
 	public SpringELExpressionParser(SpelExpressionParser expressionParser) {
 		this(expressionParser, new DefaultConversionService());
@@ -73,12 +71,10 @@ public class SpringELExpressionParser implements ExpressionParser {
 	public Expression parseExpression(String expressionString, ParserContext parserContext) throws ParserException {
 		Assert.hasText(expressionString, "The expression string to parse is required and must not be empty");
 		parserContext = (parserContext == null) ? NullParserContext.INSTANCE : parserContext;
-		StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
-		evaluationContext.setTypeConverter(new StandardTypeConverter(conversionService.getDelegateConversionService()));
-		evaluationContext.getPropertyAccessors().addAll(propertyAccessors);
 		Map spelExpressionVariables = parseSpelExpressionVariables(parserContext.getExpressionVariables());
 		return new SpringELExpression(parseSpelExpression(expressionString, parserContext), spelExpressionVariables,
-				parserContext.getExpectedEvaluationResultType(), evaluationContext);
+				parserContext.getExpectedEvaluationResultType(), conversionService.getDelegateConversionService(),
+				propertyAccessors);
 	}
 
 	private org.springframework.expression.Expression parseSpelExpression(String expression, ParserContext parserContext) {
