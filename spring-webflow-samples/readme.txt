@@ -13,11 +13,10 @@ Sample pre-requisites:
 * JDK 1.5 or > must be installed and in your system path
 * Ant 1.7 or > must be installed and in your system path
 
-To build the samples:
----------------------
-Running 'mvn package' from the this directory builds all samples.
+Build Samples with Maven Central Dependencies:
+----------------------------------------------
+Run 'mvn package' from the this directory to build all samples against Maven central dependencies.
 You can find .war files under the appropriate '<sample>/target' directory.
-Samples can be built individually by running 'mvn package' from the sample sub-directory.
 
 To import the samples into Eclipse:
 -----------------------------------

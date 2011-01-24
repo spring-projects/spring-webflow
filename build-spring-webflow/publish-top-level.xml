@@ -29,5 +29,9 @@
 					toFile="${adjusted.release.type}/${project.key}/${package.basename}-with-dependencies.zip.sha1" publicRead="true"/>
 		</aws:s3>
 	</target>
+	
+	<target name="publish-maven-central-local">
+		<all-bundles target="publish-maven-central-local"/>
+	</target>	
 
 </project>

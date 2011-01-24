@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="publish-bundle" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:maven="antlib:org.apache.maven.artifact.ant">
+
+	<target name="publish-maven-central-local" depends="maven.init">
+		<property name="maven.central.repository" value="s3://maven.springframework.org/${adjusted.release.type}"/>
+		<maven:install file="${jar.output.file}">
+			<pom file="${local.pom.output.file}"/>
+			<attach file="${source-jar.output.file}" classifier="sources"/>
+		</maven:install>
+	</target>
+
+</project>

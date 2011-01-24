@@ -3,6 +3,7 @@
 
 	<property file="${basedir}/../build.properties"/>
 	<import file="${basedir}/../build-spring-webflow/package-bundle.xml"/>
+	<import file="${basedir}/../build-spring-webflow/publish-artifact.xml"/>
 	<import file="${basedir}/../spring-build/standard/default.xml"/>
 
 </project>

@@ -225,13 +225,26 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<testResources>
-			<testResource>
+		<resources>
+			<resource>
+				<filtering>false</filtering>
 				<directory>src/main/java</directory>
 				<includes>
 					<include>**/*.xsd</include>
 				</includes>
-			</testResource>
+				<excludes>
+					<exclude>**/.svn/**</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>META-INF/spring.*</include>
+				</includes>
+			</resource>
+		</resources>
+		<testResources>
 			<testResource>
 				<directory>src/test/java</directory>
 				<includes>

@@ -1,9 +1,9 @@
 Contained in this directory are the Spring Web Flow (SWF) related project sources.
 
 DIRECTORIES
+-----------
 
 1. build-spring-webflow - Contains the metadata needed to build the SWF projects using spring-build.
-                          To build all projects, simply run 'ant' (version 1.7 or >) in this directory.
 
 2. spring-build - A linked in SVN external to Spring's master build system. 
                   Used to power the build for all Spring projects.
@@ -19,3 +19,16 @@ DIRECTORIES
 7. spring-faces - Spring's JavaServerFaces integration module, which includes Web Flow & JavaScript support.
 
 8. spring-webflow-samples - The Spring Web Flow sample applications, illustrating the framework in action.
+
+
+BUILDING
+--------
+
+To build all projects, cd to build-spring-webflow and run the following with ant (version 1.7 or >):
+
+ant clean clean-integration jar
+
+To install all jars as local Maven dependencies:
+
+ant clean clean-integration jar publish-maven-central-local
+
