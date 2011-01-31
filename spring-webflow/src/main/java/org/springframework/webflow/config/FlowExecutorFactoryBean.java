@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,8 @@ import org.springframework.webflow.mvc.builder.MvcEnvironment;
 class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, BeanClassLoaderAware, InitializingBean {
 
 	private static final String ALWAYS_REDIRECT_ON_PAUSE = "alwaysRedirectOnPause";
+
+	private static final String REDIRECT_IN_SAME_STATE = "redirectInSameState";
 
 	private FlowDefinitionLocator flowDefinitionLocator;
 
@@ -185,11 +187,12 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private void putDefaultFlowExecutionAttributes(LocalAttributeMap executionAttributes) {
 		if (!executionAttributes.contains(ALWAYS_REDIRECT_ON_PAUSE)) {
-			if (environment == MvcEnvironment.PORTLET) {
-				executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, Boolean.FALSE);
-			} else {
-				executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, Boolean.TRUE);
-			}
+			boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, redirect);
+		}
+		if (!executionAttributes.contains(REDIRECT_IN_SAME_STATE)) {
+			boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			executionAttributes.put(REDIRECT_IN_SAME_STATE, redirect);
 		}
 	}
 

@@ -12,6 +12,7 @@
 		<webflow:flow-execution-repository max-executions="1" max-execution-snapshots="2" conversation-manager="conversationManager" />
 		<webflow:flow-execution-attributes>
 			<webflow:always-redirect-on-pause value="false"/>
+			<webflow:redirect-in-same-state value="true"/>
 			<webflow:attribute name="foo" value="bar"/>		
 			<webflow:attribute name="bar" value="2" type="integer"/>
 		</webflow:flow-execution-attributes>

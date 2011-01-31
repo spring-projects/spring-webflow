@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * Custom {@link StateManager} that manages the JSF component state in web flow's view scope.
  * 
  * @author Jeremy Grelle
+ * @author Rossen Stoyanchev
  */
 public class FlowViewStateManager extends StateManager {
 
@@ -150,31 +151,35 @@ public class FlowViewStateManager extends StateManager {
 	/**
 	 * <p>
 	 * JSF 1.2 (or higher) version of state saving.
-	 * </p>
 	 * 
 	 * <p>
-	 * In JSF 2 where a partial state saving algorithm is used, this method merely delegates to the next
-	 * ViewStateManager. Thus partial state saving is handled by the JSF 2 runtime. However, a
-	 * {@link FlowViewResponseStateManager} plugged in via {@link FlowRenderKit} will ensure the state is saved in a Web
-	 * Flow view-scoped variable.
-	 * </p>
+	 * In JSF 2, if partial state saving is enabled this method delegates in order to obtain the serialized view state.
+	 * During rendering JSF calls this method to prepare the state and then calls {@link FlowViewResponseStateManager}
+	 * which writes it to Web Flow's view scope.
+	 * 
+	 * <p>
+	 * Nevertheless this method always writes the serialized state to Web Flow's view scope to ensure it is up-to-date
+	 * for cases outside of rendering (e.g. ViewState.updateHistory()) or when the render phase doesn't call
+	 * {@link FlowViewResponseStateManager} such as when processing a partial request.
 	 */
 	public Object saveView(FacesContext context) {
 		if (context.getViewRoot().isTransient()) {
 			return null;
 		}
+		FlowSerializedView view = null;
 		if ((!JsfUtils.isFlowRequest()) || JsfRuntimeInformation.isPartialStateSavingSupported()) {
-			return delegate.saveView(context);
+			Object[] state = (Object[]) delegate.saveView(context);
+			view = new FlowSerializedView(context.getViewRoot().getViewId(), state[0], state[1]);
 		} else {
-			RequestContext requestContext = RequestContextHolder.getRequestContext();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
-			}
-			FlowSerializedView view = new FlowSerializedView(context.getViewRoot().getViewId(),
-					getTreeStructureToSave(context), getComponentStateToSave(context));
-			requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
-			return view;
+			view = new FlowSerializedView(context.getViewRoot().getViewId(), getTreeStructureToSave(context),
+					getComponentStateToSave(context));
 		}
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
+		}
+		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
+		return view;
 	}
 
 	/**

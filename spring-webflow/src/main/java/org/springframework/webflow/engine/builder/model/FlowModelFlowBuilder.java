@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,6 +76,7 @@ import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractMappingModel;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.ActionStateModel;
+import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
 import org.springframework.webflow.engine.model.BinderModel;
@@ -382,6 +383,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		MutableAttributeMap flowAttributes = parseMetaAttributes(flow.getAttributes());
 		parseAndPutPersistenceContext(flow.getPersistenceContext(), flowAttributes);
 		parseAndPutSecured(flow.getSecured(), flowAttributes);
+		parseAndPutAjaxDriven(flow.getAjaxDriven(), flowAttributes);
 		return flowAttributes;
 	}
 
@@ -924,6 +926,12 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			MutableAttributeMap attributes) {
 		if (persistenceContext != null) {
 			attributes.put("persistenceContext", Boolean.TRUE);
+		}
+	}
+
+	private void parseAndPutAjaxDriven(AjaxDrivenModel ajaxDrivenModel, MutableAttributeMap attributes) {
+		if (ajaxDrivenModel != null) {
+			attributes.put("ajaxDriven", Boolean.TRUE);
 		}
 	}
 

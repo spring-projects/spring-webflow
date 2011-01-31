@@ -297,7 +297,6 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirectInSameState(Boolean.TRUE);
 		Transition t = new Transition(on("submit"), null);
 		state.getTransitionSet().add(t);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
@@ -320,7 +319,6 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirectInSameState(Boolean.TRUE);
 		Transition t = new Transition(on("submit"), null);
 		TestAction action = new TestAction();
 		t.setExecutionCriteria(new ActionTransitionCriteria(action));
@@ -426,6 +424,62 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 		assertTrue(context.getFlashScope().contains("foo"));
 		assertEquals(StubViewFactory.USER_EVENT_STATE, context.getFlashScope().get(View.USER_EVENT_STATE_ATTRIBUTE));
+	}
+
+	public void testRedirectInSameStateOverridesAlwaysRedirectOnPause() {
+		Flow flow = new Flow("myFlow");
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		Transition t = new Transition(on("submit"), null);
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.setAlwaysRedirectOnPause(false);
+		context.setRedirectInSameState(true);
+		context.getFlowScope().remove("renderCalled");
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testAjaxDrivenAttributeOverridesRedirectInSameState() {
+		Flow flow = new Flow("myFlow");
+		flow.getAttributes().put("ajaxDriven", Boolean.TRUE);
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		Transition t = new Transition(on("submit"), null);
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.getMockExternalContext().setAjaxRequest(true);
+		context.setAlwaysRedirectOnPause(true);
+		context.setRedirectInSameState(true);
+		context.getFlowScope().remove("renderCalled");
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
+	}
+
+	public void testViewStateRedirectOverridesAjaxDrivenAttribute() {
+		Flow flow = new Flow("myFlow");
+		flow.getAttributes().put("ajaxDriven", Boolean.TRUE);
+		StubViewFactory viewFactory = new StubViewFactory();
+		ViewState state = new ViewState(flow, "viewState", viewFactory);
+		state.setRedirect(false);
+		Transition t = new Transition(on("submit"), null);
+		state.getTransitionSet().add(t);
+		MockRequestControlContext context = new MockRequestControlContext(flow);
+		state.enter(context);
+		context = new MockRequestControlContext(context.getFlowExecutionContext());
+		context.getMockExternalContext().setAjaxRequest(true);
+		context.setAlwaysRedirectOnPause(true);
+		context.setRedirectInSameState(true);
+		context.getFlowScope().remove("renderCalled");
+		context.putRequestParameter("_eventId", "submit");
+		state.resume(context);
+		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
 	public void testResumeViewStateForEventDestroyVariables() {

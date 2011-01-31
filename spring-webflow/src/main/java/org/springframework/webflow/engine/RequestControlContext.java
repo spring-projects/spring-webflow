@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -149,5 +149,12 @@ public interface RequestControlContext extends RequestContext {
 	 * @return true or false
 	 */
 	public boolean getRedirectOnPause();
+
+	/**
+	 * Returns the value of the 'redirect in same state' flow execution attribute if set or otherwise it falls back on
+	 * the value returned by {@link #getRedirectOnPause()}.
+	 * @return true or false
+	 */
+	public boolean getRedirectInSameState();
 
 }

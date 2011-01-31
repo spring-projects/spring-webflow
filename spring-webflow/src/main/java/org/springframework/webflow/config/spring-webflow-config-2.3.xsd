@@ -396,6 +396,16 @@ Determines if flow executions always redirect after they pause.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="redirect-in-same-state" type="redirectInSameStateType" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Determines if flow executions redirect after they pause for transitions that remain in the same view state.
+This attribute effectively overrides the value of the "always-redirect-on-pause" attribute in same state tranisitions.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
 					<xsd:documentation>
@@ -414,6 +424,19 @@ A single flow execution meta attribute.
 				<xsd:documentation>
 					<![CDATA[
 true = always redirect on pause; false = do not, only redirect when explicitly instructed by the flow definition.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="redirectInSameStateType">
+		<xsd:attribute name="value" type="xsd:boolean" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+true = redirect on pause for transitions that remain in the same view state; 
+false = do not redirect for transitions that remain in the same view state.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>

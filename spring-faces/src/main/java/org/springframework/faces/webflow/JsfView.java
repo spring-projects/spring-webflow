@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,6 +88,13 @@ public class JsfView implements View {
 		try {
 			logger.debug("Asking faces lifecycle to render");
 			facesLifecycle.render(facesContext);
+
+			/* Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). */
+			if (JsfRuntimeInformation.isAtLeastJsf20()) {
+				if (requestContext.getExternalContext().isAjaxRequest()) {
+					saveState();
+				}
+			}
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();
@@ -134,9 +141,10 @@ public class JsfView implements View {
 			// Set the temporary UIViewRoot state so that it will be available across the redirect
 			return new ViewRootHolder(getViewRoot());
 		} else {
-			// In JSF 2 the partial state saving algorithm attaches a system event listener to the UIViewRoot with
-			// a reference to the FacesContext instance. The FacesContext instance is released at end of each request.
-			// Hence, keeping the UIViewRoot across the redirect is not feasible.
+			// In JSF 2 the partial state saving algorithm attaches a system event listener to the UIViewRoot which
+			// holds on to a reference to the FacesContext instance. The FacesContext instance is released at end of
+			// each request. Hence, keeping the UIViewRoot across the redirect is not feasible.
+			// @see com.sun.faces.context.StateContext$AddRemoveListener
 			logger.debug("User event state requested but not saved.");
 			return null;
 		}

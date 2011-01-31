@@ -27,7 +27,7 @@
 				</spring:bind>
 			</div>
 		</spring:hasBindErrors>
-		<form:form modelAttribute="booking">
+		<form:form modelAttribute="booking" action="${flowExecutionUrl}">
 			<fieldset>
 				<legend>Book Hotel</legend>
 		        <div>
@@ -187,7 +187,7 @@
 					</p>
 					<script type="text/javascript">
 						Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
-						Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'proceed',event:'onclick',formId:'booking',params:{fragments:'body'}}));
+						Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'proceed',event:'onclick',formId:'booking'}));
 					</script>
 				</div>
 			</fieldset>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,8 @@ public class FlowModel extends AbstractModel {
 	private SecuredModel secured;
 
 	private PersistenceContextModel persistenceContext;
+
+	private AjaxDrivenModel ajaxDriven;
 
 	private LinkedList vars;
 
@@ -222,6 +224,20 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setPersistenceContext(PersistenceContextModel persistenceContext) {
 		this.persistenceContext = persistenceContext;
+	}
+
+	/**
+	 * @return the ajaxDriven model
+	 */
+	public AjaxDrivenModel getAjaxDriven() {
+		return ajaxDriven;
+	}
+
+	/**
+	 * @param ajaxDriven the ajaxDriven model to set
+	 */
+	public void setAjaxDriven(AjaxDrivenModel ajaxDriven) {
+		this.ajaxDriven = ajaxDriven;
 	}
 
 	/**

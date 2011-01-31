@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,11 @@ import org.springframework.webflow.execution.ViewFactory;
 public class ViewState extends TransitionableState {
 
 	/**
+	 * The name of the attribute indicating an Ajax-driven Flow Definition.
+	 */
+	private static final String AJAX_DRIVEN_ATTRIBUTE_NAME = "ajaxDriven";
+
+	/**
 	 * The list of actions to be executed before the view is rendered.
 	 */
 	private ActionList renderActionList = new ActionList();
@@ -60,12 +65,6 @@ public class ViewState extends TransitionableState {
 	 * Whether or not a redirect should occur before the view is rendered.
 	 */
 	private Boolean redirect;
-
-	/**
-	 * Whether or not a redirect should occur when the state is not exited (e.g. invalid form submission, a transition
-	 * without a "to" attribute).
-	 */
-	private Boolean redirectInSameState = Boolean.FALSE;
 
 	/**
 	 * Whether or not the view should render as a popup.
@@ -137,22 +136,6 @@ public class ViewState extends TransitionableState {
 	 */
 	public void setRedirect(Boolean redirect) {
 		this.redirect = redirect;
-	}
-
-	/**
-	 * Returns whether this view state should request a flow execution redirect when the state hasn't been exited.
-	 */
-	public boolean getRedirectInSameState() {
-		return (redirectInSameState != null) ? redirectInSameState.booleanValue() : false;
-	}
-
-	/**
-	 * Sets whether this view state should requests a flow execution redirect when entered when processing is done but
-	 * the state hasn't been exited (e.g. invalid form submissions).
-	 * @param redirectInSameState the redirect flag
-	 */
-	public void setRedirectInSameState(Boolean redirectInSameState) {
-		this.redirectInSameState = redirectInSameState;
 	}
 
 	/**
@@ -289,17 +272,29 @@ public class ViewState extends TransitionableState {
 	private boolean shouldRedirect(RequestControlContext context) {
 		if (redirect != null) {
 			return redirect.booleanValue();
-		} else {
-			return context.getRedirectOnPause();
 		}
+		if (getAjaxDriven(context) != null) {
+			if (context.getExternalContext().isAjaxRequest()) {
+				return false;
+			}
+		}
+		return context.getRedirectOnPause();
 	}
 
 	private boolean shouldRedirectInSameState(RequestControlContext context) {
-		if (redirectInSameState != null) {
-			return redirectInSameState.booleanValue();
-		} else {
-			return shouldRedirect(context);
+		if (redirect != null) {
+			return redirect.booleanValue();
 		}
+		if (getAjaxDriven(context) != null) {
+			if (context.getExternalContext().isAjaxRequest()) {
+				return false;
+			}
+		}
+		return context.getRedirectInSameState();
+	}
+
+	private Boolean getAjaxDriven(RequestControlContext context) {
+		return context.getActiveFlow().getAttributes().getBoolean(AJAX_DRIVEN_ATTRIBUTE_NAME);
 	}
 
 	private void render(RequestControlContext context, View view) throws ViewRenderingException {
@@ -367,8 +362,8 @@ public class ViewState extends TransitionableState {
 
 	protected void appendToString(ToStringCreator creator) {
 		super.appendToString(creator);
-		creator.append("viewFactory", viewFactory).append("variables", variables).append("redirect", redirect).append(
-				"popup", popup);
+		creator.append("viewFactory", viewFactory).append("variables", variables).append("redirect", redirect)
+				.append("popup", popup);
 	}
 
 }

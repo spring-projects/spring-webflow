@@ -15,7 +15,7 @@
 		</address>
 	</div>
 	<div class="span-12 last">
-		<form:form id="confirm" modelAttribute="booking">
+		<form:form id="confirm" modelAttribute="booking" action="${flowExecutionUrl}">
 		<fieldset>
 			<legend>Confirm Booking Details</legend>
 			<div>
@@ -49,9 +49,14 @@
 				</div>
 			</div>
 			<div>
-				<button type="submit" name="_eventId_confirm">Confirm</button>
-				<button type="submit" name="_eventId_revise">Revise</button>
-				<button type="submit" name="_eventId_cancel">Cancel</button>
+				<p>
+					<button type="submit" name="_eventId_confirm">Confirm</button>
+					<button type="submit" name="_eventId_revise" id="revise">Revise</button>
+					<button type="submit" name="_eventId_cancel">Cancel</button>
+				</p>
+				<script type="text/javascript">
+					Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'revise',event:'onclick',formId:'confirm'}));
+				</script>
 			</div>
 		</fieldset>
 		</form:form>

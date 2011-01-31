@@ -18,6 +18,7 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
+import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.EvaluateModel;
@@ -129,6 +130,14 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
 	}
 
+	public void testAjaxDrivenFlow() {
+		model.setAjaxDriven(new AjaxDrivenModel());
+		model.setStates(singleList(new EndStateModel("end")));
+		Flow flow = getFlow(model);
+		assertNotNull(flow.getAttributes().get("ajaxDriven"));
+		assertTrue(((Boolean) flow.getAttributes().get("ajaxDriven")).booleanValue());
+	}
+
 	public void testFlowInputOutputMapping() {
 		InputModel input1 = new InputModel("foo", "flowScope.foo");
 		InputModel input2 = new InputModel("foo", "flowScope.bar");
@@ -190,8 +199,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		end.setSecured(new SecuredModel("ROLE_USER"));
 		model.setStates(singleList(end));
 		Flow flow = getFlow(model);
-		SecurityRule rule = (SecurityRule) flow.getState("end").getAttributes().get(
-				SecurityRule.SECURITY_ATTRIBUTE_NAME);
+		SecurityRule rule = (SecurityRule) flow.getState("end").getAttributes()
+				.get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		assertNotNull(rule);
 		assertEquals(SecurityRule.COMPARISON_ANY, rule.getComparisonType());
 		assertEquals(1, rule.getAttributes().size());

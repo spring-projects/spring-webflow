@@ -125,11 +125,28 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}
 
+	public boolean getRedirectInSameState() {
+		if (!getExternalContext().isResponseAllowed()) {
+			return true;
+		}
+		Boolean redirectInSameState = getMockFlowExecutionContext().getAttributes().getBoolean("redirectInSameState");
+		if (redirectInSameState != null) {
+			return redirectInSameState.booleanValue();
+		} else {
+			return getRedirectOnPause();
+		}
+	}
+
 	// implementation specific accessors for testing
 
 	public void setAlwaysRedirectOnPause(boolean alwaysRedirectOnPause) {
 		getMockFlowExecutionContext().getAttributeMap().put("alwaysRedirectOnPause",
 				Boolean.valueOf(alwaysRedirectOnPause));
+	}
+
+	public void setRedirectInSameState(boolean redirectInSameState) {
+		getMockFlowExecutionContext().getAttributeMap()
+				.put("redirectInSameState", Boolean.valueOf(redirectInSameState));
 	}
 
 }

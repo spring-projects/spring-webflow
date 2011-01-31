@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -246,10 +246,22 @@ class RequestControlContextImpl implements RequestControlContext {
 		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
 	}
 
+	public boolean getRedirectInSameState() {
+		if (!getExternalContext().isResponseAllowed()) {
+			return true;
+		}
+		Boolean redirectInSameState = flowExecution.getAttributes().getBoolean("redirectInSameState");
+		if (redirectInSameState != null) {
+			return redirectInSameState.booleanValue();
+		} else {
+			return getRedirectOnPause();
+		}
+	}
+
 	public String toString() {
 		return new ToStringCreator(this).append("externalContext", externalContext)
-				.append("currentEvent", currentEvent).append("requestScope", requestScope).append("attributes",
-						attributes).append("messageContext", messageContext).append("flowExecution", flowExecution)
-				.toString();
+				.append("currentEvent", currentEvent).append("requestScope", requestScope)
+				.append("attributes", attributes).append("messageContext", messageContext)
+				.append("flowExecution", flowExecution).toString();
 	}
 }

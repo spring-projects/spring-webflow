@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,15 +89,21 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		}
 	}
 
-	private Set parseFlowExecutionAttributes(Element element) {
+	private Set<Object> parseFlowExecutionAttributes(Element element) {
 		Element executionAttributesElement = DomUtils.getChildElementByTagName(element, "flow-execution-attributes");
 		if (executionAttributesElement != null) {
-			HashSet attributes = new HashSet();
+			HashSet<Object> attributes = new HashSet<Object>();
 			Element redirectElement = DomUtils.getChildElementByTagName(executionAttributesElement,
 					"always-redirect-on-pause");
 			if (redirectElement != null) {
 				String value = redirectElement.getAttribute("value");
 				attributes.add(new FlowElementAttribute("alwaysRedirectOnPause", value, "boolean"));
+			}
+			Element redirectInSameStateElement = DomUtils.getChildElementByTagName(executionAttributesElement,
+					"redirect-in-same-state");
+			if (redirectInSameStateElement != null) {
+				String value = redirectInSameStateElement.getAttribute("value");
+				attributes.add(new FlowElementAttribute("redirectInSameState", value, "boolean"));
 			}
 			List attributeElements = DomUtils.getChildElementsByTagName(executionAttributesElement, "attribute");
 			for (Iterator it = attributeElements.iterator(); it.hasNext();) {

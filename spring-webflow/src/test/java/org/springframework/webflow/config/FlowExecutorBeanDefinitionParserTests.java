@@ -40,9 +40,11 @@ public class FlowExecutorBeanDefinitionParserTests extends TestCase {
 
 	public static class ConfigurationListener extends FlowExecutionListenerAdapter {
 		public void sessionCreating(RequestContext context, FlowDefinition definition) {
-			assertEquals(3, context.getFlowExecutionContext().getAttributes().size());
+			assertEquals(4, context.getFlowExecutionContext().getAttributes().size());
 			assertEquals(Boolean.FALSE,
 					context.getFlowExecutionContext().getAttributes().getBoolean("alwaysRedirectOnPause"));
+			assertEquals(Boolean.TRUE,
+					context.getFlowExecutionContext().getAttributes().getBoolean("redirectInSameState"));
 			assertEquals("bar", context.getFlowExecutionContext().getAttributes().get("foo"));
 			assertEquals(new Integer(2), context.getFlowExecutionContext().getAttributes().get("bar"));
 		}

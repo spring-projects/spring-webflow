@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
 	<secured attributes="ROLE_USER" />
 
-	<input name="hotelId" required="true" />
+	<ajax-driven />
 	
+	<input name="hotelId" required="true" />
+
 	<on-start>
 		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" result="flowScope.booking" />
 	</on-start>
@@ -23,11 +25,17 @@
 			<binding property="creditCardExpiryYear" />
 			<binding property="amenities" />
 		</binder>
+		<on-render>
+			<render fragments="body" />
+		</on-render>
 		<transition on="proceed" to="reviewBooking" />
 		<transition on="cancel" to="cancel" bind="false" />
 	</view-state>
 	
 	<view-state id="reviewBooking" model="booking">
+		<on-render>
+			<render fragments="body" />
+		</on-render>
 		<transition on="confirm" to="bookingConfirmed">
 			<evaluate expression="bookingService.persistBooking(booking)" />
 		</transition>

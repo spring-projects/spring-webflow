@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.springframework.util.xml.DomUtils;
 import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.ActionStateModel;
+import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
 import org.springframework.webflow.engine.model.BinderModel;
@@ -201,6 +202,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		flow.setAttributes(parseAttributes(element));
 		flow.setSecured(parseSecured(element));
 		flow.setPersistenceContext(parsePersistenceContext(element));
+		flow.setAjaxDriven(parseAjaxDriven(element));
 		flow.setVars(parseVars(element));
 		flow.setInputs(parseInputs(element));
 		flow.setOnStartActions(parseOnStartActions(element));
@@ -410,6 +412,15 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
+	private AjaxDrivenModel parseAjaxDriven(Element element) {
+		element = DomUtils.getChildElementByTagName(element, "ajax-driven");
+		if (element == null) {
+			return null;
+		} else {
+			return new AjaxDrivenModel();
+		}
+	}
+
 	private VarModel parseVar(Element element) {
 		return new VarModel(element.getAttribute("name"), element.getAttribute("class"));
 	}
@@ -507,8 +518,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	}
 
 	private BindingModel parseBinding(Element element) {
-		return new BindingModel(element.getAttribute("property"), element.getAttribute("converter"), element
-				.getAttribute("required"));
+		return new BindingModel(element.getAttribute("property"), element.getAttribute("converter"),
+				element.getAttribute("required"));
 	}
 
 	private LinkedList parseOnExitActions(Element element) {

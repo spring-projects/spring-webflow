@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * EntityResolver implementation for the Spring Web Flow 2.0 XML Schema. This will load the XSD from the classpath.
+ * EntityResolver implementation for the Spring Web Flow XML Schema. This will load the XSD from the classpath.
  * <p>
  * The xmlns of the XSD expected to be resolved:
  * 
@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  *     &lt;flow xmlns=&quot;http://www.springframework.org/schema/webflow&quot;
  *           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
  *           xsi:schemaLocation=&quot;http://www.springframework.org/schema/webflow
- *                               http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd&quot;&gt;
+ *                               http://www.springframework.org/schema/webflow/spring-webflow.xsd&quot;&gt;
  * </pre>
  * 
  * @author Erwin Vervaet
@@ -41,22 +41,32 @@ import org.xml.sax.SAXException;
  */
 class WebFlowEntityResolver implements EntityResolver {
 
-	private static final String WEBFLOW_ELEMENT = "spring-webflow-2.0";
+	private static final String[] WEBFLOW_VERSIONS = new String[] { "spring-webflow-2.3", "spring-webflow-2.0" };
 
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-		if (systemId != null && systemId.indexOf(WEBFLOW_ELEMENT) > systemId.lastIndexOf("/")) {
-			String filename = systemId.substring(systemId.indexOf(WEBFLOW_ELEMENT));
-			try {
-				Resource resource = new ClassPathResource(filename, getClass());
-				InputSource source = new InputSource(resource.getInputStream());
-				source.setPublicId(publicId);
-				source.setSystemId(systemId);
-				return source;
-			} catch (IOException ex) {
-				// fall through below
+		if (systemId != null && systemId.indexOf("spring-webflow.xsd") > -1) {
+			return createInputSource(publicId, systemId, WEBFLOW_VERSIONS[0] + ".xsd");
+		}
+		for (int i = 0; i < WEBFLOW_VERSIONS.length; i++) {
+			if (systemId != null && systemId.indexOf(WEBFLOW_VERSIONS[i]) > systemId.lastIndexOf("/")) {
+				String fileName = systemId.substring(systemId.indexOf(WEBFLOW_VERSIONS[i]));
+				return createInputSource(publicId, systemId, fileName);
 			}
 		}
 		// let the parser handle it
+		return null;
+	}
+
+	private InputSource createInputSource(String publicId, String systemId, String fileName) {
+		try {
+			Resource resource = new ClassPathResource(fileName, getClass());
+			InputSource source = new InputSource(resource.getInputStream());
+			source.setPublicId(publicId);
+			source.setSystemId(systemId);
+			return source;
+		} catch (IOException ex) {
+			// fall through below
+		}
 		return null;
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.AbstractStateModel;
+import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BindingModel;
 import org.springframework.webflow.engine.model.ExceptionHandlerModel;
@@ -101,6 +102,16 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		SecuredModel secured = flow.getSecured();
 		assertNotNull(secured);
 		assertEquals("ROLE_USER", secured.getAttributes());
+	}
+
+	public void testFlowAjaxDriven() {
+		ClassPathResource resource = new ClassPathResource("flow-ajax-driven.xml", getClass());
+		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
+		builder.init();
+		builder.build();
+		FlowModel flow = builder.getFlowModel();
+		AjaxDrivenModel ajaxDriven = flow.getAjaxDriven();
+		assertNotNull(ajaxDriven);
 	}
 
 	public void testFlowSecuredState() {
@@ -290,16 +301,16 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		DefaultFlowModelHolder holder = new DefaultFlowModelHolder(builder);
 		FlowModel model = holder.getFlowModel();
 		assertEquals("foo1", ((ExceptionHandlerModel) model.getExceptionHandlers().get(0)).getBean());
-		assertEquals("foo2", ((ExceptionHandlerModel) model.getStateById("state1").getExceptionHandlers().get(0))
-				.getBean());
-		assertEquals("foo3", ((ExceptionHandlerModel) model.getStateById("state2").getExceptionHandlers().get(0))
-				.getBean());
-		assertEquals("foo4", ((ExceptionHandlerModel) model.getStateById("state3").getExceptionHandlers().get(0))
-				.getBean());
-		assertEquals("foo5", ((ExceptionHandlerModel) model.getStateById("state4").getExceptionHandlers().get(0))
-				.getBean());
-		assertEquals("foo6", ((ExceptionHandlerModel) model.getStateById("state5").getExceptionHandlers().get(0))
-				.getBean());
+		assertEquals("foo2",
+				((ExceptionHandlerModel) model.getStateById("state1").getExceptionHandlers().get(0)).getBean());
+		assertEquals("foo3",
+				((ExceptionHandlerModel) model.getStateById("state2").getExceptionHandlers().get(0)).getBean());
+		assertEquals("foo4",
+				((ExceptionHandlerModel) model.getStateById("state3").getExceptionHandlers().get(0)).getBean());
+		assertEquals("foo5",
+				((ExceptionHandlerModel) model.getStateById("state4").getExceptionHandlers().get(0)).getBean());
+		assertEquals("foo6",
+				((ExceptionHandlerModel) model.getStateById("state5").getExceptionHandlers().get(0)).getBean());
 	}
 
 	public void testFormActionValidatorMethod() {

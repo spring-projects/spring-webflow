@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.0.5.v200805032123]]></pluginVersion>
+	<pluginVersion><![CDATA[2.5.2.201101081000-RELEASE]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
+		<config>src/main/webapp/WEB-INF/config/data-access-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/security-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/webflow-config.xml</config>
+		<config>src/main/webapp/WEB-INF/config/webmvc-config.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
