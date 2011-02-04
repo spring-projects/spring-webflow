@@ -10,7 +10,7 @@
 	<br />
 	${hotel.country}
 </address>
-<form action="booking" method="get">
+<form action="booking?mode=embedded" method="get">
 	<p>
 		Nightly Rate:
 		<spring:bind path="hotel.price">${status.value}</spring:bind>

@@ -58,8 +58,6 @@ public class FlowModel extends AbstractModel {
 
 	private PersistenceContextModel persistenceContext;
 
-	private AjaxDrivenModel ajaxDriven;
-
 	private LinkedList vars;
 
 	private LinkedList inputs;
@@ -224,20 +222,6 @@ public class FlowModel extends AbstractModel {
 	 */
 	public void setPersistenceContext(PersistenceContextModel persistenceContext) {
 		this.persistenceContext = persistenceContext;
-	}
-
-	/**
-	 * @return the ajaxDriven model
-	 */
-	public AjaxDrivenModel getAjaxDriven() {
-		return ajaxDriven;
-	}
-
-	/**
-	 * @param ajaxDriven the ajaxDriven model to set
-	 */
-	public void setAjaxDriven(AjaxDrivenModel ajaxDriven) {
-		this.ajaxDriven = ajaxDriven;
 	}
 
 	/**

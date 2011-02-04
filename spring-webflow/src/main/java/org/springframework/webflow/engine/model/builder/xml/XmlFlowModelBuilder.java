@@ -31,7 +31,6 @@ import org.springframework.util.xml.DomUtils;
 import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.ActionStateModel;
-import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
 import org.springframework.webflow.engine.model.BinderModel;
@@ -202,7 +201,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		flow.setAttributes(parseAttributes(element));
 		flow.setSecured(parseSecured(element));
 		flow.setPersistenceContext(parsePersistenceContext(element));
-		flow.setAjaxDriven(parseAjaxDriven(element));
 		flow.setVars(parseVars(element));
 		flow.setInputs(parseInputs(element));
 		flow.setOnStartActions(parseOnStartActions(element));
@@ -409,15 +407,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		} else {
 			return new PersistenceContextModel();
-		}
-	}
-
-	private AjaxDrivenModel parseAjaxDriven(Element element) {
-		element = DomUtils.getChildElementByTagName(element, "ajax-driven");
-		if (element == null) {
-			return null;
-		} else {
-			return new AjaxDrivenModel();
 		}
 	}
 

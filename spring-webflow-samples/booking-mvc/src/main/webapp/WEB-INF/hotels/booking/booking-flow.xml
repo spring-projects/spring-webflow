@@ -5,8 +5,6 @@
 
 	<secured attributes="ROLE_USER" />
 
-	<ajax-driven />
-	
 	<input name="hotelId" required="true" />
 
 	<on-start>

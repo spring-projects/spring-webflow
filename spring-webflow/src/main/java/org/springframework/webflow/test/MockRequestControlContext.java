@@ -137,6 +137,14 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		}
 	}
 
+	public boolean getEmbeddedMode() {
+		Boolean embedded = getMockFlowExecutionContext().getAttributes().getBoolean("embeddedMode");
+		if (embedded != null) {
+			return embedded;
+		}
+		return false;
+	}
+
 	// implementation specific accessors for testing
 
 	public void setAlwaysRedirectOnPause(boolean alwaysRedirectOnPause) {
@@ -147,6 +155,10 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	public void setRedirectInSameState(boolean redirectInSameState) {
 		getMockFlowExecutionContext().getAttributeMap()
 				.put("redirectInSameState", Boolean.valueOf(redirectInSameState));
+	}
+
+	public void setEmbeddedMode(boolean embedded) {
+		getMockFlowExecutionContext().getAttributeMap().put("embeddedMode", Boolean.valueOf(embedded));
 	}
 
 }

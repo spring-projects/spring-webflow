@@ -214,6 +214,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Starting in " + externalContext + " with input " + input);
 		}
+		if (hasEmbeddedModeAttribute(input)) {
+			attributes.asMap().put("embeddedMode", Boolean.TRUE);
+		}
 		MessageContext messageContext = createMessageContext(null);
 		RequestControlContext requestContext = createRequestContext(externalContext, messageContext);
 		RequestContextHolder.setRequestContext(requestContext);
@@ -243,9 +246,8 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	}
 
 	public void resume(ExternalContext externalContext) throws FlowExecutionException, IllegalStateException {
-		Assert
-				.state(status == FlowExecutionStatus.ACTIVE,
-						"This FlowExecution cannot be resumed because it is not active; it has either not been started or has ended");
+		Assert.state(status == FlowExecutionStatus.ACTIVE,
+				"This FlowExecution cannot be resumed because it is not active; it has either not been started or has ended");
 		if (logger.isDebugEnabled()) {
 			logger.debug("Resuming in " + externalContext);
 		}
@@ -641,6 +643,16 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 */
 	private boolean tryFlowHandlers(FlowExecutionException exception, RequestControlContext context) {
 		return getActiveSessionInternal().getFlow().handleException(exception, context);
+	}
+
+	private boolean hasEmbeddedModeAttribute(AttributeMap input) {
+		if (input != null) {
+			String mode = (String) input.get("mode");
+			if (mode != null && mode.trim().toLowerCase().equals("embedded")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

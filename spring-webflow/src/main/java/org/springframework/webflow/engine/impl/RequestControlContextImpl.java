@@ -251,11 +251,12 @@ class RequestControlContextImpl implements RequestControlContext {
 			return true;
 		}
 		Boolean redirectInSameState = flowExecution.getAttributes().getBoolean("redirectInSameState");
-		if (redirectInSameState != null) {
-			return redirectInSameState.booleanValue();
-		} else {
-			return getRedirectOnPause();
-		}
+		return (redirectInSameState != null) ? redirectInSameState.booleanValue() : getRedirectOnPause();
+	}
+
+	public boolean getEmbeddedMode() {
+		Boolean embedded = flowExecution.getAttributes().getBoolean("embeddedMode");
+		return (embedded != null) ? embedded.booleanValue() : false;
 	}
 
 	public String toString() {
@@ -264,4 +265,5 @@ class RequestControlContextImpl implements RequestControlContext {
 				.append("attributes", attributes).append("messageContext", messageContext)
 				.append("flowExecution", flowExecution).toString();
 	}
+
 }

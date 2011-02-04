@@ -76,7 +76,6 @@ import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractMappingModel;
 import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.ActionStateModel;
-import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.BeanImportModel;
 import org.springframework.webflow.engine.model.BinderModel;
@@ -383,7 +382,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		MutableAttributeMap flowAttributes = parseMetaAttributes(flow.getAttributes());
 		parseAndPutPersistenceContext(flow.getPersistenceContext(), flowAttributes);
 		parseAndPutSecured(flow.getSecured(), flowAttributes);
-		parseAndPutAjaxDriven(flow.getAjaxDriven(), flowAttributes);
 		return flowAttributes;
 	}
 
@@ -926,12 +924,6 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			MutableAttributeMap attributes) {
 		if (persistenceContext != null) {
 			attributes.put("persistenceContext", Boolean.TRUE);
-		}
-	}
-
-	private void parseAndPutAjaxDriven(AjaxDrivenModel ajaxDrivenModel, MutableAttributeMap attributes) {
-		if (ajaxDrivenModel != null) {
-			attributes.put("ajaxDriven", Boolean.TRUE);
 		}
 	}
 

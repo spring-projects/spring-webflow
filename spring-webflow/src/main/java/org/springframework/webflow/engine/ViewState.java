@@ -42,11 +42,6 @@ import org.springframework.webflow.execution.ViewFactory;
 public class ViewState extends TransitionableState {
 
 	/**
-	 * The name of the attribute indicating an Ajax-driven Flow Definition.
-	 */
-	private static final String AJAX_DRIVEN_ATTRIBUTE_NAME = "ajaxDriven";
-
-	/**
 	 * The list of actions to be executed before the view is rendered.
 	 */
 	private ActionList renderActionList = new ActionList();
@@ -273,10 +268,8 @@ public class ViewState extends TransitionableState {
 		if (redirect != null) {
 			return redirect.booleanValue();
 		}
-		if (getAjaxDriven(context) != null) {
-			if (context.getExternalContext().isAjaxRequest()) {
-				return false;
-			}
+		if (context.getExternalContext().isAjaxRequest() && context.getEmbeddedMode()) {
+			return false;
 		}
 		return context.getRedirectOnPause();
 	}
@@ -285,16 +278,10 @@ public class ViewState extends TransitionableState {
 		if (redirect != null) {
 			return redirect.booleanValue();
 		}
-		if (getAjaxDriven(context) != null) {
-			if (context.getExternalContext().isAjaxRequest()) {
-				return false;
-			}
+		if (context.getExternalContext().isAjaxRequest() && context.getEmbeddedMode()) {
+			return false;
 		}
 		return context.getRedirectInSameState();
-	}
-
-	private Boolean getAjaxDriven(RequestControlContext context) {
-		return context.getActiveFlow().getAttributes().getBoolean(AJAX_DRIVEN_ATTRIBUTE_NAME);
 	}
 
 	private void render(RequestControlContext context, View view) throws ViewRenderingException {

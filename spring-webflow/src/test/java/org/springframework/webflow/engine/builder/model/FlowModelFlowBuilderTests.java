@@ -18,7 +18,6 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
-import org.springframework.webflow.engine.model.AjaxDrivenModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.EvaluateModel;
@@ -128,14 +127,6 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		Flow flow = getFlow(model);
 		assertNotNull(flow.getAttributes().get("persistenceContext"));
 		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
-	}
-
-	public void testAjaxDrivenFlow() {
-		model.setAjaxDriven(new AjaxDrivenModel());
-		model.setStates(singleList(new EndStateModel("end")));
-		Flow flow = getFlow(model);
-		assertNotNull(flow.getAttributes().get("ajaxDriven"));
-		assertTrue(((Boolean) flow.getAttributes().get("ajaxDriven")).booleanValue());
 	}
 
 	public void testFlowInputOutputMapping() {

@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  */
 class WebFlowEntityResolver implements EntityResolver {
 
-	private static final String[] WEBFLOW_VERSIONS = new String[] { "spring-webflow-2.3", "spring-webflow-2.0" };
+	private static final String[] WEBFLOW_VERSIONS = new String[] { "spring-webflow-2.0" };
 
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 		if (systemId != null && systemId.indexOf("spring-webflow.xsd") > -1) {

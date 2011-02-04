@@ -443,28 +443,23 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
-	public void testAjaxDrivenAttributeOverridesRedirectInSameState() {
+	public void testEmbeddedModeOverridesRedirectInSameState() {
 		Flow flow = new Flow("myFlow");
-		flow.getAttributes().put("ajaxDriven", Boolean.TRUE);
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
 		Transition t = new Transition(on("submit"), null);
 		state.getTransitionSet().add(t);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		state.enter(context);
-		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		context.getMockExternalContext().setAjaxRequest(true);
+		context.setEmbeddedMode(true);
 		context.setAlwaysRedirectOnPause(true);
 		context.setRedirectInSameState(true);
-		context.getFlowScope().remove("renderCalled");
-		context.putRequestParameter("_eventId", "submit");
-		state.resume(context);
+		state.enter(context);
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
-	public void testViewStateRedirectOverridesAjaxDrivenAttribute() {
+	public void testViewStateRedirectOverridesEmbeddedMode() {
 		Flow flow = new Flow("myFlow");
-		flow.getAttributes().put("ajaxDriven", Boolean.TRUE);
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
 		state.setRedirect(false);
@@ -472,13 +467,10 @@ public class ViewStateTests extends TestCase {
 		state.getTransitionSet().add(t);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
-		context = new MockRequestControlContext(context.getFlowExecutionContext());
 		context.getMockExternalContext().setAjaxRequest(true);
+		context.setEmbeddedMode(true);
 		context.setAlwaysRedirectOnPause(true);
 		context.setRedirectInSameState(true);
-		context.getFlowScope().remove("renderCalled");
-		context.putRequestParameter("_eventId", "submit");
-		state.resume(context);
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 

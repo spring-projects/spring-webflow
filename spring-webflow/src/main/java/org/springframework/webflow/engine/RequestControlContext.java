@@ -157,4 +157,10 @@ public interface RequestControlContext extends RequestContext {
 	 */
 	public boolean getRedirectInSameState();
 
+	/**
+	 * Returns true if the flow current flow execution was launched in embedded page mode. When a flow is embedded on a
+	 * page it can make different assumptions with regards to whether redirect after post is necessary.
+	 */
+	public boolean getEmbeddedMode();
+
 }
