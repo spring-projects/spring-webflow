@@ -17,9 +17,9 @@ package org.springframework.webflow.mvc.portlet;
 
 import java.util.Map;
 
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletContext;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
 
 import org.springframework.web.portlet.DispatcherPortlet;
 import org.springframework.web.servlet.View;
@@ -50,8 +50,8 @@ public class PortletMvcView extends AbstractMvcView {
 		ExternalContext externalContext = context.getExternalContext();
 		View view = getView();
 		PortletContext portletContext = (PortletContext) externalContext.getNativeContext();
-		RenderRequest request = (RenderRequest) externalContext.getNativeRequest();
-		RenderResponse response = (RenderResponse) externalContext.getNativeResponse();
+		PortletRequest request = (PortletRequest) externalContext.getNativeRequest();
+		MimeResponse response = (MimeResponse) externalContext.getNativeResponse();
 		if (response.getContentType() == null) {
 			// No Portlet content type specified yet -> use the view-determined type.
 			// (The Portlet spec requires the content type to be set on the RenderResponse)

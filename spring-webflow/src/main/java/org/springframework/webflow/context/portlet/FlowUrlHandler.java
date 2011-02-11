@@ -19,6 +19,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 /**
  * A interface for parsing and generating flow URLs. Encapsulates a specific flow URL format.
@@ -43,20 +45,37 @@ public interface FlowUrlHandler {
 	public void setFlowExecutionRenderParameter(String flowExecutionKey, ActionResponse response);
 
 	/**
-	 * Set the flow execution key into the portlet session. This should only be used when the portlet is started before
-	 * any action requests are made
+	 * Set the flow execution key into the portlet session. This should only be used in a render request when the
+	 * portlet is started before any action requests are made
 	 * @param flowExecutionKey the key
-	 * @param request the render request
+	 * @param request the request
 	 */
 	public void setFlowExecutionInSession(String flowExecutionKey, RenderRequest request);
 
 	/**
-	 * Creates a flow execution URL suitable for use as an action URL.
+	 * Set the flow execution key into the portlet session. This should only be used in a resource request when the
+	 * portlet is started before any action requests are made
+	 * @param flowExecutionKey the key
+	 * @param request the request
+	 */
+	public void setFlowExecutionInSession(String flowExecutionKey, ResourceRequest request);
+
+	/**
+	 * Creates a flow execution URL during a render phase suitable to invoke Web Flow in a portlet environment
 	 * @param flowId the flow id
 	 * @param flowExecutionKey the flow execution key
-	 * @param response the render response
+	 * @param response the response
 	 * @return the execution url
 	 */
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, RenderResponse response);
+
+	/**
+	 * Creates a flow execution URL during a resource phase suitable to invoke Web Flow in a portlet environment
+	 * @param flowId the flow id
+	 * @param flowExecutionKey the flow execution key
+	 * @param response the response
+	 * @return the execution url
+	 */
+	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, ResourceResponse response);
 
 }

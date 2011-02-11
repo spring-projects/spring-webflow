@@ -17,11 +17,14 @@ package org.springframework.webflow.context.portlet;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 /**
  * Default flow URL handler for SWF 2.
@@ -50,13 +53,31 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public void setFlowExecutionInSession(String flowExecutionKey, RenderRequest request) {
-		PortletSession session = request.getPortletSession();
-		session.setAttribute(EXECUTION_ATTRIBUTE, flowExecutionKey);
+		setSessionAttribute(EXECUTION_ATTRIBUTE, flowExecutionKey, request);
+	}
+
+	public void setFlowExecutionInSession(String flowExecutionKey, ResourceRequest request) {
+		setSessionAttribute(EXECUTION_ATTRIBUTE, flowExecutionKey, request);
 	}
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, RenderResponse response) {
+		return createFlowExecutionActionUrl(flowExecutionKey, response);
+	}
+
+	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, ResourceResponse response) {
+		// Create Action URL by default
+		return createFlowExecutionActionUrl(flowExecutionKey, response);
+	}
+
+	private void setSessionAttribute(String name, String value, PortletRequest request) {
+		PortletSession session = request.getPortletSession();
+		session.setAttribute(name, value);
+	}
+
+	private String createFlowExecutionActionUrl(String flowExecutionKey, MimeResponse response) {
 		PortletURL url = response.createActionURL();
 		url.setParameter(EXECUTION_ATTRIBUTE, flowExecutionKey);
 		return url.toString();
 	}
+
 }

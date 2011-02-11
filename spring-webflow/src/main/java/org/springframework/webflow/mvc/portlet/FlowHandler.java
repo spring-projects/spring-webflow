@@ -20,6 +20,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletModeException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -37,6 +39,7 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
  * flow id to launch, how to provision its input, how to process its outcomes, and how to handle uncaught exceptions.
  * 
  * @author Keith Donald
+ * @author Rossen Stoyanchev
  */
 public interface FlowHandler {
 
@@ -47,12 +50,20 @@ public interface FlowHandler {
 	public String getFlowId();
 
 	/**
-	 * Creates the flow execution input map to pass to a new instance of the flow being started. Used by a Controller to
-	 * launch the flow execution with the correct input.
+	 * Creates the flow execution input map to pass to a new instance of the flow being started in a render request.
+	 * Used by a Controller to launch the flow execution with the correct input.
 	 * @param request the current request
 	 * @return the input map
 	 */
 	public MutableAttributeMap createExecutionInputMap(RenderRequest request);
+
+	/**
+	 * Creates the flow execution input map to pass to a new instance of the flow being started in a resource request.
+	 * Used by a Controller to launch the flow execution with the correct input.
+	 * @param request the current request
+	 * @return the input map
+	 */
+	public MutableAttributeMap createResourceExecutionInputMap(ResourceRequest request);
 
 	/**
 	 * Handles a specific flow execution outcome. Used to change portlet modes after the flow ends.
@@ -66,8 +77,8 @@ public interface FlowHandler {
 			throws PortletModeException;
 
 	/**
-	 * Handles a flow exception that was not handled by the Web Flow system. Used by a Controller to handle a specific
-	 * type of exception dealing with this flow in a custom manner.
+	 * Handles a flow exception that was not handled by the Web Flow system in render request. Used by a Controller to
+	 * handle a specific type of exception dealing with this flow in a custom manner.
 	 * @param e the unhandled exception originating from Spring Web Flow. May be thrown by the flow execution itself or
 	 * the flow executor system if no execution could be restored.
 	 * @param request the current request
@@ -76,5 +87,17 @@ public interface FlowHandler {
 	 * the caller
 	 */
 	public String handleException(FlowException e, RenderRequest request, RenderResponse response);
+
+	/**
+	 * Handles a flow exception that was not handled by the Web Flow system in a resource request. Used by a Controller
+	 * to handle a specific type of exception dealing with this flow in a custom manner.
+	 * @param e the unhandled exception originating from Spring Web Flow. May be thrown by the flow execution itself or
+	 * the flow executor system if no execution could be restored.
+	 * @param request the current request
+	 * @param response the current response
+	 * @return the name of a specific error view to render, or <code>null</code> if the exception should be handled by
+	 * the caller
+	 */
+	public String handleResourceException(FlowException e, ResourceRequest request, ResourceResponse response);
 
 }

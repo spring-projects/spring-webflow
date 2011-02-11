@@ -7,6 +7,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import junit.framework.TestCase;
 
@@ -67,10 +69,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 		actionResponse = new MockActionResponse();
 		renderRequest = new MockRenderRequest();
 		renderResponse = new MockRenderResponse();
-		actionContext = new PortletExternalContext(portletContext, actionRequest, actionResponse, controller
-				.getFlowUrlHandler());
-		renderContext = new PortletExternalContext(portletContext, renderRequest, renderResponse, controller
-				.getFlowUrlHandler());
+		actionContext = new PortletExternalContext(portletContext, actionRequest, actionResponse,
+				controller.getFlowUrlHandler());
+		renderContext = new PortletExternalContext(portletContext, renderRequest, renderResponse,
+				controller.getFlowUrlHandler());
 
 		flowHandler = new FlowHandler() {
 			public String getFlowId() {
@@ -78,6 +80,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 			}
 
 			public MutableAttributeMap createExecutionInputMap(RenderRequest request) {
+				return null;
+			}
+
+			public MutableAttributeMap createResourceExecutionInputMap(ResourceRequest request) {
 				return null;
 			}
 
@@ -92,6 +98,14 @@ public class FlowHandlerAdapterTests extends TestCase {
 			}
 
 			public String handleException(FlowException e, RenderRequest request, RenderResponse response) {
+				if (handleException) {
+					return "error";
+				} else {
+					return null;
+				}
+			}
+
+			public String handleResourceException(FlowException e, ResourceRequest request, ResourceResponse response) {
 				if (handleException) {
 					return "error";
 				} else {

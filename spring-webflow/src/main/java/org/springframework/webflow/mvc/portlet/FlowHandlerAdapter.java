@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.mvc.portlet;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -25,7 +24,6 @@ import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -56,6 +54,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * 
  * @author Keith Donald
  * @author Scott Andrews
+ * @author Rossen Stoyanchev
  */
 public class FlowHandlerAdapter extends PortletContentGenerator implements HandlerAdapter, InitializingBean {
 
@@ -121,19 +120,36 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		FlowHandler flowHandler = (FlowHandler) handler;
 		checkAndPrepare(request, response);
 		populateConveniencePortletProperties(request);
-		PortletSession session = request.getPortletSession(false);
-		if (session != null) {
-			FlowException e = (FlowException) session.getAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE);
-			if (e != null) {
-				session.removeAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE);
-				return handleException(e, flowHandler, request, response);
-			}
+		FlowException e = clearActionRequestFlowException(request, response, flowHandler);
+		if (e != null) {
+			return handleException(e, flowHandler, request, response);
 		}
 		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
 		if (flowExecutionKey != null) {
-			return resumeFlow(flowExecutionKey, flowHandler, request, response);
+			return resumeFlowRender(request, response, flowHandler, flowExecutionKey);
 		} else {
-			return startFlow(flowHandler, request, response);
+			MutableAttributeMap input = flowHandler.createExecutionInputMap(request);
+			if (input == null) {
+				input = defaultCreateFlowExecutionInputMap(request);
+			}
+			return startFlowRender(flowHandler, input, request, response);
+		}
+	}
+
+	public ModelAndView handleResource(ResourceRequest request, ResourceResponse response, Object handler)
+			throws Exception {
+		FlowHandler flowHandler = (FlowHandler) handler;
+		checkAndPrepare(request, response);
+		populateConveniencePortletProperties(request);
+		String flowExecutionKey = flowUrlHandler.getFlowExecutionKey(request);
+		if (flowExecutionKey != null) {
+			return resumeFlowResource(request, response, flowHandler, flowExecutionKey);
+		} else {
+			MutableAttributeMap input = flowHandler.createResourceExecutionInputMap(request);
+			if (input == null) {
+				input = defaultCreateFlowExecutionInputMap(request);
+			}
+			return startFlowResource(flowHandler, request, response);
 		}
 	}
 
@@ -159,18 +175,6 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 	public void handleEvent(EventRequest request, EventResponse response, Object handler) throws Exception {
 		// keep render params
 		response.setRenderParameters(request);
-	}
-
-	public ModelAndView handleResource(ResourceRequest request, ResourceResponse response, Object handler)
-			throws Exception {
-		// equivalent to Portlet 2.0 GenericPortlet
-		if (request.getResourceID() != null) {
-			PortletRequestDispatcher rd = this.getPortletContext().getRequestDispatcher(request.getResourceID());
-			if (rd != null) {
-				rd.forward(request, response);
-			}
-		}
-		return null;
 	}
 
 	// subclassing hooks
@@ -212,11 +216,28 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 			RenderResponse response) {
 		if (e instanceof NoSuchFlowExecutionException) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Restarting a new execution of previously ended flow '" + flowHandler.getFlowId() + "'");
+				logger.debug("Starting a new execution of previously ended flow '" + flowHandler.getFlowId() + "'");
 			}
 			// by default, attempt to restart the flow
-			startFlow(flowHandler, null, request, response);
-			return null;
+			try {
+				startFlowRender(flowHandler, null, request, response);
+				return null;
+			} catch (FlowException flowException) {
+				return handleException(flowException, flowHandler, request, response);
+			}
+		} else {
+			throw e;
+		}
+	}
+
+	protected ModelAndView defaultHandleResourceException(FlowHandler flowHandler, FlowException e,
+			ResourceRequest request, ResourceResponse response) {
+		if (e instanceof NoSuchFlowExecutionException) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Starting a new execution of previously ended flow '" + flowHandler.getFlowId() + "'");
+			}
+			// by default, attempt to restart the flow
+			return startFlowResource(flowHandler, request, response);
 		} else {
 			throw e;
 		}
@@ -226,11 +247,21 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 
 	private ModelAndView handleException(FlowException e, FlowHandler flowHandler, RenderRequest request,
 			RenderResponse response) {
-		String viewName = flowHandler.handleException(e, request, response);
-		if (viewName != null) {
-			return new ModelAndView(viewName);
+		String view = flowHandler.handleException(e, request, response);
+		if (view != null) {
+			return new ModelAndView(view);
 		} else {
 			return defaultHandleException(flowHandler, e, request, response);
+		}
+	}
+
+	private ModelAndView handleResourceException(FlowException e, FlowHandler flowHandler, ResourceRequest request,
+			ResourceResponse response) {
+		String view = flowHandler.handleResourceException(e, request, response);
+		if (view != null) {
+			return new ModelAndView(view);
+		} else {
+			return defaultHandleResourceException(flowHandler, e, request, response);
 		}
 	}
 
@@ -242,15 +273,7 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		}
 	}
 
-	private ModelAndView startFlow(FlowHandler flowHandler, RenderRequest request, RenderResponse response) {
-		MutableAttributeMap input = flowHandler.createExecutionInputMap(request);
-		if (input == null) {
-			input = defaultCreateFlowExecutionInputMap(request);
-		}
-		return startFlow(flowHandler, input, request, response);
-	}
-
-	private ModelAndView startFlow(FlowHandler flowHandler, MutableAttributeMap input, RenderRequest request,
+	private ModelAndView startFlowRender(FlowHandler flowHandler, MutableAttributeMap input, RenderRequest request,
 			RenderResponse response) {
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
@@ -259,13 +282,26 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 				flowUrlHandler.setFlowExecutionInSession(result.getPausedKey(), request);
 			}
 			return null;
-		} catch (FlowException e) {
-			return handleException(e, flowHandler, request, response);
+		} catch (FlowException flowEx) {
+			return handleException(flowEx, flowHandler, request, response);
 		}
 	}
 
-	private ModelAndView resumeFlow(String flowExecutionKey, FlowHandler flowHandler, RenderRequest request,
-			RenderResponse response) throws IOException {
+	private ModelAndView startFlowResource(FlowHandler flowHandler, ResourceRequest request, ResourceResponse response) {
+		PortletExternalContext context = createPortletExternalContext(request, response);
+		try {
+			FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), null, context);
+			if (result.isPaused()) {
+				flowUrlHandler.setFlowExecutionInSession(result.getPausedKey(), request);
+			}
+			return null;
+		} catch (FlowException flowEx) {
+			return handleResourceException(flowEx, flowHandler, request, response);
+		}
+	}
+
+	private ModelAndView resumeFlowRender(RenderRequest request, RenderResponse response, FlowHandler flowHandler,
+			String flowExecutionKey) {
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
 			flowExecutor.resumeExecution(flowExecutionKey, context);
@@ -273,6 +309,30 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		} catch (FlowException e) {
 			return handleException(e, flowHandler, request, response);
 		}
+	}
+
+	private ModelAndView resumeFlowResource(ResourceRequest request, ResourceResponse response,
+			FlowHandler flowHandler, String flowExecutionKey) {
+		PortletExternalContext context = createPortletExternalContext(request, response);
+		try {
+			flowExecutor.resumeExecution(flowExecutionKey, context);
+			return null;
+		} catch (FlowException e) {
+			return handleResourceException(e, flowHandler, request, response);
+		}
+	}
+
+	private FlowException clearActionRequestFlowException(RenderRequest request, RenderResponse response,
+			FlowHandler flowHandler) {
+		PortletSession session = request.getPortletSession(false);
+		if (session != null) {
+			FlowException e = (FlowException) session.getAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE);
+			if (e != null) {
+				session.removeAttribute(ACTION_REQUEST_FLOW_EXCEPTION_ATTRIBUTE);
+				return e;
+			}
+		}
+		return null;
 	}
 
 }

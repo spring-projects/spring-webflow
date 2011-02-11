@@ -17,8 +17,11 @@ package org.springframework.webflow.mvc.portlet;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.springframework.webflow.core.FlowException;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -29,6 +32,7 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
  * which operations they need.
  * 
  * @author Keith Donald
+ * @author Rossen Stoyanchev
  */
 public class AbstractFlowHandler implements FlowHandler {
 
@@ -40,11 +44,23 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
+	public MutableAttributeMap createResourceExecutionInputMap(ResourceRequest request) {
+		return null;
+	}
+
 	public boolean handleExecutionOutcome(FlowExecutionOutcome outcome, ActionRequest request, ActionResponse response) {
 		return false;
 	}
 
+	public String handleException(FlowException e, PortletRequest request, RenderResponse response) {
+		return null;
+	}
+
 	public String handleException(FlowException e, RenderRequest request, RenderResponse response) {
+		return null;
+	}
+
+	public String handleResourceException(FlowException e, ResourceRequest request, ResourceResponse response) {
 		return null;
 	}
 

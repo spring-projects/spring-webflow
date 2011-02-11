@@ -22,11 +22,14 @@ import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -50,6 +53,8 @@ public class PortletExternalContext implements ExternalContext {
 
 	protected static final short RENDER_PHASE = 2;
 
+	protected static final short RESOURCE_PHASE = 3;
+
 	/**
 	 * The context.
 	 */
@@ -66,7 +71,7 @@ public class PortletExternalContext implements ExternalContext {
 	private PortletResponse response;
 
 	/**
-	 * The portlet request phase: render or action
+	 * The portlet request phase: render, action, resource
 	 */
 	private short requestPhase;
 
@@ -202,17 +207,20 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public String getFlowExecutionUrl(String flowId, String flowExecutionKey) {
-		if (!isRenderPhase()) {
+		if (isRenderPhase()) {
+			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
+		} else if (isResourcePhase()) {
+			return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (ResourceResponse) response);
+		} else {
 			throw new IllegalStateException(
-					"A flow execution action URL can only be obtained in a RenderRequest using a RenderResponse");
+					"A flow execution action URL can only be obtained in a RenderRequest or a ResourceRequest");
 		}
-		return flowUrlHandler.createFlowExecutionUrl(flowId, flowExecutionKey, (RenderResponse) response);
 	}
 
 	public Writer getResponseWriter() throws IllegalStateException {
 		assertResponseAllowed();
 		try {
-			return ((RenderResponse) response).getWriter();
+			return ((MimeResponse) response).getWriter();
 		} catch (IOException e) {
 			IllegalStateException ise = new IllegalStateException("Unable to access the response Writer");
 			ise.initCause(e);
@@ -221,7 +229,7 @@ public class PortletExternalContext implements ExternalContext {
 	}
 
 	public boolean isResponseAllowed() {
-		return isRenderPhase() && !responseComplete;
+		return (isRenderPhase() || isResourcePhase()) && !responseComplete;
 	}
 
 	public boolean isResponseComplete() {
@@ -331,6 +339,13 @@ public class PortletExternalContext implements ExternalContext {
 		return requestPhase == RENDER_PHASE;
 	}
 
+	/**
+	 * Returns true if the current request phase is the resource phase
+	 */
+	public boolean isResourcePhase() {
+		return requestPhase == RESOURCE_PHASE;
+	}
+
 	// private helpers
 
 	private void init(PortletContext context, PortletRequest request, PortletResponse response,
@@ -347,15 +362,17 @@ public class PortletExternalContext implements ExternalContext {
 			requestPhase = ACTION_PHASE;
 		} else if (request instanceof RenderRequest && response instanceof RenderResponse) {
 			requestPhase = RENDER_PHASE;
+		} else if (request instanceof ResourceRequest && response instanceof ResourceResponse) {
+			requestPhase = RESOURCE_PHASE;
 		} else {
-			throw new IllegalArgumentException("Unknown portlet phase, expected: action or render");
+			throw new IllegalArgumentException("Unknown portlet phase, expected: action, render, or resource");
 		}
 	}
 
 	private void assertResponseAllowed() throws IllegalStateException {
-		if (!isRenderPhase()) {
+		if (!isRenderPhase() && !isResourcePhase()) {
 			throw new IllegalStateException(
-					"A response is not allowed because the current PortletRequest is not a RenderRequest");
+					"A response is not allowed because the current PortletRequest is neither a RenderRequest nor a ResourceRequest");
 		}
 		if (responseComplete) {
 			throw new IllegalStateException(
