@@ -45,12 +45,6 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 	private ExternalContext externalContext;
 
-	/*
-	 * This partialViewContext duplicates the one FacesContextImpl because the constructor of FacesContextImpl calls
-	 * getPartialViewContext(), which causes it to be instantiated with an instance of FacesContextImpl. This leads to
-	 * issues with adding and showing validation messages during Ajax requests because the FlowFacesContext is
-	 * effectively bypassed.
-	 */
 	private PartialViewContext partialViewContext;
 
 	public Jsf2FlowFacesContext(RequestContext context, FacesContext delegate) {
@@ -58,9 +52,10 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 		this.externalContext = new Jsf2FlowExternalContext(getDelegate().getExternalContext());
 
-		PartialViewContextFactory f = (PartialViewContextFactory) FactoryFinder
+		PartialViewContextFactory factory = (PartialViewContextFactory) FactoryFinder
 				.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
-		this.partialViewContext = f.getPartialViewContext(this);
+		PartialViewContext partialViewContextDelegate = factory.getPartialViewContext(this);
+		this.partialViewContext = new FlowPartialViewContext(partialViewContextDelegate);
 	}
 
 	public ExternalContext getExternalContext() {
