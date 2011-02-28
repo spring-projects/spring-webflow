@@ -3,10 +3,10 @@
 
 <!-- Main targets -->
 	<target name="publish-documentation" depends="publish-documentation.init">
-		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
-				command="mkdir /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}"/>
+		<sshexec host="static.springsource.org" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
+				command="mkdir /var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/${bundle.version}"/>
 
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}"
+		<scp remoteToDir="${username}@static.springsource.org:/var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/${bundle.version}"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}">
 				<include name="changelog.txt" />
@@ -16,25 +16,25 @@
 			<fileset dir="${package.docs.dir}" />
 		</scp>
 
-		<sshexec host="spring02.managed.contegix.com" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
-				command="rm /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.2.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version} /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/2.2.x ; ln -s /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/spring-webflow-reference/ /opt/www/domains/springframework.org/www/htdocs/spring-webflow/docs/${bundle.version}/reference" />
+		<sshexec host="static.springsource.org" username="${username}" keyfile="${key.file}" passphrase="${passphrase}"
+				command="rm /var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/2.3.x ; ln -s /var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/${bundle.version} /var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/2.3.x ; ln -s /var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/${bundle.version}/spring-webflow-reference/ /var/www/domains/springsource.org/www/htdocs/spring-webflow/docs/${bundle.version}/reference" />
 
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/faces"
+		<scp remoteToDir="${username}@static.springsource.org:/var/www/domains/springsource.org/www/htdocs/schema/faces"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-faces/src/main/java/org/springframework/faces/config">
-				<include name="spring-faces-2.0.xsd" />
+				<include name="spring-faces-*.xsd" />
 			</fileset>
 		</scp>
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/webflow"
+		<scp remoteToDir="${username}@static.springsource.org:/var/www/domains/springsource.org/www/htdocs/schema/webflow"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-webflow/src/main/java/org/springframework/webflow/engine/model/builder/xml">
-				<include name="spring-webflow-2.0.xsd" />
+				<include name="spring-webflow-*.xsd" />
 			</fileset>
 		</scp>
-		<scp remoteToDir="${username}@spring02.managed.contegix.com:/opt/www/domains/springframework.org/www/htdocs/schema/webflow-config"
+		<scp remoteToDir="${username}@static.springsource.org:/var/www/domains/springsource.org/www/htdocs/schema/webflow-config"
 				keyfile="${key.file}" passphrase="${passphrase}" sftp="true" verbose="true">
 			<fileset dir="${package.output.dir}/projects/spring-webflow/src/main/java/org/springframework/webflow/config">
-				<include name="spring-webflow-config-2.0.xsd" />
+				<include name="spring-webflow-config-*.xsd" />
 			</fileset>
 		</scp>
 	</target>
