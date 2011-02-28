@@ -2,9 +2,28 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
-Changes in version 2.3.0.RELEASE 
+Changes in version 2.3.0.RELEASE (Feb 28, 2011)
 -----------------------------------------------
-
+[SWF-360] - Flow managed persistence context propagation
+[SWF-1415] - Provide support for Portlet 2.0 resource requests
+[SWF-1419] - Add support for JSR-303 (Bean Validation) style validation
+[SWF-1424] - Support partial rendering through the "render" action with JSF 2 and PrimeFaces
+[SWF-759] - Add ability to inject Custom ConversationManager and FlowExecutionRepository in Webflow 2.0.1
+[SWF-991] - Make client-side redirect behavior configurable for Ajax requests
+[SWF-1413] - Provide configuration option for whether redirect after POST should occur after server-side validation error
+[SWF-1414] - Simplify process for getting up and running with the samples
+[SWF-880] - Update Web Flow Samples on richweb.springframework.org
+[SWF-1408] - Replace use of persistence-context by default in Web Flow samples
+[SWF-1447] - Update documentation for 2.3.0 release
+[SWF-1434] - Use Maven central dependencies in Web Flow samples
+[SWF-1435] - Add top-level pom.xml and settings.xml for verifying Maven settings
+[SWF-1446] - Make it easy to install Maven-central compatible Web Flow artifacts locally
+[SWF-1127] - ValidationHelper should make use of Validator.supports method
+[SWF-1247] - MessageContextErrors ResolveMessageCodes
+[SWF-1421] - dojo.require may not have sufficient time to load under some circumstances
+[SWF-1426] - PrimeFaces' commandButton does not work on view transition in Internet Explorer.
+[SWF-1432] - JsfAjaxHandler does not set content type when sending a partial response with a redirect instruction
+[SWF-1437] - Two concurrent threads in an expression of a flow override the rootobject of evaluation context
 
 Changes in version 2.2.1.RELEASE (Oct 28, 2010)
 -----------------------------------------------
