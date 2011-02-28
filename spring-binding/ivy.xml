@@ -23,10 +23,10 @@
 		<dependency org="javax.el" name="com.springsource.javax.el" rev="1.0.0" conf="provided->runtime"/>
 		<dependency org="org.apache.commons" name="com.springsource.org.apache.commons.logging" rev="1.1.1" conf="compile->runtime"/>
 		<dependency org="org.ognl" name="com.springsource.org.ognl" rev="2.6.9" conf="optional->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.4.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.4.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.4.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.4.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.5.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.5.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.5.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.5.RELEASE" conf="compile->runtime"/>
 
 		<!-- test-time only dependencies -->
 		<dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" conf="test->runtime"/>
