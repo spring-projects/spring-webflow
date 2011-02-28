@@ -837,11 +837,11 @@ mvn package
     	They would if the Web Flow didn't do a redirect.  
 	</para>
 	<para>
-		This can lead to a problem specific to JSF 2 environments where JSF components in Sun Mojarra cache the FacesContext assuming the same instance is available throughout the JSF lifecycle.
+		This can lead to a problem specific to JSF 2 environments where a specific Sun Mojarra listener component caches the FacesContext assuming the same instance is available throughout the JSF lifecycle.
 		In Web Flow however the render phase is temporarily put on hold and a client-side redirect executed. 
 	</para>
 	<para>
-		The default behavior of Web Flow is desirable and it is unlikely JSF 2 applications will experience issue.
+		The default behavior of Web Flow is desirable and it is unlikely JSF 2 applications will experience the issue.
 		This is because Ajax is often enabled the default in JSF 2 component libraries and Web Flow does not redirect during Ajax requests.  
 		However if you experience this issue you can disable client-side redirects within the same view as follows:
 	    <programlisting language="xml">
