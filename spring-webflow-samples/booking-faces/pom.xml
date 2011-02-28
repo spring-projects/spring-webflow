@@ -12,7 +12,7 @@
 		<org.springsecurity-version>3.0.2.RELEASE</org.springsecurity-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<jsf-version>2.0.3</jsf-version>
-		<primefaces-version>2.2.RC1</primefaces-version>
+		<primefaces-version>2.2.1</primefaces-version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
