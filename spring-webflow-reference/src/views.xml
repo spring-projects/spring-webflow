@@ -448,8 +448,38 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 		<title>Validating a model</title>
 		<para>
 			Model validation is driven by constraints specified against a model object.
-			Web Flow supports enforcing such constraints programatically.
+			Web Flow supports enforcing such constraints programatically as well as 
+			declaratively with JSR-303 Bean Validation annotations.
 		</para>
+		<sect2 id="view-validation-jsr303">
+			<title>JSR-303 Bean Validation</title>
+			<para>
+				Web Flow provides built-in support for the JSR-303 Bean Validation API 
+				building on equivalent support available in Spring MVC. 
+				To enable JSR-303 validation configure the flow-builder-services with 
+				Spring MVC's <code>LocalValidatorFactoryBean</code>:
+			</para>
+			<programlisting language="xml">
+&lt;webflow:flow-registry flow-builder-services="flowBuilderServices" /&gt;
+
+&lt;webflow:flow-builder-services id="flowBuilderServices" validator="validator" /&gt;
+
+&lt;bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" /&gt;
+			</programlisting>
+
+			<para>
+				With the above in place, the configured validator will be applied to
+				all model attributes after data binding. 
+			</para>
+			
+			<para>
+				Note that JSR-303 bean validation and validation by convention 
+				(explained in the next section) are not mutually exclusive.
+				In other words Web Flow will apply all available validation 
+				mechanisms.
+			</para>
+			
+		</sect2>
 		<sect2 id="view-validation-programmatic">
 			<title>Programmatic validation</title>
 			<para>

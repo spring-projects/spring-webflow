@@ -2,122 +2,206 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="whatsnew">
-	<title>What's New In Spring Web Flow 2.2.0</title>
-	<sect1 id="whatsnew-jsf2">
-		<title>JSF 2 Support</title>
-		<sect2>
-			<title>Comprehensive JSF 2 Support</title>
+	<title>What's New</title>
+	<sect1 id="whatsnew-swf-230">
+		<title>Spring Web Flow 2.3</title>
+		<sect2 id="whatsnew-swf-embedded-flow">
+			<title>Embedding A Flow On A Page</title>
 			<para>
-				Building on 2.1, Spring Web Flow version 2.2 adds support for core JSF 2 features 
-				The following features that were not supported in 2.1 are now available: 
-				partial state saving, JSF 2 resource request, handling, and JSF 2 Ajax requests. 
-				At this point support for JSF 2 is considered 
-				comprehensive although not covering every JSF 2 feature -- 
-				excluded are mostly features that overlap with the core value Web Flow provides
-				such as those relating to navigation and state management. 
-			</para>
-			<para>
-				See <xref linkend="spring-faces-webflow-config"/> for important configuration changes.
-				Note that partial state saving is only supported with Sun Mojarra 2.0.3 or later.
-				It is not yet supported with Apache MyFaces. This is due to the
-				fact MyFaces was not as easy to customize with regards to how component state is stored. 
-				We will work with Apache MyFaces to provide this support. In the mean time you will need to use
-				the <code>javax.faces.PARTIAL_STATE_SAVING</code> context parameter in <code>web.xml</code>
-				to disable partial state saving with Apache MyFaces.
+				By default Web Flow does a client-side redirect upon entering every view state.
+				That makes it impossible to embed a flow on a page or within a modal dialog and execute more than one view state without causing a full-page refresh. 
+				Web Flow now supports launching a flow in "embedded" mode.
+				In this mode a flow can transition to other view states without a client-side redirect during Ajax requests.
+				See <xref linkend="spring-mvc-embedded-flow"/> and <xref linkend="spring-faces-embedded-mode"/>.
 			</para>
 		</sect2>
-		<sect2>
-			<title>Travel Sample With the PrimeFaces Components</title>
+		<sect2 id="whatsnew-jsr303">
+			<title>Support For JSR-303 Bean Validation</title>
 			<para>
-				The main Spring Travel sample demonstrating Spring Web Flow and JSF support 
-				is now built on JSF 2 and components from the PrimeFaces component library.
-				Please check out the booking-faces sample in the distribution.
+				Support for the JSR-303 Bean Validation API is now available building on equivalent support available in Spring MVC.
+				See <xref linkend="view-validate"/> for more details. 
+			</para>
+		</sect2>
+		<sect2 id="whatsnew-pc-propagation">
+			<title>Flow-Managed Persistence Context Propagation</title>
+			<para>
+				Starting with Web Flow 2.3 a flow managed <code>PersistenceContext</code> is automatically extended (propagated) to sub-flows assuming the subflow also has the feature enabled as well.
+				See <xref linkend="flow-managed-persistence-propagation"/>.
+			</para>
+		</sect2>
+		<sect2 id="whatsnew-portlet-resource-requests">
+			<title>Portlet 2.0 Resource Requests</title>
+			<para>
+				Support for Portlet 2.0 resource requests has now been added enabling Ajax requests with partial rendering.
+				URLs for such requests can be prepared with the <code>&lt;portlet:resourceURL&gt;</code> tag in JSP pages.
+				Server-side processing is similar to a combined an action and a render requests but combined in a single request.
+				Unlike a render request, the response from a resource request includes content from the target portlet only. 
+			</para>
+		</sect2>
+		<sect2 id="whatsnew-conversation-manager">
+			<title>Custom ConversationManager</title>
+			<para>
+				The <code>&lt;flow-execution-repository&gt;</code> element now provides a conversation-manager attribute accepting a reference to a ConversationManager instance. 
+			</para>
+		</sect2>
+		<sect2 id="whatsnew-redirect-in-same-state">
+			<title>Redirect In Same State</title>
+			<para>
+		    	By default Web Flow does a client-side redirect when remaining in the same view state as long as the current request is not an Ajax request.
+		    	This is useful after form validation failure.
+		    	Hitting Refresh or Back won't result in browser warnings.
+				Hence this behavior is usually desirable.
+				However a new flow execution attribute makes it possible to disable it and that may also be necessary in some cases specific to JSF 2 applications.
+				See <xref linkend="spring-faces-redirect-in-same-state"/>.
+			</para>
+		</sect2>
+		<sect2 id="whatsnew-samples">
+			<title>Samples</title>
+			<para>
+				The process for building the samples included with the distribution has been simplified.
+				Maven can be used to build all samples in one step.
+				Eclipse settings include source code references to simplify debugging.
 			</para>
 			<para>
-				Additional samples can be found at the Spring Web Flow - Prime Faces 
-				<ulink url="https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase">
-					Showcase</ulink>, an SVN repository within the 
-					<ulink url="https://src.springframework.org/svn/spring-samples">spring-samples</ulink> 
-					repository. Use these commands to check out and build:
-			</para>
-<programlisting><![CDATA[svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
+				Additional samples can be accessed as follows:
+<programlisting language="xml">mkdir spring-samples
+cd spring-samples
+svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
 cd webflow-primefaces-showcase
 mvn package
-]]></programlisting>					
+# import into Eclipse
+</programlisting>
 
-		</sect2>
-	</sect1>
-	<sect1 id="whatsnew-sec">
-		<title>Spring Security Facelets Tag Library</title>
-		<para>
-			A new Spring Security tag library is available for use with with JSF 2.0 or with JSF 1.2 Facelets views.
-			It provides an &lt;authorize&gt; tag as well as several EL functions. 
-			See <xref linkend="spring-faces-security-taglib"/> for more details. 
-		</para>
-	</sect1>
-	<sect1 id="whatsnew-versions">
-		<title>Spring JavaScript Updates</title>
-		<sect2>
-			<title>Deprecated ResourcesServlet</title>
-			<para>
-				Starting with Spring 3.0.4, the Spring Framework includes
-				a replacement for the ResourcesServlet. Please see 
-				the Spring Framework documentation for details on the custom mvc namespace,
-				specifically the new 
-				<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">"resources"</ulink>
-				element.
-			</para>
-		</sect2>
-		<sect2>
-			<title>Dojo 1.5 and dojox</title>
-			<para>
-				The bundled custom Dojo build is upgraded to version 1.5. It now includes dojox.
-			</para>
-			<para>
-				Note that applications are generally encouraged to prepare their own custom
-				Dojo build for optimized performance depending on what parts of Dojo are
-				commonly used together. For examples see the 
-				<ulink url="https://src.springframework.org/svn/spring-webflow/branches/spring-webflow-2.2-maintenance/spring-js-resources/scripts/dojo">scripts</ulink>
-				used by Spring Web Flow to prepare its own custom Dojo build.
-			</para>
-		</sect2>
-		<sect2>
-			<title>Two Spring JS artifacts</title>
-			<para>
-				The <code>spring-js</code> artifact has been split in two -- the new artifact 
-				(<code>spring-js-resources</code>) contains client side resource (.js, .css, etc.) while
-				the existing artifact (<code>spring-js</code>) contains server-side Java code only.
-			</para>
-			<para>
-				Applications preparing their own custom Dojo build have an option now to
-				avoid including <code>spring-js-resources</code> and put <code>Spring.js</code> and 
-				<code>Spring-Dojo.js</code> directly under the root of their web application.
-			</para>
-		</sect2>
-		<sect2>
-			<title>Client resources moved into META-INF/web-resources</title>
-			<para>
-				Bundled client resources (.js, .css, etc.) 
-				have been moved to <code>META-INF/web-resources</code> from their previous location
-				under <code>META-INF</code>. This change is transparent for applications but will result
-				in simpler and safer configuration when using the new resource handling
-				mechanism available in Spring 3.0.4.
+<programlisting language="xml">mkdir spring-samples
+cd spring-samples
+svn co https://src.springframework.org/svn/spring-samples/webflow-showcase
+cd webflow-showcase
+mvn package
+# import into Eclipse
+</programlisting>
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="whatsnew-jsf-portlet">
-		<title>JFS Portlet Support</title>
-		<sect2>
-			<title>Portlet API 2.0 and JSF 1.2 support</title>
+
+	<sect1 id="whatsnew-swf-220">
+		<title>Spring Web Flow 2.2</title>
+		<sect2 id="whatsnew-jsf2">
+			<title>JSF 2 Support</title>
+			<sect3>
+				<title>Comprehensive JSF 2 Support</title>
+				<para>
+					Building on 2.1, Spring Web Flow version 2.2 adds support for core JSF 2 features 
+					The following features that were not supported in 2.1 are now available: 
+					partial state saving, JSF 2 resource request, handling, and JSF 2 Ajax requests. 
+					At this point support for JSF 2 is considered 
+					comprehensive although not covering every JSF 2 feature -- 
+					excluded are mostly features that overlap with the core value Web Flow provides
+					such as those relating to navigation and state management. 
+				</para>
+				<para>
+					See <xref linkend="spring-faces-webflow-config"/> for important configuration changes.
+					Note that partial state saving is only supported with Sun Mojarra 2.0.3 or later.
+					It is not yet supported with Apache MyFaces. This is due to the
+					fact MyFaces was not as easy to customize with regards to how component state is stored. 
+					We will work with Apache MyFaces to provide this support. In the mean time you will need to use
+					the <code>javax.faces.PARTIAL_STATE_SAVING</code> context parameter in <code>web.xml</code>
+					to disable partial state saving with Apache MyFaces.
+				</para>
+			</sect3>
+			<sect3>
+				<title>Travel Sample With the PrimeFaces Components</title>
+				<para>
+					The main Spring Travel sample demonstrating Spring Web Flow and JSF support 
+					is now built on JSF 2 and components from the PrimeFaces component library.
+					Please check out the booking-faces sample in the distribution.
+				</para>
+				<para>
+					Additional samples can be found at the Spring Web Flow - Prime Faces 
+					<ulink url="https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase">
+						Showcase</ulink>, an SVN repository within the 
+						<ulink url="https://src.springframework.org/svn/spring-samples">spring-samples</ulink> 
+						repository. Use these commands to check out and build:
+				</para>
+	<programlisting><![CDATA[svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
+	cd webflow-primefaces-showcase
+	mvn package
+	]]></programlisting>					
+	
+			</sect3>
+		</sect2>
+		<sect2 id="whatsnew-sec">
+			<title>Spring Security Facelets Tag Library</title>
 			<para>
-				In previous versions of Spring Web Flow support for JSF Portlets relied on 
-				a Portlet Bridge for JSF implementation and was considered experimental. 
-				Spring Web Flow 2.2 adds support for JSF Portlets based on its own internal 
-				Portlet integration targeting Portlet API 2.0 and JSF 1.2 environments.
-				See <xref linkend="portlet-jsf"/> for more details.
-				The Spring Web Flow Travel JSF Portlets sample has been successfully 
-				tested on the Apache Pluto portal container.
+				A new Spring Security tag library is available for use with with JSF 2.0 or with JSF 1.2 Facelets views.
+				It provides an &lt;authorize&gt; tag as well as several EL functions. 
+				See <xref linkend="spring-faces-security-taglib"/> for more details. 
 			</para>
 		</sect2>
+		<sect2 id="whatsnew-versions">
+			<title>Spring JavaScript Updates</title>
+			<sect3>
+				<title>Deprecated ResourcesServlet</title>
+				<para>
+					Starting with Spring 3.0.4, the Spring Framework includes
+					a replacement for the ResourcesServlet. Please see 
+					the Spring Framework documentation for details on the custom mvc namespace,
+					specifically the new 
+					<ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">"resources"</ulink>
+					element.
+				</para>
+			</sect3>
+			<sect3>
+				<title>Dojo 1.5 and dojox</title>
+				<para>
+					The bundled custom Dojo build is upgraded to version 1.5. It now includes dojox.
+				</para>
+				<para>
+					Note that applications are generally encouraged to prepare their own custom
+					Dojo build for optimized performance depending on what parts of Dojo are
+					commonly used together. For examples see the 
+					<ulink url="https://src.springframework.org/svn/spring-webflow/branches/spring-webflow-2.2-maintenance/spring-js-resources/scripts/dojo">scripts</ulink>
+					used by Spring Web Flow to prepare its own custom Dojo build.
+				</para>
+			</sect3>
+			<sect3>
+				<title>Two Spring JS artifacts</title>
+				<para>
+					The <code>spring-js</code> artifact has been split in two -- the new artifact 
+					(<code>spring-js-resources</code>) contains client side resource (.js, .css, etc.) while
+					the existing artifact (<code>spring-js</code>) contains server-side Java code only.
+				</para>
+				<para>
+					Applications preparing their own custom Dojo build have an option now to
+					avoid including <code>spring-js-resources</code> and put <code>Spring.js</code> and 
+					<code>Spring-Dojo.js</code> directly under the root of their web application.
+				</para>
+			</sect3>
+			<sect3>
+				<title>Client resources moved into META-INF/web-resources</title>
+				<para>
+					Bundled client resources (.js, .css, etc.) 
+					have been moved to <code>META-INF/web-resources</code> from their previous location
+					under <code>META-INF</code>. This change is transparent for applications but will result
+					in simpler and safer configuration when using the new resource handling
+					mechanism available in Spring 3.0.4.
+				</para>
+			</sect3>
+		</sect2>
+		<sect2 id="whatsnew-jsf-portlet">
+			<title>JFS Portlet Support</title>
+			<sect3>
+				<title>Portlet API 2.0 and JSF 1.2 support</title>
+				<para>
+					In previous versions of Spring Web Flow support for JSF Portlets relied on 
+					a Portlet Bridge for JSF implementation and was considered experimental. 
+					Spring Web Flow 2.2 adds support for JSF Portlets based on its own internal 
+					Portlet integration targeting Portlet API 2.0 and JSF 1.2 environments.
+					See <xref linkend="portlet-jsf"/> for more details.
+					The Spring Web Flow Travel JSF Portlets sample has been successfully 
+					tested on the Apache Pluto portal container.
+				</para>
+			</sect3>
+		</sect2>
 	</sect1>
+
 </chapter>

@@ -78,7 +78,7 @@
 	<sect1 id="flow-managed-persistence-propagation">
 		<title>Flow Managed Persistence And Sub-Flows</title>
 		<para>
-			Starting with version 2.3 a flow managed <code>PersistenceContext</code> is automatically extended
+			A flow managed <code>PersistenceContext</code> is automatically extended
 			(propagated) to subflows assuming the subflow also has the <code>&lt;perstistence-context/&gt;</code>
 			variable. When a subflow re-uses the <code>PersistenceContext</code> started by its parent it ignores 
 			commit flags when an end state is reached thereby deferring the final decision (to commit or not) to 
