@@ -212,7 +212,7 @@
 		<repository>
 			<id>org.maven.central</id>
 			<name>Maven Central Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
+			<url>http://repo1.maven.org/maven2/</url>
 			<snapshots><enabled>false</enabled></snapshots>
 		</repository>
 		<!-- For testing against latest Spring snapshots -->
@@ -230,13 +230,6 @@
 			<url>http://maven.springframework.org/milestone</url>
 			<snapshots><enabled>false</enabled></snapshots>
 		</repository>		
-		<!-- Needed for Hibernate, which is not published to central -->
-		<repository>
-			<id>org.jboss.repository</id>
-			<name>JBoss Maven Repository</name>
-            <url>http://repository.jboss.org/maven2</url>
-	   		<snapshots><enabled>false</enabled></snapshots>
-		</repository>
 	</repositories>
 	<build>
 		<finalName>booking-mvc</finalName>
