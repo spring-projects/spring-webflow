@@ -85,6 +85,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		factory.setExecutionAttributes(attributes);
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		assertEquals(attributes, execution.getAttributes());
+		assertNotSame(attributes, execution.getAttributes());
 	}
 
 	public void testCreateWithExecutionListener() {
