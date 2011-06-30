@@ -166,8 +166,11 @@ public class FlowViewStateManager extends StateManager {
 		if (context.getViewRoot().isTransient()) {
 			return null;
 		}
+		if (!JsfUtils.isFlowRequest()) {
+			return delegate.saveView(context);
+		}
 		FlowSerializedView view = null;
-		if ((!JsfUtils.isFlowRequest()) || JsfRuntimeInformation.isPartialStateSavingSupported()) {
+		if (JsfRuntimeInformation.isPartialStateSavingSupported()) {
 			Object[] state = (Object[]) delegate.saveView(context);
 			view = new FlowSerializedView(context.getViewRoot().getViewId(), state[0], state[1]);
 		} else {
