@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<project-modules id="moduleCoreId" project-version="2.0">
   <wb-module deploy-name="booking-portlet-mvc">
     <property name="context-root" value="booking-portlet-mvc"/>
     <wb-resource deploy-path="/" source-path="src/main/webapp"/>
@@ -88,7 +87,7 @@
     <dependent-module archiveName="spring-beans-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-beans/3.0.5.RELEASE/spring-beans-3.0.5.RELEASE.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-binding-2.3.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-binding/2.3.0.BUILD-SNAPSHOT/spring-binding-2.3.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-binding-2.3.1.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-binding/2.3.1.BUILD-SNAPSHOT/spring-binding-2.3.1.BUILD-SNAPSHOT.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="spring-context-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-context/3.0.5.RELEASE/spring-context-3.0.5.RELEASE.jar">
@@ -106,10 +105,10 @@
     <dependent-module archiveName="spring-jdbc-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-jdbc/3.0.5.RELEASE/spring-jdbc-3.0.5.RELEASE.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-js-2.3.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-js/2.3.0.BUILD-SNAPSHOT/spring-js-2.3.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-js-2.3.1.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-js/2.3.1.BUILD-SNAPSHOT/spring-js-2.3.1.BUILD-SNAPSHOT.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-js-resources-2.3.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-js-resources/2.3.0.BUILD-SNAPSHOT/spring-js-resources-2.3.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-js-resources-2.3.1.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-js-resources/2.3.1.BUILD-SNAPSHOT/spring-js-resources-2.3.1.BUILD-SNAPSHOT.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="spring-orm-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-orm/3.0.5.RELEASE/spring-orm-3.0.5.RELEASE.jar">
@@ -121,7 +120,7 @@
     <dependent-module archiveName="spring-web-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="spring-webflow-2.3.0.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-webflow/2.3.0.BUILD-SNAPSHOT/spring-webflow-2.3.0.BUILD-SNAPSHOT.jar">
+    <dependent-module archiveName="spring-webflow-2.3.1.BUILD-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/webflow/spring-webflow/2.3.1.BUILD-SNAPSHOT/spring-webflow-2.3.1.BUILD-SNAPSHOT.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="spring-webmvc-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-webmvc/3.0.5.RELEASE/spring-webmvc-3.0.5.RELEASE.jar">
@@ -130,13 +129,7 @@
     <dependent-module archiveName="spring-webmvc-portlet-3.0.5.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/springframework/spring-webmvc-portlet/3.0.5.RELEASE/spring-webmvc-portlet-3.0.5.RELEASE.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="stax-1.2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/stax/stax/1.2.0/stax-1.2.0.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
     <dependent-module archiveName="stax-api-1.0-2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
-    <dependent-module archiveName="stax-api-1.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="validation-api-1.0.0.GA.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar">
@@ -147,8 +140,5 @@
     </dependent-module>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
   </wb-module>
 </project-modules>

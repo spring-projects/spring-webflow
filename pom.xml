@@ -6,7 +6,7 @@
 	<artifactId>spring-webflow-root</artifactId>
 	<packaging>pom</packaging>
 	<name>Spring Web Flow</name>
-	<version>2.3.0.BUILD-SNAPSHOT</version>
+	<version>2.3.1.BUILD-SNAPSHOT</version>
 	<modules>
 		<module>spring-binding</module>
 		<module>spring-js-resources</module>

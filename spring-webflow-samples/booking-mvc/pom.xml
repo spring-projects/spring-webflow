@@ -6,7 +6,7 @@
 	<artifactId>booking-mvc</artifactId>
 	<packaging>war</packaging>
 	<name>Hotel Booking : Spring MVC + Web Flow + JSP</name>
-	<version>2.3.0.BUILD-SNAPSHOT</version>
+	<version>2.3.1.BUILD-SNAPSHOT</version>
 	<properties>
 		<org.springframework-version>3.0.5.RELEASE</org.springframework-version>
 		<org.springsecurity-version>3.0.2.RELEASE</org.springsecurity-version>
