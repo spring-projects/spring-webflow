@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: <%= project_name %>
+Bundle-Vendor: SpringSource Inc.

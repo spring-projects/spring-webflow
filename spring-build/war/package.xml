@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-war">
+
+	<import file="common.xml"/>
+	<import file="../common/package.xml"/>
+
+<!-- Macros -->
+	<macrodef name="dist-jar">
+		<attribute name="output.dir" default="${package.dist.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<copy file="${war.output.file}" tofile="@{output.dir}/${package.war.output.file}"/>
+		</sequential>
+	</macrodef>
+
+</project>

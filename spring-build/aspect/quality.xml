@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quality-aspect" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/quality.xml"/>
+
+	<target name="test.do" depends="ivy.init, resolve.test, resolve.aspects, compile.init, test.init" if="test.exists">
+		<path id="test.compile.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+		</path>
+		<test-compile classpath.id="test.compile.classpath" input.dir="${test.java.dir}" output.dir="${test.output.dir}"
+				resources.dir="${test.resources.dir}"/>
+		<iajc inPath="${test.output.dir}" aspectPath="${jar.output.file}" classpathRef="test.compile.classpath"
+				destDir="${test.output.dir}" source="${source.version}" checkRuntimeVersion="false"/>
+
+		<path id="test.run.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<pathelement location="${test.output.dir}"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+			<path refid="runtime.classpath"/>
+		</path>
+		<test-run classpath.id="test.run.classpath"/>
+	</target>
+
+	<target name="clover.instrument" depends="ivy.init, resolve.test, compile.init, clover.init">
+		<instrument input.dir="${main.java.dir}" output.dir="${main.clover.dir}"/>
+		<path id="clover.compile.classpath">
+			<path refid="clover.classpath"/>
+			<path refid="compile.classpath"/>
+		</path>
+		<compile classpath.id="clover.compile.classpath" input.dir="${main.clover.dir}" output.dir="${main.output.dir}"
+				resources.dir="${main.resources.dir}"/>
+
+		<instrument input.dir="${test.java.dir}" output.dir="${test.clover.dir}"/>
+		<path id="test.compile.classpath">
+			<pathelement location="${main.output.dir}"/>
+			<path refid="clover.classpath"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+		</path>
+		<test-compile classpath.id="test.compile.classpath" input.dir="${test.clover.dir}" output.dir="${test.output.dir}"
+				resources.dir="${test.resources.dir}"/>
+		<iajc inPath="${test.output.dir}" aspectPath="${main.output.dir}" classpathRef="test.compile.classpath"
+				destDir="${test.output.dir}" source="${source.version}" checkRuntimeVersion="false"/>
+		<delete dir="${clover.staging.dir}" quiet="true"/>
+	</target>
+
+</project>

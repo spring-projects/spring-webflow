@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quality-standard">
+
+	<import file="common.xml"/>
+	<import file="../common/quality.xml"/>
+
+</project>

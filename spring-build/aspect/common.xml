@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common-aspect">
+
+	<import file="../common/common.xml"/>
+
+<!-- Macros -->
+	<macrodef name="do-compile">
+		<attribute name="classpath.id"/>
+		<attribute name="input.dir"/>
+		<attribute name="output.dir"/>
+		<attribute name="resources.dir"/>
+		<sequential>
+			<iajc sourceroots="@{input.dir}" destDir="@{output.dir}" classpathRef="@{classpath.id}" source="${source.version}"
+					debug="${compile.debug}" debugLevel="${compile.debug.level}" checkRuntimeVersion="false"/>
+			<copy todir="@{output.dir}">
+				<fileset dir="@{input.dir}">
+					<exclude name="**/*.aj"/>
+					<exclude name="**/*.java"/>
+					<exclude name="*.aj"/>
+					<exclude name="*.java"/>
+				</fileset>
+			</copy>
+			<copy todir="@{output.dir}">
+				<fileset dir="@{resources.dir}"/>
+			</copy>
+		</sequential>
+	</macrodef>
+
+</project>
