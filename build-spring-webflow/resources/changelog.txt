@@ -2,6 +2,12 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.4.0.RELEASE
+-----------------------------------------------
+
+
+
+
 Changes in version 2.3.0.RELEASE (Feb 28, 2011)
 -----------------------------------------------
 [SWF-360] - Flow managed persistence context propagation
