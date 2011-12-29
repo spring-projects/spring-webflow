@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-common" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+
+<!-- Main targets -->
+	<target name="package"
+			description="Copies all external and created artifacts to a packaging location.  Unless overriden, copies nothing.">
+		<echo message="${ant.project.name} contributed no artifacts to packaging.  To contribute, override the 'package' target in the bundle." />
+	</target>
+
+	<target name="copy-dist-jar" depends="ivy.init"
+			description="Copies the distributable jar to a location">
+		<dist-jar output.dir="${copy.to.dir}"/>
+	</target>
+
+	<target name="copy-ext-jars" depends="ivy.init"
+			description="Copies the external jars to a location">
+		<ext-jars output.dir="${copy.to.dir}"/>
+	</target>
+
+	<target name="copy-provided-jars" depends="ivy.init"
+			description="Copies the provided jars to a location">
+		<provided-jars output.dir="${copy.to.dir}"/>
+	</target>
+
+	<target name="copy-provided-libs" depends="ivy.init"
+			description="Copies the provided libs to a location">
+		<provided-libs output.dir="${copy.to.dir}"/>
+	</target>
+
+<!-- Macros -->
+	<macrodef name="dist-jar">
+		<attribute name="output.dir" default="${package.dist.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<copy file="${jar.output.file}" tofile="@{output.dir}/${package.jar.output.file}"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="src-jar">
+		<attribute name="output.dir" default="${package.src.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<copy file="${source-jar.output.file}" tofile="@{output.dir}/${package.source-jar.output.file}"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="add-jars">
+		<attribute name="output.dir" default="${package.lib.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<ivy:retrieve resolveId="additional.classpath" conf="additional" type="jar"
+					pattern="@{output.dir}/[artifact]-[revision].[ext]" log="download-only"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="ext-jars">
+		<attribute name="output.dir" default="${package.lib.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<ivy:retrieve resolveId="runtime.classpath" conf="runtime" type="jar"
+					pattern="@{output.dir}/[artifact]-[revision].[ext]" log="download-only"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="ext-jars-shallow">
+		<attribute name="output.dir" default="${package.lib.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<ivy:retrieve resolveId="runtime.classpath" conf="runtime" type="jar" transitive="false"
+					pattern="@{output.dir}/[artifact]-[revision].[ext]" log="download-only"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="provided-jars">
+		<attribute name="output.dir" default="${package.lib.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<ivy:retrieve resolveId="provided.classpath" conf="provided" type="jar"
+					pattern="@{output.dir}/[artifact]-[revision].[ext]" log="download-only"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="provided-libs">
+		<attribute name="output.dir" default="${package.lib.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<ivy:retrieve resolveId="provided.classpath" conf="provided" type="library"
+					pattern="@{output.dir}/[artifact]-[revision].[ext]" log="download-only"/>
+		</sequential>
+	</macrodef>
+
+</project>

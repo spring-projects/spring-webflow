@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-par">
+
+	<import file="common.xml"/>
+	<import file="../common/package.xml"/>
+
+<!-- Macros -->
+	<macrodef name="dist-jar">
+		<attribute name="output.dir" default="${package.dist.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<copy file="${par.output.file}" tofile="@{output.dir}/${package.par.output.file}"/>
+		</sequential>
+	</macrodef>
+
+</project>

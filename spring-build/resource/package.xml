@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-resource">
+
+	<import file="common.xml"/>
+	<import file="../common/package.xml"/>
+
+<!-- Macros -->
+	<macrodef name="dist-jar">
+		<attribute name="output.dir" default="${package.dist.dir}"/>
+		<sequential>
+			<mkdir dir="@{output.dir}"/>
+			<copy dir="${resource.src.dir}" tofile="@{output.dir}"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="src-jar">
+		<attribute name="output.dir" default="${package.src.dir}"/>
+		<sequential>
+		</sequential>
+	</macrodef>
+
+</project>

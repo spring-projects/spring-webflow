@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby -wKU
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__))
+require "rubygems"
+require "choice"
+require "project-gen/options"
+require "project-gen/creator"
+
+
+Creator.create(Choice.choices)
+

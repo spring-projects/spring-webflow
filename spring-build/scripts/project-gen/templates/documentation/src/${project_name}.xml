@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+<book>
+	<bookinfo>
+		<title>...</title>
+
+		<productname>...</productname>
+		<releaseinfo>...</releaseinfo>
+
+		<mediaobject>
+			<imageobject role="fo">
+				<imagedata align="center" fileref="images/s2-logo.png" format="PNG"/>
+			</imageobject>
+			<imageobject role="html">
+				<imagedata align="right" fileref="images/s2-logo.png" format="PNG"/>
+			</imageobject>
+		</mediaobject>
+
+		<authorgroup>
+			<author>
+				<firstname>...</firstname>
+				<surname>...</surname>
+			</author>
+		</authorgroup>
+
+		<legalnotice>Copyright &copy; SpringSource Inc., 2008</legalnotice>
+	</bookinfo>
+
+	<toc/>
+</book>

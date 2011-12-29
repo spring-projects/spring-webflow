@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="artifact-weaving-external" xmlns:ivy="antlib:org.apache.ivy.ant"
+		xmlns:bundlor="antlib:com.springsource.bundlor.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/artifact.xml"/>
+
+	<target name="javadoc-all"
+			description="Creates javadoc documentation for all classes."/>
+
+	<target name="jar" depends="ivy.init, resolve.compile, resolve.aspects, resolve.external, compile.init, jar.init"
+			description="Creates a JAR file containing the output of a compilation of the source tree.">
+		<delete quiet="true" file="${ivy.output.file}"/>
+		<mkdir dir="${ivy.output.dir}"/>
+		<delete quiet="true" file="${jar.output.file}"/>
+		<mkdir dir="${jar.output.dir}"/>
+		<delete quiet="true" file="${source-jar.output.file}"/>
+		<mkdir dir="${source-jar.output.dir}"/>
+
+		<iajc inPathRef="external.classpath" aspectPathRef="aspects.classpath" classpathRef="compile.classpath"
+				outJar="${jar.output.file}" source="${source.version}" checkRuntimeVersion="false"/>
+		<antcall target="bundlor"/>
+		<copy tofile="${source-jar.output.file}">
+			<path refid="external.srcpath"/>
+			<flattenmapper/>
+		</copy>
+		<ivy:publish resolver="integration" pubdate="${timestamp}" status="${release.type}" overwrite="true">
+			<artifacts pattern="${ivy.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${jar.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${source-jar.output.dir}/[artifact].[ext]"/>
+		</ivy:publish>
+	</target>
+
+<!-- Other targets -->
+	<target name="compile.init" depends="ivy.init">
+		<ivy:cachepath resolveId="ajc.classpath" pathid="ajc.classpath" organisation="org.aspectj"
+				module="com.springsource.org.aspectj.tools" revision="${org.aspectj.tools.version}" conf="runtime"
+				type="jar" inline="true" log="download-only"/>
+		<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties" classpathref="ajc.classpath"/>
+
+		<ivy:cachepath resolveId="spring.ant.classpath" pathid="spring.ant.classpath"
+				organisation="org.springframework.build" module="org.springframework.build.ant"
+				revision="${org.springframework.build.ant.version}" conf="runtime" type="jar" inline="true"
+				log="download-only"/>
+		<ivy:cachepath resolveId="ecj.classpath" pathid="ecj.classpath" organisation="org.eclipse.jdt"
+				module="com.springsource.org.eclipse.jdt.core.compiler.batch" revision="${org.eclipse.jdt.core.compiler.batch.version}"
+				conf="runtime" type="jar" inline="true" log="download-only"/>
+		<taskdef resource="org/springframework/build/ant/antlib.xml" uri="antlib:org.springframework.build">
+			<classpath>
+				<path refid="spring.ant.classpath"/>
+				<path refid="ecj.classpath"/>
+			</classpath>
+		</taskdef>
+	</target>
+
+	<target name="bundlor" depends="bundlor.init" unless="disable.bundlor">
+		<bundlor:bundlor bundlePath="${jar.output.file}" outputPath="${jar.output.file}"
+				mergeExistingHeaders="${merge.existing.headers}" bundleVersion="${bundle.version}"
+				manifestTemplatePath="${manifest.template.file}">
+			<propertyset refid="bundlor.properties"/>
+		</bundlor:bundlor>
+	</target>
+
+</project>

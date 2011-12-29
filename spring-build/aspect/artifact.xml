@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="artifact-aspect" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/artifact.xml"/>
+
+<!-- Other targets -->
+	<target name="compile.init" depends="ivy.init">
+		<ivy:cachepath resolveId="ajc.classpath" pathid="ajc.classpath" organisation="org.aspectj"
+				module="com.springsource.org.aspectj.tools" revision="${org.aspectj.tools.version}" conf="runtime"
+				type="jar" inline="true" log="download-only"/>
+		<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties" classpathref="ajc.classpath"/>
+	</target>
+
+</project>

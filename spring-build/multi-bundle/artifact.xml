@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="artifact-multi-bundle">
+
+	<import file="common.xml"/>
+
+<!-- Main targets -->
+	<target name="javadoc-all"
+			description="Creates javadoc documentation for all classes.">
+		<delete dir="${javadoc-all.output.dir}" quiet="true"/>
+		<mkdir dir="${javadoc-all.output.dir}"/>
+		<all-bundles target="javadoc.prep">
+			<property name="javadoc.prep.dir" value="${javadoc.prep.dir}"/>
+		</all-bundles>
+		<path id="global.path">
+			<fileset dir="${ivy.cache.dir}">
+				<exclude name="**/*-sources-*.jar"/>
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		<java-doc input.dir="${javadoc.prep.dir}" output.dir="${javadoc-all.output.dir}" classpath.id="global.path"
+				access="private"/>
+		<delete quiet="true" dir="${javadoc.prep.dir}"/>
+	</target>
+
+	<target name="javadoc-api"
+			description="Creates javadoc documentation for all classes.">
+		<delete dir="${javadoc-api.output.dir}" quiet="true"/>
+		<mkdir dir="${javadoc-api.output.dir}"/>
+		<all-bundles target="javadoc.prep">
+			<property name="javadoc.prep.dir" value="${javadoc.prep.dir}"/>
+		</all-bundles>
+		<path id="global.path">
+			<fileset dir="${ivy.cache.dir}">
+				<exclude name="**/*-sources-*.jar"/>
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		<java-doc input.dir="${javadoc.prep.dir}" output.dir="${javadoc-api.output.dir}" classpath.id="global.path"
+				access="protected" exclude.package.names="${javadoc.exclude.package.names}"/>
+		<delete quiet="true" dir="${javadoc.prep.dir}"/>
+	</target>
+
+	<target name="jar"
+			description="Creates a JAR file containing the output of a compilation of the source tree.">
+		<all-bundles target="jar"/>
+	</target>
+
+<!-- Other targets -->
+	<target name="javadoc.prep">
+		<all-bundles target="javadoc.prep">
+			<property name="javadoc.prep.dir" value="${javadoc.prep.dir}"/>
+		</all-bundles>
+	</target>
+
+</project>
