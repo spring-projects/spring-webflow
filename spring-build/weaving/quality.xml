@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quality-weaving" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/quality.xml"/>
+
+	<target name="test.do" depends="ivy.init, resolve.test, resolve.aspects, compile.init, test.init" if="test.exists">
+		<path id="test.compile.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+		</path>
+		<test-compile classpath.id="test.compile.classpath" input.dir="${test.java.dir}" output.dir="${test.output.dir}"
+				resources.dir="${test.resources.dir}"/>
+
+		<path id="test.run.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<pathelement location="${test.output.dir}"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+			<path refid="runtime.classpath"/>
+			<path refid="aspects.classpath"/>
+		</path>
+		<test-run classpath.id="test.run.classpath"/>
+	</target>
+
+</project>

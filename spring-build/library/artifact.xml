@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="artifact-library" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	
+	<filterset id="library.filters" />
+
+<!-- Main targets -->
+	<target name="javadoc-all" description="Does nothing"/>
+
+	<target name="javadoc-api" description="Does nothing."/>
+
+	<target name="jar" depends="ivy.init, resolve.compile"
+			description="Creates a libd file with the proper versions substituted.">
+		<delete quiet="true" file="${ivy.output.file}"/>
+		<mkdir dir="${ivy.output.dir}"/>
+		<delete quiet="true" file="${libd.output.file}"/>
+		<mkdir dir="${libd.output.dir}"/>
+
+		<copy file="${libd.input.file}" tofile="${libd.output.file}">
+			<filterset>
+				<filter token="bundle.version" value="${bundle.version}"/>
+				<filterset refid="library.filters"/>
+			</filterset>
+		</copy>
+
+		<ivy:publish resolver="integration" pubdate="${timestamp}" status="${release.type}">
+			<artifacts pattern="${ivy.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${libd.output.dir}/[artifact].[ext]"/>
+		</ivy:publish>
+	</target>
+
+<!-- Other targets -->
+	<target name="javadoc.prep"/>
+
+</project>

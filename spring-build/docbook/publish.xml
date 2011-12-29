@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="publish-docbook" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/publish.xml"/>
+
+	<target name="publish-ivy" depends="ivy.init, resolve">
+		<delete quiet="true" file="${ivy.output.file}"/>
+		<mkdir dir="${ivy.output.dir}" />
+
+		<ivy:publish resolver="${publication.resolver.prefix}-bundle-publish" pubdate="${timestamp}"
+				status="${release.type}">
+			<artifacts pattern="${docbook.output.dir}/html/[artifact].[ext]"/>
+			<artifacts pattern="${docbook.output.dir}/htmlsingle/[artifact].[ext]"/>
+			<artifacts pattern="${docbook.output.dir}/pdf/[artifact].[ext]"/>
+			<artifacts pattern="${ivy.output.dir}/[artifact].[ext]"/>
+		</ivy:publish>
+	</target>
+
+	<target name="publish-maven"/>
+
+	<target name="publish-maven-local"/>
+
+	<target name="publish-maven-central"/>
+
+</project>

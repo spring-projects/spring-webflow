@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurations>
+
+<!-- Maven equivalent configurations -->
+	<conf name="compile"				visibility="public"		extends="aspects"	description="Maven compile dependencies"/>
+	<conf name="optional"				visibility="public"		extends="compile"	description="Maven optional dependencies"/>
+	<conf name="provided" 				visibility="public"							description="Maven provided dependencies"/>
+	<conf name="dm-server-provided" 	visibility="public"							description="Maven provided dependencies that already exist in the platform"/>
+	<conf name="runtime"				visibility="public"		extends="compile"	description="Runtime dependencies"/>
+	<conf name="test"					visibility="private"						description="Test dependencies"/>
+
+<!-- Aspect weaving configuration -->
+	<conf name="aspects"	visibility="private"						description="Aspects to be woven"/>
+	<conf name="external"	visibility="private"						description="External candidates to be woven"/>
+
+<!-- PAR configuration -->
+	<conf name="additional"	visibility="private"						description="Additional candidates to be included in the PAR"/>
+
+</configurations>

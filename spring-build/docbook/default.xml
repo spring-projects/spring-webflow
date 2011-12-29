@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="default-docbook">
+
+	<import file="common.xml"/>
+	<import file="documentation.xml"/>
+	<import file="package.xml"/>
+	<import file="publish.xml"/>
+
+</project>

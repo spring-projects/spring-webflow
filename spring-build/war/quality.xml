@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quality-war">
+
+	<import file="common.xml"/>
+	<import file="../common/quality.xml"/>
+
+<!-- Other targets -->
+	<target name="test.do" depends="ivy.init, resolve.test, compile.init, test.init" if="test.exists">
+		<path id="test.compile.classpath">
+			<pathelement location="${war.classes.dir}"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+		</path>
+		<test-compile classpath.id="test.compile.classpath" input.dir="${test.java.dir}" output.dir="${test.output.dir}"
+				resources.dir="${test.resources.dir}"/>
+
+		<path id="test.run.classpath">
+			<pathelement location="${war.classes.dir}"/>
+			<pathelement location="${test.output.dir}"/>
+			<path refid="compile.classpath"/>
+			<path refid="test.classpath"/>
+			<path refid="runtime.classpath"/>
+		</path>
+		<test-run classpath.id="test.run.classpath"/>
+	</target>
+
+	<target name="findbugs.do" depends="ivy.init, resolve.compile, compile.init, findbugs.init, src.init" if="src.exists">
+		<findbugs home="${findbugs.dir}" output="xml" outputFile="${findbugs.output.file}"
+				excludeFilter="${findbugs.exclude.file}" jvmargs="-Xmx1024M" errorProperty="findbugs.errors" warningsProperty="findbugs.warnings">
+			<class location="${war.classes.dir}"/>
+			<auxClasspath refid="compile.classpath"/>
+			<sourcepath location="${main.java.dir}"/>
+		</findbugs>
+		<antcall target="findbugs.post"/>
+	</target>
+
+	<target name="findbugs.post" if="findbugs.enforce">
+		<fail if="findbugs.errors" message="FindBugs errors found"/>
+		<fail if="findbugs.warnings" message="FindBugs warnings found"/>
+	</target>
+
+</project>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="default-multi-bundle">
+
+	<import file="common.xml"/>
+	<import file="artifact.xml"/>
+	<import file="quality.xml"/>
+	<import file="package.xml"/>
+	<import file="publish.xml"/>
+
+</project>

@@ -1,0 +1,12 @@
+*.java.hsp
+*.sonarj
+*.sw*
+.DS_Store
+.settings
+.springBeans
+bin
+build.sh
+ivy-cache
+integration-repo
+target
+spring-build/lib/docbook

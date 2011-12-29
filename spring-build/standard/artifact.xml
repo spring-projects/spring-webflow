@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="artifact-standard" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/artifact.xml"/>
+
+
+<!-- Other targets -->
+	<target name="compile.init" depends="ivy.init">
+		<ivy:cachepath resolveId="spring.ant.classpath" pathid="spring.ant.classpath"
+				organisation="org.springframework.build" module="org.springframework.build.ant"
+				revision="${org.springframework.build.ant.version}" conf="runtime" type="jar" inline="true"
+				log="download-only"/>
+		<ivy:cachepath resolveId="ecj.classpath" pathid="ecj.classpath" organisation="org.eclipse.jdt"
+				module="com.springsource.org.eclipse.jdt.core.compiler.batch" revision="${org.eclipse.jdt.core.compiler.batch.version}"
+				conf="runtime" type="jar" inline="true" log="download-only"/>
+		<taskdef resource="org/springframework/build/ant/antlib.xml" uri="antlib:org.springframework.build">
+			<classpath>
+				<path refid="spring.ant.classpath"/>
+				<path refid="ecj.classpath"/>
+			</classpath>
+		</taskdef>
+	</target>
+
+</project>

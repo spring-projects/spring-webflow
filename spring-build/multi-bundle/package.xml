@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-multi-bundle">
+
+	<import file="common.xml"/>
+
+<!-- Main targets -->
+	<target name="package"
+			description="Creates a packaged distributable of the project.  Unless overridden, delegates to sub-bundles.">
+		<all-bundles target="package">
+			<property name="package.output.dir" value="${package.output.dir}"/>
+		</all-bundles>
+	</target>
+
+</project>

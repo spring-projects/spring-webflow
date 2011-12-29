@@ -1,0 +1,6 @@
+<FindBugsFilter>
+     <!-- Exclusions -->
+     <Match>
+       	<Bug code="BAC,PS"/>
+     </Match>
+</FindBugsFilter>

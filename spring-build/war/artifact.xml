@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="artifact-war" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/artifact.xml"/>
+
+<!-- Main targets -->
+	<target name="jar" depends="ivy.init, resolve.compile, compile.init, jar.init"
+			description="Creates a WAR file containing the output of a compilation of the source tree.">
+		<delete quiet="true" file="${ivy.output.file}"/>
+		<mkdir dir="${ivy.output.dir}"/>
+		<delete quiet="true" file="${war.output.file}"/>
+		<mkdir dir="${war.output.dir}"/>
+		<delete quiet="true" file="${source-jar.output.file}"/>
+		<mkdir dir="${source-jar.output.dir}"/>
+
+		<copy todir="${war.staging.dir}">
+			<fileset dir="${main.webapp.dir}"/>
+		</copy>
+
+		<compile classpath.id="compile.classpath" input.dir="${main.java.dir}" output.dir="${war.classes.dir}"
+				resources.dir="${main.resources.dir}"/>
+
+		<ivy:retrieve resolveId="compile.classpath" conf="compile,runtime" type="jar"
+				pattern="${war.lib.dir}/[artifact]-[revision].[ext]" log="download-only"/>
+
+		<jar destfile="${war.output.file}" basedir="${war.staging.dir}" index="true" filesetmanifest="merge">
+			<manifest>
+				<attribute name="Bundle-Creator" value="${user.name}"/>
+				<attribute name="Implementation-Title" value="${implementation.title}"/>
+				<attribute name="Implementation-Version" value="${implementation.version}"/>
+			</manifest>
+		</jar>
+		<jar destfile="${source-jar.output.file}" basedir="${main.java.dir}" index="true"/>
+		<ivy:publish resolver="integration" pubdate="${timestamp}" status="${release.type}">
+			<artifacts pattern="${ivy.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${war.output.dir}/[artifact].[ext]"/>
+			<artifacts pattern="${source-jar.output.dir}/[artifact].[ext]"/>
+		</ivy:publish>
+	</target>
+
+<!-- Other targets -->
+	<target name="compile.init" depends="ivy.init">
+		<ivy:cachepath resolveId="spring.ant.classpath" pathid="spring.ant.classpath"
+				organisation="org.springframework.build" module="org.springframework.build.ant"
+				revision="${org.springframework.build.ant.version}" conf="runtime" type="jar" inline="true"
+				log="download-only"/>
+		<ivy:cachepath resolveId="ecj.classpath" pathid="ecj.classpath" organisation="org.eclipse.jdt"
+				module="com.springsource.org.eclipse.jdt.core.compiler.batch" revision="${org.eclipse.jdt.core.compiler.batch.version}"
+				conf="runtime" type="jar" inline="true" log="download-only"/>
+		<taskdef resource="org/springframework/build/ant/antlib.xml" uri="antlib:org.springframework.build">
+			<classpath>
+				<path refid="spring.ant.classpath"/>
+				<path refid="ecj.classpath"/>
+			</classpath>
+		</taskdef>
+	</target>
+
+</project>

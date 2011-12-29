@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quality-library">
+
+<!-- Main targets -->
+	<target name="test" description="Does nothing."/>
+
+	<target name="clover" description="Does nothing."/>
+
+	<target name="findbugs" description="Does nothing."/>
+
+<!-- Other targets -->
+	<target name="test.do" description="Does nothing."/>
+
+	<target name="clover.do" description="Does nothing."/>
+
+	<target name="findbugs.do" description="Does nothing."/>
+
+</project>

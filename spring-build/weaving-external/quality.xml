@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quality-weaving-external" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<import file="common.xml"/>
+	<import file="../common/quality.xml"/>
+
+<!-- Other targets -->
+	<target name="test.do" depends="ivy.init, resolve.test, compile.init, test.init" if="test.exists">
+		<path id="test.compile.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<path refid="test.classpath"/>
+		</path>
+		<test-compile classpath.id="test.compile.classpath" input.dir="${test.java.dir}" output.dir="${test.output.dir}"
+				resources.dir="${test.resources.dir}"/>
+
+		<path id="test.run.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<pathelement location="${test.output.dir}"/>
+			<path refid="test.classpath"/>
+			<path refid="runtime.classpath"/>
+		</path>
+		<test-run classpath.id="test.run.classpath"/>
+	</target>
+
+	<target name="clover.do" depends="ivy.init, resolve.test, compile.init, clover.init, clover.instrument, test.init"
+			if="test.exists">
+		<path id="clover.run.classpath">
+			<pathelement location="${jar.output.file}"/>
+			<pathelement location="${test.output.dir}"/>
+			<path refid="clover.classpath"/>
+			<path refid="test.classpath"/>
+			<path refid="runtime.classpath"/>
+		</path>
+		<test-run classpath.id="clover.run.classpath"/>
+	</target>
+
+	<target name="clover.instrument" depends="ivy.init, resolve.test, compile.init, clover.init">
+		<instrument input.dir="${test.java.dir}" output.dir="${test.clover.dir}"/>
+		<path id="test.compile.classpath">
+			<pathelement location="${main.output.dir}"/>
+			<path refid="test.classpath"/>
+			<path refid="clover.classpath"/>
+		</path>
+		<test-compile classpath.id="test.compile.classpath" input.dir="${test.clover.dir}" output.dir="${test.output.dir}"
+				resources.dir="${test.resources.dir}"/>
+		<delete dir="${clover.staging.dir}" quiet="true"/>
+	</target>
+</project>

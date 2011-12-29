@@ -155,8 +155,8 @@
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>2.2.M1-SNAPSHOT</version>
-		</dependency>		
+			<version>2.2.1</version>
+		</dependency>
 		<!-- build time only dependencies -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

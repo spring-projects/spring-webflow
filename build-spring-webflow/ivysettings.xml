@@ -20,7 +20,7 @@
                      m2compatible="true"
                      usepoms="true"
                      pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
-                     root="http://repository.prime.com.tr"/>
+                     root="http://repository.primefaces.org"/>
             <!-- MyFaces Core 2.0.1-SNAPSHOT -->
             <ibiblio name="apache-maven2-snapshot"
                      m2compatible="true"

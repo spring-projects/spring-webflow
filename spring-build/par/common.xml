@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common-par">
+
+	<import file="../multi-bundle/common.xml"/>
+
+</project>

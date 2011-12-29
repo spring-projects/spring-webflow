@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package-weaving-external">
+
+	<import file="common.xml"/>
+	<import file="../common/package.xml"/>
+
+</project>
