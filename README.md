@@ -24,7 +24,7 @@ See the current [Javadoc](http://static.springsource.org/spring-webflow/docs/cur
 
 # Samples
 
-The `./spring-webflow-samples` sub-directory contains several samples that can be built with Maven. More samples can be found in the `spring-samples` SVN repository: see [webflow-showcase](https://src.springframework.org/svn/spring-samples/webflow-showcase) and [webflow-primefaces-showcase](https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase).
+The `spring-webflow-samples` sub-directory contains several samples that can be built with Maven. More samples can be found in the [spring-samples](https://src.springframework.org/svn/spring-samples) SVN repository: see [webflow-showcase](https://src.springframework.org/svn/spring-samples/webflow-showcase) and [webflow-primefaces-showcase](https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase).
 
 # Downloading artifacts
 
