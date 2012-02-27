@@ -11,6 +11,7 @@
 
 	<configurations>
 		<include file="${spring.build.dir}/common/default-ivy-configurations.xml"/>
+		<conf name="mojarra21" visibility="public"/>
 		<conf name="mojarra20" visibility="public"/>
 		<conf name="myfaces20" visibility="public"/>
 		<conf name="mojarra12" visibility="public"/>
@@ -44,9 +45,13 @@
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="latest.integration" conf="compile->runtime"/>
 
+		<!-- JSF 2.1 Mojarra dependencies -->
+		<dependency org="com.sun.faces" name="jsf-api" rev="2.1.7" conf="provided, mojarra21->default" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.1.7" conf="provided, mojarra21->default" />
+
 		<!-- JSF 2.0 Mojarra dependencies -->
-		<dependency org="com.sun.faces" name="jsf-api" rev="2.0.3" conf="provided, mojarra20->default" />
-		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.3" conf="provided, mojarra20->default" />
+		<dependency org="com.sun.faces" name="jsf-api" rev="2.0.6" conf="provided, mojarra20->default" />
+		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.6" conf="provided, mojarra20->default" />
 
 		<!-- JSF 2.0 MyFaces dependencies -->
    		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="2.0.1-SNAPSHOT" conf="myfaces20->default" />

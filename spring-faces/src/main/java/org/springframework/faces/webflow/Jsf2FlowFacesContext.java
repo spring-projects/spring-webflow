@@ -127,6 +127,12 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 		getDelegate().validationFailed();
 	}
 
+	// --------------- JSF 2.1 Pass-through delegate methods ------------------//
+
+	public boolean isReleased() {
+		return getDelegate().isReleased();
+	}
+
 	protected class Jsf2FlowExternalContext extends FlowExternalContext {
 
 		Log logger = LogFactory.getLog(FlowExternalContext.class);
@@ -242,5 +248,18 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 			return delegate.encodePartialActionURL(url);
 		}
 
+		// --------------- JSF 2.1 Pass-through delegate methods ------------------//
+
+		public int getSessionMaxInactiveInterval() {
+			return delegate.getSessionMaxInactiveInterval();
+		}
+
+		public boolean isSecure() {
+			return delegate.isSecure();
+		}
+
+		public void setSessionMaxInactiveInterval(int interval) {
+			delegate.setSessionMaxInactiveInterval(interval);
+		}
 	}
 }
