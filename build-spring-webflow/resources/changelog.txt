@@ -7,6 +7,7 @@ Changes in version 2.3.1.RELEASE
 Upgrade JSF Mojarra version to 2.1.7
 Modify Jsf2FlowFacesContext.isValidationFailed() to check Web Flow's MessageContext for errors
 Recognize class-level bean validation messages in BindingResult.getGlobalErrors()
+Fix "embedded" mode to be flow session local, i.e. specific to a specific flow or subflow.
 
 Changes in version 2.3.0.RELEASE (Feb 28, 2011)
 -----------------------------------------------

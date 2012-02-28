@@ -451,7 +451,7 @@ public class ViewStateTests extends TestCase {
 		state.getTransitionSet().add(t);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getMockExternalContext().setAjaxRequest(true);
-		context.setEmbeddedMode(true);
+		context.setEmbeddedMode();
 		context.setAlwaysRedirectOnPause(true);
 		context.setRedirectInSameState(true);
 		state.enter(context);
@@ -468,7 +468,7 @@ public class ViewStateTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
 		context.getMockExternalContext().setAjaxRequest(true);
-		context.setEmbeddedMode(true);
+		context.setEmbeddedMode();
 		context.setAlwaysRedirectOnPause(true);
 		context.setRedirectInSameState(true);
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());

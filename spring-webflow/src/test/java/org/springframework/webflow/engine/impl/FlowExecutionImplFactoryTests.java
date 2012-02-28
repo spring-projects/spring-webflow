@@ -85,7 +85,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		factory.setExecutionAttributes(attributes);
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		assertEquals(attributes, execution.getAttributes());
-		assertNotSame(attributes, execution.getAttributes());
+		assertSame("Flow execution attributes are global", attributes.asMap(), execution.getAttributes().asMap());
 	}
 
 	public void testCreateWithExecutionListener() {
@@ -142,7 +142,8 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		flowExecution.getFlowSessions().add(session1);
 		flowExecution.getFlowSessions().add(session2);
 		factory.restoreFlowExecution(flowExecution, flowDefinition, flowExecutionKey, conversationScope, locator);
-		assertSame(executionAttributes, flowExecution.getAttributes());
+		assertSame("Flow execution attributes are global", flowExecution.getAttributes().asMap(),
+				executionAttributes.asMap());
 		assertEquals(1, flowExecution.getListeners().length);
 		assertSame(listener, flowExecution.getListeners()[0]);
 		assertSame(flowExecutionKey, flowExecution.getKey());

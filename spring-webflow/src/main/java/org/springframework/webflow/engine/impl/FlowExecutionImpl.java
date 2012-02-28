@@ -214,9 +214,6 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Starting in " + externalContext + " with input " + input);
 		}
-		if (hasEmbeddedModeAttribute(input)) {
-			attributes.asMap().put("embeddedMode", Boolean.TRUE);
-		}
 		MessageContext messageContext = createMessageContext(null);
 		RequestControlContext requestContext = createRequestContext(externalContext, messageContext);
 		RequestContextHolder.setRequestContext(requestContext);
@@ -353,12 +350,15 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	void start(Flow flow, MutableAttributeMap input, RequestControlContext context) {
 		listeners.fireSessionCreating(context, flow);
-		FlowSession session = activateSession(flow);
+		FlowSessionImpl session = activateSession(flow);
 		if (session.isRoot()) {
 			status = FlowExecutionStatus.ACTIVE;
 		}
 		if (input == null) {
 			input = new LocalAttributeMap();
+		}
+		if (hasEmbeddedModeAttribute(input)) {
+			session.setEmbeddedMode();
 		}
 		StateManageableMessageContext messageContext = (StateManageableMessageContext) context.getMessageContext();
 		messageContext.setMessageSource(flow.getApplicationContext());

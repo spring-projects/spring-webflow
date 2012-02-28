@@ -36,7 +36,9 @@ import org.springframework.webflow.execution.FlowSession;
  */
 public class MockFlowSession implements FlowSession {
 
-	private static final String FLOW_VIEW_MAP_ATTRIBUTE = "flowViewMap";
+	private static final String VIEW_MAP_ATTRIBUTE = "flowViewMap";
+
+	private static final String EMBEDDED_MODE_ATTRIBUTE = "embeddedMode";
 
 	private Flow definition;
 
@@ -99,7 +101,11 @@ public class MockFlowSession implements FlowSession {
 			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '"
 					+ definition.getId() + "' is not a view state - view scope not accessible");
 		}
-		return (MutableAttributeMap) scope.get(FLOW_VIEW_MAP_ATTRIBUTE);
+		return (MutableAttributeMap) scope.get(VIEW_MAP_ATTRIBUTE);
+	}
+
+	public boolean isEmbeddedMode() {
+		return (Boolean) scope.get(EMBEDDED_MODE_ATTRIBUTE, Boolean.FALSE);
 	}
 
 	public FlowSession getParent() {
@@ -163,13 +169,21 @@ public class MockFlowSession implements FlowSession {
 		return state;
 	}
 
+	/**
+	 * Set a flow session attribute to indicate the current session should execute in embedded mode.
+	 * @see FlowSession#isEmbeddedMode()
+	 */
+	void setEmbeddedMode() {
+		this.scope.put(EMBEDDED_MODE_ATTRIBUTE, true);
+	}
+
 	// internal helpers
 
 	private void initViewScope() {
-		scope.put(FLOW_VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
+		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
 	}
 
 	private void destroyViewScope() {
-		scope.remove(FLOW_VIEW_MAP_ATTRIBUTE);
+		scope.remove(VIEW_MAP_ATTRIBUTE);
 	}
 }

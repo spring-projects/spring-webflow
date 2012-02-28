@@ -32,8 +32,8 @@ import org.springframework.webflow.execution.FlowSession;
 
 /**
  * Implementation of the FlowSession interfaced used internally by the <code>FlowExecutionImpl</code>. This class is
- * closely coupled with <code>FlowExecutionImpl</code> and <code>RequestControlContextImpl</code>. The three
- * classes work together to form a complete flow execution implementation.
+ * closely coupled with <code>FlowExecutionImpl</code> and <code>RequestControlContextImpl</code>. The three classes
+ * work together to form a complete flow execution implementation.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -41,6 +41,8 @@ import org.springframework.webflow.execution.FlowSession;
 class FlowSessionImpl implements FlowSession, Externalizable {
 
 	private static final String VIEW_SCOPE_ATTRIBUTE = "viewScope";
+
+	private static final String EMBEDDED_MODE_ATTRIBUTE = "embeddedMode";
 
 	/**
 	 * The flow definition (a singleton).
@@ -117,6 +119,10 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 					+ "' is not a view state - view scope not accessible");
 		}
 		return (MutableAttributeMap) scope.get(VIEW_SCOPE_ATTRIBUTE);
+	}
+
+	public boolean isEmbeddedMode() {
+		return (Boolean) scope.get(EMBEDDED_MODE_ATTRIBUTE, Boolean.FALSE);
 	}
 
 	public FlowSession getParent() {
@@ -224,6 +230,14 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		this.stateId = stateId;
 	}
 
+	/**
+	 * Set a flow session attribute to indicate the current session should execute in embedded mode.
+	 * @see FlowSession#isEmbeddedMode()
+	 */
+	void setEmbeddedMode() {
+		this.scope.put(EMBEDDED_MODE_ATTRIBUTE, true);
+	}
+
 	// internal helpers
 
 	/**
@@ -242,8 +256,8 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 
 	public String toString() {
 		if (flow != null) {
-			return new ToStringCreator(this).append("flow", getFlowId()).append("state", getStateId()).append("scope",
-					scope).toString();
+			return new ToStringCreator(this).append("flow", getFlowId()).append("state", getStateId())
+					.append("scope", scope).toString();
 		} else {
 			return "[Unhydrated session '" + flowId + "' in state '" + stateId + "']";
 		}

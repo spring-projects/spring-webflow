@@ -78,7 +78,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 			logger.debug("Creating new execution of '" + flowDefinition.getId() + "'");
 		}
 		FlowExecutionImpl execution = new FlowExecutionImpl((Flow) flowDefinition);
-		execution.setAttributes(new LocalAttributeMap(executionAttributes.asMap()));
+		execution.setAttributes(executionAttributes);
 		execution.setListeners(executionListenerLoader.getListeners(execution.getDefinition()));
 		execution.setKeyFactory(executionKeyFactory);
 		return execution;
