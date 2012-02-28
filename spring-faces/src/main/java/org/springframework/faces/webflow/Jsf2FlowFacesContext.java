@@ -112,7 +112,11 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 	}
 
 	public boolean isValidationFailed() {
-		return getDelegate().isValidationFailed();
+		if (getMessageDelegate().hasErrorMessages()) {
+			return true;
+		} else {
+			return getDelegate().isValidationFailed();
+		}
 	}
 
 	public void setExceptionHandler(ExceptionHandler exceptionHandler) {

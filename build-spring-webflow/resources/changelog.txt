@@ -4,6 +4,8 @@ http://www.springframework.org/webflow
 
 Changes in version 2.3.1.RELEASE
 -----------------------------------------------
+Upgrade JSF Mojarra version to 2.1.7
+Improve Jsf2FlowFacesContext.isValidationFailed() to check Web Flow's MessageContext for errors
 
 
 Changes in version 2.3.0.RELEASE (Feb 28, 2011)

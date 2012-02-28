@@ -62,6 +62,13 @@ public class FlowFacesContextMessageDelegate {
 	}
 
 	/**
+	 * Whether Web Flow's MessageContext contains any errors.
+	 */
+	public boolean hasErrorMessages() {
+		return context.getMessageContext().hasErrorMessages();
+	}
+
+	/**
 	 * @see FlowFacesContext#addMessage(String, FacesMessage)
 	 */
 	public void addToFlowMessageContext(String clientId, FacesMessage message) {

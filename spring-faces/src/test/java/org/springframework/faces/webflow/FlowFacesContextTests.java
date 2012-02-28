@@ -27,15 +27,17 @@ public class FlowFacesContextTests extends TestCase {
 
 	FacesContext facesContext;
 
-	RequestContext requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
+	RequestContext requestContext;
 
 	MessageContext messageContext;
 
 	MessageContext prepopulatedMessageContext;
 
+	@SuppressWarnings("cast")
 	protected void setUp() throws Exception {
 		jsf.setUp();
-		facesContext = new FlowFacesContext(requestContext, jsf.facesContext());
+		requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
+		facesContext = new Jsf2FlowFacesContext(requestContext, jsf.facesContext());
 
 		setupMessageContext();
 	}
@@ -60,7 +62,6 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals("foo", summaryMessage.getText());
 		Message detailMessage = messageContext.getMessagesBySource("foo_detail")[0];
 		assertEquals("bar", detailMessage.getText());
-
 	}
 
 	public final void testGetGlobalMessagesOnly() {
@@ -260,6 +261,16 @@ public class FlowFacesContextTests extends TestCase {
 
 		assertNotNull(facesContext.getELContext());
 		assertSame(facesContext, facesContext.getELContext().getContext(FacesContext.class));
+	}
+
+	public final void testValidationFailed() {
+		messageContext = new DefaultMessageContext();
+		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
+		EasyMock.replay(new Object[] { requestContext });
+
+		facesContext.addMessage("foo", new FacesMessage(FacesMessage.SEVERITY_ERROR, "foo", "bar"));
+
+		assertEquals(true, facesContext.isValidationFailed());
 	}
 
 	private void setupMessageContext() {
