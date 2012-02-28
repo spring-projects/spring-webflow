@@ -113,6 +113,11 @@ public class JSFMockHelper {
 
 		public void setUp() throws Exception {
 
+			// Ensure no pre-existing FacesContext ..
+			if (FacesContext.getCurrentInstance() != null) {
+				FacesContext.getCurrentInstance().release();
+			}
+
 			// Set up a new thread context class loader
 			threadContextClassLoader = Thread.currentThread().getContextClassLoader();
 			Thread.currentThread().setContextClassLoader(
@@ -132,8 +137,7 @@ public class JSFMockHelper {
 			FactoryFinder.setFactory(FactoryFinder.FACES_CONTEXT_FACTORY, MockBaseFacesContextFactory.class.getName());
 			FactoryFinder.setFactory(FactoryFinder.LIFECYCLE_FACTORY, MockLifecycleFactory.class.getName());
 			FactoryFinder.setFactory(FactoryFinder.RENDER_KIT_FACTORY, MockRenderKitFactory.class.getName());
-			FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY, MockPartialViewContextFactory.class
-					.getName());
+			FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY, MockPartialViewContextFactory.class.getName());
 			lifecycleFactory = (MockLifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
 			lifecycle = (MockLifecycle) lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
 			facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
