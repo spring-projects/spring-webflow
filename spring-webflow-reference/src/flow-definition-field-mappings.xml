@@ -944,6 +944,22 @@
 						bind
 					</entry>
 				</row>
+				<row>
+					<entry colname="1.0-attribute">
+						*
+					</entry>
+					<entry colname="2.0-attribute">
+						validate
+					</entry>
+				</row>
+				<row>
+					<entry colname="1.0-attribute">
+						*
+					</entry>
+					<entry colname="2.0-attribute">
+						history
+					</entry>
+				</row>
 			</tbody>
 			<tbody>
 				<row>

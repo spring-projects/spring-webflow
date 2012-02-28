@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine;
 
-import org.springframework.webflow.engine.support.TransitionExecutingFlowExecutionExceptionHandler;
 import org.springframework.webflow.execution.FlowExecutionException;
 
 /**
@@ -32,7 +31,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
  * 
  * Note: Because flow execution handlers are more difficult to implement correctly, consider catching exceptions in your
  * web flow action code and returning result events that drive standard transitions. Alternatively, consider use of the
- * existing {@link TransitionExecutingFlowExecutionExceptionHandler} which illustrates the proper way to implement an
+ * existing {@code TransitionExecutingFlowExecutionExceptionHandler} which illustrates the proper way to implement an
  * exception handler.
  * 
  * @author Keith Donald
