@@ -16,7 +16,6 @@
 package org.springframework.faces.webflow;
 
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isLessThanJsf20;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -137,17 +136,8 @@ public class JsfView implements View {
 	}
 
 	public Serializable getUserEventState() {
-		if (isLessThanJsf20()) {
-			// Set the temporary UIViewRoot state so that it will be available across the redirect
-			return new ViewRootHolder(getViewRoot());
-		} else {
-			// In JSF 2 the partial state saving algorithm attaches a system event listener to the UIViewRoot which
-			// holds on to a reference to the FacesContext instance. The FacesContext instance is released at end of
-			// each request. Hence, keeping the UIViewRoot across the redirect is not feasible.
-			// @see com.sun.faces.context.StateContext$AddRemoveListener
-			logger.debug("User event state requested but not saved.");
-			return null;
-		}
+		// Set the temporary UIViewRoot state so that it will be available across the redirect
+		return new ViewRootHolder(getViewRoot());
 	}
 
 	public boolean hasFlowEvent() {
