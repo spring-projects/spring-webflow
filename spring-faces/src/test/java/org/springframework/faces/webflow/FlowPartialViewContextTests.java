@@ -16,6 +16,7 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowPartialViewContextTests extends TestCase {
 
+	@SuppressWarnings("unchecked")
 	public void testReturnFragmentIds() throws Exception {
 		String[] fragmentIds = new String[] { "foo", "bar" };
 
@@ -44,6 +45,20 @@ public class FlowPartialViewContextTests extends TestCase {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
 
 		assertEquals(renderIds, context.getRenderIds());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testReturnFragmentIdsMutable() throws Exception {
+		String[] fragmentIds = new String[] { "foo", "bar" };
+
+		RequestContext requestContext = new MockRequestContext();
+		requestContext.getFlashScope().asMap().put(View.RENDER_FRAGMENTS_ATTRIBUTE, fragmentIds);
+		RequestContextHolder.setRequestContext(requestContext);
+
+		Collection<String> renderIds = new FlowPartialViewContext(null).getRenderIds();
+		renderIds.add("baz");
+
+		assertEquals(Arrays.asList("foo", "bar", "baz"), renderIds);
 	}
 
 }
