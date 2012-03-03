@@ -11,13 +11,20 @@ import javax.faces.component.UIOutput;
 import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
+import javax.faces.event.PostRestoreStateEvent;
+import javax.faces.event.SystemEvent;
 import javax.faces.lifecycle.Lifecycle;
 
 import junit.framework.TestCase;
 
+import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
 import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
@@ -82,6 +89,8 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private void configureJsf() throws Exception {
 		jsfMock.setUp();
+		ExceptionEventAwareMockApplication application = new ExceptionEventAwareMockApplication();
+		((MockBaseFacesContext) FlowFacesContext.getCurrentInstance()).setApplication(application);
 		trackingListener = new TrackingPhaseListener();
 		jsfMock.lifecycle().addPhaseListener(trackingListener);
 		jsfMock.facesContext().setViewRoot(null);
@@ -98,7 +107,7 @@ public class JsfViewFactoryTests extends TestCase {
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
 				lifecycle);
 
-		UIViewRoot newRoot = new UIViewRoot();
+		MockUIViewRoot newRoot = new MockUIViewRoot();
 		newRoot.setViewId(VIEW_ID);
 		((MockViewHandler) viewHandler).setCreateView(newRoot);
 		context.inViewState();
@@ -115,7 +124,7 @@ public class JsfViewFactoryTests extends TestCase {
 	}
 
 	/**
-	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no event signaled
+	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no flow event signaled
 	 */
 	public final void testGetView_Restore() {
 
@@ -124,7 +133,7 @@ public class JsfViewFactoryTests extends TestCase {
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
 				lifecycle);
 
-		UIViewRoot existingRoot = new UIViewRoot();
+		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 		UIInput input = new UIInput();
 		input.setId("invalidInput");
@@ -144,10 +153,11 @@ public class JsfViewFactoryTests extends TestCase {
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
 		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 		assertTrue("The input component's valid flag was not reset", input.isValid());
+		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
 	}
 
 	/**
-	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no event signaled
+	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no flow event signaled
 	 */
 	public final void testGetView_RestoreWithBindings() {
 
@@ -156,7 +166,7 @@ public class JsfViewFactoryTests extends TestCase {
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
 				lifecycle);
 
-		UIViewRoot existingRoot = new UIViewRoot();
+		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 		UIPanel panel = new UIPanel();
 		panel.setId("panel1");
@@ -190,11 +200,12 @@ public class JsfViewFactoryTests extends TestCase {
 		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 		assertSame("The UIInput binding was not restored properly", input, testBean.getInput());
 		assertSame("The faceted UIOutput binding was not restored properly", output, testBean.getOutput());
+		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
 	}
 
 	/**
-	 * Ajax Request - View already exists in view/flash scope and must be restored and the lifecycle executed, no event
-	 * signaled
+	 * Ajax Request - View already exists in view/flash scope and must be restored and the lifecycle executed, no flow
+	 * event signaled
 	 */
 	public final void testGetView_Restore_Ajax() {
 
@@ -203,7 +214,7 @@ public class JsfViewFactoryTests extends TestCase {
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
 				lifecycle);
 
-		UIViewRoot existingRoot = new UIViewRoot();
+		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
@@ -223,6 +234,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("An ViewRoot was not set", ((JsfView) restoredView).getViewRoot() instanceof UIViewRoot);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
 		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
+		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
 	}
 
 	/**
@@ -234,7 +246,7 @@ public class JsfViewFactoryTests extends TestCase {
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
 				lifecycle);
 
-		UIViewRoot newRoot = new UIViewRoot();
+		MockUIViewRoot newRoot = new MockUIViewRoot();
 		newRoot.setViewId(VIEW_ID);
 		jsfMock.facesContext().setViewRoot(newRoot);
 		jsfMock.facesContext().renderResponse();
@@ -248,6 +260,30 @@ public class JsfViewFactoryTests extends TestCase {
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
 		assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
 		assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
+		assertTrue("The PostRestoreViewEvent was not seen", newRoot.isPostRestoreStateEventSeen());
+	}
+
+	public void testGetView_ExceptionsOnPostRestoreStateEvent() throws Exception {
+		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
+		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
+				lifecycle);
+
+		MockUIViewRoot existingRoot = new MockUIViewRoot();
+		existingRoot.setThrowOnPostRestoreStateEvent(true);
+		existingRoot.setViewId(VIEW_ID);
+		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+
+		context.inViewState();
+		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+
+		EasyMock.replay(new Object[] { context });
+		factory.getView(context);
+		ExceptionEventAwareMockApplication application = (ExceptionEventAwareMockApplication) FlowFacesContext
+				.getCurrentInstance().getApplication();
+		assertNotNull("Expected exception event", application.getExceptionQueuedEventContext());
+		assertSame("Expected same exception", existingRoot.getAbortProcessingException(), application
+				.getExceptionQueuedEventContext().getException());
 	}
 
 	private class NoExecutionLifecycle extends FlowLifecycle {
@@ -335,6 +371,53 @@ public class JsfViewFactoryTests extends TestCase {
 
 		public void setInput(UIInput input) {
 			this.input = input;
+		}
+	}
+
+	private static class MockUIViewRoot extends UIViewRoot {
+
+		private boolean postRestoreStateEventSeen;
+		private boolean throwOnPostRestoreStateEvent;
+		private AbortProcessingException abortProcessingException;
+
+		public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
+			if (event instanceof PostRestoreStateEvent) {
+				assertSame("Component did not match", this, ((PostRestoreStateEvent) event).getComponent());
+				postRestoreStateEventSeen = true;
+				if (throwOnPostRestoreStateEvent) {
+					abortProcessingException = new AbortProcessingException();
+					throw abortProcessingException;
+				}
+			}
+		}
+
+		public void setThrowOnPostRestoreStateEvent(boolean throwOnPostRestoreStateEvent) {
+			this.throwOnPostRestoreStateEvent = throwOnPostRestoreStateEvent;
+		}
+
+		public boolean isPostRestoreStateEventSeen() {
+			return postRestoreStateEventSeen;
+		}
+
+		public AbortProcessingException getAbortProcessingException() {
+			return abortProcessingException;
+		}
+	}
+
+	private static class ExceptionEventAwareMockApplication extends MockApplication20 {
+
+		private ExceptionQueuedEventContext exceptionQueuedEventContext;
+
+		public void publishEvent(FacesContext facesContext, Class<? extends SystemEvent> systemEventClass, Object source) {
+			if (ExceptionQueuedEvent.class.equals(systemEventClass)) {
+				this.exceptionQueuedEventContext = (ExceptionQueuedEventContext) source;
+			} else {
+				super.publishEvent(facesContext, systemEventClass, source);
+			}
+		}
+
+		public ExceptionQueuedEventContext getExceptionQueuedEventContext() {
+			return exceptionQueuedEventContext;
 		}
 	}
 }

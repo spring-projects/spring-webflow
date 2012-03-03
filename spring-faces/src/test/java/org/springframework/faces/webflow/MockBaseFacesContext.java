@@ -38,4 +38,8 @@ public class MockBaseFacesContext extends MockFacesContext20 {
 		}
 		return application;
 	}
+
+	public void setApplication(Application application) {
+		this.application = application;
+	}
 }

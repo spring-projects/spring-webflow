@@ -25,9 +25,16 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.visit.VisitCallback;
+import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitResult;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
+import javax.faces.event.PostRestoreStateEvent;
 import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -128,10 +135,23 @@ public class JsfViewFactory implements ViewFactory {
 				view = createJsfView(viewRoot, lifecycle, context);
 			}
 		}
+		if (isAtLeastJsf20()) {
+			deliverPostRestoreStateEvent(facesContext);
+		}
 		if (!facesContext.getRenderResponse()) {
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 		}
 		return view;
+	}
+
+	private void deliverPostRestoreStateEvent(FacesContext facesContext) {
+		try {
+			facesContext.getViewRoot().visitTree(VisitContext.createVisitContext(facesContext),
+					new DeliverPostRestoreStateEventVisitCallback());
+		} catch (AbortProcessingException e) {
+			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
+					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
+		}
 	}
 
 	private boolean viewAlreadySet(FacesContext facesContext, String viewName) {
@@ -180,6 +200,21 @@ public class JsfViewFactory implements ViewFactory {
 		while (it.hasNext()) {
 			UIComponent child = (UIComponent) it.next();
 			processTree(context, child);
+		}
+	}
+
+	private static class DeliverPostRestoreStateEventVisitCallback implements VisitCallback {
+
+		private PostRestoreStateEvent event;
+
+		public VisitResult visit(VisitContext context, UIComponent target) {
+			if (event == null) {
+				event = new PostRestoreStateEvent(target);
+			} else {
+				event.setComponent(target);
+			}
+			target.processEvent(event);
+			return VisitResult.ACCEPT;
 		}
 	}
 }
