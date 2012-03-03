@@ -9,6 +9,7 @@ Modify Jsf2FlowFacesContext.isValidationFailed() to check Web Flow's MessageCont
 Recognize class-level bean validation messages in BindingResult.getGlobalErrors()
 Fix "embedded" mode to be flow session local, i.e. specific to a specific flow or subflow.
 Allow JSF view root to survive redirect in same state (following fix in JSF Mojarra 2.1)
+Ensure PostRestoreStateEvent is delivered to registered listeners.
 
 Changes in version 2.3.0.RELEASE (Feb 28, 2011)
 -----------------------------------------------

@@ -128,6 +128,9 @@ public class JsfViewFactory implements ViewFactory {
 				view = createJsfView(viewRoot, lifecycle, context);
 			}
 		}
+		if (isAtLeastJsf20()) {
+			JsfUtils.publishPostRestoreStateEvent();
+		}
 		if (!facesContext.getRenderResponse()) {
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 		}
@@ -182,4 +185,5 @@ public class JsfViewFactory implements ViewFactory {
 			processTree(context, child);
 		}
 	}
+
 }
