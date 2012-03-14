@@ -7,9 +7,14 @@ Changes in version 2.3.1.RELEASE
 Upgrade JSF Mojarra version to 2.1.7
 Modify Jsf2FlowFacesContext.isValidationFailed() to check Web Flow's MessageContext for errors
 Recognize class-level bean validation messages in BindingResult.getGlobalErrors()
-Fix "embedded" mode to be flow session local, i.e. specific to a specific flow or subflow.
+Ensure "embedded" mode is flow session local, i.e. specific to a specific flow or subflow
 Allow JSF view root to survive redirect in same state (following fix in JSF Mojarra 2.1)
-Ensure PostRestoreStateEvent is delivered to registered listeners.
+Ensure PostRestoreStateEvent is delivered to registered listeners
+Upgrade booking-faces sample to use PrimeFaces 3.1.1
+Fix NullPointerException in FlowViewStateManager when not in a flow request
+Move source code to http://github.com/SpringSource/spring-webflow
+Modify FlowPartialViewContext to return a modifiable List to comply with its contract
+Check request parameter in addition to request header to recognize JSF 2 Ajax requests.
 
 Changes in version 2.3.0.RELEASE (Feb 28, 2011)
 -----------------------------------------------
