@@ -2,84 +2,27 @@
 <body>
 <p align="center">
 <img src="http://static.springframework.org/spring-webflow/images/spring-webflow.jpg"><br>
-The public Java Documentation for Spring Web Flow, a framework for modeling and executing user interface flow.
+The public Java Documentation for the Spring Web Flow project.
 </p>
-<p>
-Spring Web Flow's packages are partitioned across a set of logical layers.  Higher layers depend on the layers directly beneath.  Lower layers never depend on higher layers.
-</p>
-<p>
-The layers of Spring Web Flow, from lowest to highest, are shown below:
-</p>
-<p align="center">
-<img src="http://static.springframework.org/spring-webflow/images/architecture-layer-diagram.png">
-<br>
-Layer architecture diagram
-</p>
-<p>
-The description, subsystems, and source packages of each layer are summarized below:
-</p>
-<h3>Execution Core Layer</h3>
-<p>
-Contains the central public Spring Web Flow API elements.  This includes elements to model flow definitions 
-as well as execute those flow definitions.  As the "bottom layer", this layer defines key domain interfaces and is highly stable.
-</p>
-<h4>Subsystems</h4>
-<ol>
-<li>{@link org.springframework.webflow.core Core}
-<li>{@link org.springframework.webflow.definition Flow Definition}
-<li>{@link org.springframework.webflow.definition.registry Flow Definition Registry}
-<li>{@link org.springframework.webflow.context External Context}
-<li>{@link org.springframework.webflow.conversation Conversation}
-<li>{@link org.springframework.webflow.execution Flow Execution}
-<li>{@link org.springframework.webflow.execution.repository Flow Execution Repository}
-<li>{@link org.springframework.webflow.action Action}
-<li>{@link org.springframework.webflow.util Util}
-</ol>
-<h3>Executor Layer</h3>
-<p>
-Contains services called "flow executors" that drive the execution of flow definitions. This layer defines the 
-core FlowExecutor service interface and implementation, as well as adaption code for executing flows in several
-specific environments.  Support for Spring MVC, Struts, and Java Server Faces (JSF) environments is housed here.
-This layer depends on the stable Execution Core, but is not coupled to the more volatile Execution Engine
-implementation.
-</p>
-<h4>Subsystems</h4>
-<ol>
-<li>{@link org.springframework.webflow.executor Core}
-<li>{@link org.springframework.webflow.executor.mvc Spring MVC}
-<li>{@link org.springframework.webflow.executor.struts Struts}
-<li>{@link org.springframework.webflow.executor.jsf Java Server Faces (JSF)}
-</ol>
-<h3>Execution Engine Layer</h3>
-<p>
-Contains concrete implementations of the stable Execution Engine abstractions.  This layer defines the
-finite-state machine that carries out runtime flow execution. It also contains a builder subsystem for
-assembling flows from externalized resources such as XML files.
-</p>
-<h4>Subsystems</h4>
-<ol>
-<li>{@link org.springframework.webflow.engine Engine Implementation}
-<li>{@link org.springframework.webflow.engine.builder Flow Builder}
-</ol>
-<h3>Test Layer</h3>
-<p>
-Contains support code for testing flow executions. Two types of support are provided: stubs for unit 
-testing engine artifacts, and base classes for writing flow execution integration tests. This layer 
-depends on the Execution Core and Execution Engine layers.
-</p>
-<h4>Subsystems</h4>
-<ol>
-<li>{@link org.springframework.webflow.test Unit Test}
-<li>{@link org.springframework.webflow.test.execution Execution Test}
-</ol>
-<h3>System Configuration Layer</h3>
-<h4>Subsystems</h4>
-<p>
-Contains support for configuring the flow executor engine using Spring. A Spring 2.0 config schema is provided.
-This is the top layer and depends on the Execution Core, Executor, and Execution Engine layers.
-</p>
-<ol>
-<li>{@link org.springframework.webflow.config Spring Configuration Support}
-</ol>
+<p>Spring Web Flow facilitates building web applications that require guided navigation -- e.g. a shopping cart, flight check-in, a loan application, and many others. In contrast to stateless, free-form navigation such use cases have a clear start and end point, one or more screens to go through in a specific order, and a set of changes that are not finalized to the end.</p>
+
+<p>A distinguishing feature is the ability to define a <strong>flow definition</strong> consisting of <em>states</em>, <em>transitions</em>, and <em>data</em>. For example, view states correspond to the individual screens of the flow while transitions are caused by events resulting from the click of a button or a link. Data may be stored in scopes such as <em>flash</em>, <em>view</em>, <em>flow</em>, and others. Scoped data is cleared when it is no longer in scope.</p>
+
+<p>In REST terms a flow represents as a single resource. The same URL used to start the flow is also the URL used to step through the flow (there is also an execution key uniquely identifying the current flow instance). As a result of this approach navigation remains encapsulated in the flow definition.</p>
+
+<p>Some key benefits of using Spring Web Flow:</p>
+
+<ul>
+<li>A flow abstraction to model <em>"long conversations"</em> in web applications</li>
+<li>Proper encapsulation for navigation rules</li>
+<li>Multiple scopes in which to keep data</li>
+<li>Automatic use of the POST/REDIRECT/GET pattern to avoid browser warnings</li>
+<li>Impossible to return to completed flow sessions via browser back button</li>
+<li>Rapid prototyping of flow requirements</li>
+<li>Development mode in which flow definition changes are detected on the fly</li>
+<li>IDE visualization for flow definitions</li>
+<li>Much more...</li>
+</ul>
+
 </body>
 </html>

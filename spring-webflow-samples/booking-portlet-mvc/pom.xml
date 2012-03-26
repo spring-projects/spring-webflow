@@ -175,28 +175,11 @@
 		</dependency>
 	</dependencies>
 	<repositories>
-		<!-- Maven Central -->
 		<repository>
-			<id>org.maven.central</id>
-			<name>Maven Central Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
-			<snapshots><enabled>false</enabled></snapshots>
+			<id>spring-repository</id>
+			<name>Spring project snapshots, milestones, and releases</name>
+			<url>http://repo.springsource.org/snapshot</url>
 		</repository>
-		<!-- For testing against latest Spring snapshots -->
-		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
-			<releases><enabled>false</enabled></releases>
-			<snapshots><enabled>true</enabled></snapshots>
-		</repository>
-		<!-- For developing against latest Spring milestones -->
-        <repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-			<snapshots><enabled>false</enabled></snapshots>
-		</repository>		
 	</repositories>
 	<build>
 		<finalName>booking-portlet-mvc</finalName>
