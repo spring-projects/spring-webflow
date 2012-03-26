@@ -30,15 +30,15 @@
 		<dependency org="org.hibernate" name="com.springsource.org.hibernate" rev="3.2.6.ga" conf="optional, test->runtime" />
 		<dependency org="org.junit" name="com.springsource.junit" rev="3.8.2" conf="provided, test->runtime" />
 		<dependency org="org.ognl" name="com.springsource.org.ognl" rev="2.6.9" conf="optional->runtime" />
-		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.5.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.5.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.core" rev="3.0.5.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.expression" rev="3.0.5.RELEASE" conf="compile->runtime" />
-		<dependency org="org.springframework" name="org.springframework.orm" rev="3.0.5.RELEASE" conf="optional->runtime" />
-		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.0.5.RELEASE" conf="optional->runtime" />
-		<dependency org="org.springframework" name="org.springframework.web" rev="3.0.5.RELEASE" conf="compile->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.web.portlet" rev="3.0.5.RELEASE" conf="optional->runtime" />
-		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.0.5.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.1.1.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.1.1.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.core" rev="3.1.1.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.expression" rev="3.1.1.RELEASE" conf="compile->runtime" />
+		<dependency org="org.springframework" name="org.springframework.orm" rev="3.1.1.RELEASE" conf="optional->runtime" />
+		<dependency org="org.springframework" name="org.springframework.transaction" rev="3.1.1.RELEASE" conf="optional->runtime" />
+		<dependency org="org.springframework" name="org.springframework.web" rev="3.1.1.RELEASE" conf="compile->runtime"/>
+		<dependency org="org.springframework" name="org.springframework.web.portlet" rev="3.1.1.RELEASE" conf="optional->runtime" />
+		<dependency org="org.springframework" name="org.springframework.web.servlet" rev="3.1.1.RELEASE" conf="compile->runtime"/>
 		<dependency org="org.springframework.security" name="org.springframework.security.core" rev="3.0.2.RELEASE" conf="optional->runtime" />
 		<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="latest.integration" conf="compile->runtime"/>
 		<dependency org="org.springframework.webflow" name="org.springframework.js" rev="latest.integration" conf="compile->runtime"/>
@@ -52,10 +52,10 @@
 		<dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.5.2" conf="test->runtime" />
 		<dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" conf="test->runtime" />
 		<dependency org="org.jboss.el" name="com.springsource.org.jboss.el" rev="2.0.0.GA" conf="test->runtime"/>
-		<dependency org="org.springframework" name="org.springframework.aop" rev="3.0.5.RELEASE" conf="test->runtime" />		
-		<dependency org="org.springframework" name="org.springframework.jdbc" rev="3.0.5.RELEASE" conf="test->runtime" />
-		<dependency org="org.springframework" name="org.springframework.test" rev="3.0.5.RELEASE" conf="test->runtime" />
-		
+		<dependency org="org.springframework" name="org.springframework.aop" rev="3.1.1.RELEASE" conf="test->runtime" />
+		<dependency org="org.springframework" name="org.springframework.jdbc" rev="3.1.1.RELEASE" conf="test->runtime" />
+		<dependency org="org.springframework" name="org.springframework.test" rev="3.1.1.RELEASE" conf="test->runtime" />
+
 	</dependencies>
 
 </ivy-module>

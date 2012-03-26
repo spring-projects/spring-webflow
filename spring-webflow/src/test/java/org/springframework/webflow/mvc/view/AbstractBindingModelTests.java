@@ -150,7 +150,8 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		model.pushNestedPath("nestedBean");
 		assertEquals("test", model.getFieldValue("datum1"));
 		assertEquals("0", model.getFieldValue("datum2"));
-		assertEquals(int.class, model.getFieldType("datum2"));
+		Class clazz = model.getFieldType("datum2");
+		assertTrue(int.class.equals(clazz) || Integer.class.equals(clazz));
 
 		messages.addMessage(new MessageBuilder().source("nestedBean.datum2").error().defaultText("Error").build());
 		assertNotNull(model.getFieldErrors("datum2").get(0));

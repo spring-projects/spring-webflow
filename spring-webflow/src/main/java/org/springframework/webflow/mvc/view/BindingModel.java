@@ -209,6 +209,10 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		throw new UnsupportedOperationException("Should not be called during view rendering");
 	}
 
+	public String[] resolveMessageCodes(String errorCode) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
 	// internal helpers
 
 	private Expression parseFieldExpression(String field, boolean useResultTypeHint) {
