@@ -112,7 +112,11 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 	}
 
 	public boolean isValidationFailed() {
-		return getDelegate().isValidationFailed();
+		if (getMessageDelegate().hasErrorMessages()) {
+			return true;
+		} else {
+			return getDelegate().isValidationFailed();
+		}
 	}
 
 	public void setExceptionHandler(ExceptionHandler exceptionHandler) {
@@ -125,6 +129,12 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 	public void validationFailed() {
 		getDelegate().validationFailed();
+	}
+
+	// --------------- JSF 2.1 Pass-through delegate methods ------------------//
+
+	public boolean isReleased() {
+		return getDelegate().isReleased();
 	}
 
 	protected class Jsf2FlowExternalContext extends FlowExternalContext {
@@ -242,5 +252,18 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 			return delegate.encodePartialActionURL(url);
 		}
 
+		// --------------- JSF 2.1 Pass-through delegate methods ------------------//
+
+		public int getSessionMaxInactiveInterval() {
+			return delegate.getSessionMaxInactiveInterval();
+		}
+
+		public boolean isSecure() {
+			return delegate.isSecure();
+		}
+
+		public void setSessionMaxInactiveInterval(int interval) {
+			delegate.setSessionMaxInactiveInterval(interval);
+		}
 	}
 }

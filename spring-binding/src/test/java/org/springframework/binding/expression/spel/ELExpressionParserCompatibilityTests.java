@@ -107,8 +107,8 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 	public void testParseBeanEvalExpressionInvalidELVariable() {
 		try {
 			String expressionString = "bogus";
-			Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-					.evaluate(TestBean.class));
+			Expression exp = parser.parseExpression(expressionString,
+					new FluentParserContext().evaluate(TestBean.class));
 			exp.getValue(new TestBean());
 			fail("Should have failed");
 		} catch (EvaluationException e) {
@@ -131,8 +131,8 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 
 	public void testParseTemplateExpressionWithVariables() {
 		String expressionString = "#{value}#{#max}";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
-				new ExpressionVariable("max", "maximum")));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().template().variable(new ExpressionVariable("max", "maximum")));
 		TestBean target = new TestBean();
 		assertEquals("foo2", exp.getValue(target)); // TODO:
 	}
@@ -147,7 +147,8 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
 		TestBean context = new TestBean();
-		assertEquals(int.class, exp.getValueType(context));
+		Class clazz = exp.getValueType(context);
+		assertTrue(int.class.equals(clazz) || Integer.class.equals(clazz));
 	}
 
 	public void testGetValueWithCoersion() {
@@ -159,8 +160,8 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 
 	public void testGetValueCoersionError() {
 		String expressionString = "maximum";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-				.expectResult(TestBean.class));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().expectResult(TestBean.class));
 		TestBean context = new TestBean();
 		try {
 			exp.getValue(context);
@@ -202,8 +203,8 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		}
 
 		public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
-			return new TypedValue("Custom resolver resolved this special property!", TypeDescriptor
-					.valueOf(String.class));
+			return new TypedValue("Custom resolver resolved this special property!",
+					TypeDescriptor.valueOf(String.class));
 		}
 
 		public Class[] getSpecificTargetClasses() {

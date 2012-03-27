@@ -521,7 +521,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param transition the matched transition
 	 * @return true if binding should occur, false if not
 	 */
-	private boolean shouldValidate(Object model, TransitionDefinition transition) {
+	protected boolean shouldValidate(Object model, TransitionDefinition transition) {
 		Boolean validateAttribute = getValidateAttribute(transition);
 		if (validateAttribute != null) {
 			return validateAttribute.booleanValue();

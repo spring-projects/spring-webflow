@@ -18,6 +18,7 @@ package org.springframework.binding.message;
 import java.io.Serializable;
 
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.util.StringUtils;
 
 /**
  * An object of communication that provides text information. For example, a validation message may inform a web
@@ -49,7 +50,8 @@ public class Message implements Serializable {
 
 	/**
 	 * A reference to the source element this message is associated with. This could be a field on a form in UI, or null
-	 * if the message is not associated with a any particular element.
+	 * (or empty "" in the case of global bean validation) if the message is not associated with a any particular
+	 * element.
 	 * @return the source
 	 */
 	public Object getSource() {
@@ -70,6 +72,18 @@ public class Message implements Serializable {
 	 */
 	public Severity getSeverity() {
 		return severity;
+	}
+
+	/**
+	 * Whether the message is associated with a field.
+	 * @return {@code true} if the source is a String that has text; {@code false} otherwise.
+	 */
+	public boolean hasField() {
+		if (this.source instanceof String) {
+			return StringUtils.hasText((String) this.source);
+		} else {
+			return false;
+		}
 	}
 
 	public String toString() {

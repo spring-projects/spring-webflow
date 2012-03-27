@@ -48,166 +48,97 @@
 	<sect1 id="jars-mvn-central">
 		<title>How to access Web Flow artifacts from Maven Central</title>
 		<para>
-			Each jar in the Web Flow distribution is available in the <ulink url="http://repo1.maven.org/maven2/">Maven Central Repository</ulink>.
+			Each jar in the Web Flow distribution is available in the <ulink url="http://search.maven.org">Maven Central Repository</ulink>.
 			This allows you to easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
 		</para>
 		<para>
-			To access Web Flow jars from Maven Central, declare the following dependency in your pom (also adds "spring-binding", "spring-js", and "spring-js-resources"):			
+			To access Web Flow jars from Maven Central, declare the following dependency in your pom (includes transitive dependencies "spring-binding" and "spring-js"):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
-    <version>2.4.0.RELEASE</version>
+    <version>x.y.z.RELEASE</version>
 </dependency>
 ]]>
 		</programlisting>
 		<para>
-			If using JavaServer Faces, declare the following dependency in your pom (also adds the above dependencies):
+			If using JavaServer Faces, declare the following dependency in your pom (includes transitive dependencies "spring-binding", "spring-webflow" and "spring-js"):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-faces</artifactId>
-    <version>2.4.0.RELEASE</version>
+    <version>x.y.z.RELEASE</version>
 </dependency> 
 ]]>
 		</programlisting>
-	</sect1>	
-	<sect1 id="jars-bundle-repository">
-		<title>How to access Web Flow artifacts from the SpringSource Bundle Repository</title>
+	</sect1>
+	<sect1 id="jars-ivy">
+		<title>How to access Web Flow artifacts with Ivy</title>
 		<para>
-			Each jar in the Web Flow distribution is also available in the <ulink url="http://www.springsource.com/repository">SpringSource Enterprise Bundle Repository</ulink>.
-			Use this repository when you wish to run Spring Web Flow in an OSGi environment such as the <ulink url="http://www.springsource.com/products/dmserver">SpringSource dm Server</ulink>.
-			All jars obtained from the SpringSource Bundle Repository are OSGi-ready.
+			To access Spring Web Flow jars with Ivy, add the following repositories to your Ivy config:
 		</para>
-		<sect2 id="jars-maven">
-			<title>Accessing Web Flow bundles with Maven</title>
-			<para>
-				To access bundles using Maven, add the following repositories to your Maven pom:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<repository>
-    <id>com.springsource.repository.bundles.release</id>
-    <name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
-    <url>http://repository.springsource.com/maven/bundles/release</url>
-</repository>
-
-<repository>
-    <id>com.springsource.repository.bundles.external</id>
-    <name>SpringSource Enterprise Bundle Repository - External Releases</name>
-    <url>http://repository.springsource.com/maven/bundles/external</url>
-</repository>]]>
-			</programlisting>
-			<para>
-				Then declare the following dependency:			
-			</para>
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.webflow</artifactId>
-    <version>2.4.0.RELEASE</version>
-</dependency>]]>
-			</programlisting>
-			<para>
-				And if using JavaServer Faces:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
-    <version>2.4.0.RELEASE</version>
-</dependency>]]>
-			</programlisting>
-			<para>
-				Note the Web Flow artifacts in the SpringSource Bundle Repository are indexed under different ids because their transitive dependencies are different than the Maven Central artifacts.
-				The difference is the transitive jars such as commons-logging have been patched by SpringSource to add the metadata required to make them OSGi-compatible.
-			</para>
-		</sect2>
-		<sect2 id="jars-ivy">
-			<title>Accessing Web Flow bundles with Ivy</title>
-			<para>
-				To access bundles using Ivy, add the following repositories to your Ivy config:
-			</para>
 			<programlisting language="xml"><![CDATA[
 <url name="com.springsource.repository.bundles.release">
     <ivy pattern="http://repository.springsource.com/ivy/bundles/release/
                   [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
     <artifact pattern="http://repository.springsource.com/ivy/bundles/release/
-                       [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
 <url name="com.springsource.repository.bundles.external">
     <ivy pattern="http://repository.springsource.com/ivy/bundles/external/
                   [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
     <artifact pattern="http://repository.springsource.com/ivy/bundles/external/
-                       [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>]]>
 			</programlisting>
-			<para>
-				Then declare the following dependencies (also adds "org.springframework.binding", 
-					"org.springframework.js", and "org.springframework.spring.js"):			
-			</para>
+		<para>
+			To access Spring Web Flow jars as well as 3rd party dependencies with Ivy, add the following repository to your Ivy config:
+		</para>
 			<programlisting language="xml"><![CDATA[
+<url name="springsource-repository">
+    <ivy pattern="http://repo.springsource.org/libs-release/[organization]/[module]/[revision]/[type]s/ivy-[revision].xml" />
+    <artifact pattern="http://repo.springsource.org/libs-release/[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]" />
+</url>]]>
+			</programlisting>
+		<para>
+			Then declare the following dependencies in your ivy.xml:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<dependency org="org.springframework.webflow" name="org.springframework.binding"
+            rev="x.y.z.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.js"
+            rev="x.y.z.RELEASE" conf="compile->runtime" />
 <dependency org="org.springframework.webflow" name="org.springframework.webflow"
-            rev="2.4.0.RELEASE" conf="compile->runtime" />]]>
-			</programlisting>
-			<para>
-				And if using JavaServerFaces:
-			</para>
-			<programlisting language="xml"><![CDATA[
+            rev="x.y.z.RELEASE" conf="compile->runtime" />]]>
+		</programlisting>
+		<para>
+			If using JavaServer Faces, declare the following dependency in your pom (also adds the above dependencies):
+		</para>
+		<programlisting language="xml"><![CDATA[
 <dependency org="org.springframework.webflow" name="org.springframework.faces"
-            rev="2.4.0.RELEASE" conf="compile->runtime" />]]>
-			</programlisting>
-		</sect2>
-		<sect2 id="webflow-dm-server-lib">
-			<title>Accessing the dm Server Web Flow library</title>
-			<para>
-				A dm Server library for Web Flow is also available if you are deploying to a dm Server environment.
-				Import this library in your MANIFEST.mf to automatically import all Web Flow bundles.
-				To access the library, add the following repository:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<repository>
-    <id>com.springsource.repository.libraries.release</id>
-    <name>SpringSource Enterprise Bundle Repository - SpringSource Library Releases</name>
-    <url>http://repository.springsource.com/maven/libraries/release</url>
-</repository>]]>	
-			</programlisting>
-			<para>
-				And declare the following dependency:
-			</para>	
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.webflow-library</artifactId>
-    <type>libd</type>
-    <version>2.4.0.RELEASE</version>
-</dependency>]]>	
-			</programlisting>
-		</sect2>
+            rev="x.y.z.RELEASE" conf="compile->runtime" />]]>
+		</programlisting>
 	</sect1>
 	<sect1>
-		<title>How to access nightly builds</title>
+		<title>How to access nightly builds and milestone releases</title>
 		<para>
-			Nightly snapshots of Web Flow development branches are available using Maven, and distribution zips are also available for download.
+			Nightly snapshots of Web Flow development branches are available using Maven.
 			These snapshot builds are useful for testing out fixes you depend on in advance of the next release, and provide a convenient way for you to provide feedback about whether a fix meets your needs.
 		</para>
-		<para>
-			If using Maven, you may obtain snapshots from either the SpringSource-managed Maven Central-compatible repository or the SpringSource Enterprise Bundle Repository.
-			Use the <ulink url="http://s3browse.com/explore/maven.springframework.org/snapshot/org/springframework/webflow">Maven Central-compatible snapshot repository</ulink> when your project obtains its other open source dependencies from Maven Central.
-			Use the <ulink url="http://s3browse.com/explore/repository.springsource.com/maven/bundles/snapshot/org/springframework/webflow">Spring Source Enterprise Bundle Snapshot Repository</ulink> when you wish to run Web Flow in an OSGi environment.
-		</para>
 		<sect2>
-			<title>Accessing snapshots from the Maven-central compatible repository</title>
+			<title>Accessing snapshots and milestones with Maven</title>
 			<para>
-				Add the following repository your pom:
+				For milestones and snapshots you'll need to use the SpringSource repository.
+				Add the following repository to your Maven pom.xml:
 			</para>			
 			<programlisting language="xml"><![CDATA[
 <repository>
-    <id>org.springsource.maven.snapshot</id>
-    <name>SpringSource Maven Central-compatible Snapshot Repository</name>
-    <url>http://maven.springframework.org/snapshot</url>
+    <id>springsource-repository</id>
+    <name>Spring project snapshots, milestones, and releases</name>
+    <url>http://repo.springsource.org/snapshot</url>
 </repository>]]>
 			</programlisting>
 			<para>
@@ -242,57 +173,6 @@
     <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>]]>
 			</programlisting>
-		</sect2>
-		<sect2>
-			<title>Accessing snapshots from the SpringSource Enterprise Bundle Repository</title>
-			<para>
-				Add the following repository your pom:
-			</para>			
-			<programlisting language="xml"><![CDATA[
-<repository>
-    <id>com.springsource.repository.bundles.snapshot</id>
-    <name>SpringSource Enterprise Bundle Snapshot Repository</name>
-    <url>http://repository.springsource.com/maven/bundles/snapshot</url>
-</repository>]]>
-			</programlisting>
-			<para>
-				Then declare the following dependencies:			
-			</para>
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.binding</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.js</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency> 
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.webflow</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency>]]>
-			</programlisting>
-			<para>
-				And if using JavaServerFaces:
-			</para>
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>org.springframework.faces</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency>]]>
-			</programlisting>
-		</sect2>
-		<sect2>
-			<title>Accessing snapshot distribution archives</title>
-			<para>
-				Get the snapshot zip with the most recent CI build number from the <ulink url="http://static.springframework.org/downloads/nightly/snapshot-download.php?project=SWF">Web Flow snapshot download area</ulink>.		
-			</para>
 		</sect2>
 	</sect1>
 </chapter>

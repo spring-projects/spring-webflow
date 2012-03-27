@@ -255,8 +255,7 @@ class RequestControlContextImpl implements RequestControlContext {
 	}
 
 	public boolean getEmbeddedMode() {
-		Boolean embedded = flowExecution.getAttributes().getBoolean("embeddedMode");
-		return (embedded != null) ? embedded.booleanValue() : false;
+		return flowExecution.getActiveSession().isEmbeddedMode();
 	}
 
 	public String toString() {

@@ -26,7 +26,11 @@ import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.Behavior;
+import javax.faces.component.visit.VisitContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 
@@ -116,4 +120,17 @@ public class Jsf2FlowApplication extends FlowApplication {
 		getDelegate().unsubscribeFromEvent(systemEventClass, listener);
 	}
 
+	// Ideally this method should be in JsfView
+	// We keep it here to avoid ClassNotFoundExceptions for JSF 1.2 apps
+
+	static void publishPostRestoreStateEvent() {
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		try {
+			facesContext.getViewRoot().visitTree(VisitContext.createVisitContext(facesContext),
+					new PostRestoreStateEventVisitCallback());
+		} catch (AbortProcessingException e) {
+			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
+					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
+		}
+	}
 }

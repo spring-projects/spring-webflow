@@ -23,9 +23,9 @@ import org.springframework.webflow.definition.StateDefinition;
  * A single, local instantiation of a {@link FlowDefinition flow definition} launched within an overall flow execution.
  * <p>
  * This object maintains all instance state including session status within exactly one governing FlowExecution, as well
- * as the current flow state. This object also acts as the local "flow scope" data model. Data in
- * {@link #getScope() flow scope} lives for the life of this object and is cleaned up automatically when this object is
- * destroyed. Destruction happens when this session enters an end state.
+ * as the current flow state. This object also acts as the local "flow scope" data model. Data in {@link #getScope()
+ * flow scope} lives for the life of this object and is cleaned up automatically when this object is destroyed.
+ * Destruction happens when this session enters an end state.
  * <p>
  * Note that a flow <i>session</i> is in no way linked to an HTTP session. It just uses the familiar "session" naming
  * convention to denote a stateful object.
@@ -61,6 +61,12 @@ public interface FlowSession {
 	 * @throws IllegalStateException if this flow session is not currently in a view state
 	 */
 	public MutableAttributeMap getViewScope() throws IllegalStateException;
+
+	/**
+	 * Returns true if the flow session was started in embedded page mode. An embedded flow can make different
+	 * assumptions with regards to whether redirect after post is necessary.
+	 */
+	public boolean isEmbeddedMode();
 
 	/**
 	 * Returns the parent flow session in the current flow execution, or <code>null</code> if there is no parent flow

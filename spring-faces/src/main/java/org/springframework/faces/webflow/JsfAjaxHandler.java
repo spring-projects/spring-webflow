@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,14 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 	}
 
 	protected boolean isAjaxRequestInternal(HttpServletRequest request, HttpServletResponse response) {
-		String facesRequestHeader = request.getHeader("Faces-Request");
-		return ("partial/ajax".equals(facesRequestHeader)) ? true : false;
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		if (facesContext != null) {
+			return facesContext.getPartialViewContext().isAjaxRequest();
+		} else {
+			String header = request.getHeader("Faces-Request");
+			String param = request.getParameter("javax.faces.partial.ajax");
+			return ("partial/ajax".equals(header) || "true".equals(param)) ? true : false;
+		}
 	}
 
 	protected void sendAjaxRedirectInternal(final String targetUrl, final HttpServletRequest request,

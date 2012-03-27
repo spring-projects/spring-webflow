@@ -78,33 +78,25 @@ For an exact list of project dependencies, see each project's ivy file at "proje
 ------------------
 This distribution contains documentation and sample applications demonstrating the features of the Spring Web Flow projects.
 A great way to get started is to review and run the sample applications, supplementing with reference manual material as you go.
-To build deployable .war files for all samples, simply access the projects/build-spring-webflow directory and run ant.
-All projects are directly importable into Eclipse as "Dynamic Web Projects".
-See http://www.springframework.org/webflow-samples for more information.
+To build deployable .war files for the samples, access the projects/spring-webflow-samples directory and run "mvn package".
+Sample projects can be imported into an IDE as Maven projects or by generating IDE settings (e.g. "mvn eclipse:eclipse").
 
-5. OBTAINING RELEASE JARS FROM THE SPRINGSOURCE BUNDLE REPOSITORY
------------------------------------------------------------------
-Each jar in the Web Flow distribution is available in the SpringSource release repository.
-These jars may be accessed using Maven or Ivy dependency managers.
-Browse the contents of the repository by accessing http://www.springsource.com/repository.
+5. OBTAINING RELEASE JARS WITH MAVEN OR IVY
+-------------------------------------------
+Release versions of Spring Web Flow artifacts are available via Maven Central.
 
-To access jars using Maven, add the following repositories to your Maven pom:
+For milestones and snapshots only (and for Ivy dependencies) you'll need to use the
+SpringSource repository. Add the following repository to your Maven pom.xml:
 
 <repository>
-    <id>com.springsource.repository.bundles.release</id>
-    <name>SpringSource Enterprise Bundle Repository - SpringSource Releases</name>
-    <url>http://repository.springsource.com/maven/bundles/release</url>
+    <id>springsource-repository</id>
+    <name>Spring project releases, milestones, and snapshots</name>
+    <url>http://repo.springsource.org/snapshot</url>
 </repository>
 
-<repository>
-    <id>com.springsource.repository.bundles.external</id>
-    <name>SpringSource Enterprise Bundle Repository - External Releases</name>
-    <url>http://repository.springsource.com/maven/bundles/external</url>
-</repository>
-
-Then declare the following dependencies (note that many times it's sufficient to include
-org.springframework.webflow only, which will give you org.springframework.binding, 
-org.springframework.js, and org.springframework.js via transitive dependencies):
+Then declare the following dependencies (note that many times it's sufficient
+to include spring-webflow only, which will give you spring-binding and spring-js
+via transitive dependencies):
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
@@ -124,7 +116,7 @@ org.springframework.js, and org.springframework.js via transitive dependencies):
     <version>2.4.0.RELEASE</version>
 </dependency> 
 
-If using JavaServerFaces all you need to include is:
+If using JSF all you need to include is:
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
@@ -154,21 +146,14 @@ If using JavaServerFaces:
 
 <dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.4.0.RELEASE" conf="compile->runtime" />
 
-Refer to the reference documentation for more coverage on obtaining Web Flow jars using Maven or Ivy.
+For more information see the reference documentation and the SpringSource Repository FAQ:
+https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ
 	
 6. ADDITIONAL RESOURCES
 -----------------------
 The Spring Web Flow homepage is located at:
-    http://www.springframework.org/webflow
-
-There you will find resources such as a 'Quick Start' guide and a 'Frequently Asked Questions' section.
+    http://www.springsource.org/spring-web-flow
 
 The Spring Web Flow community forums are located at:
     http://forum.springframework.org
-	
-There you will find an active community of users collaborating about the project.
 
-The Spring Community portal is located at:
-    http://www.springframework.org
-
-There you will find links to many resources on Spring Portfolio projects, including on-line access to Spring documentation.

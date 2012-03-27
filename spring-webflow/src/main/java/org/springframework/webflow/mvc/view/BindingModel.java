@@ -111,7 +111,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 	}
 
 	public List getGlobalErrors() {
-		return toErrors(messageContext.getMessagesByCriteria(ERRORS_NULL_SOURCE));
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_WITHOUT_FIELD_SOURCE));
 	}
 
 	public List getFieldErrors(String field) {
@@ -206,6 +206,10 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 	}
 
 	public String[] resolveMessageCodes(String errorCode, String field) {
+		throw new UnsupportedOperationException("Should not be called during view rendering");
+	}
+
+	public String[] resolveMessageCodes(String errorCode) {
 		throw new UnsupportedOperationException("Should not be called during view rendering");
 	}
 
@@ -318,15 +322,15 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		}
 	};
 
-	private static final MessageCriteria ERRORS_NULL_SOURCE = new MessageCriteria() {
+	private static final MessageCriteria ERRORS_WITHOUT_FIELD_SOURCE = new MessageCriteria() {
 		public boolean test(Message message) {
-			return message.getSource() == null && message.getSeverity() == Severity.ERROR;
+			return (!message.hasField() && message.getSeverity() == Severity.ERROR);
 		}
 	};
 
 	private static final MessageCriteria ERRORS_FIELD_SOURCE = new MessageCriteria() {
 		public boolean test(Message message) {
-			return message.getSeverity() == Severity.ERROR && message.getSource() instanceof String;
+			return (message.hasField() && message.getSeverity() == Severity.ERROR);
 		}
 	};
 

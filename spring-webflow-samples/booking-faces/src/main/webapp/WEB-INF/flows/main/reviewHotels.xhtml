@@ -3,7 +3,7 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 	  			xmlns:h="http://java.sun.com/jsf/html"
 	  			xmlns:f="http://java.sun.com/jsf/core"
-	  			xmlns:p="http://primefaces.prime.com.tr/ui"
+	  			xmlns:p="http://primefaces.org/ui"
 				template="/WEB-INF/layouts/standard.xhtml">
 <ui:define name="notes">
 	<p>
@@ -18,8 +18,8 @@
 </ui:define>
 <ui:define name="content">
 <h:form>
-	<p:dataTable id="hotels" var="h" value="#{hotels}" paginator="true" dynamic="true" lazy="true" 
-			rows="#{searchCriteria.pageSize}" page="#{searchCrtieria.currentPage}">
+	<p:dataTable id="hotels" var="h" value="#{hotels}" paginator="true" dynamic="true"
+			rows="#{hotels.pageSize}" page="#{hotels.currentPage}">
         <f:facet name="header">
         	Hotel Search Results<br/>
         	<p:commandLink value="Modify or start search again" action="changeSearch" styleClass="alt" />
@@ -42,7 +42,7 @@
 		</p:column>
 		<p:column>
 			<f:facet name="header">Action</f:facet>
-			<p:commandButton id="viewHotelLink" value="View" action="select" image="ui-icon-search">
+			<p:commandButton id="viewHotelLink" value="View" action="select" icon="ui-icon-search">
 				<f:setPropertyActionListener value="#{h}" target="#{hotels.selected}" />
 			</p:commandButton>
 		</p:column>
