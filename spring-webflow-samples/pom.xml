@@ -6,7 +6,7 @@
 	<artifactId>spring-webflow-samples</artifactId>
 	<packaging>pom</packaging>
 	<name>Spring Web Flow Samples</name>
-	<version>2.3.1.BUILD-SNAPSHOT</version>
+	<version>2.3.1.RELEASE</version>
 	<modules>
 		<module>booking-mvc</module>
 		<module>booking-faces</module>

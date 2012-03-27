@@ -6,7 +6,7 @@
 	<artifactId>booking-portlet-faces</artifactId>
 	<packaging>war</packaging>
 	<name>Hotel Booking : Spring Portlet MVC + Web Flow + JSF</name>
-	<version>2.3.1.BUILD-SNAPSHOT</version>
+	<version>2.3.1.RELEASE</version>
 	<properties>
 		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
