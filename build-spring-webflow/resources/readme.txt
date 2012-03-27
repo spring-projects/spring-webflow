@@ -89,8 +89,8 @@ For milestones and snapshots only (and for Ivy dependencies) you'll need to use 
 SpringSource repository. Add the following repository to your Maven pom.xml:
 
 <repository>
-    <id>spring-repository</id>
-    <name>Spring project snapshots, milestones, and releases</name>
+    <id>springsource-repository</id>
+    <name>Spring project releases, milestones, and snapshots</name>
     <url>http://repo.springsource.org/snapshot</url>
 </repository>
 
@@ -126,27 +126,27 @@ If using JSF all you need to include is:
 
 To access jars using Ivy, add the following repositories to your Ivy config:
 
-<url name="spring-project-releases">
-    <ivy pattern="http://repo.springsource.org/release/[organization]/[module]/[revision]/[type]s/ivy-[revision].xml" />
-    <artifact pattern="http://repo.springsource.org/release/[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]" />
+<url name="com.springsource.repository.bundles.release">
+    <ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
-<url name="spring-project-releases-milestones-snapshots">
-    <ivy pattern="http://repo.springsource.org/snapshot/[organization]/[module]/[revision]/[type]s/ivy-[revision].xml" />
-    <artifact pattern="http://repo.springsource.org/snapshot/[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]" />
+<url name="com.springsource.repository.bundles.external">
+    <ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
 Then declare the following dependencies in your ivy.xml:
 
-<dependency org="org.springframework.webflow" name="spring-binding" rev="2.3.1.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="spring-js" rev="2.3.1.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="spring-webflow" rev="2.3.1.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.4.0.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.4.0.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.4.0.RELEASE" conf="compile->runtime" />
 
 If using JavaServerFaces:
 
-<dependency org="org.springframework.webflow" name="spring-faces" rev="2.3.1.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.4.0.RELEASE" conf="compile->runtime" />
 
-For more information see the SpringSource Repository FAQ:
+For more information see the reference documentation and the SpringSource Repository FAQ:
 https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ
 	
 6. ADDITIONAL RESOURCES
