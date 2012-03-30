@@ -33,7 +33,7 @@ public class FlowDefinitionResource {
 
 	private Resource path;
 
-	private AttributeMap attributes;
+	private AttributeMap<Object> attributes;
 
 	/**
 	 * Creates a new flow definition resource
@@ -41,7 +41,7 @@ public class FlowDefinitionResource {
 	 * @param path the location of the resource
 	 * @param attributes meta-attributes describing the flow resource
 	 */
-	public FlowDefinitionResource(String flowId, Resource path, AttributeMap attributes) {
+	public FlowDefinitionResource(String flowId, Resource path, AttributeMap<Object> attributes) {
 		this.id = flowId;
 		this.path = path;
 		this.attributes = attributes;
@@ -67,7 +67,7 @@ public class FlowDefinitionResource {
 	 * Returns attributes to assign the flow definition.
 	 * @return flow definition attributes
 	 */
-	public AttributeMap getAttributes() {
+	public AttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 

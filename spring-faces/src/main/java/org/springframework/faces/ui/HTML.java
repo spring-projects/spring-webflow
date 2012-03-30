@@ -31,7 +31,7 @@ final class HTML {
 	public static final String[] STANDARD_ATTRIBUTES = new String[] { "id", "class", "style", "title", "dir", "lang",
 			"accesskey", "tabindex" };
 
-	public static final Map STANDARD_ATTRIBUTE_ALIASES = new HashMap();
+	public static final Map<String, String> STANDARD_ATTRIBUTE_ALIASES = new HashMap<String, String>();
 
 	/**
 	 * Standard window events - only valid in body and frameset elements
@@ -67,7 +67,7 @@ final class HTML {
 	/**
 	 * Anchor attributes
 	 */
-	public static final Object[] ANCHOR_ATTRIBUTES = new String[] { "charset", "coords", "href", "hreflang", "name",
+	public static final String[] ANCHOR_ATTRIBUTES = new String[] { "charset", "coords", "href", "hreflang", "name",
 			"rel", "rev", "shape", "target", "type" };
 
 	static {

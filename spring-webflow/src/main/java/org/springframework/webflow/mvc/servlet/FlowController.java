@@ -44,7 +44,7 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 
 	private FlowHandlerAdapter flowHandlerAdapter;
 
-	private Map flowHandlers = new HashMap();
+	private Map<String, FlowHandler> flowHandlers = new HashMap<String, FlowHandler>();
 
 	private boolean customFlowHandlerAdapterSet;
 
@@ -125,7 +125,7 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 	 * Sets the custom flow handles for managing the access to flows in a custom manner.
 	 * @param flowHandlers the flow handler map
 	 */
-	public void setFlowHandlers(Map flowHandlers) {
+	public void setFlowHandlers(Map<String, FlowHandler> flowHandlers) {
 		this.flowHandlers = flowHandlers;
 	}
 
@@ -183,7 +183,7 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 	}
 
 	private FlowHandler getFlowHandler(String flowId) {
-		FlowHandler handler = (FlowHandler) flowHandlers.get(flowId);
+		FlowHandler handler = flowHandlers.get(flowId);
 		if (handler == null) {
 			handler = new DefaultFlowHandler(flowId);
 		}

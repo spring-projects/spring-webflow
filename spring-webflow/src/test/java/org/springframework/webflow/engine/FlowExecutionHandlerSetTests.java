@@ -49,10 +49,10 @@ public class FlowExecutionHandlerSetTests extends TestCase {
 	 */
 	public static class TestStateExceptionHandler implements FlowExecutionExceptionHandler {
 
-		private Class typeToHandle;
+		private Class<?> typeToHandle;
 		private String resultName;
 
-		public TestStateExceptionHandler(Class typeToHandle, String resultName) {
+		public TestStateExceptionHandler(Class<?> typeToHandle, String resultName) {
 			this.typeToHandle = typeToHandle;
 			this.resultName = resultName;
 		}

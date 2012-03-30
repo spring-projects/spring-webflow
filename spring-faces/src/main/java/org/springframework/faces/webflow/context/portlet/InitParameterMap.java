@@ -28,7 +28,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * @author Rossen Stoyanchev
  * @since 2.2.0
  */
-public class InitParameterMap extends StringKeyedMapAdapter {
+public class InitParameterMap extends StringKeyedMapAdapter<String> {
 
 	final private PortletContext portletContext;
 
@@ -42,7 +42,7 @@ public class InitParameterMap extends StringKeyedMapAdapter {
 	}
 
 	@Override
-	protected void setAttribute(String key, Object value) {
+	protected void setAttribute(String key, String value) {
 		throw new UnsupportedOperationException("Cannot set PortletContext InitParameter");
 	}
 
@@ -52,7 +52,6 @@ public class InitParameterMap extends StringKeyedMapAdapter {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected Iterator<String> getAttributeNames() {
 		return CollectionUtils.toIterator(portletContext.getInitParameterNames());
 	}

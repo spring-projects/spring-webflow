@@ -23,13 +23,13 @@ import java.util.LinkedList;
  */
 public class BinderModel extends AbstractModel {
 
-	private LinkedList bindings;
+	private LinkedList<BindingModel> bindings;
 
-	public LinkedList getBindings() {
+	public LinkedList<BindingModel> getBindings() {
 		return bindings;
 	}
 
-	public void setBindings(LinkedList bindings) {
+	public void setBindings(LinkedList<BindingModel> bindings) {
 		this.bindings = bindings;
 	}
 

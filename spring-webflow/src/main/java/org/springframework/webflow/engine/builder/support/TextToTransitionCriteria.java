@@ -33,10 +33,10 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * This converter supports the following encoded forms:
  * <ul>
- * <li>"*" - will result in a TransitionCriteria object that matches on everything. </li>
- * <li>"eventId" - will result in a TransitionCriteria object that matches given event id. </li>
- * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an
- * expression. </li>
+ * <li>"*" - will result in a TransitionCriteria object that matches on everything.</li>
+ * <li>"eventId" - will result in a TransitionCriteria object that matches given event id.</li>
+ * <li>"${...}" - will result in a TransitionCriteria object that evaluates given condition, expressed as an expression.
+ * </li>
  * </ul>
  * 
  * @see org.springframework.webflow.engine.TransitionCriteria
@@ -59,15 +59,15 @@ class TextToTransitionCriteria implements Converter {
 		this.flowBuilderContext = flowBuilderContext;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return String.class;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return TransitionCriteria.class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		String encodedCriteria = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
 		if (!StringUtils.hasText(encodedCriteria)
@@ -88,8 +88,8 @@ class TextToTransitionCriteria implements Converter {
 	 */
 	protected TransitionCriteria createBooleanExpressionTransitionCriteria(String encodedCriteria,
 			ExpressionParser parser) throws ConversionExecutionException {
-		Expression expression = parser.parseExpression(encodedCriteria, new FluentParserContext().template().evaluate(
-				RequestContext.class));
+		Expression expression = parser.parseExpression(encodedCriteria,
+				new FluentParserContext().template().evaluate(RequestContext.class));
 		return new DefaultTransitionCriteria(expression);
 	}
 }

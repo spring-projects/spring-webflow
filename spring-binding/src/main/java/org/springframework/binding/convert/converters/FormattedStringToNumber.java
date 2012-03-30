@@ -54,7 +54,7 @@ public class FormattedStringToNumber extends StringToObject {
 		super(Number.class);
 	}
 
-	public FormattedStringToNumber(Class numberClass) {
+	public FormattedStringToNumber(Class<? extends Number> numberClass) {
 		super(numberClass);
 	}
 
@@ -84,7 +84,8 @@ public class FormattedStringToNumber extends StringToObject {
 		this.lenient = lenient;
 	}
 
-	protected Object toObject(String string, Class targetClass) throws Exception {
+	@SuppressWarnings("unchecked")
+	protected Object toObject(String string, Class<?> targetClass) throws Exception {
 		ParsePosition parsePosition = new ParsePosition(0);
 		NumberFormat format = numberFormatFactory.getNumberFormat();
 		Number number = format.parse(string, parsePosition);
@@ -98,7 +99,7 @@ public class FormattedStringToNumber extends StringToObject {
 				throw new InvalidFormatException(string, getPattern(format));
 			}
 		}
-		return convertToNumberClass(number, targetClass);
+		return convertToNumberClass(number, (Class<? extends Number>) targetClass);
 	}
 
 	protected String toString(Object object) throws Exception {
@@ -112,7 +113,8 @@ public class FormattedStringToNumber extends StringToObject {
 	 * @return the coersed number
 	 * @throws IllegalArgumentException when an overflow condition occurs during coersion
 	 */
-	protected Number convertToNumberClass(Number number, Class numberClass) throws IllegalArgumentException {
+	protected Number convertToNumberClass(Number number, Class<? extends Number> numberClass)
+			throws IllegalArgumentException {
 		return NumberUtils.convertNumberToTargetClass(number, numberClass);
 	}
 

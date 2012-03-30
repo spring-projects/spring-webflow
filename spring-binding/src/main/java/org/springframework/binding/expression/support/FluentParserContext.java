@@ -28,11 +28,11 @@ import org.springframework.binding.expression.ParserContext;
  */
 public class FluentParserContext implements ParserContext {
 
-	private Class evaluationContextType;
+	private Class<?> evaluationContextType;
 
-	private Class evaluationResultType;
+	private Class<?> evaluationResultType;
 
-	private List expressionVariables;
+	private List<ExpressionVariable> expressionVariables;
 
 	private boolean template;
 
@@ -48,16 +48,16 @@ public class FluentParserContext implements ParserContext {
 		init();
 	}
 
-	public Class getEvaluationContextType() {
+	public Class<?> getEvaluationContextType() {
 		return evaluationContextType;
 	}
 
-	public Class getExpectedEvaluationResultType() {
+	public Class<?> getExpectedEvaluationResultType() {
 		return evaluationResultType;
 	}
 
 	public ExpressionVariable[] getExpressionVariables() {
-		return (ExpressionVariable[]) expressionVariables.toArray(new ExpressionVariable[expressionVariables.size()]);
+		return expressionVariables.toArray(new ExpressionVariable[expressionVariables.size()]);
 	}
 
 	public boolean isTemplate() {
@@ -69,7 +69,7 @@ public class FluentParserContext implements ParserContext {
 	 * @param contextType the type of context object the parsed expression will evaluate in
 	 * @return this
 	 */
-	public FluentParserContext evaluate(Class contextType) {
+	public FluentParserContext evaluate(Class<?> contextType) {
 		evaluationContextType = contextType;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class FluentParserContext implements ParserContext {
 	 * @param resultType the type of result object the parsed expression should return when evaluated
 	 * @return this
 	 */
-	public FluentParserContext expectResult(Class resultType) {
+	public FluentParserContext expectResult(Class<?> resultType) {
 		evaluationResultType = resultType;
 		return this;
 	}
@@ -114,6 +114,6 @@ public class FluentParserContext implements ParserContext {
 	}
 
 	private void init() {
-		expressionVariables = new ArrayList();
+		expressionVariables = new ArrayList<ExpressionVariable>();
 	}
 }

@@ -41,13 +41,13 @@ class FlowLocation {
 	/**
 	 * Attributes to assign to the flow definition.
 	 */
-	private Set attributes;
+	private Set<FlowElementAttribute> attributes;
 
-	public FlowLocation(String id, String path, Set attributes) {
+	public FlowLocation(String id, String path, Set<FlowElementAttribute> attributes) {
 		Assert.hasText(path, "The path is required");
 		this.id = id;
 		this.path = path;
-		this.attributes = (attributes != null ? attributes : Collections.EMPTY_SET);
+		this.attributes = (attributes != null ? attributes : Collections.<FlowElementAttribute> emptySet());
 	}
 
 	public String getId() {
@@ -58,7 +58,7 @@ class FlowLocation {
 		return path;
 	}
 
-	public Set getAttributes() {
+	public Set<FlowElementAttribute> getAttributes() {
 		return attributes;
 	}
 }

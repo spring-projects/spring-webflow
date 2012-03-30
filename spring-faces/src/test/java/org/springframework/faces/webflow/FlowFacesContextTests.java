@@ -73,9 +73,9 @@ public class FlowFacesContextTests extends TestCase {
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "FOO", "BAR"));
 
 		int iterationCount = 0;
-		Iterator i = facesContext.getMessages(null);
+		Iterator<FacesMessage> i = facesContext.getMessages(null);
 		while (i.hasNext()) {
-			FacesMessage message = (FacesMessage) i.next();
+			FacesMessage message = i.next();
 			assertNotNull(message);
 			iterationCount++;
 		}
@@ -91,9 +91,9 @@ public class FlowFacesContextTests extends TestCase {
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "FOO", "BAR"));
 
 		int iterationCount = 0;
-		Iterator i = facesContext.getMessages();
+		Iterator<FacesMessage> i = facesContext.getMessages();
 		while (i.hasNext()) {
-			FacesMessage message = (FacesMessage) i.next();
+			FacesMessage message = i.next();
 			assertNotNull(message);
 			iterationCount++;
 		}
@@ -125,7 +125,7 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.replay(new Object[] { requestContext });
 
 		int iterationCount = 0;
-		Iterator i = facesContext.getMessages();
+		Iterator<FacesMessage> i = facesContext.getMessages();
 		while (i.hasNext()) {
 			assertNotNull(i.next());
 			iterationCount++;
@@ -139,7 +139,7 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.replay(new Object[] { requestContext });
 
 		facesContext.addMessage("TESTID", new FacesMessage("summary1"));
-		FacesMessage soruceMessage = (FacesMessage) facesContext.getMessages("TESTID").next();
+		FacesMessage soruceMessage = facesContext.getMessages("TESTID").next();
 		soruceMessage.setSummary("summary2");
 
 		// check that message sticks around even when the facesContext has been torn down and re-created during the
@@ -147,7 +147,7 @@ public class FlowFacesContextTests extends TestCase {
 		FacesContext newFacesContext = new FlowFacesContext(requestContext, jsf.facesContext());
 		assertSame(FacesContext.getCurrentInstance(), newFacesContext);
 
-		FacesMessage gotMessage = (FacesMessage) newFacesContext.getMessages("TESTID").next();
+		FacesMessage gotMessage = newFacesContext.getMessages("TESTID").next();
 		assertEquals("summary2", gotMessage.getSummary());
 	}
 
@@ -157,9 +157,9 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.replay(new Object[] { requestContext });
 
 		int iterationCount = 0;
-		Iterator i = facesContext.getMessages("componentId");
+		Iterator<FacesMessage> i = facesContext.getMessages("componentId");
 		while (i.hasNext()) {
-			FacesMessage message = (FacesMessage) i.next();
+			FacesMessage message = i.next();
 			assertNotNull(message);
 			assertEquals("componentId_summary" + (iterationCount + 1), message.getSummary());
 			assertEquals("componentId_detail" + (iterationCount + 1), message.getDetail());
@@ -174,9 +174,9 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.replay(new Object[] { requestContext });
 
 		int iterationCount = 0;
-		Iterator i = facesContext.getMessages("userMessage");
+		Iterator<FacesMessage> i = facesContext.getMessages("userMessage");
 		while (i.hasNext()) {
-			FacesMessage message = (FacesMessage) i.next();
+			FacesMessage message = i.next();
 			assertNotNull(message);
 			assertEquals("userMessage", message.getSummary());
 			assertEquals("userMessage", message.getDetail());
@@ -190,7 +190,7 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
 		EasyMock.replay(new Object[] { requestContext });
 
-		Iterator i = facesContext.getMessages("unknown");
+		Iterator<FacesMessage> i = facesContext.getMessages("unknown");
 		assertFalse(i.hasNext());
 	}
 
@@ -199,15 +199,15 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.expect(requestContext.getMessageContext()).andStubReturn(messageContext);
 		EasyMock.replay(new Object[] { requestContext });
 
-		List expectedOrderedIds = new ArrayList();
+		List<String> expectedOrderedIds = new ArrayList<String>();
 		expectedOrderedIds.add(null);
 		expectedOrderedIds.add("componentId");
 		expectedOrderedIds.add("userMessage");
 
 		int iterationCount = 0;
-		Iterator i = facesContext.getClientIdsWithMessages();
+		Iterator<String> i = facesContext.getClientIdsWithMessages();
 		while (i.hasNext()) {
-			String clientId = (String) i.next();
+			String clientId = i.next();
 			assertEquals("Client id not expected", expectedOrderedIds.get(iterationCount), clientId);
 			iterationCount++;
 		}
@@ -220,7 +220,7 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.replay(new Object[] { requestContext });
 
 		facesContext.addMessage("TESTID", new FacesMessage("summary1"));
-		FacesMessage sourceMessage = (FacesMessage) facesContext.getMessages("TESTID").next();
+		FacesMessage sourceMessage = facesContext.getMessages("TESTID").next();
 		sourceMessage.setSummary("summary2");
 		sourceMessage.setSeverity(FacesMessage.SEVERITY_FATAL);
 
@@ -244,7 +244,7 @@ public class FlowFacesContextTests extends TestCase {
 
 		FacesContext newFacesContext = new FlowFacesContext(requestContext, jsf.facesContext());
 		assertSame(FacesContext.getCurrentInstance(), newFacesContext);
-		FacesMessage gotMessage = (FacesMessage) newFacesContext.getMessages("TESTID").next();
+		FacesMessage gotMessage = newFacesContext.getMessages("TESTID").next();
 		assertEquals("summary2", gotMessage.getSummary());
 		assertEquals(FacesMessage.SEVERITY_FATAL, gotMessage.getSeverity());
 	}

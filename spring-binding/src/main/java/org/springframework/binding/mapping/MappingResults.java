@@ -37,7 +37,7 @@ public interface MappingResults {
 	/**
 	 * A list of all the mapping results between the source and target.
 	 */
-	public List getAllResults();
+	public List<MappingResult> getAllResults();
 
 	/**
 	 * Whether some results were errors. Returns true if mapping errors occurred.
@@ -47,12 +47,12 @@ public interface MappingResults {
 	/**
 	 * A list of all error results that occurred.
 	 */
-	public List getErrorResults();
+	public List<MappingResult> getErrorResults();
 
 	/**
 	 * Get all results that meet the given result criteria.
 	 * @param criteria the mapping result criteria
 	 */
-	public List getResults(MappingResultsCriteria criteria);
+	public List<MappingResult> getResults(MappingResultsCriteria criteria);
 
 }

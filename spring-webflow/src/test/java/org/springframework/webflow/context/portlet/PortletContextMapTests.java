@@ -17,7 +17,6 @@ package org.springframework.webflow.context.portlet;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -94,7 +93,7 @@ public class PortletContextMapTests extends TestCase {
 	}
 
 	public void testPutAll() {
-		Map otherMap = new HashMap();
+		Map<String, Object> otherMap = new HashMap<String, Object>();
 		otherMap.put("SomeOtherKey", "SomeOtherValue");
 		otherMap.put("SomeKey", "SomeUpdatedValue");
 		tested.putAll(otherMap);
@@ -119,7 +118,7 @@ public class PortletContextMapTests extends TestCase {
 
 	public void testEntrySet() {
 		assertEquals(1, tested.entrySet().size());
-		assertEquals("SomeKey", ((Entry) tested.entrySet().iterator().next()).getKey());
-		assertEquals("SomeValue", ((Entry) tested.entrySet().iterator().next()).getValue());
+		assertEquals("SomeKey", tested.entrySet().iterator().next().getKey());
+		assertEquals("SomeValue", tested.entrySet().iterator().next().getValue());
 	}
 }

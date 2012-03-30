@@ -55,6 +55,7 @@ import org.springframework.webflow.engine.builder.BinderConfiguration;
  * 
  * @author Keith Donald
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
 public class BindingModel extends AbstractErrors implements BindingResult {
 
@@ -106,15 +107,15 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 
 	// implementing Errors
 
-	public List getAllErrors() {
-		return toErrors(messageContext.getMessagesByCriteria(ERRORS_ANY_SOURCE));
+	public List<ObjectError> getAllErrors() {
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_ANY_SOURCE), ALL_ERRORS);
 	}
 
-	public List getGlobalErrors() {
-		return toErrors(messageContext.getMessagesByCriteria(ERRORS_WITHOUT_FIELD_SOURCE));
+	public List<ObjectError> getGlobalErrors() {
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_WITHOUT_FIELD_SOURCE), ALL_ERRORS);
 	}
 
-	public List getFieldErrors(String field) {
+	public List<FieldError> getFieldErrors(String field) {
 		field = fixedField(field);
 		MessageCriteria messageCriteria;
 		if (field.endsWith("*")) {
@@ -123,19 +124,19 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		} else {
 			messageCriteria = new FieldErrorMessage(field);
 		}
-		return toErrors(messageContext.getMessagesByCriteria(messageCriteria));
+		return toErrors(messageContext.getMessagesByCriteria(messageCriteria), FIELD_ERRORS);
 	}
 
-	public Class getFieldType(String field) {
+	public Class<?> getFieldType(String field) {
 		return parseFieldExpression(fixedField(field), false).getValueType(boundObject);
 	}
 
 	public Object getFieldValue(String field) {
 		field = fixedField(field);
 		if (mappingResults != null) {
-			List results = mappingResults.getResults(new FieldErrorResult(field));
+			List<MappingResult> results = mappingResults.getResults(new FieldErrorResult(field));
 			if (!results.isEmpty()) {
-				MappingResult fieldError = (MappingResult) results.get(0);
+				MappingResult fieldError = results.get(0);
 				return fieldError.getOriginalValue();
 			}
 		}
@@ -144,8 +145,8 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 
 	// not typically used by mvc views, but implemented to be on the safe side
 
-	public List getFieldErrors() {
-		return toErrors(messageContext.getMessagesByCriteria(ERRORS_FIELD_SOURCE));
+	public List<FieldError> getFieldErrors() {
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_FIELD_SOURCE), FIELD_ERRORS);
 	}
 
 	public String getObjectName() {
@@ -176,7 +177,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		return parseFieldExpression(fixedField(field), false).getValue(boundObject);
 	}
 
-	public PropertyEditor findEditor(String field, Class valueType) {
+	public PropertyEditor findEditor(String field, Class<?> valueType) {
 		if (field != null) {
 			field = fixedField(field);
 		}
@@ -189,7 +190,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		throw new UnsupportedOperationException("Should not be called during view rendering");
 	}
 
-	public Map getModel() {
+	public Map<String, Object> getModel() {
 		throw new UnsupportedOperationException("Should not be called during view rendering");
 	}
 
@@ -225,7 +226,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 
 	private Object getFormattedValue(String field) {
 		Expression fieldExpression = parseFieldExpression(field, true);
-		Class valueType = fieldExpression.getValueType(boundObject);
+		Class<?> valueType = fieldExpression.getValueType(boundObject);
 		if (isCustomConverterConfigured(field) || avoidConversion(valueType)) {
 			fieldExpression = parseFieldExpression(fieldExpression.getExpressionString(), false);
 		}
@@ -249,7 +250,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		return (binderConfiguration.getConverterId(field) != null);
 	}
 
-	private boolean avoidConversion(Class valueType) {
+	private boolean avoidConversion(Class<?> valueType) {
 		// special handling for array, collection, map types
 		// necessary as getFieldValue is called by form tags for non-formattable properties, too
 		// TODO - investigate how to improve this in Spring MVC
@@ -260,7 +261,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		return false;
 	}
 
-	private PropertyEditor findSpringConvertingPropertyEditor(String field, Class valueType) {
+	private PropertyEditor findSpringConvertingPropertyEditor(String field, Class<?> valueType) {
 		if (conversionService != null) {
 			String converterId = null;
 			if (field != null) {
@@ -283,17 +284,15 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		}
 	}
 
-	private List toErrors(Message[] messages) {
+	private <T extends ObjectError> List<T> toErrors(Message[] messages, ObjectErrorFactory<T> errorFactory) {
 		if (messages == null || messages.length == 0) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
-		ArrayList errors = new ArrayList(messages.length);
-		for (int i = 0; i < messages.length; i++) {
-			Message message = messages[i];
-			if (message.getSource() == null) {
-				errors.add(new ObjectError(objectName, message.getText()));
-			} else {
-				errors.add(new FieldError(objectName, (String) message.getSource(), message.getText()));
+		ArrayList<T> errors = new ArrayList<T>(messages.length);
+		for (Message message : messages) {
+			T error = errorFactory.get(objectName, message);
+			if (error != null) {
+				errors.add(error);
 			}
 		}
 		return Collections.unmodifiableList(errors);
@@ -360,5 +359,30 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 					&& ((String) message.getSource()).startsWith(fieldPrefix);
 		}
 	}
+
+	private static interface ObjectErrorFactory<T extends ObjectError> {
+		T get(String objectName, Message message);
+	}
+
+	private static final ObjectErrorFactory<ObjectError> ALL_ERRORS = new ObjectErrorFactory<ObjectError>() {
+
+		public ObjectError get(String objectName, Message message) {
+			ObjectError error = FIELD_ERRORS.get(objectName, message);
+			if (error == null) {
+				error = new ObjectError(objectName, message.getText());
+			}
+			return error;
+		}
+	};
+
+	private static final ObjectErrorFactory<FieldError> FIELD_ERRORS = new ObjectErrorFactory<FieldError>() {
+
+		public FieldError get(String objectName, Message message) {
+			if (message.getSource() != null) {
+				return new FieldError(objectName, (String) message.getSource(), message.getText());
+			}
+			return null;
+		}
+	};
 
 }

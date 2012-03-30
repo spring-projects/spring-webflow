@@ -32,12 +32,14 @@ public class CollectionUtils {
 	/**
 	 * The shared, singleton empty iterator instance.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static final Iterator EMPTY_ITERATOR = new EmptyIterator();
 
 	/**
 	 * The shared, singleton empty attribute map instance.
 	 */
-	public static final AttributeMap EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap(Collections.EMPTY_MAP);
+	public static final AttributeMap<Object> EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap<Object>(
+			Collections.<String, Object> emptyMap());
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -45,13 +47,18 @@ public class CollectionUtils {
 	private CollectionUtils() {
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <E> Iterator<E> emptyIterator() {
+		return EMPTY_ITERATOR;
+	}
+
 	/**
 	 * Factory method that adapts an enumeration to an iterator.
 	 * @param enumeration the enumeration
 	 * @return the iterator
 	 */
-	public static Iterator toIterator(Enumeration enumeration) {
-		return new EnumerationIterator(enumeration);
+	public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
+		return new EnumerationIterator<E>(enumeration);
 	}
 
 	/**
@@ -60,8 +67,8 @@ public class CollectionUtils {
 	 * @param attributeValue the attribute value
 	 * @return the unmodifiable map with a single element
 	 */
-	public static AttributeMap singleEntryMap(String attributeName, Object attributeValue) {
-		return new LocalAttributeMap(attributeName, attributeValue);
+	public static <V> AttributeMap<V> singleEntryMap(String attributeName, V attributeValue) {
+		return new LocalAttributeMap<V>(attributeName, attributeValue);
 	}
 
 	/**
@@ -71,7 +78,7 @@ public class CollectionUtils {
 	 * @param objects the objects to add
 	 * @return whether or not the target collection changed
 	 */
-	public static boolean addAllNoDuplicates(List target, Object[] objects) {
+	public static <T> boolean addAllNoDuplicates(List<T> target, T[] objects) {
 		if (objects == null || objects.length == 0) {
 			return false;
 		} else {
@@ -89,7 +96,7 @@ public class CollectionUtils {
 	/**
 	 * Iterator iterating over no elements (hasNext() always returns false).
 	 */
-	private static class EmptyIterator implements Iterator, Serializable {
+	private static class EmptyIterator<E> implements Iterator<E>, Serializable {
 
 		private EmptyIterator() {
 		}
@@ -98,7 +105,7 @@ public class CollectionUtils {
 			return false;
 		}
 
-		public Object next() {
+		public E next() {
 			throw new UnsupportedOperationException("There are no elements");
 		}
 
@@ -110,11 +117,11 @@ public class CollectionUtils {
 	/**
 	 * Iterator wrapping an Enumeration.
 	 */
-	private static class EnumerationIterator implements Iterator {
+	private static class EnumerationIterator<E> implements Iterator<E> {
 
-		private Enumeration enumeration;
+		private Enumeration<E> enumeration;
 
-		public EnumerationIterator(Enumeration enumeration) {
+		public EnumerationIterator(Enumeration<E> enumeration) {
 			this.enumeration = enumeration;
 		}
 
@@ -122,7 +129,7 @@ public class CollectionUtils {
 			return enumeration.hasMoreElements();
 		}
 
-		public Object next() {
+		public E next() {
 			return enumeration.nextElement();
 		}
 

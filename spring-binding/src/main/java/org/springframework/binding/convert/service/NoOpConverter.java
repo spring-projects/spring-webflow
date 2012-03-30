@@ -24,27 +24,27 @@ import org.springframework.binding.convert.converters.Converter;
  */
 class NoOpConverter implements Converter {
 
-	private Class sourceClass;
+	private Class<?> sourceClass;
 
-	private Class targetClass;
+	private Class<?> targetClass;
 
 	/**
 	 * Create a "no op" converter from given source to given target class.
 	 */
-	public NoOpConverter(Class sourceClass, Class targetClass) {
+	public NoOpConverter(Class<?> sourceClass, Class<?> targetClass) {
 		this.sourceClass = sourceClass;
 		this.targetClass = targetClass;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return sourceClass;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		return source;
 	}
 
@@ -52,7 +52,7 @@ class NoOpConverter implements Converter {
 		return true;
 	}
 
-	public Object convertTargetToSourceClass(Object target, Class sourceClass) throws Exception,
+	public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) throws Exception,
 			UnsupportedOperationException {
 		return target;
 	}

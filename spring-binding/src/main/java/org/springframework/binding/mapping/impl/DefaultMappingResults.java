@@ -34,7 +34,7 @@ public class DefaultMappingResults implements MappingResults {
 
 	private Object target;
 
-	private List mappingResults;
+	private List<MappingResult> mappingResults;
 
 	/**
 	 * Creates a new mapping results object.
@@ -42,7 +42,7 @@ public class DefaultMappingResults implements MappingResults {
 	 * @param target the target
 	 * @param mappingResults the actual results produced by {@link DefaultMapper}
 	 */
-	public DefaultMappingResults(Object source, Object target, List mappingResults) {
+	public DefaultMappingResults(Object source, Object target, List<MappingResult> mappingResults) {
 		this.source = source;
 		this.target = target;
 		this.mappingResults = mappingResults;
@@ -56,14 +56,14 @@ public class DefaultMappingResults implements MappingResults {
 		return target;
 	}
 
-	public List getAllResults() {
+	public List<MappingResult> getAllResults() {
 		return Collections.unmodifiableList(mappingResults);
 	}
 
 	public boolean hasErrorResults() {
-		Iterator it = mappingResults.iterator();
+		Iterator<MappingResult> it = mappingResults.iterator();
 		while (it.hasNext()) {
-			MappingResult result = (MappingResult) it.next();
+			MappingResult result = it.next();
 			if (result.isError()) {
 				return true;
 			}
@@ -71,11 +71,11 @@ public class DefaultMappingResults implements MappingResults {
 		return false;
 	}
 
-	public List getErrorResults() {
-		List errorResults = new ArrayList();
-		Iterator it = mappingResults.iterator();
+	public List<MappingResult> getErrorResults() {
+		List<MappingResult> errorResults = new ArrayList<MappingResult>();
+		Iterator<MappingResult> it = mappingResults.iterator();
 		while (it.hasNext()) {
-			MappingResult result = (MappingResult) it.next();
+			MappingResult result = it.next();
 			if (result.isError()) {
 				errorResults.add(result);
 			}
@@ -83,11 +83,11 @@ public class DefaultMappingResults implements MappingResults {
 		return Collections.unmodifiableList(errorResults);
 	}
 
-	public List getResults(MappingResultsCriteria criteria) {
-		List results = new ArrayList();
-		Iterator it = mappingResults.iterator();
+	public List<MappingResult> getResults(MappingResultsCriteria criteria) {
+		List<MappingResult> results = new ArrayList<MappingResult>();
+		Iterator<MappingResult> it = mappingResults.iterator();
 		while (it.hasNext()) {
-			MappingResult result = (MappingResult) it.next();
+			MappingResult result = it.next();
 			if (criteria.test(result)) {
 				results.add(result);
 			}

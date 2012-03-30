@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 		this.requestContext = requestContext;
 	}
 
-	public Class getCommonPropertyType(ELContext context, Object base) {
+	public Class<?> getCommonPropertyType(ELContext context, Object base) {
 		if (base == null) {
 			return Object.class;
 		} else {
@@ -69,11 +70,11 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 		}
 	}
 
-	public Iterator getFeatureDescriptors(ELContext context, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext context, Object base, Object property) {
+	public Class<?> getType(ELContext context, Object base, Object property) {
 		RequestContext requestContext = getRequestContext();
 		if (base != null || requestContext == null) {
 			return null;
@@ -128,7 +129,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	private static final class ImplicitVariables {
-		private static final Map vars = new HashMap();
+		private static final Map<String, PropertyResolver> vars = new HashMap<String, PropertyResolver>();
 
 		private static final PropertyResolver requestContextResolver = new PropertyResolver() {
 			protected Object doResolve(ELContext elContext, RequestContext requestContext, Object property) {
@@ -168,7 +169,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 		}
 
 		public static Object value(ELContext elContext, RequestContext requestContext, Object property) {
-			PropertyResolver resolver = (PropertyResolver) vars.get(property);
+			PropertyResolver resolver = vars.get(property);
 			return resolver.resolve(requestContext, property);
 		}
 	}

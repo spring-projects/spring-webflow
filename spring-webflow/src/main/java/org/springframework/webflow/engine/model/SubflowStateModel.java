@@ -30,9 +30,9 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 
 	private String subflowAttributeMapper;
 
-	private LinkedList inputs;
+	private LinkedList<InputModel> inputs;
 
-	private LinkedList outputs;
+	private LinkedList<OutputModel> outputs;
 
 	/**
 	 * Create a subflow state model
@@ -115,28 +115,28 @@ public class SubflowStateModel extends AbstractTransitionableStateModel {
 	/**
 	 * @return the input mappings
 	 */
-	public LinkedList getInputs() {
+	public LinkedList<InputModel> getInputs() {
 		return inputs;
 	}
 
 	/**
 	 * @param inputs the input mappings to set
 	 */
-	public void setInputs(LinkedList inputs) {
+	public void setInputs(LinkedList<InputModel> inputs) {
 		this.inputs = inputs;
 	}
 
 	/**
 	 * @return the output mappings
 	 */
-	public LinkedList getOutputs() {
+	public LinkedList<OutputModel> getOutputs() {
 		return outputs;
 	}
 
 	/**
 	 * @param outputs the output mappings to set
 	 */
-	public void setOutputs(LinkedList outputs) {
+	public void setOutputs(LinkedList<OutputModel> outputs) {
 		this.outputs = outputs;
 	}
 

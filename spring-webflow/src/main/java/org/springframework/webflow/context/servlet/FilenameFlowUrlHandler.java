@@ -88,7 +88,7 @@ public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 	 * http://someHost/someApp/someServlet/nestedPath/bar.html
 	 * </pre>
 	 */
-	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
+	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
 		String pathInfo = request.getPathInfo();
 		if (pathInfo != null) {

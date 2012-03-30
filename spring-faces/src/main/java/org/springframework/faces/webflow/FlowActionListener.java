@@ -107,7 +107,7 @@ public class FlowActionListener implements ActionListener {
 			if (requestContext.getMessageContext().hasErrorMessages()) {
 				isValid = false;
 				if (requestContext.getExternalContext().isAjaxRequest()) {
-					List fragments = new ArrayList();
+					List<String> fragments = new ArrayList<String>();
 					String formId = getModelExpression(requestContext).getExpressionString();
 					if (facesContext.getViewRoot().findComponent(formId) != null) {
 						fragments.add(formId);
@@ -118,7 +118,7 @@ public class FlowActionListener implements ActionListener {
 					if (fragments.size() > 0) {
 						String[] fragmentsArray = new String[fragments.size()];
 						for (int i = 0; i < fragments.size(); i++) {
-							fragmentsArray[i] = (String) fragments.get(i);
+							fragmentsArray[i] = fragments.get(i);
 						}
 						requestContext.getFlashScope().put(View.RENDER_FRAGMENTS_ATTRIBUTE, fragmentsArray);
 					}

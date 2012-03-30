@@ -17,7 +17,6 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
-import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.execution.Event;
 
 /**

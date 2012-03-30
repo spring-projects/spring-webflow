@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  * @author Keith Donald
  */
-public interface ParameterMap extends MapAdaptable {
+public interface ParameterMap extends MapAdaptable<String, Object> {
 
 	/**
 	 * Is this parameter map empty, with a size of 0?
@@ -65,22 +65,22 @@ public interface ParameterMap extends MapAdaptable {
 	public String get(String parameterName, String defaultValue);
 
 	/**
-	 * Get a multi-valued parameter value, returning <code>null</code> if no value is found. If the parameter is
-	 * single valued an array with a single element is returned.
+	 * Get a multi-valued parameter value, returning <code>null</code> if no value is found. If the parameter is single
+	 * valued an array with a single element is returned.
 	 * @param parameterName the parameter name
 	 * @return the parameter value array
 	 */
 	public String[] getArray(String parameterName);
 
 	/**
-	 * Get a multi-valued parameter value, converting each value to the target type or returning <code>null</code> if
-	 * no value is found.
+	 * Get a multi-valued parameter value, converting each value to the target type or returning <code>null</code> if no
+	 * value is found.
 	 * @param parameterName the parameter name
 	 * @param targetElementType the target type of the array's elements
 	 * @return the converterd parameter value array
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Object[] getArray(String parameterName, Class targetElementType) throws ConversionExecutionException;
+	public <T> T[] getArray(String parameterName, Class<T> targetElementType) throws ConversionExecutionException;
 
 	/**
 	 * Get a parameter value, converting it from <code>String</code> to the target type.
@@ -89,18 +89,18 @@ public interface ParameterMap extends MapAdaptable {
 	 * @return the converted parameter value, or null if not found
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Object get(String parameterName, Class targetType) throws ConversionExecutionException;
+	public <T> T get(String parameterName, Class<T> targetType) throws ConversionExecutionException;
 
 	/**
-	 * Get a parameter value, converting it from <code>String</code> to the target type or returning the defaultValue
-	 * if not found.
+	 * Get a parameter value, converting it from <code>String</code> to the target type or returning the defaultValue if
+	 * not found.
 	 * @param parameterName name of the parameter to get
 	 * @param targetType the target type of the parameter value
 	 * @param defaultValue the default value
 	 * @return the converted parameter value, or the default if not found
 	 * @throws ConversionExecutionException when a value could not be converted
 	 */
-	public Object get(String parameterName, Class targetType, Object defaultValue) throws ConversionExecutionException;
+	public <T> T get(String parameterName, Class<T> targetType, T defaultValue) throws ConversionExecutionException;
 
 	/**
 	 * Get the value of a required parameter.
@@ -125,7 +125,7 @@ public interface ParameterMap extends MapAdaptable {
 	 * @throws IllegalArgumentException when the parameter is not found
 	 * @throws ConversionExecutionException when a value could not be converted
 	 */
-	public Object[] getRequiredArray(String parameterName, Class targetElementType) throws IllegalArgumentException,
+	public <T> T[] getRequiredArray(String parameterName, Class<T> targetElementType) throws IllegalArgumentException,
 			ConversionExecutionException;
 
 	/**
@@ -136,7 +136,7 @@ public interface ParameterMap extends MapAdaptable {
 	 * @throws IllegalArgumentException when the parameter is not found
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Object getRequired(String parameterName, Class targetType) throws IllegalArgumentException,
+	public <T> T getRequired(String parameterName, Class<T> targetType) throws IllegalArgumentException,
 			ConversionExecutionException;
 
 	/**
@@ -147,7 +147,8 @@ public interface ParameterMap extends MapAdaptable {
 	 * @return the number parameter value
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Number getNumber(String parameterName, Class targetType) throws ConversionExecutionException;
+	public <T extends Number> T getNumber(String parameterName, Class<T> targetType)
+			throws ConversionExecutionException;
 
 	/**
 	 * Returns a number parameter value in the map of the specified type, returning the defaultValue if no value was
@@ -157,7 +158,8 @@ public interface ParameterMap extends MapAdaptable {
 	 * @return the number parameter value
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Number getNumber(String parameterName, Class targetType, Number defaultValue) throws ConversionExecutionException;
+	public <T extends Number> T getNumber(String parameterName, Class<T> targetType, T defaultValue)
+			throws ConversionExecutionException;
 
 	/**
 	 * Returns a number parameter value in the map, throwing an exception if the parameter is not present or could not
@@ -167,8 +169,8 @@ public interface ParameterMap extends MapAdaptable {
 	 * @throws IllegalArgumentException if the parameter is not present
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Number getRequiredNumber(String parameterName, Class targetType) throws IllegalArgumentException,
-			ConversionExecutionException;
+	public <T extends Number> T getRequiredNumber(String parameterName, Class<T> targetType)
+			throws IllegalArgumentException, ConversionExecutionException;
 
 	/**
 	 * Returns an integer parameter value in the map, returning <code>null</code> if no value was found.
@@ -195,7 +197,8 @@ public interface ParameterMap extends MapAdaptable {
 	 * @throws IllegalArgumentException if the parameter is not present
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException, ConversionExecutionException;
+	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException,
+			ConversionExecutionException;
 
 	/**
 	 * Returns a long parameter value in the map, returning <code>null</code> if no value was found.
@@ -249,7 +252,8 @@ public interface ParameterMap extends MapAdaptable {
 	 * @throws IllegalArgumentException if the parameter is not present
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException, ConversionExecutionException;
+	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException,
+			ConversionExecutionException;
 
 	/**
 	 * Get a multi-part file parameter value, returning <code>null</code> if no value is found.
@@ -270,6 +274,6 @@ public interface ParameterMap extends MapAdaptable {
 	 * Adapts this parameter map to an {@link AttributeMap}.
 	 * @return the underlying map as a unmodifiable attribute map
 	 */
-	public AttributeMap asAttributeMap();
+	public AttributeMap<Object> asAttributeMap();
 
 }

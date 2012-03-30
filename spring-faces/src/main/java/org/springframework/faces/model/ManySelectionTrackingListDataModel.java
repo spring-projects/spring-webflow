@@ -28,19 +28,19 @@ import org.springframework.util.Assert;
  * 
  * @author Jeremy Grelle
  */
-public class ManySelectionTrackingListDataModel extends SerializableListDataModel implements SelectionAware {
+public class ManySelectionTrackingListDataModel<T> extends SerializableListDataModel<T> implements SelectionAware<T> {
 
-	private List selections = new ArrayList();
+	private List<T> selections = new ArrayList<T>();
 
 	public ManySelectionTrackingListDataModel() {
 		super();
 	}
 
-	public ManySelectionTrackingListDataModel(List list) {
+	public ManySelectionTrackingListDataModel(List<T> list) {
 		super(list);
 	}
 
-	public List getSelections() {
+	public List<T> getSelections() {
 		return selections;
 	}
 
@@ -50,7 +50,7 @@ public class ManySelectionTrackingListDataModel extends SerializableListDataMode
 
 	public void selectAll() {
 		selections.clear();
-		selections.addAll((List) getWrappedData());
+		selections.addAll(getWrappedData());
 	}
 
 	public void setCurrentRowSelected(boolean rowSelected) {
@@ -64,13 +64,12 @@ public class ManySelectionTrackingListDataModel extends SerializableListDataMode
 		}
 	}
 
-	public void setSelections(List selections) {
+	public void setSelections(List<T> selections) {
 		this.selections = selections;
 	}
 
-	public void select(Object rowData) {
-		Assert.isTrue(((List) getWrappedData()).contains(rowData),
-				"The object to select is not contained in this DataModel.");
+	public void select(T rowData) {
+		Assert.isTrue((getWrappedData()).contains(rowData), "The object to select is not contained in this DataModel.");
 		if (!selections.contains(rowData)) {
 			selections.add(rowData);
 		}

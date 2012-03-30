@@ -127,7 +127,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	 * http://someHost/someApp/someServlet/nestedPath/bar
 	 * </pre>
 	 */
-	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
+	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
 		if (request.getPathInfo() != null) {
 			url.append(request.getContextPath());
@@ -168,10 +168,10 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		}
 	}
 
-	protected void appendQueryParameters(StringBuffer url, Map parameters, String encodingScheme) {
-		Iterator entries = parameters.entrySet().iterator();
+	protected <T> void appendQueryParameters(StringBuffer url, Map<String, T> parameters, String encodingScheme) {
+		Iterator<Map.Entry<String, T>> entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
+			Map.Entry<?, ?> entry = entries.next();
 			appendQueryParameter(url, entry.getKey(), entry.getValue(), encodingScheme);
 			if (entries.hasNext()) {
 				url.append('&');

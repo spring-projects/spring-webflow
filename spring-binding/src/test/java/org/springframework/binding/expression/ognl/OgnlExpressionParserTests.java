@@ -127,9 +127,7 @@ public class OgnlExpressionParserTests extends TestCase {
 
 		// maps
 		parser.parseExpression("#{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
-		parser
-				.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new FluentParserContext()
-						.template());
+		parser.parseExpression("${#{ 'foo' : 'foo value', 'bar' : 'bar value' }}", new FluentParserContext().template());
 		parser.parseExpression("#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }", null);
 		parser.parseExpression("${#@java.util.LinkedHashMap@{ 'foo' : 'foo value', 'bar' : 'bar value' }}",
 				new FluentParserContext().template());
@@ -141,8 +139,8 @@ public class OgnlExpressionParserTests extends TestCase {
 	}
 
 	public void testVariables() {
-		Expression exp = parser.parseExpression("#var", new FluentParserContext().variable(new ExpressionVariable(
-				"var", "flag")));
+		Expression exp = parser.parseExpression("#var",
+				new FluentParserContext().variable(new ExpressionVariable("var", "flag")));
 		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
 	}
 
@@ -186,8 +184,8 @@ public class OgnlExpressionParserTests extends TestCase {
 
 	public void testGetValueCoersionError() {
 		String expressionString = "number";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-				.expectResult(TestBean.class));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().expectResult(TestBean.class));
 		TestBean context = new TestBean();
 		try {
 			exp.getValue(context);

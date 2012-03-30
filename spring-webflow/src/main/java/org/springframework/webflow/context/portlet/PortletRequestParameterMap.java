@@ -22,6 +22,7 @@ import javax.portlet.PortletRequest;
 import org.springframework.binding.collection.CompositeIterator;
 import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.portlet.multipart.MultipartActionRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
@@ -32,7 +33,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class PortletRequestParameterMap extends StringKeyedMapAdapter {
+public class PortletRequestParameterMap extends StringKeyedMapAdapter<Object> {
 
 	/**
 	 * The wrapped Portlet request.
@@ -50,7 +51,7 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter {
 	protected Object getAttribute(String key) {
 		if (request instanceof MultipartActionRequest) {
 			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
-			Object data = multipartRequest.getFileMap().get(key);
+			MultipartFile data = multipartRequest.getFileMap().get(key);
 			if (data != null) {
 				return data;
 			}
@@ -73,10 +74,10 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter {
 		throw new UnsupportedOperationException("PortletRequest parameter maps are immutable");
 	}
 
-	protected Iterator getAttributeNames() {
+	protected Iterator<String> getAttributeNames() {
 		if (request instanceof MultipartActionRequest) {
 			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
-			CompositeIterator iterator = new CompositeIterator();
+			CompositeIterator<String> iterator = new CompositeIterator<String>();
 			iterator.add(multipartRequest.getFileMap().keySet().iterator());
 			iterator.add(CollectionUtils.toIterator(request.getParameterNames()));
 			return iterator;

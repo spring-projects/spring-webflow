@@ -51,20 +51,20 @@ public class ArrayToArray implements Converter {
 		this.elementConverter = elementConverter;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return Object[].class;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return Object[].class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		if (source == null) {
 			return null;
 		}
-		Class sourceComponentType = source.getClass().getComponentType();
-		Class targetComponentType = targetClass.getComponentType();
+		Class<?> sourceComponentType = source.getClass().getComponentType();
+		Class<?> targetComponentType = targetClass.getComponentType();
 		int length = Array.getLength(source);
 		Object targetArray = Array.newInstance(targetComponentType, length);
 		ConversionExecutor converter = getElementConverter(sourceComponentType, targetComponentType);
@@ -75,7 +75,7 @@ public class ArrayToArray implements Converter {
 		return targetArray;
 	}
 
-	private ConversionExecutor getElementConverter(Class sourceComponentType, Class targetComponentType) {
+	private ConversionExecutor getElementConverter(Class<?> sourceComponentType, Class<?> targetComponentType) {
 		if (elementConverter != null) {
 			return elementConverter;
 		} else {

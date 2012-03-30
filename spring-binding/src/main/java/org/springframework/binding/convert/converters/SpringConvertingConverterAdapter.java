@@ -28,19 +28,20 @@ public class SpringConvertingConverterAdapter implements Converter {
 	/**
 	 * The source value type to convert from.
 	 */
-	private final Class sourceClass;
+	private final Class<?> sourceClass;
 
 	/**
 	 * The target value type to convert to.
 	 */
-	private final Class targetClass;
+	private final Class<?> targetClass;
 
 	/**
 	 * The ConversionService that will perform the conversion.
 	 */
 	private ConversionService conversionService;
 
-	public SpringConvertingConverterAdapter(Class sourceClass, Class targetClass, ConversionService conversionService) {
+	public SpringConvertingConverterAdapter(Class<?> sourceClass, Class<?> targetClass,
+			ConversionService conversionService) {
 		Assert.notNull(sourceClass, "The source class to convert from is required.");
 		Assert.notNull(targetClass, "The target class to convert to is required.");
 		Assert.notNull(conversionService, "A Spring ConversionService is required.");
@@ -49,15 +50,15 @@ public class SpringConvertingConverterAdapter implements Converter {
 		this.conversionService = conversionService;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		return conversionService.convert(source, targetClass);
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return sourceClass;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 

@@ -12,14 +12,8 @@ import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
-import org.springframework.webflow.engine.model.AbstractStateModel;
-import org.springframework.webflow.engine.model.AttributeModel;
-import org.springframework.webflow.engine.model.BindingModel;
-import org.springframework.webflow.engine.model.ExceptionHandlerModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.SecuredModel;
-import org.springframework.webflow.engine.model.TransitionModel;
-import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
@@ -51,7 +45,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
 		assertNull(flow.getStartStateId());
-		assertEquals("end", ((AbstractStateModel) flow.getStates().get(0)).getId());
+		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
 	public void testBuildFlowWithDefaultStartState() {
@@ -61,7 +55,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
 		assertNull(flow.getStartStateId());
-		assertEquals("end", ((AbstractStateModel) flow.getStates().get(0)).getId());
+		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
 	public void testBuildFlowWithStartStateAttribute() {
@@ -79,8 +73,8 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.init();
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
-		assertEquals("bar", ((AttributeModel) flow.getAttributes().get(0)).getValue());
-		assertEquals("number", ((AttributeModel) flow.getAttributes().get(1)).getName());
+		assertEquals("bar", flow.getAttributes().get(0).getValue());
+		assertEquals("number", flow.getAttributes().get(1).getName());
 	}
 
 	public void testPersistenceContextFlow() {
@@ -109,7 +103,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.init();
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
-		SecuredModel secured = ((AbstractStateModel) flow.getStates().get(0)).getSecured();
+		SecuredModel secured = flow.getStates().get(0).getSecured();
 		assertNotNull(secured);
 		assertEquals("ROLE_USER", secured.getAttributes());
 	}
@@ -120,7 +114,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.init();
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
-		SecuredModel secured = ((TransitionModel) flow.getGlobalTransitions().get(0)).getSecured();
+		SecuredModel secured = flow.getGlobalTransitions().get(0).getSecured();
 		assertNotNull(secured);
 		assertEquals("ROLE_USER", secured.getAttributes());
 	}
@@ -131,8 +125,8 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.init();
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
-		assertEquals("flow-foo", ((VarModel) flow.getVars().get(0)).getName());
-		assertEquals("conversation-foo", ((VarModel) flow.getVars().get(1)).getName());
+		assertEquals("flow-foo", flow.getVars().get(0).getName());
+		assertEquals("conversation-foo", flow.getVars().get(1).getName());
 	}
 
 	public void testViewStateVariable() {
@@ -141,7 +135,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		builder.init();
 		builder.build();
 		FlowModel flow = builder.getFlowModel();
-		assertEquals("foo", ((VarModel) ((ViewStateModel) flow.getStates().get(0)).getVars().get(0)).getName());
+		assertEquals("foo", ((ViewStateModel) flow.getStates().get(0)).getVars().get(0).getName());
 	}
 
 	public void testViewStateModelBinding() {
@@ -152,8 +146,8 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		FlowModel flow = builder.getFlowModel();
 		ViewStateModel model = (ViewStateModel) flow.getStates().get(0);
 		assertEquals("formObject", model.getModel());
-		assertEquals("objectProperty", ((BindingModel) model.getBinder().getBindings().get(0)).getProperty());
-		assertEquals("customConverter", ((BindingModel) model.getBinder().getBindings().get(0)).getConverter());
+		assertEquals("objectProperty", model.getBinder().getBindings().get(0).getProperty());
+		assertEquals("customConverter", model.getBinder().getBindings().get(0).getConverter());
 	}
 
 	public void testViewStateRedirect() {
@@ -184,7 +178,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		FlowModel flow = registry.getFlowModel("child");
 		assertEquals(1, flow.getGlobalTransitions().size());
 		assertEquals(2, flow.getStates().size());
-		assertEquals("view", ((AbstractStateModel) flow.getStates().get(0)).getId());
+		assertEquals("view", flow.getStates().get(0).getId());
 	}
 
 	public void testMergeParentNotFound() {
@@ -289,17 +283,12 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(res);
 		DefaultFlowModelHolder holder = new DefaultFlowModelHolder(builder);
 		FlowModel model = holder.getFlowModel();
-		assertEquals("foo1", ((ExceptionHandlerModel) model.getExceptionHandlers().get(0)).getBean());
-		assertEquals("foo2",
-				((ExceptionHandlerModel) model.getStateById("state1").getExceptionHandlers().get(0)).getBean());
-		assertEquals("foo3",
-				((ExceptionHandlerModel) model.getStateById("state2").getExceptionHandlers().get(0)).getBean());
-		assertEquals("foo4",
-				((ExceptionHandlerModel) model.getStateById("state3").getExceptionHandlers().get(0)).getBean());
-		assertEquals("foo5",
-				((ExceptionHandlerModel) model.getStateById("state4").getExceptionHandlers().get(0)).getBean());
-		assertEquals("foo6",
-				((ExceptionHandlerModel) model.getStateById("state5").getExceptionHandlers().get(0)).getBean());
+		assertEquals("foo1", model.getExceptionHandlers().get(0).getBean());
+		assertEquals("foo2", model.getStateById("state1").getExceptionHandlers().get(0).getBean());
+		assertEquals("foo3", model.getStateById("state2").getExceptionHandlers().get(0).getBean());
+		assertEquals("foo4", model.getStateById("state3").getExceptionHandlers().get(0).getBean());
+		assertEquals("foo5", model.getStateById("state4").getExceptionHandlers().get(0).getBean());
+		assertEquals("foo6", model.getStateById("state5").getExceptionHandlers().get(0).getBean());
 	}
 
 	public void testFormActionValidatorMethod() {

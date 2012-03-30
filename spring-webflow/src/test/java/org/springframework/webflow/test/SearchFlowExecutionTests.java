@@ -87,9 +87,10 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 		Flow mockDetailFlow = new Flow("detail-flow");
 		mockDetailFlow.setInputMapper(new Mapper() {
+			@SuppressWarnings("unchecked")
 			public MappingResults map(Object source, Object target) {
 				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1),
-						((AttributeMap) source).get("id"));
+						((AttributeMap<Object>) source).get("id"));
 				return null;
 			}
 		});
@@ -100,8 +101,8 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	}
 
 	public static class TestPhoneBook {
-		public List search(Object criteria) {
-			ArrayList res = new ArrayList();
+		public List<Object> search(Object criteria) {
+			ArrayList<Object> res = new ArrayList<Object>();
 			res.add(new Object());
 			return res;
 		}

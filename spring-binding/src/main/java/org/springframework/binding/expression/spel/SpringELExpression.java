@@ -17,7 +17,6 @@ package org.springframework.binding.expression.spel;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class SpringELExpression implements Expression {
 
 	private Class<?> expectedType;
 
-	private Map expressionVariables;
+	private Map<String, Expression> expressionVariables;
 
 	private ConversionService conversionService;
 
@@ -65,8 +64,9 @@ public class SpringELExpression implements Expression {
 	 * @param conversionService the Spring ConversionService instance to use for type conversion
 	 * @param propertyAccessors propertyAccessors for Spring EL to use when evaluating expressions
 	 */
-	public SpringELExpression(org.springframework.expression.Expression expression, Map expressionVariables,
-			Class expectedType, ConversionService conversionService, List<PropertyAccessor> propertyAccessors) {
+	public SpringELExpression(org.springframework.expression.Expression expression,
+			Map<String, Expression> expressionVariables, Class<?> expectedType, ConversionService conversionService,
+			List<PropertyAccessor> propertyAccessors) {
 		Assert.notNull(expression, "The SpelExpression is required for evaluation");
 		this.expression = expression;
 		this.expressionVariables = expressionVariables;
@@ -95,7 +95,7 @@ public class SpringELExpression implements Expression {
 		}
 	}
 
-	public Class getValueType(Object rootObject) throws EvaluationException {
+	public Class<?> getValueType(Object rootObject) throws EvaluationException {
 		try {
 			return expression.getValueType(newEvaluationContext(rootObject));
 		} catch (SpelEvaluationException e) {
@@ -150,9 +150,8 @@ public class SpringELExpression implements Expression {
 			return Collections.emptyMap();
 		}
 		Map<String, Object> variableValues = new HashMap<String, Object>(expressionVariables.size());
-		for (Iterator iterator = expressionVariables.entrySet().iterator(); iterator.hasNext();) {
-			Map.Entry var = (Map.Entry) iterator.next();
-			variableValues.put((String) var.getKey(), ((Expression) var.getValue()).getValue(rootObject));
+		for (Map.Entry<String, Expression> var : expressionVariables.entrySet()) {
+			variableValues.put(var.getKey(), var.getValue().getValue(rootObject));
 		}
 		return variableValues;
 	}

@@ -113,8 +113,7 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 	private void registerDependentFlowModels() {
 		FlowDefinitionResource[] modelResources = getModelResources(getResourceFactory());
 		if (modelResources != null) {
-			for (int i = 0; i < modelResources.length; i++) {
-				FlowDefinitionResource modelResource = modelResources[i];
+			for (FlowDefinitionResource modelResource : modelResources) {
 				FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(modelResource.getPath(), flowModelRegistry);
 				flowModelRegistry.registerFlowModel(modelResource.getId(), new DefaultFlowModelHolder(modelBuilder));
 			}

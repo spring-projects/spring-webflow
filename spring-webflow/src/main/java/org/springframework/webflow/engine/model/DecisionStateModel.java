@@ -25,9 +25,9 @@ import org.springframework.util.ObjectUtils;
  */
 public class DecisionStateModel extends AbstractStateModel {
 
-	private LinkedList ifs;
+	private LinkedList<IfModel> ifs;
 
-	private LinkedList onExitActions;
+	private LinkedList<AbstractActionModel> onExitActions;
 
 	/**
 	 * Create a decision state model
@@ -67,28 +67,28 @@ public class DecisionStateModel extends AbstractStateModel {
 	/**
 	 * @return the ifs
 	 */
-	public LinkedList getIfs() {
+	public LinkedList<IfModel> getIfs() {
 		return ifs;
 	}
 
 	/**
 	 * @param ifs the ifs to set
 	 */
-	public void setIfs(LinkedList ifs) {
+	public void setIfs(LinkedList<IfModel> ifs) {
 		this.ifs = ifs;
 	}
 
 	/**
 	 * @return the on exit actions
 	 */
-	public LinkedList getOnExitActions() {
+	public LinkedList<AbstractActionModel> getOnExitActions() {
 		return onExitActions;
 	}
 
 	/**
 	 * @param onExitActions the on exit actions to set
 	 */
-	public void setOnExitActions(LinkedList onExitActions) {
+	public void setOnExitActions(LinkedList<AbstractActionModel> onExitActions) {
 		this.onExitActions = onExitActions;
 	}
 

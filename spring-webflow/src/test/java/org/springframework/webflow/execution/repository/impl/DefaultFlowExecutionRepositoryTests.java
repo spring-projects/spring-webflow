@@ -268,18 +268,12 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 
 			private final ConversationId ID = new SimpleConversationId(new Integer(12345));
 
-			private boolean locked;
-
 			private boolean ended;
 
-			private Map attributes = new HashMap();
+			private Map<Object, Object> attributes = new HashMap<Object, Object>();
 
 			public boolean hasEnded() {
 				return ended;
-			}
-
-			public boolean isLocked() {
-				return locked;
 			}
 
 			public ConversationId getId() {
@@ -287,7 +281,6 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 			}
 
 			public void lock() {
-				locked = true;
 			}
 
 			public Object getAttribute(Object name) {
@@ -307,7 +300,6 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 			}
 
 			public void unlock() {
-				locked = false;
 			}
 		}
 	}

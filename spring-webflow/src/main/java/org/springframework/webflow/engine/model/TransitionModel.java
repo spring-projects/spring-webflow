@@ -43,11 +43,11 @@ public class TransitionModel extends AbstractModel {
 
 	private String history;
 
-	private LinkedList attributes;
+	private LinkedList<AttributeModel> attributes;
 
 	private SecuredModel secured;
 
-	private LinkedList actions;
+	private LinkedList<AbstractActionModel> actions;
 
 	/**
 	 * Create a transition model
@@ -201,14 +201,14 @@ public class TransitionModel extends AbstractModel {
 	/**
 	 * @return the attributes
 	 */
-	public LinkedList getAttributes() {
+	public LinkedList<AttributeModel> getAttributes() {
 		return attributes;
 	}
 
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(LinkedList attributes) {
+	public void setAttributes(LinkedList<AttributeModel> attributes) {
 		this.attributes = attributes;
 	}
 
@@ -229,14 +229,14 @@ public class TransitionModel extends AbstractModel {
 	/**
 	 * @return the actions
 	 */
-	public LinkedList getActions() {
+	public LinkedList<AbstractActionModel> getActions() {
 		return actions;
 	}
 
 	/**
 	 * @param actions the actions to set
 	 */
-	public void setActions(LinkedList actions) {
+	public void setActions(LinkedList<AbstractActionModel> actions) {
 		this.actions = actions;
 	}
 }

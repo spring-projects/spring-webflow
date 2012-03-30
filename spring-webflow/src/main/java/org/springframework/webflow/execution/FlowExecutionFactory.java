@@ -56,6 +56,6 @@ public interface FlowExecutionFactory {
 	 * @return the restored flow execution
 	 */
 	public FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
-			FlowExecutionKey flowExecutionKey, MutableAttributeMap conversationScope,
+			FlowExecutionKey flowExecutionKey, MutableAttributeMap<Object> conversationScope,
 			FlowDefinitionLocator subflowDefinitionLocator);
 }

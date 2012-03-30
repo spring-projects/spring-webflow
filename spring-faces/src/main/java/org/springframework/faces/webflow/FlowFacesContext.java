@@ -46,7 +46,7 @@ import org.springframework.webflow.execution.RequestContext;
  * requests in the case of the POST+REDIRECT+GET pattern being enabled.
  * 
  * @author Jeremy Grelle
- * @author Phil Webb
+ * @author Phillip Webb
  */
 public class FlowFacesContext extends FacesContext {
 
@@ -109,10 +109,10 @@ public class FlowFacesContext extends FacesContext {
 	}
 
 	public ELContext getELContext() {
-		Method delegateMethod = ClassUtils.getMethodIfAvailable(delegate.getClass(), "getELContext", null);
+		Method delegateMethod = ClassUtils.getMethodIfAvailable(delegate.getClass(), "getELContext");
 		if (delegateMethod != null) {
 			try {
-				ELContext context = (ELContext) delegateMethod.invoke(delegate, null);
+				ELContext context = (ELContext) delegateMethod.invoke(delegate);
 				context.putContext(FacesContext.class, this);
 				return context;
 			} catch (Exception e) {

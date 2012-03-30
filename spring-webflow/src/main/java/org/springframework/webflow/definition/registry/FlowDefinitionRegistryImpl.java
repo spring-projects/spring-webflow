@@ -38,7 +38,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	/**
 	 * The map of loaded Flow definitions maintained in this registry.
 	 */
-	private Map flowDefinitions;
+	private Map<String, FlowDefinitionHolder> flowDefinitions;
 
 	/**
 	 * An optional parent flow definition registry.
@@ -46,7 +46,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	private FlowDefinitionRegistry parent;
 
 	public FlowDefinitionRegistryImpl() {
-		flowDefinitions = new TreeMap();
+		flowDefinitions = new TreeMap<String, FlowDefinitionHolder>();
 	}
 
 	// implementing FlowDefinitionLocator
@@ -83,7 +83,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	}
 
 	public String[] getFlowDefinitionIds() {
-		return (String[]) flowDefinitions.keySet().toArray(new String[flowDefinitions.size()]);
+		return flowDefinitions.keySet().toArray(new String[flowDefinitions.size()]);
 	}
 
 	public FlowDefinitionRegistry getParent() {
@@ -108,9 +108,9 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	}
 
 	public void destroy() {
-		Iterator it = flowDefinitions.values().iterator();
+		Iterator<FlowDefinitionHolder> it = flowDefinitions.values().iterator();
 		while (it.hasNext()) {
-			FlowDefinitionHolder holder = (FlowDefinitionHolder) it.next();
+			FlowDefinitionHolder holder = it.next();
 			holder.destroy();
 		}
 	}
@@ -121,7 +121,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	 * Returns the identified flow definition holder. Throws an exception if it cannot be found.
 	 */
 	private FlowDefinitionHolder getFlowDefinitionHolder(String id) throws NoSuchFlowDefinitionException {
-		FlowDefinitionHolder holder = (FlowDefinitionHolder) flowDefinitions.get(id);
+		FlowDefinitionHolder holder = flowDefinitions.get(id);
 		if (holder == null) {
 			throw new NoSuchFlowDefinitionException(id);
 		}

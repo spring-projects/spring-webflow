@@ -26,7 +26,7 @@ public class StringToByte extends StringToObject {
 		super(Byte.class);
 	}
 
-	public Object toObject(String string, Class objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) throws Exception {
 		return Byte.valueOf(string);
 	}
 

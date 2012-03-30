@@ -25,7 +25,9 @@ import javax.faces.el.VariableResolver;
  * A JSF 1.1 {@link VariableResolver} that delegates to a wrapped Unified EL resolver chain for variable resolution.
  * 
  * @author Jeremy Grelle
+ * @deprecated Upgrade to JSF 2.0
  */
+@Deprecated
 public abstract class ELDelegatingVariableResolver extends VariableResolver {
 
 	private VariableResolver nextResolver;

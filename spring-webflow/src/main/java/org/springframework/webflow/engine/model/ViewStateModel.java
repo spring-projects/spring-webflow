@@ -35,11 +35,11 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 
 	private String model;
 
-	private LinkedList vars;
+	private LinkedList<VarModel> vars;
 
 	private BinderModel binder;
 
-	private LinkedList onRenderActions;
+	private LinkedList<AbstractActionModel> onRenderActions;
 
 	/**
 	 * Create a view state model
@@ -163,14 +163,14 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	/**
 	 * @return the vars
 	 */
-	public LinkedList getVars() {
+	public LinkedList<VarModel> getVars() {
 		return vars;
 	}
 
 	/**
 	 * @param vars the vars to set
 	 */
-	public void setVars(LinkedList vars) {
+	public void setVars(LinkedList<VarModel> vars) {
 		this.vars = vars;
 	}
 
@@ -185,14 +185,14 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	/**
 	 * @return the on render actions
 	 */
-	public LinkedList getOnRenderActions() {
+	public LinkedList<AbstractActionModel> getOnRenderActions() {
 		return onRenderActions;
 	}
 
 	/**
 	 * @param onRenderActions the on render actions to set
 	 */
-	public void setOnRenderActions(LinkedList onRenderActions) {
+	public void setOnRenderActions(LinkedList<AbstractActionModel> onRenderActions) {
 		this.onRenderActions = onRenderActions;
 	}
 

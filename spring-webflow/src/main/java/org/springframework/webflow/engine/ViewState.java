@@ -54,7 +54,7 @@ public class ViewState extends TransitionableState {
 	/**
 	 * The set of view variables created by this view state.
 	 */
-	private Map variables = new LinkedHashMap();
+	private Map<String, ViewVariable> variables = new LinkedHashMap<String, ViewVariable>();
 
 	/**
 	 * Whether or not a redirect should occur before the view is rendered.
@@ -98,8 +98,8 @@ public class ViewState extends TransitionableState {
 	 * @param variables the variables
 	 */
 	public void addVariables(ViewVariable[] variables) {
-		for (int i = 0; i < variables.length; i++) {
-			addVariable(variables[i]);
+		for (ViewVariable variable : variables) {
+			addVariable(variable);
 		}
 	}
 
@@ -108,14 +108,14 @@ public class ViewState extends TransitionableState {
 	 * @param name the name of the variable
 	 */
 	public ViewVariable getVariable(String name) {
-		return (ViewVariable) variables.get(name);
+		return variables.get(name);
 	}
 
 	/**
 	 * Returns the configured view variables.
 	 */
 	public ViewVariable[] getVariables() {
-		return (ViewVariable[]) variables.values().toArray(new ViewVariable[variables.size()]);
+		return variables.values().toArray(new ViewVariable[variables.size()]);
 	}
 
 	/**
@@ -254,9 +254,9 @@ public class ViewState extends TransitionableState {
 	// internal helpers
 
 	private void createVariables(RequestContext context) {
-		Iterator it = variables.values().iterator();
+		Iterator<ViewVariable> it = variables.values().iterator();
 		while (it.hasNext()) {
-			ViewVariable variable = (ViewVariable) it.next();
+			ViewVariable variable = it.next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating " + variable);
 			}
@@ -308,9 +308,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void restoreVariables(RequestContext context) {
-		Iterator it = variables.values().iterator();
+		Iterator<ViewVariable> it = variables.values().iterator();
 		while (it.hasNext()) {
-			ViewVariable variable = (ViewVariable) it.next();
+			ViewVariable variable = it.next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restoring " + variable);
 
@@ -336,9 +336,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void destroyVariables(RequestContext context) {
-		Iterator it = variables.values().iterator();
+		Iterator<ViewVariable> it = variables.values().iterator();
 		while (it.hasNext()) {
-			ViewVariable variable = (ViewVariable) it.next();
+			ViewVariable variable = it.next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Destroying " + variable);
 

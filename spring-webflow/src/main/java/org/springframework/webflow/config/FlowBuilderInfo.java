@@ -43,13 +43,13 @@ class FlowBuilderInfo {
 	/**
 	 * Attributes to assign to the flow definition.
 	 */
-	private Set attributes;
+	private Set<FlowElementAttribute> attributes;
 
-	public FlowBuilderInfo(String id, String className, Set attributes) {
+	public FlowBuilderInfo(String id, String className, Set<FlowElementAttribute> attributes) {
 		Assert.hasText(className, "The fully-qualified FlowBuilder class name is required");
 		this.className = className;
 		setId(id);
-		this.attributes = (attributes != null ? attributes : Collections.EMPTY_SET);
+		this.attributes = (attributes != null ? attributes : Collections.<FlowElementAttribute> emptySet());
 	}
 
 	private void setId(String id) {
@@ -68,7 +68,7 @@ class FlowBuilderInfo {
 		return className;
 	}
 
-	public Set getAttributes() {
+	public Set<FlowElementAttribute> getAttributes() {
 		return attributes;
 	}
 }

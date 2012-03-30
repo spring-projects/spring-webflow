@@ -42,13 +42,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private PortletExternalContext actionContext;
 	private PortletExternalContext renderContext;
 	private FlowHandler flowHandler;
-	private LocalAttributeMap flowInput = null;
+	private LocalAttributeMap<Object> flowInput = null;
 	private boolean handleException;
 	private boolean handleExecutionOutcome;
 	private boolean handleExecutionOutcomeCalled;
 
 	protected void setUp() throws Exception {
-		flowExecutor = (FlowExecutor) EasyMock.createMock(FlowExecutor.class);
+		flowExecutor = EasyMock.createMock(FlowExecutor.class);
 		controller = new FlowHandlerAdapter() {
 			protected PortletExternalContext createPortletExternalContext(PortletRequest request,
 					PortletResponse response) {
@@ -79,11 +79,11 @@ public class FlowHandlerAdapterTests extends TestCase {
 				return "foo";
 			}
 
-			public MutableAttributeMap createExecutionInputMap(RenderRequest request) {
+			public MutableAttributeMap<Object> createExecutionInputMap(RenderRequest request) {
 				return null;
 			}
 
-			public MutableAttributeMap createResourceExecutionInputMap(ResourceRequest request) {
+			public MutableAttributeMap<Object> createResourceExecutionInputMap(ResourceRequest request) {
 				return null;
 			}
 
@@ -192,7 +192,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		handleExecutionOutcome = true;
 		actionRequest.setContextPath("/springtravel");
 		actionRequest.addParameter("execution", "12345");
-		LocalAttributeMap output = new LocalAttributeMap();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		flowExecutor.resumeExecution("12345", actionContext);

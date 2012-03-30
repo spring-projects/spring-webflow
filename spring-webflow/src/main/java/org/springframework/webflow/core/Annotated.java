@@ -42,6 +42,6 @@ public interface Annotated {
 	 * characteristics or properties that may affect object behavior.
 	 * @return the attribute map
 	 */
-	public MutableAttributeMap getAttributes();
+	public MutableAttributeMap<Object> getAttributes();
 
 }

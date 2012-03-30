@@ -22,7 +22,7 @@ public class MockActionTests extends TestCase {
 
 	public void testMockActionExecuteCustomResultAttributes() {
 		MockAction action = new MockAction("foo");
-		LocalAttributeMap resultAttributes = new LocalAttributeMap();
+		LocalAttributeMap<Object> resultAttributes = new LocalAttributeMap<Object>();
 		resultAttributes.put("bar", "baz");
 		action.setResultAttributes(resultAttributes);
 		Event e = action.execute(new MockRequestContext());

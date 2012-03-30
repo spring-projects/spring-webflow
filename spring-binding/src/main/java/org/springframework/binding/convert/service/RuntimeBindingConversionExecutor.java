@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
  */
 public class RuntimeBindingConversionExecutor implements ConversionExecutor {
 
-	private Class targetClass;
+	private Class<?> targetClass;
 
 	private ConversionService conversionService;
 
@@ -35,18 +35,18 @@ public class RuntimeBindingConversionExecutor implements ConversionExecutor {
 	 * @param targetClass the target type to convert to
 	 * @param conversionService the conversion service to get converters from
 	 */
-	public RuntimeBindingConversionExecutor(Class targetClass, ConversionService conversionService) {
+	public RuntimeBindingConversionExecutor(Class<?> targetClass, ConversionService conversionService) {
 		Assert.notNull(targetClass, "The target class of the conversion is required");
 		Assert.notNull(conversionService, "The conversion service is required");
 		this.targetClass = targetClass;
 		this.conversionService = conversionService;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return null;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 

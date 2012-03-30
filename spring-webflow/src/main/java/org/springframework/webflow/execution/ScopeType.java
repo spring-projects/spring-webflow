@@ -35,7 +35,7 @@ public enum ScopeType {
 	 * flow execution. When the request ends any attributes in request scope go out of scope.
 	 */
 	REQUEST() {
-		public MutableAttributeMap getScope(RequestContext context) {
+		public MutableAttributeMap<Object> getScope(RequestContext context) {
 			return context.getRequestScope();
 		}
 	},
@@ -47,7 +47,7 @@ public enum ScopeType {
 	 * Flash scope is typically used to store messages that should be preserved until after the next view renders.
 	 */
 	FLASH() {
-		public MutableAttributeMap getScope(RequestContext context) {
+		public MutableAttributeMap<Object> getScope(RequestContext context) {
 			return context.getFlashScope();
 		}
 	},
@@ -59,7 +59,7 @@ public enum ScopeType {
 	 * View scope is typically used to store view model objects manipulated over a series of Ajax requests.
 	 */
 	VIEW() {
-		public MutableAttributeMap getScope(RequestContext context) {
+		public MutableAttributeMap<Object> getScope(RequestContext context) {
 			return context.getViewScope();
 		}
 	},
@@ -70,7 +70,7 @@ public enum ScopeType {
 	 * flow scope goes out of scope.
 	 */
 	FLOW() {
-		public MutableAttributeMap getScope(RequestContext context) {
+		public MutableAttributeMap<Object> getScope(RequestContext context) {
 			return context.getFlowScope();
 		}
 	},
@@ -81,12 +81,12 @@ public enum ScopeType {
 	 * conversation). When the governing execution ends, any data in conversation scope goes out of scope.
 	 */
 	CONVERSATION() {
-		public MutableAttributeMap getScope(RequestContext context) {
+		public MutableAttributeMap<Object> getScope(RequestContext context) {
 			return context.getConversationScope();
 		}
 	};
 
-	public Class getType() {
+	public Class<?> getType() {
 		// force ScopeType as type
 		return ScopeType.class;
 	}
@@ -96,6 +96,6 @@ public enum ScopeType {
 	 * @param context the context representing an executing request
 	 * @return the scope map of this type for that request, allowing attributes to be accessed and set
 	 */
-	public abstract MutableAttributeMap getScope(RequestContext context);
+	public abstract MutableAttributeMap<Object> getScope(RequestContext context);
 
 }

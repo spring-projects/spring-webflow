@@ -100,21 +100,21 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	/**
 	 * Check whether or not given type is mapped to a corresponding event using special mapping rules.
 	 */
-	public boolean isMappedValueType(Class type) {
+	public boolean isMappedValueType(Class<?> type) {
 		return isBoolean(type) || isLabeledEnum(type) || isJdk5Enum(type) || isString(type) || isEvent(type);
 	}
 
 	// internal helpers to determine the 'type' of a class
 
-	private boolean isBoolean(Class type) {
+	private boolean isBoolean(Class<?> type) {
 		return Boolean.class.equals(type) || boolean.class.equals(type);
 	}
 
-	private boolean isLabeledEnum(Class type) {
+	private boolean isLabeledEnum(Class<?> type) {
 		return LabeledEnum.class.isAssignableFrom(type);
 	}
 
-	private boolean isJdk5Enum(Class type) {
+	private boolean isJdk5Enum(Class<?> type) {
 		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
 			return EnumUtils.isEnum(type);
 		} else {
@@ -122,11 +122,11 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 		}
 	}
 
-	private boolean isString(Class type) {
+	private boolean isString(Class<?> type) {
 		return String.class.equals(type);
 	}
 
-	private boolean isEvent(Class type) {
+	private boolean isEvent(Class<?> type) {
 		return Event.class.isAssignableFrom(type);
 	}
 
@@ -135,10 +135,10 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	 */
 	private static class EnumUtils {
 		public static String getEnumName(Object enumValue) {
-			return ((java.lang.Enum) enumValue).name();
+			return ((java.lang.Enum<?>) enumValue).name();
 		}
 
-		public static boolean isEnum(Class type) {
+		public static boolean isEnum(Class<?> type) {
 			return java.lang.Enum.class.isAssignableFrom(type);
 		}
 	}

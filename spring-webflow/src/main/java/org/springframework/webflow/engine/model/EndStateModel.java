@@ -30,7 +30,7 @@ public class EndStateModel extends AbstractStateModel {
 
 	private String commit;
 
-	private LinkedList outputs;
+	private LinkedList<OutputModel> outputs;
 
 	/**
 	 * Create an end state model
@@ -108,14 +108,14 @@ public class EndStateModel extends AbstractStateModel {
 	/**
 	 * @return the outputs
 	 */
-	public LinkedList getOutputs() {
+	public LinkedList<OutputModel> getOutputs() {
 		return outputs;
 	}
 
 	/**
 	 * @param outputs the outputs to set
 	 */
-	public void setOutputs(LinkedList outputs) {
+	public void setOutputs(LinkedList<OutputModel> outputs) {
 		this.outputs = outputs;
 	}
 

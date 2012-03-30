@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
 import javax.el.ELContext;
@@ -43,7 +44,7 @@ public class ScopeSearchingELResolver extends ELResolver {
 		this.requestContext = requestContext;
 	}
 
-	public Class getCommonPropertyType(ELContext elContext, Object base) {
+	public Class<?> getCommonPropertyType(ELContext elContext, Object base) {
 		if (base == null) {
 			return Object.class;
 		} else {
@@ -51,11 +52,11 @@ public class ScopeSearchingELResolver extends ELResolver {
 		}
 	}
 
-	public Iterator getFeatureDescriptors(ELContext elContext, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext elContext, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext elContext, Object base, Object property) {
+	public Class<?> getType(ELContext elContext, Object base, Object property) {
 		RequestContext requestContext = getRequestContext();
 		if (base != null || requestContext == null) {
 			return null;

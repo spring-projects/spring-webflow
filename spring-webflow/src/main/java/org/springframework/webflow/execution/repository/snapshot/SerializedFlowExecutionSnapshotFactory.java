@@ -71,7 +71,7 @@ public class SerializedFlowExecutionSnapshotFactory implements FlowExecutionSnap
 	}
 
 	public FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
-			MutableAttributeMap conversationScope, FlowExecutionKeyFactory keyFactory)
+			MutableAttributeMap<Object> conversationScope, FlowExecutionKeyFactory keyFactory)
 			throws FlowExecutionRestorationFailureException {
 		SerializedFlowExecutionSnapshot snapshotImpl = (SerializedFlowExecutionSnapshot) snapshot;
 		FlowDefinition def = flowDefinitionLocator.getFlowDefinition(flowId);

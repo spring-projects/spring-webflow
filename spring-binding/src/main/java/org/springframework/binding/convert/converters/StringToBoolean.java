@@ -48,7 +48,7 @@ public class StringToBoolean extends StringToObject {
 		this.falseString = falseString;
 	}
 
-	protected Object toObject(String string, Class targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) throws Exception {
 		if (trueString != null && string.equals(trueString)) {
 			return Boolean.TRUE;
 		} else if (falseString != null && string.equals(falseString)) {

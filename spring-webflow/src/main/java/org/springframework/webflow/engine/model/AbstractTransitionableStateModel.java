@@ -24,9 +24,9 @@ import java.util.LinkedList;
  */
 public abstract class AbstractTransitionableStateModel extends AbstractStateModel {
 
-	private LinkedList transitions;
+	private LinkedList<TransitionModel> transitions;
 
-	private LinkedList onExitActions;
+	private LinkedList<AbstractActionModel> onExitActions;
 
 	public AbstractTransitionableStateModel(String id) {
 		super(id);
@@ -41,28 +41,28 @@ public abstract class AbstractTransitionableStateModel extends AbstractStateMode
 	/**
 	 * @return the transitions
 	 */
-	public LinkedList getTransitions() {
+	public LinkedList<TransitionModel> getTransitions() {
 		return transitions;
 	}
 
 	/**
 	 * @param transitions the transitions to set
 	 */
-	public void setTransitions(LinkedList transitions) {
+	public void setTransitions(LinkedList<TransitionModel> transitions) {
 		this.transitions = transitions;
 	}
 
 	/**
 	 * @return the on exit actions
 	 */
-	public LinkedList getOnExitActions() {
+	public LinkedList<AbstractActionModel> getOnExitActions() {
 		return onExitActions;
 	}
 
 	/**
 	 * @param onExitActions the on exit actions to set
 	 */
-	public void setOnExitActions(LinkedList onExitActions) {
+	public void setOnExitActions(LinkedList<AbstractActionModel> onExitActions) {
 		this.onExitActions = onExitActions;
 	}
 

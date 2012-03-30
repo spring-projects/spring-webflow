@@ -30,15 +30,15 @@ public class ReverseConverter implements Converter {
 		this.converter = converter;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return converter.getTargetClass();
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return converter.getSourceClass();
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		return converter.convertTargetToSourceClass(source, targetClass);
 	}
 

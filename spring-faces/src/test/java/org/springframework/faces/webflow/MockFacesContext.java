@@ -58,7 +58,7 @@ public class MockFacesContext extends FacesContext {
 		this.application = application;
 	}
 
-	public Iterator getClientIdsWithMessages() {
+	public Iterator<String> getClientIdsWithMessages() {
 		return null;
 	}
 
@@ -78,11 +78,11 @@ public class MockFacesContext extends FacesContext {
 		return null;
 	}
 
-	public Iterator getMessages() {
+	public Iterator<FacesMessage> getMessages() {
 		return null;
 	}
 
-	public Iterator getMessages(String arg0) {
+	public Iterator<FacesMessage> getMessages(String arg0) {
 		return null;
 	}
 

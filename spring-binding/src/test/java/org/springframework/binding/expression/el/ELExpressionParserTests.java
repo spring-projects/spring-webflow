@@ -1,5 +1,6 @@
 package org.springframework.binding.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
 import javax.el.ELContext;
@@ -84,8 +85,8 @@ public class ELExpressionParserTests extends TestCase {
 	public void testParseBeanEvalExpressionInvalidELVariable() {
 		try {
 			String expressionString = "bogus";
-			Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-					.evaluate(TestBean.class));
+			Expression exp = parser.parseExpression(expressionString,
+					new FluentParserContext().evaluate(TestBean.class));
 			exp.getValue(new TestBean());
 			fail("Should have failed");
 		} catch (EvaluationException e) {
@@ -108,8 +109,8 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseTemplateExpressionWithVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
-				new ExpressionVariable("max", "maximum")));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().template().variable(new ExpressionVariable("max", "maximum")));
 		TestBean target = new TestBean();
 		assertEquals("foo2", exp.getValue(target));
 	}
@@ -123,9 +124,11 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testTemplateNestedVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
-				new ExpressionVariable("max", "#{maximum}#{var}", new FluentParserContext().template().variable(
-						new ExpressionVariable("var", "'bar'")))));
+		Expression exp = parser.parseExpression(
+				expressionString,
+				new FluentParserContext().template().variable(
+						new ExpressionVariable("max", "#{maximum}#{var}", new FluentParserContext().template()
+								.variable(new ExpressionVariable("var", "'bar'")))));
 		TestBean target = new TestBean();
 		assertEquals("foo2bar", exp.getValue(target));
 	}
@@ -159,8 +162,8 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testGetValueCoersionError() {
 		String expressionString = "maximum";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-				.expectResult(TestBean.class));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().expectResult(TestBean.class));
 		TestBean context = new TestBean();
 		try {
 			exp.getValue(context);
@@ -201,15 +204,15 @@ public class ELExpressionParserTests extends TestCase {
 			return new ELContext() {
 				public ELResolver getELResolver() {
 					return new ELResolver() {
-						public Class getCommonPropertyType(ELContext arg0, Object arg1) {
+						public Class<?> getCommonPropertyType(ELContext arg0, Object arg1) {
 							return Object.class;
 						}
 
-						public Iterator getFeatureDescriptors(ELContext arg0, Object arg1) {
+						public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext arg0, Object arg1) {
 							return null;
 						}
 
-						public Class getType(ELContext arg0, Object arg1, Object arg2) {
+						public Class<?> getType(ELContext arg0, Object arg1, Object arg2) {
 							return String.class;
 						}
 

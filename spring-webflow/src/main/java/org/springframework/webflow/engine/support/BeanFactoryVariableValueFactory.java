@@ -31,7 +31,7 @@ public class BeanFactoryVariableValueFactory implements VariableValueFactory {
 	/**
 	 * The class of variable value. Typically a Java bean.
 	 */
-	private Class type;
+	private Class<?> type;
 
 	/**
 	 * The backing bean factory that will create and restore variable instances.
@@ -43,7 +43,7 @@ public class BeanFactoryVariableValueFactory implements VariableValueFactory {
 	 * @param type the variable class
 	 * @param beanFactory the bean factory that will create and restore variable instances.
 	 */
-	public BeanFactoryVariableValueFactory(Class type, AutowireCapableBeanFactory beanFactory) {
+	public BeanFactoryVariableValueFactory(Class<?> type, AutowireCapableBeanFactory beanFactory) {
 		this.type = type;
 		this.beanFactory = beanFactory;
 	}

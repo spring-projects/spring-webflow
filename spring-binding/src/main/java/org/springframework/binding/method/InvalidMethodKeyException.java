@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.method;
 
-
 /**
  * Thrown when a method key could not be resolved to an invokable java Method on a Class.
  * 

@@ -23,9 +23,9 @@ package org.springframework.binding.convert;
  */
 public class ConversionExecutorNotFoundException extends ConversionException {
 
-	private Class sourceClass;
+	private Class<?> sourceClass;
 
-	private Class targetClass;
+	private Class<?> targetClass;
 
 	/**
 	 * Creates a new conversion executor not found exception.
@@ -33,7 +33,7 @@ public class ConversionExecutorNotFoundException extends ConversionException {
 	 * @param targetClass the target type requested to convert to
 	 * @param message a descriptive message
 	 */
-	public ConversionExecutorNotFoundException(Class sourceClass, Class targetClass, String message) {
+	public ConversionExecutorNotFoundException(Class<?> sourceClass, Class<?> targetClass, String message) {
 		super(message);
 		this.sourceClass = sourceClass;
 		this.targetClass = targetClass;
@@ -42,14 +42,14 @@ public class ConversionExecutorNotFoundException extends ConversionException {
 	/**
 	 * Returns the source type requested to convert from.
 	 */
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return sourceClass;
 	}
 
 	/**
 	 * Returns the target type requested to convert to.
 	 */
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 }

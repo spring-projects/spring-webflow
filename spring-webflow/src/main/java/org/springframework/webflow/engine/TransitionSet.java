@@ -31,12 +31,12 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  */
-public class TransitionSet {
+public class TransitionSet implements Iterable<Transition> {
 
 	/**
 	 * The set of transitions.
 	 */
-	private List transitions = new LinkedList();
+	private List<Transition> transitions = new LinkedList<Transition>();
 
 	/**
 	 * Add a transition to this set.
@@ -89,7 +89,7 @@ public class TransitionSet {
 	 * Returns an iterator over this transition set.
 	 * @return an iterator
 	 */
-	public Iterator iterator() {
+	public Iterator<Transition> iterator() {
 		return transitions.iterator();
 	}
 
@@ -98,7 +98,7 @@ public class TransitionSet {
 	 * @return the transition set as a typed array
 	 */
 	public Transition[] toArray() {
-		return (Transition[]) transitions.toArray(new Transition[transitions.size()]);
+		return transitions.toArray(new Transition[transitions.size()]);
 	}
 
 	/**
@@ -108,9 +108,9 @@ public class TransitionSet {
 	public TransitionCriteria[] getTransitionCriterias() {
 		TransitionCriteria[] criterias = new TransitionCriteria[transitions.size()];
 		int i = 0;
-		Iterator it = transitions.iterator();
+		Iterator<Transition> it = transitions.iterator();
 		while (it.hasNext()) {
-			criterias[i++] = ((Transition) it.next()).getMatchingCriteria();
+			criterias[i++] = it.next().getMatchingCriteria();
 		}
 		return criterias;
 	}
@@ -121,9 +121,9 @@ public class TransitionSet {
 	 * @return the transition, or null if no transition matches
 	 */
 	public Transition getTransition(RequestContext context) {
-		Iterator it = transitions.iterator();
+		Iterator<Transition> it = transitions.iterator();
 		while (it.hasNext()) {
-			Transition transition = (Transition) it.next();
+			Transition transition = it.next();
 			if (transition.matches(context)) {
 				return transition;
 			}

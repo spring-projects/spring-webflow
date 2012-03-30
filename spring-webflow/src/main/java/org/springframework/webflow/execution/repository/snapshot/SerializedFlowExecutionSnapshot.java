@@ -120,8 +120,8 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 
 	public int hashCode() {
 		int hashCode = 0;
-		for (int i = 0; i < flowExecutionData.length; i++) {
-			hashCode += flowExecutionData[i];
+		for (byte element : flowExecutionData) {
+			hashCode += element;
 		}
 		return hashCode;
 	}
@@ -231,7 +231,7 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 	private static class ConfigurableObjectInputStream extends ObjectInputStream {
 
 		/* Temporary workaround for SPR-???? */
-		private static final HashMap PRIMITIVE_CLASSES = new HashMap(8, 1.0F);
+		private static final HashMap<String, Class<?>> PRIMITIVE_CLASSES = new HashMap<String, Class<?>>(8, 1.0F);
 		static {
 			PRIMITIVE_CLASSES.put("boolean", boolean.class);
 			PRIMITIVE_CLASSES.put("byte", byte.class);
@@ -251,12 +251,12 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 			this.classLoader = classLoader;
 		}
 
-		protected Class resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
 			String name = desc.getName();
 			try {
 				return ClassUtils.forName(desc.getName(), classLoader);
 			} catch (ClassNotFoundException ex) {
-				Class rtn = (Class) PRIMITIVE_CLASSES.get(name);
+				Class<?> rtn = PRIMITIVE_CLASSES.get(name);
 				if (rtn == null) {
 					throw ex;
 				}
@@ -264,14 +264,14 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 			}
 		}
 
-		protected Class resolveProxyClass(String[] interfaces) throws IOException, ClassNotFoundException {
+		protected Class<?> resolveProxyClass(String[] interfaces) throws IOException, ClassNotFoundException {
 			ClassLoader nonPublicLoader = null;
 			boolean hasNonPublicInterface = false;
 
 			// define proxy in class loader of non-public interface(s), if any
-			Class[] classObjs = new Class[interfaces.length];
+			Class<?>[] classObjs = new Class[interfaces.length];
 			for (int i = 0; i < interfaces.length; i++) {
-				Class cl = ClassUtils.forName(interfaces[i], classLoader);
+				Class<?> cl = ClassUtils.forName(interfaces[i], classLoader);
 				if ((cl.getModifiers() & Modifier.PUBLIC) == 0) {
 					if (hasNonPublicInterface) {
 						if (nonPublicLoader != cl.getClassLoader()) {

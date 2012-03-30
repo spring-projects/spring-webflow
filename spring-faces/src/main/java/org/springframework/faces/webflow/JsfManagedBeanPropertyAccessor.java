@@ -52,7 +52,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return null;
 	}
 
@@ -69,7 +69,7 @@ public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
 	}
 
 	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
-		MutableAttributeMap map = getScopeForBean(name);
+		MutableAttributeMap<Object> map = getScopeForBean(name);
 		if (map != null) {
 			map.put(name, newValue);
 		}
@@ -97,7 +97,7 @@ public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
 		}
 	}
 
-	private MutableAttributeMap getScopeForBean(String name) {
+	private MutableAttributeMap<Object> getScopeForBean(String name) {
 		ExternalContext externalContext = RequestContextHolder.getRequestContext().getExternalContext();
 		if (externalContext.getRequestMap().contains(name)) {
 			return externalContext.getRequestMap();

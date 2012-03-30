@@ -49,19 +49,19 @@ public class ObjectToArray implements Converter {
 		this.elementConverter = elementConverter;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return Object.class;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return Object[].class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		if (source == null) {
 			return null;
 		}
-		Class componentType = targetClass.getComponentType();
+		Class<?> componentType = targetClass.getComponentType();
 		Object array = Array.newInstance(componentType, 1);
 		ConversionExecutor converter;
 		if (elementConverter != null) {

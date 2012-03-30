@@ -27,22 +27,22 @@ import org.springframework.util.Assert;
  * 
  * @author Jeremy Grelle
  */
-public class OneSelectionTrackingListDataModel extends SerializableListDataModel implements SelectionAware {
+public class OneSelectionTrackingListDataModel<T> extends SerializableListDataModel<T> implements SelectionAware<T> {
 
 	/**
 	 * The list of currently selected row data objects.
 	 */
-	private List selections = new ArrayList();
+	private List<T> selections = new ArrayList<T>();
 
 	public OneSelectionTrackingListDataModel() {
 		super();
 	}
 
-	public OneSelectionTrackingListDataModel(List list) {
+	public OneSelectionTrackingListDataModel(List<T> list) {
 		super(list);
 	}
 
-	public List getSelections() {
+	public List<T> getSelections() {
 		return selections;
 	}
 
@@ -50,15 +50,14 @@ public class OneSelectionTrackingListDataModel extends SerializableListDataModel
 		return selections.contains(getRowData());
 	}
 
-	public void select(Object rowData) {
-		Assert.isTrue(((List) getWrappedData()).contains(rowData),
-				"The object to select is not contained in this DataModel.");
+	public void select(T rowData) {
+		Assert.isTrue((getWrappedData()).contains(rowData), "The object to select is not contained in this DataModel.");
 		selections.clear();
 		selections.add(rowData);
 	}
 
 	public void selectAll() {
-		if (((List) getWrappedData()).size() > 1) {
+		if ((getWrappedData()).size() > 1) {
 			throw new UnsupportedOperationException("This DataModel only allows one selection.");
 		}
 	}
@@ -76,7 +75,7 @@ public class OneSelectionTrackingListDataModel extends SerializableListDataModel
 		}
 	}
 
-	public void setSelections(List selections) {
+	public void setSelections(List<T> selections) {
 		Assert.isTrue(selections.size() <= 1, "This DataModel only allows one selection.");
 		this.selections = selections;
 	}

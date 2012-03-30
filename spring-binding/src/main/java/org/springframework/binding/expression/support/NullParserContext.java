@@ -33,11 +33,11 @@ public final class NullParserContext implements ParserContext {
 	private NullParserContext() {
 	}
 
-	public Class getEvaluationContextType() {
+	public Class<?> getEvaluationContextType() {
 		return null;
 	}
 
-	public Class getExpectedEvaluationResultType() {
+	public Class<?> getExpectedEvaluationResultType() {
 		return null;
 	}
 

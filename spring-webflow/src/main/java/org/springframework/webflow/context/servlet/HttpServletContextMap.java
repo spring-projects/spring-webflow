@@ -28,7 +28,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * 
  * @author Keith Donald
  */
-public class HttpServletContextMap extends StringKeyedMapAdapter implements SharedMap {
+public class HttpServletContextMap extends StringKeyedMapAdapter<Object> implements SharedMap<String, Object> {
 
 	/**
 	 * The wrapped servlet context.
@@ -54,7 +54,8 @@ public class HttpServletContextMap extends StringKeyedMapAdapter implements Shar
 		context.removeAttribute(key);
 	}
 
-	protected Iterator getAttributeNames() {
+	@SuppressWarnings("unchecked")
+	protected Iterator<String> getAttributeNames() {
 		return CollectionUtils.toIterator(context.getAttributeNames());
 	}
 

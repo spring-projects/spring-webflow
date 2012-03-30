@@ -53,12 +53,12 @@ public class GenericConversionService implements ConversionService {
 	 * A map of custom converters. Custom converters are assigned a unique identifier that can be used to lookup the
 	 * converter. This allows multiple converters for the same source->target class to be registered.
 	 */
-	private final Map customConverters = new HashMap();
+	private final Map<String, Converter> customConverters = new HashMap<String, Converter>();
 
 	/**
 	 * Indexes classes by well-known aliases.
 	 */
-	private final Map aliasMap = new HashMap();
+	private final Map<String, Class<?>> aliasMap = new HashMap<String, Class<?>>();
 
 	/**
 	 * An optional parent conversion service.
@@ -143,11 +143,11 @@ public class GenericConversionService implements ConversionService {
 	/**
 	 * Add an alias for given target type.
 	 */
-	public void addAlias(String alias, Class targetType) {
+	public void addAlias(String alias, Class<?> targetType) {
 		aliasMap.put(alias, targetType);
 	}
 
-	public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+	public ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
 			throws ConversionExecutorNotFoundException {
 		Assert.notNull(sourceClass, "The source class to convert from is required");
 		Assert.notNull(targetClass, "The target class to convert to is required");
@@ -168,12 +168,12 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
-	public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+	public ConversionExecutor getConversionExecutor(String id, Class<?> sourceClass, Class<?> targetClass)
 			throws ConversionExecutorNotFoundException {
 		Assert.hasText(id, "The id of the custom converter is required");
 		Assert.notNull(sourceClass, "The source class to convert from is required");
 		Assert.notNull(targetClass, "The target class to convert to is required");
-		Converter converter = (Converter) customConverters.get(id);
+		Converter converter = customConverters.get(id);
 		if (converter == null) {
 			if (parent != null) {
 				return parent.getConversionExecutor(id, sourceClass, targetClass);
@@ -186,9 +186,9 @@ public class GenericConversionService implements ConversionService {
 		sourceClass = convertToWrapperClassIfNecessary(sourceClass);
 		targetClass = convertToWrapperClassIfNecessary(targetClass);
 		if (sourceClass.isArray()) {
-			Class sourceComponentType = sourceClass.getComponentType();
+			Class<?> sourceComponentType = sourceClass.getComponentType();
 			if (targetClass.isArray()) {
-				Class targetComponentType = targetClass.getComponentType();
+				Class<?> targetComponentType = targetClass.getComponentType();
 				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
 					if (!converter.getTargetClass().isAssignableFrom(targetComponentType)) {
 						throw new ConversionExecutorNotFoundException(sourceClass, targetClass,
@@ -221,15 +221,15 @@ public class GenericConversionService implements ConversionService {
 				}
 				if (converter.getSourceClass().isAssignableFrom(sourceComponentType)) {
 					// type erasure has prevented us from getting the concrete type, this is best we can do for now
-					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType, converter
-							.getTargetClass(), converter);
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							converter.getTargetClass(), converter);
 					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
 							elementConverter));
 				} else if (converter.getTargetClass().isAssignableFrom(sourceComponentType)
 						&& converter instanceof TwoWayConverter) {
 					TwoWayConverter twoWay = (TwoWayConverter) converter;
-					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType, converter
-							.getSourceClass(), new ReverseConverter(twoWay));
+					ConversionExecutor elementConverter = new StaticConversionExecutor(sourceComponentType,
+							converter.getSourceClass(), new ReverseConverter(twoWay));
 					return new StaticConversionExecutor(sourceClass, targetClass, new ArrayToCollection(
 							elementConverter));
 				} else {
@@ -242,7 +242,7 @@ public class GenericConversionService implements ConversionService {
 			}
 		}
 		if (targetClass.isArray()) {
-			Class targetComponentType = targetClass.getComponentType();
+			Class<?> targetComponentType = targetClass.getComponentType();
 			if (Collection.class.isAssignableFrom(sourceClass)) {
 				// type erasure limits us here as well
 				if (converter.getTargetClass().isAssignableFrom(targetComponentType)) {
@@ -294,11 +294,11 @@ public class GenericConversionService implements ConversionService {
 				ConversionExecutor elementConverter;
 				// type erasure forces us to do runtime checks of list elements
 				if (converter instanceof TwoWayConverter) {
-					elementConverter = new TwoWayCapableConversionExecutor(converter.getSourceClass(), converter
-							.getTargetClass(), (TwoWayConverter) converter);
+					elementConverter = new TwoWayCapableConversionExecutor(converter.getSourceClass(),
+							converter.getTargetClass(), (TwoWayConverter) converter);
 				} else {
-					elementConverter = new StaticConversionExecutor(converter.getSourceClass(), converter
-							.getTargetClass(), converter);
+					elementConverter = new StaticConversionExecutor(converter.getSourceClass(),
+							converter.getTargetClass(), converter);
 				}
 				return new StaticConversionExecutor(sourceClass, targetClass, new CollectionToCollection(
 						elementConverter));
@@ -340,7 +340,7 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
-	public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+	public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException {
 		if (source != null) {
 			ConversionExecutor conversionExecutor = getConversionExecutor(source.getClass(), targetClass);
 			return conversionExecutor.execute(source);
@@ -349,7 +349,7 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
-	public Object executeConversion(String converterId, Object source, Class targetClass) throws ConversionException {
+	public Object executeConversion(String converterId, Object source, Class<?> targetClass) throws ConversionException {
 		if (source != null) {
 			ConversionExecutor conversionExecutor = getConversionExecutor(converterId, source.getClass(), targetClass);
 			return conversionExecutor.execute(source);
@@ -358,8 +358,8 @@ public class GenericConversionService implements ConversionService {
 		}
 	}
 
-	public Class getClassForAlias(String name) throws IllegalArgumentException {
-		Class clazz = (Class) aliasMap.get(name);
+	public Class<?> getClassForAlias(String name) throws IllegalArgumentException {
+		Class<?> clazz = aliasMap.get(name);
 		if (clazz != null) {
 			return clazz;
 		} else {
@@ -373,7 +373,7 @@ public class GenericConversionService implements ConversionService {
 
 	// internal helpers
 
-	private Class convertToWrapperClassIfNecessary(Class targetType) {
+	private Class<?> convertToWrapperClassIfNecessary(Class<?> targetType) {
 		if (targetType.isPrimitive()) {
 			if (targetType.equals(int.class)) {
 				return Integer.class;

@@ -30,7 +30,7 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class ScopeSearchingPropertyAccessor implements PropertyAccessor {
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return new Class[] { RequestContext.class };
 	}
 
@@ -39,7 +39,7 @@ public class ScopeSearchingPropertyAccessor implements PropertyAccessor {
 	}
 
 	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
-		MutableAttributeMap scope = findScopeForAttribute((RequestContext) target, name);
+		MutableAttributeMap<Object> scope = findScopeForAttribute((RequestContext) target, name);
 		return (scope != null) ? new TypedValue(scope.get(name)) : null;
 	}
 
@@ -48,13 +48,13 @@ public class ScopeSearchingPropertyAccessor implements PropertyAccessor {
 	}
 
 	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
-		MutableAttributeMap scope = findScopeForAttribute((RequestContext) target, name);
+		MutableAttributeMap<Object> scope = findScopeForAttribute((RequestContext) target, name);
 		if (scope != null) {
 			scope.put(name, newValue);
 		}
 	}
 
-	private MutableAttributeMap findScopeForAttribute(RequestContext requestContext, String name) {
+	private MutableAttributeMap<Object> findScopeForAttribute(RequestContext requestContext, String name) {
 		if (requestContext.getRequestScope().contains(name)) {
 			return requestContext.getRequestScope();
 		}

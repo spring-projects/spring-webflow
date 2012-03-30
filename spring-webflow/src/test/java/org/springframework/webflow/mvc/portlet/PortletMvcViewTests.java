@@ -32,8 +32,7 @@ public class PortletMvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeRequest(request);
 		context.getMockExternalContext().setNativeResponse(response);
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
-		org.springframework.web.servlet.View mvcView = (org.springframework.web.servlet.View) EasyMock
-				.createMock(org.springframework.web.servlet.View.class);
+		org.springframework.web.servlet.View mvcView = EasyMock.createMock(org.springframework.web.servlet.View.class);
 		AbstractMvcView view = new PortletMvcView(mvcView, context);
 		view.render();
 		assertNotNull(request.getAttribute(ViewRendererServlet.VIEW_ATTRIBUTE));
@@ -54,8 +53,7 @@ public class PortletMvcViewTests extends TestCase {
 		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
 		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
 		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
-		org.springframework.web.servlet.View mvcView = (org.springframework.web.servlet.View) EasyMock
-				.createMock(org.springframework.web.servlet.View.class);
+		org.springframework.web.servlet.View mvcView = EasyMock.createMock(org.springframework.web.servlet.View.class);
 		AbstractMvcView view = new PortletMvcView(mvcView, context);
 		view.setExpressionParser(new WebFlowSpringELExpressionParser(new SpelExpressionParser()));
 		view.setMessageCodesResolver(new WebFlowMessageCodesResolver());

@@ -167,7 +167,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * @param resultAttributes the event attributes
 	 * @return the action result event
 	 */
-	protected Event result(String eventId, AttributeMap resultAttributes) {
+	protected Event result(String eventId, AttributeMap<Object> resultAttributes) {
 		return getEventFactorySupport().event(this, eventId, resultAttributes);
 	}
 
@@ -213,9 +213,8 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * <p>
 	 * This implementation just returns <code>null</code>.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
-	 * @return the non-<code>null</code> action result, in which case the <code>doExecute()</code> will not be
-	 * called, or <code>null</code> if the <code>doExecute()</code> method should be called to obtain the action
-	 * result
+	 * @return the non-<code>null</code> action result, in which case the <code>doExecute()</code> will not be called,
+	 * or <code>null</code> if the <code>doExecute()</code> method should be called to obtain the action result
 	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
 	protected Event doPreExecute(RequestContext context) throws Exception {
@@ -231,8 +230,8 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	protected abstract Event doExecute(RequestContext context) throws Exception;
 
 	/**
-	 * Post-action execution hook, subclasses may override. Will only be called if <code>doExecute()</code> was
-	 * called, e.g. when <code>doPreExecute()</code> returned <code>null</code>.
+	 * Post-action execution hook, subclasses may override. Will only be called if <code>doExecute()</code> was called,
+	 * e.g. when <code>doPreExecute()</code> returned <code>null</code>.
 	 * <p>
 	 * This implementation does nothing.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"

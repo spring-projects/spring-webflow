@@ -124,7 +124,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of state definitions for this flow.
 	 */
-	private Set states = new LinkedHashSet(9);
+	private Set<State> states = new LinkedHashSet<State>(9);
 
 	/**
 	 * The default start state for this flow.
@@ -134,7 +134,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of flow variables created by this flow.
 	 */
-	private Map variables = new LinkedHashMap();
+	private Map<String, FlowVariable> variables = new LinkedHashMap<String, FlowVariable>();
 
 	/**
 	 * The mapper to map flow input attributes.
@@ -191,7 +191,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param attributes the attributes
 	 * @return the flow
 	 */
-	public static Flow create(String id, AttributeMap attributes) {
+	public static Flow create(String id, AttributeMap<?> attributes) {
 		Flow flow = new Flow(id);
 		flow.getAttributes().putAll(attributes);
 		return flow;
@@ -216,14 +216,13 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	public String[] getPossibleOutcomes() {
-		List possibleOutcomes = new ArrayList();
-		for (Iterator it = states.iterator(); it.hasNext();) {
-			State state = (State) it.next();
+		List<String> possibleOutcomes = new ArrayList<String>();
+		for (State state : states) {
 			if (state instanceof EndState) {
 				possibleOutcomes.add(state.getId());
 			}
 		}
-		return (String[]) possibleOutcomes.toArray(new String[possibleOutcomes.size()]);
+		return possibleOutcomes.toArray(new String[possibleOutcomes.size()]);
 	}
 
 	public ClassLoader getClassLoader() {
@@ -280,9 +279,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @return true if yes, false otherwise
 	 */
 	public boolean containsState(String stateId) {
-		Iterator it = states.iterator();
+		Iterator<State> it = states.iterator();
 		while (it.hasNext()) {
-			State state = (State) it.next();
+			State state = it.next();
 			if (state.getId().equals(stateId)) {
 				return true;
 			}
@@ -338,9 +337,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		if (!StringUtils.hasText(stateId)) {
 			throw new IllegalArgumentException("The specified stateId is invalid: state identifiers must be non-blank");
 		}
-		Iterator it = states.iterator();
+		Iterator<State> it = states.iterator();
 		while (it.hasNext()) {
-			State state = (State) it.next();
+			State state = it.next();
 			if (state.getId().equals(stateId)) {
 				return state;
 			}
@@ -357,9 +356,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	public String[] getStateIds() {
 		String[] stateIds = new String[getStateCount()];
 		int i = 0;
-		Iterator it = states.iterator();
+		Iterator<State> it = states.iterator();
 		while (it.hasNext()) {
-			stateIds[i++] = ((State) it.next()).getId();
+			stateIds[i++] = it.next().getId();
 		}
 		return stateIds;
 	}
@@ -380,8 +379,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		if (variables == null) {
 			return;
 		}
-		for (int i = 0; i < variables.length; i++) {
-			addVariable(variables[i]);
+		for (FlowVariable variable : variables) {
+			addVariable(variable);
 		}
 	}
 
@@ -390,14 +389,14 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param name the name of the variable
 	 */
 	public FlowVariable getVariable(String name) {
-		return (FlowVariable) variables.get(name);
+		return variables.get(name);
 	}
 
 	/**
 	 * Returns the flow variables.
 	 */
 	public FlowVariable[] getVariables() {
-		return (FlowVariable[]) variables.values().toArray(new FlowVariable[variables.size()]);
+		return variables.values().toArray(new FlowVariable[variables.size()]);
 	}
 
 	/**
@@ -476,8 +475,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @return the transition that matches, or null if no match is found.
 	 */
 	public TransitionDefinition getGlobalTransition(String eventId) {
-		for (Iterator it = globalTransitionSet.iterator(); it.hasNext();) {
-			Transition transition = (Transition) it.next();
+		for (Transition transition : globalTransitionSet) {
 			if (transition.getId().equals(eventId)) {
 				return transition;
 			}
@@ -522,7 +520,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param input eligible input into the session
 	 * @throws FlowExecutionException when an exception occurs starting the flow
 	 */
-	public void start(RequestControlContext context, MutableAttributeMap input) throws FlowExecutionException {
+	public void start(RequestControlContext context, MutableAttributeMap<?> input) throws FlowExecutionException {
 		assertStartStateSet();
 		createVariables(context);
 		if (inputMapper != null) {
@@ -581,7 +579,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @param output initial output produced by the session that is eligible for modification by this method
 	 * @throws FlowExecutionException when an exception occurs ending this flow
 	 */
-	public void end(RequestControlContext context, String outcome, MutableAttributeMap output)
+	public void end(RequestControlContext context, String outcome, MutableAttributeMap<?> output)
 			throws FlowExecutionException {
 		endActionList.execute(context);
 		if (outputMapper != null) {
@@ -618,9 +616,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	private void createVariables(RequestContext context) {
-		Iterator it = variables.values().iterator();
+		Iterator<FlowVariable> it = variables.values().iterator();
 		while (it.hasNext()) {
-			FlowVariable variable = (FlowVariable) it.next();
+			FlowVariable variable = it.next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating " + variable);
 			}
@@ -629,9 +627,9 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	public void restoreVariables(RequestContext context) {
-		Iterator it = variables.values().iterator();
+		Iterator<FlowVariable> it = variables.values().iterator();
 		while (it.hasNext()) {
-			FlowVariable variable = (FlowVariable) it.next();
+			FlowVariable variable = it.next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restoring " + variable);
 			}
@@ -659,10 +657,10 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 
 	public String toString() {
 		return new ToStringCreator(this).append("id", id).append("states", states).append("startState", startState)
-				.append("variables", variables).append("inputMapper", inputMapper).append("startActionList",
-						startActionList).append("exceptionHandlerSet", exceptionHandlerSet).append(
-						"globalTransitionSet", globalTransitionSet).append("endActionList", endActionList).append(
-						"outputMapper", outputMapper).toString();
+				.append("variables", variables).append("inputMapper", inputMapper)
+				.append("startActionList", startActionList).append("exceptionHandlerSet", exceptionHandlerSet)
+				.append("globalTransitionSet", globalTransitionSet).append("endActionList", endActionList)
+				.append("outputMapper", outputMapper).toString();
 	}
 
 }

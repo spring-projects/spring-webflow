@@ -1,5 +1,6 @@
 package org.springframework.webflow.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -31,7 +32,7 @@ public class FlowResourceELResolver extends ELResolver {
 		this.requestContext = requestContext;
 	}
 
-	public Class getCommonPropertyType(ELContext context, Object base) {
+	public Class<?> getCommonPropertyType(ELContext context, Object base) {
 		if (base == null) {
 			return MessageSource.class;
 		} else if (base instanceof MessageSource) {
@@ -41,11 +42,11 @@ public class FlowResourceELResolver extends ELResolver {
 		}
 	}
 
-	public Iterator getFeatureDescriptors(ELContext context, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext context, Object base, Object property) {
+	public Class<?> getType(ELContext context, Object base, Object property) {
 		RequestContext requestContext = getRequestContext();
 		if (requestContext == null) {
 			return null;

@@ -26,8 +26,9 @@ public class StringToEnum extends StringToObject {
 		super(Enum.class);
 	}
 
-	protected Object toObject(String string, Class targetClass) throws Exception {
-		return Enum.valueOf(targetClass, string);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Object toObject(String string, Class<?> targetClass) throws Exception {
+		return Enum.valueOf((Class) targetClass, string);
 	}
 
 	protected String toString(Object object) throws Exception {

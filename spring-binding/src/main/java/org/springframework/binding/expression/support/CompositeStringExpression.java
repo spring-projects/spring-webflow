@@ -42,8 +42,8 @@ public class CompositeStringExpression implements Expression {
 
 	public Object getValue(Object context) throws EvaluationException {
 		StringBuffer buffer = new StringBuffer(128);
-		for (int i = 0; i < expressions.length; i++) {
-			buffer.append(expressions[i].getValue(context));
+		for (Expression expression : expressions) {
+			buffer.append(expression.getValue(context));
 		}
 		return buffer.toString();
 	}
@@ -52,7 +52,7 @@ public class CompositeStringExpression implements Expression {
 		throw new UnsupportedOperationException("Cannot set a composite string expression value");
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return String.class;
 	}
 

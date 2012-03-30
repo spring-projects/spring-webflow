@@ -69,11 +69,10 @@ public interface Action {
 	 * <ul>
 	 * <li>Attributes set in {@link RequestContext#getRequestScope() request scope} exist for the life of the currently
 	 * executing request only.
-	 * <li>Attributes set in {@link RequestContext#getFlashScope() flash scope} exist until the next external user
-	 * event is signaled. That time includes the current request plus any redirect or additional refreshes to the next
-	 * view.
-	 * <li>Attributes set in {@link RequestContext#getFlowScope() flow scope} exist for the life of the flow session
-	 * and will be cleaned up automatically when the flow session ends.
+	 * <li>Attributes set in {@link RequestContext#getFlashScope() flash scope} exist until the next external user event
+	 * is signaled. That time includes the current request plus any redirect or additional refreshes to the next view.
+	 * <li>Attributes set in {@link RequestContext#getFlowScope() flow scope} exist for the life of the flow session and
+	 * will be cleaned up automatically when the flow session ends.
 	 * <li>Attributes set in {@link RequestContext#getConversationScope() conversation scope} exist for the life of the
 	 * entire flow execution representing a single logical "conversation" with a user.
 	 * </ul>
@@ -89,9 +88,9 @@ public interface Action {
 	 * <p>
 	 * Note: as flow scoped attributes are eligible for serialization they should be <code>Serializable</code>.
 	 * 
-	 * @param context the action execution context, for accessing and setting data in a {@link ScopeType scope type},
-	 * as well as obtaining other flow contextual information (e.g. request context attributes and flow execution
-	 * context information)
+	 * @param context the action execution context, for accessing and setting data in a {@link ScopeType scope type}, as
+	 * well as obtaining other flow contextual information (e.g. request context attributes and flow execution context
+	 * information)
 	 * @return a logical result outcome, used as grounds for a transition in the calling flow (e.g. "success", "error",
 	 * "yes", "no", * ...)
 	 * @throws Exception a exception occurred during action execution, either checked or unchecked; note, any

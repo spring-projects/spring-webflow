@@ -59,7 +59,7 @@ public class AjaxTilesViewTests extends TestCase {
 		setupStaticWebApplicationContext();
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertEquals("/WEB-INF/layout.jsp", response.getForwardedUrl());
 	}
 
@@ -68,7 +68,7 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addHeader("Accept", SpringJavascriptAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertEquals("/WEB-INF/layout.jsp", response.getForwardedUrl());
 	}
 
@@ -78,7 +78,7 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addParameter("fragments", "searchResults");
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertEquals("/WEB-INF/searchResults.jsp", response.getForwardedUrl());
 	}
 
@@ -88,7 +88,7 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addParameter("fragments", "body");
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertEquals("/WEB-INF/search.jsp", response.getForwardedUrl());
 	}
 
@@ -98,16 +98,16 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addParameter("fragments", "searchNavigation");
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getForwardedUrl());
 	}
 
 	public void testRenderFragment_InheritCascadedAttribute() throws Exception {
 		BasicTilesContainer container = (BasicTilesContainer) ServletUtil.getCurrentContainer(request, servletContext);
 		ServletTilesRequestContextFactory tilesRequestContextFactory = new ServletTilesRequestContextFactory();
-		tilesRequestContextFactory.init(new HashMap());
-		TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(container
-				.getApplicationContext(), new Object[] { request, response });
+		tilesRequestContextFactory.init(new HashMap<String, String>());
+		TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(
+				container.getApplicationContext(), new Object[] { request, response });
 		Definition definition = container.getDefinitionsFactory().getDefinition("search.body", tilesRequestContext);
 		definition.setPreparer("org.springframework.js.ajax.tiles2.AjaxTilesViewTests$AttributeTestingPreparer");
 
@@ -116,7 +116,7 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addParameter("fragments", "body");
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertTrue(AttributeTestingPreparer.invoked);
 	}
 
@@ -125,7 +125,7 @@ public class AjaxTilesViewTests extends TestCase {
 		Object[] requestItems = new Object[] { request, response };
 		AttributeContext attributeContext = container.startContext(requestItems);
 		attributeContext.putAttribute("body", new Attribute("/WEB-INF/dynamicTemplate.jsp"));
-		Map resultMap = new HashMap();
+		Map<String, Attribute> resultMap = new HashMap<String, Attribute>();
 		ajaxTilesView.addRuntimeAttributes(container, resultMap, request, response);
 		assertNotNull(resultMap.get("body"));
 		assertEquals("/WEB-INF/dynamicTemplate.jsp", resultMap.get("body").toString());
@@ -138,7 +138,7 @@ public class AjaxTilesViewTests extends TestCase {
 		request.addParameter("fragments", "body,searchNavigation");
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
-		ajaxTilesView.renderMergedOutputModel(new HashMap(), request, response);
+		ajaxTilesView.renderMergedOutputModel(new HashMap<String, Object>(), request, response);
 		assertTrue("Multiple fragments should result in include, not forward", response.getIncludedUrls().size() == 2);
 		assertEquals("/WEB-INF/search.jsp", response.getIncludedUrls().get(0));
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrls().get(1));
@@ -146,12 +146,12 @@ public class AjaxTilesViewTests extends TestCase {
 
 	public void testFlattenAttributeMap() throws Exception {
 		TilesRequestContextFactory tilesRequestContextFactory = new ServletTilesRequestContextFactory();
-		tilesRequestContextFactory.init(new HashMap());
+		tilesRequestContextFactory.init(new HashMap<String, String>());
 		BasicTilesContainer container = (BasicTilesContainer) ServletUtil.getCurrentContainer(request, servletContext);
-		TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(container
-				.getApplicationContext(), new Object[] { request, response });
+		TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(
+				container.getApplicationContext(), new Object[] { request, response });
 		Definition compositeDefinition = container.getDefinitionsFactory().getDefinition("search", tilesRequestContext);
-		Map resultMap = new HashMap();
+		Map<String, Attribute> resultMap = new HashMap<String, Attribute>();
 		ajaxTilesView.flattenAttributeMap(container, tilesRequestContext, resultMap, compositeDefinition, request,
 				response);
 		assertNotNull(resultMap.get("body"));
@@ -161,7 +161,7 @@ public class AjaxTilesViewTests extends TestCase {
 	}
 
 	public void testGetRenderFragments() throws Exception {
-		Map model = new HashMap();
+		Map<String, Object> model = new HashMap<String, Object>();
 		request.setParameter("fragments", "f1,f2,  f3");
 		String[] fragments = ajaxTilesView.getRenderFragments(model, request, response);
 		assertEquals("f1", fragments[0]);

@@ -68,11 +68,11 @@ public class PortletRequestMapTests extends TestCase {
 	public void testGetAttributeNames() {
 		request.setAttribute("Some key", "Some value");
 		// perform test
-		Iterator names = tested.getAttributeNames();
+		Iterator<String> names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
 		while (names.hasNext()) {
-			String name = (String) names.next();
+			String name = names.next();
 			if ("Some key".equals(name)) {
 				return;
 			}

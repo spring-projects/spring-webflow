@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
 import org.springframework.binding.message.MessageContext;
@@ -22,7 +23,7 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolverTestCase {
 
-	private static final List vars = new ArrayList();
+	private static final List<String> vars = new ArrayList<String>();
 	{
 		vars.add("requestParameters");
 		vars.add("requestScope");
@@ -40,22 +41,22 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 
 	public void testGetType_RequestParameters() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(ParameterMap.class, context.getELResolver().getType(context, null,
-				"requestParameters")));
+		assertTrue(ClassUtils.isAssignable(ParameterMap.class,
+				context.getELResolver().getType(context, null, "requestParameters")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_RequestScope() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class, context.getELResolver().getType(context, null,
-				"requestScope")));
+		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class,
+				context.getELResolver().getType(context, null, "requestScope")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_FlashScope() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class, context.getELResolver().getType(context, null,
-				"flashScope")));
+		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class,
+				context.getELResolver().getType(context, null, "flashScope")));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -64,43 +65,43 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 		RequestContextHolder.setRequestContext(requestContext);
 		initView(requestContext);
 
-		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class, context.getELResolver().getType(context, null,
-				"viewScope")));
+		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class,
+				context.getELResolver().getType(context, null, "viewScope")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_FlowScope() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class, context.getELResolver().getType(context, null,
-				"flowScope")));
+		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class,
+				context.getELResolver().getType(context, null, "flowScope")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_ConversationScope() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class, context.getELResolver().getType(context, null,
-				"conversationScope")));
+		assertTrue(ClassUtils.isAssignable(MutableAttributeMap.class,
+				context.getELResolver().getType(context, null, "conversationScope")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_MessageContext() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(MessageContext.class, context.getELResolver().getType(context, null,
-				"messageContext")));
+		assertTrue(ClassUtils.isAssignable(MessageContext.class,
+				context.getELResolver().getType(context, null, "messageContext")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_ExternalContext() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(ExternalContext.class, context.getELResolver().getType(context, null,
-				"externalContext")));
+		assertTrue(ClassUtils.isAssignable(ExternalContext.class,
+				context.getELResolver().getType(context, null, "externalContext")));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetType_FlowExecutionContext() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue(ClassUtils.isAssignable(FlowExecutionContext.class, context.getELResolver().getType(context, null,
-				"flowExecutionContext")));
+		assertTrue(ClassUtils.isAssignable(FlowExecutionContext.class,
+				context.getELResolver().getType(context, null, "flowExecutionContext")));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -109,8 +110,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 		((MockFlowExecutionContext) requestContext.getFlowExecutionContext()).setKey(new MockFlowExecutionKey("e1s1"));
 		RequestContextHolder.setRequestContext(requestContext);
 
-		assertTrue(ClassUtils.isAssignable(String.class, context.getELResolver().getType(context, null,
-				"flowExecutionUrl")));
+		assertTrue(ClassUtils.isAssignable(String.class,
+				context.getELResolver().getType(context, null, "flowExecutionUrl")));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -119,8 +120,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 		((MockExternalContext) requestContext.getExternalContext()).setCurrentUser("jjg");
 		RequestContextHolder.setRequestContext(requestContext);
 
-		assertTrue(ClassUtils.isAssignable(Principal.class, context.getELResolver().getType(context, null,
-				"currentUser")));
+		assertTrue(ClassUtils.isAssignable(Principal.class,
+				context.getELResolver().getType(context, null, "currentUser")));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -135,8 +136,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 	public void testGetValue_RequestParameters() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
-		assertSame(requestContext.getRequestParameters(), context.getELResolver().getValue(context, null,
-				"requestParameters"));
+		assertSame(requestContext.getRequestParameters(),
+				context.getELResolver().getValue(context, null, "requestParameters"));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -172,8 +173,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 	public void testGetValue_ConversationScope() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
-		assertSame(requestContext.getConversationScope(), context.getELResolver().getValue(context, null,
-				"conversationScope"));
+		assertSame(requestContext.getConversationScope(),
+				context.getELResolver().getValue(context, null, "conversationScope"));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -188,16 +189,16 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 	public void testGetValue_ExternalContext() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
-		assertSame(requestContext.getExternalContext(), context.getELResolver().getValue(context, null,
-				"externalContext"));
+		assertSame(requestContext.getExternalContext(),
+				context.getELResolver().getValue(context, null, "externalContext"));
 		assertTrue(context.isPropertyResolved());
 	}
 
 	public void testGetValue_FlowExecutionContext() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
-		assertSame(requestContext.getFlowExecutionContext(), context.getELResolver().getValue(context, null,
-				"flowExecutionContext"));
+		assertSame(requestContext.getFlowExecutionContext(),
+				context.getELResolver().getValue(context, null, "flowExecutionContext"));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -205,8 +206,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 		MockRequestContext requestContext = new MockRequestContext();
 		((MockFlowExecutionContext) requestContext.getFlowExecutionContext()).setKey(new MockFlowExecutionKey("e1s1"));
 		RequestContextHolder.setRequestContext(requestContext);
-		assertEquals(requestContext.getFlowExecutionUrl(), context.getELResolver().getValue(context, null,
-				"flowExecutionUrl"));
+		assertEquals(requestContext.getFlowExecutionUrl(),
+				context.getELResolver().getValue(context, null, "flowExecutionUrl"));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -214,8 +215,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 		MockRequestContext requestContext = new MockRequestContext();
 		((MockExternalContext) requestContext.getExternalContext()).setCurrentUser("jjg");
 		RequestContextHolder.setRequestContext(requestContext);
-		assertSame(requestContext.getExternalContext().getCurrentUser(), context.getELResolver().getValue(context,
-				null, "currentUser"));
+		assertSame(requestContext.getExternalContext().getCurrentUser(),
+				context.getELResolver().getValue(context, null, "currentUser"));
 		assertTrue(context.isPropertyResolved());
 	}
 
@@ -229,18 +230,18 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 
 	public void testIsReadOnly_AllVars() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		Iterator i = vars.iterator();
+		Iterator<String> i = vars.iterator();
 		while (i.hasNext()) {
-			String var = (String) i.next();
+			String var = i.next();
 			assertTrue(context.getELResolver().isReadOnly(context, null, var));
 		}
 	}
 
 	public void testSetValue_AllVars() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		Iterator i = vars.iterator();
+		Iterator<String> i = vars.iterator();
 		while (i.hasNext()) {
-			String var = (String) i.next();
+			String var = i.next();
 			try {
 				context.getELResolver().setValue(context, null, var, new Object());
 				fail("setValue should not be allowed");
@@ -254,8 +255,8 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 		return "flowScope";
 	}
 
-	protected List getCustomResolvers() {
-		List resolvers = new ArrayList();
+	protected List<ELResolver> getCustomResolvers() {
+		List<ELResolver> resolvers = new ArrayList<ELResolver>();
 		resolvers.add(new ImplicitFlowVariableELResolver());
 		return resolvers;
 	}

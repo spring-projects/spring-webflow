@@ -34,14 +34,14 @@ public class HttpSessionMapBindingListener implements HttpSessionBindingListener
 
 	private AttributeMapBindingListener listener;
 
-	private Map sessionMap;
+	private Map<String, Object> sessionMap;
 
 	/**
 	 * Create a new wrapper for given listener.
 	 * @param listener the listener to wrap
 	 * @param sessionMap the session map containing the listener
 	 */
-	public HttpSessionMapBindingListener(AttributeMapBindingListener listener, Map sessionMap) {
+	public HttpSessionMapBindingListener(AttributeMapBindingListener listener, Map<String, Object> sessionMap) {
 		this.listener = listener;
 		this.sessionMap = sessionMap;
 	}
@@ -56,7 +56,7 @@ public class HttpSessionMapBindingListener implements HttpSessionBindingListener
 	/**
 	 * Returns the session map containing the listener.
 	 */
-	public Map getSessionMap() {
+	public Map<String, Object> getSessionMap() {
 		return sessionMap;
 	}
 
@@ -72,6 +72,6 @@ public class HttpSessionMapBindingListener implements HttpSessionBindingListener
 	 * Create a attribute map binding event for given HTTP session binding event.
 	 */
 	private AttributeMapBindingEvent getContextBindingEvent(HttpSessionBindingEvent event) {
-		return new AttributeMapBindingEvent(new LocalAttributeMap(sessionMap), event.getName(), listener);
+		return new AttributeMapBindingEvent(new LocalAttributeMap<Object>(sessionMap), event.getName(), listener);
 	}
 }

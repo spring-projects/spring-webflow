@@ -41,8 +41,7 @@ public class DojoClientDateValidator extends DojoWidget {
 	static {
 		DOJO_ATTRS = new String[DojoWidget.DOJO_ATTRS.length + DOJO_ATTRS_INTERNAL.length];
 		System.arraycopy(DojoWidget.DOJO_ATTRS, 0, DOJO_ATTRS, 0, DojoWidget.DOJO_ATTRS.length);
-		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoWidget.DOJO_ATTRS.length,
-				DOJO_ATTRS_INTERNAL.length);
+		System.arraycopy(DOJO_ATTRS_INTERNAL, 0, DOJO_ATTRS, DojoWidget.DOJO_ATTRS.length, DOJO_ATTRS_INTERNAL.length);
 	}
 
 	public String getDatePattern() {

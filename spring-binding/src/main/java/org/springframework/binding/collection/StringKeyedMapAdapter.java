@@ -27,19 +27,19 @@ import java.util.Set;
  * 
  * @author Keith Donald
  */
-public abstract class StringKeyedMapAdapter implements Map {
+public abstract class StringKeyedMapAdapter<V> implements Map<String, V> {
 
-	private Set keySet;
+	private Set<String> keySet;
 
-	private Collection values;
+	private Collection<V> values;
 
-	private Set entrySet;
+	private Set<Entry<String, V>> entrySet;
 
 	// implementing Map
 
 	public void clear() {
-		for (Iterator it = getAttributeNames(); it.hasNext();) {
-			removeAttribute((String) it.next());
+		for (Iterator<String> it = getAttributeNames(); it.hasNext();) {
+			removeAttribute(it.next());
 		}
 	}
 
@@ -51,8 +51,8 @@ public abstract class StringKeyedMapAdapter implements Map {
 		if (value == null) {
 			return false;
 		}
-		for (Iterator it = getAttributeNames(); it.hasNext();) {
-			Object aValue = getAttribute((String) it.next());
+		for (Iterator<String> it = getAttributeNames(); it.hasNext();) {
+			Object aValue = getAttribute(it.next());
 			if (value.equals(aValue)) {
 				return true;
 			}
@@ -60,11 +60,11 @@ public abstract class StringKeyedMapAdapter implements Map {
 		return false;
 	}
 
-	public Set entrySet() {
+	public Set<Entry<String, V>> entrySet() {
 		return (entrySet != null) ? entrySet : (entrySet = new EntrySet());
 	}
 
-	public Object get(Object key) {
+	public V get(Object key) {
 		return getAttribute(key.toString());
 	}
 
@@ -72,41 +72,40 @@ public abstract class StringKeyedMapAdapter implements Map {
 		return !getAttributeNames().hasNext();
 	}
 
-	public Set keySet() {
+	public Set<String> keySet() {
 		return (keySet != null) ? keySet : (keySet = new KeySet());
 	}
 
-	public Object put(Object key, Object value) {
+	public V put(String key, V value) {
 		String stringKey = String.valueOf(key);
-		Object previousValue = getAttribute(stringKey);
+		V previousValue = getAttribute(stringKey);
 		setAttribute(stringKey, value);
 		return previousValue;
 	}
 
-	public void putAll(Map map) {
-		for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-			Entry entry = (Entry) it.next();
-			setAttribute(entry.getKey().toString(), entry.getValue());
+	public void putAll(Map<? extends String, ? extends V> map) {
+		for (Entry<? extends String, ? extends V> entry : map.entrySet()) {
+			setAttribute(entry.getKey(), entry.getValue());
 		}
 	}
 
-	public Object remove(Object key) {
+	public V remove(Object key) {
 		String stringKey = key.toString();
-		Object retval = getAttribute(stringKey);
+		V retval = getAttribute(stringKey);
 		removeAttribute(stringKey);
 		return retval;
 	}
 
 	public int size() {
 		int size = 0;
-		for (Iterator it = getAttributeNames(); it.hasNext();) {
+		for (Iterator<String> it = getAttributeNames(); it.hasNext();) {
 			size++;
 			it.next();
 		}
 		return size;
 	}
 
-	public Collection values() {
+	public Collection<V> values() {
 		return (values != null) ? values : (values = new Values());
 	}
 
@@ -117,7 +116,7 @@ public abstract class StringKeyedMapAdapter implements Map {
 	 * @param key the key to lookup
 	 * @return the associated value, or null if none
 	 */
-	protected abstract Object getAttribute(String key);
+	protected abstract V getAttribute(String key);
 
 	/**
 	 * Hook method that needs to be implemented by concrete subclasses. Puts a key-value pair in the map, overwriting
@@ -125,7 +124,7 @@ public abstract class StringKeyedMapAdapter implements Map {
 	 * @param key the key to associate the value with
 	 * @param value the value to associate with the key
 	 */
-	protected abstract void setAttribute(String key, Object value);
+	protected abstract void setAttribute(String key, V value);
 
 	/**
 	 * Hook method that needs to be implemented by concrete subclasses. Removes a key and its associated value from the
@@ -139,11 +138,11 @@ public abstract class StringKeyedMapAdapter implements Map {
 	 * the map.
 	 * @return the key enumeration
 	 */
-	protected abstract Iterator getAttributeNames();
+	protected abstract Iterator<String> getAttributeNames();
 
 	// internal helper classes
 
-	private abstract class AbstractSet extends java.util.AbstractSet {
+	private abstract class AbstractSet<T> extends java.util.AbstractSet<T> {
 		public boolean isEmpty() {
 			return StringKeyedMapAdapter.this.isEmpty();
 		}
@@ -157,8 +156,8 @@ public abstract class StringKeyedMapAdapter implements Map {
 		}
 	}
 
-	private class KeySet extends AbstractSet {
-		public Iterator iterator() {
+	private class KeySet extends AbstractSet<String> {
+		public Iterator<String> iterator() {
 			return new KeyIterator();
 		}
 
@@ -171,10 +170,10 @@ public abstract class StringKeyedMapAdapter implements Map {
 		}
 	}
 
-	private class KeyIterator implements Iterator {
-		protected final Iterator it = getAttributeNames();
+	private abstract class AbstractKeyIterator {
+		private final Iterator<String> it = getAttributeNames();
 
-		protected Object currentKey;
+		private String currentKey;
 
 		public void remove() {
 			if (currentKey == null) {
@@ -187,13 +186,19 @@ public abstract class StringKeyedMapAdapter implements Map {
 			return it.hasNext();
 		}
 
-		public Object next() {
+		protected String nextKey() {
 			return currentKey = it.next();
 		}
 	}
 
-	private class Values extends AbstractSet {
-		public Iterator iterator() {
+	private class KeyIterator extends AbstractKeyIterator implements Iterator<String> {
+		public String next() {
+			return nextKey();
+		}
+	}
+
+	private class Values extends AbstractSet<V> {
+		public Iterator<V> iterator() {
 			return new ValuesIterator();
 		}
 
@@ -205,7 +210,7 @@ public abstract class StringKeyedMapAdapter implements Map {
 			if (o == null) {
 				return false;
 			}
-			for (Iterator it = iterator(); it.hasNext();) {
+			for (Iterator<V> it = iterator(); it.hasNext();) {
 				if (o.equals(it.next())) {
 					it.remove();
 					return true;
@@ -215,68 +220,69 @@ public abstract class StringKeyedMapAdapter implements Map {
 		}
 	}
 
-	private class ValuesIterator extends KeyIterator {
-		public Object next() {
-			super.next();
-			return StringKeyedMapAdapter.this.get(currentKey);
+	private class ValuesIterator extends AbstractKeyIterator implements Iterator<V> {
+		public V next() {
+			return StringKeyedMapAdapter.this.get(nextKey());
 		}
 	}
 
-	private class EntrySet extends AbstractSet {
-		public Iterator iterator() {
+	private class EntrySet extends AbstractSet<Entry<String, V>> {
+		public Iterator<Entry<String, V>> iterator() {
 			return new EntryIterator();
 		}
 
 		public boolean contains(Object o) {
-			if (!(o instanceof Entry)) {
+			Entry<String, V> entry = getAsEntry(o);
+			if (entry == null || entry.getKey() == null || entry.getValue() == null) {
 				return false;
 			}
-			Entry entry = (Entry) o;
-			Object key = entry.getKey();
-			Object value = entry.getValue();
-			if (key == null || value == null) {
-				return false;
-			}
-			return value.equals(StringKeyedMapAdapter.this.get(key));
+			V valueFromThisMap = StringKeyedMapAdapter.this.get(entry.getKey());
+			return entry.getValue().equals(valueFromThisMap);
 		}
 
 		public boolean remove(Object o) {
-			if (!(o instanceof Entry)) {
+			Entry<String, V> entry = getAsEntry(o);
+			if (entry == null || entry.getKey() == null || entry.getValue() == null) {
 				return false;
 			}
-			Entry entry = (Entry) o;
-			Object key = entry.getKey();
-			Object value = entry.getValue();
-			if (key == null || value == null || !value.equals(StringKeyedMapAdapter.this.get(key))) {
+			V valueFromThisMap = StringKeyedMapAdapter.this.get(entry.getKey());
+			if (!entry.getValue().equals(valueFromThisMap)) {
 				return false;
 			}
-			return StringKeyedMapAdapter.this.remove(((Entry) o).getKey()) != null;
+			return StringKeyedMapAdapter.this.remove(entry.getKey()) != null;
+		}
+
+		@SuppressWarnings("unchecked")
+		private Entry<String, V> getAsEntry(Object o) {
+			if (o instanceof Entry) {
+				return (Entry<String, V>) o;
+			}
+			return null;
 		}
 	}
 
-	private class EntryIterator extends KeyIterator {
-		public Object next() {
-			super.next();
-			return new EntrySetEntry(currentKey);
+	private class EntryIterator extends AbstractKeyIterator implements Iterator<Entry<String, V>> {
+		public Entry<String, V> next() {
+			return new EntrySetEntry(nextKey());
 		}
 	}
 
-	private class EntrySetEntry implements Entry {
-		private final Object currentKey;
+	private class EntrySetEntry implements Entry<String, V> {
+		private final String currentKey;
 
-		public EntrySetEntry(Object currentKey) {
+		public EntrySetEntry(String currentKey) {
 			this.currentKey = currentKey;
 		}
 
-		public Object getKey() {
+		public String getKey() {
 			return currentKey;
 		}
 
-		public Object getValue() {
+		public V getValue() {
 			return StringKeyedMapAdapter.this.get(currentKey);
 		}
 
-		public Object setValue(Object value) {
+		public V setValue(V value) {
 			return StringKeyedMapAdapter.this.put(currentKey, value);
 		}
 	}

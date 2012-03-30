@@ -74,8 +74,8 @@ public class ActionStateTests extends TestCase {
 		state.getTransitionSet().add(new Transition(on("success"), to("finish")));
 		state.enter(context);
 		Action[] actions = state.getActionList().toArray();
-		for (int i = 0; i < actions.length; i++) {
-			TestAction action = (TestAction) actions[i];
+		for (Action action2 : actions) {
+			TestAction action = (TestAction) action2;
 			assertEquals(1, action.getExecutionCount());
 		}
 	}

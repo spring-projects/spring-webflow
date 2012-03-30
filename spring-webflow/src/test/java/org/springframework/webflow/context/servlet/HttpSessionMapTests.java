@@ -82,17 +82,17 @@ public class HttpSessionMapTests extends TestCase {
 	public void testGetAttributeNames() {
 		request.getSession().setAttribute("Some key", "Some value");
 		// perform test
-		Iterator names = tested.getAttributeNames();
+		Iterator<String> names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String) names.next();
+		String name = names.next();
 		assertEquals("Some key", name);
 	}
 
 	public void testGetAttributeNamesNullSession() {
 		request.setSession(null);
 		// perform test
-		Iterator names = tested.getAttributeNames();
+		Iterator<String> names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertFalse("No elements expected", names.hasNext());
 	}

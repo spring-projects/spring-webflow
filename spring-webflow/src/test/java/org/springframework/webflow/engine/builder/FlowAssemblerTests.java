@@ -12,7 +12,7 @@ public class FlowAssemblerTests extends TestCase {
 	private FlowBuilderContext builderContext;
 
 	protected void setUp() {
-		builder = (FlowBuilder) EasyMock.createMock(FlowBuilder.class);
+		builder = EasyMock.createMock(FlowBuilder.class);
 		builderContext = new MockFlowBuilderContext("search");
 		assembler = new FlowAssembler(builder, builderContext);
 	}

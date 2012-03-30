@@ -44,7 +44,7 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 * The list of flow execution listeners containing {@link ConditionalFlowExecutionListenerHolder} objects. The list
 	 * determines the conditions in which a single flow execution listener applies.
 	 */
-	private List listeners = new LinkedList();
+	private List<ConditionalFlowExecutionListenerHolder> listeners = new LinkedList<ConditionalFlowExecutionListenerHolder>();
 
 	/**
 	 * Add a listener that will listen to executions to flows matching the specified criteria.
@@ -76,9 +76,8 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 */
 	public FlowExecutionListener[] getListeners(FlowDefinition flowDefinition) {
 		Assert.notNull(flowDefinition, "The Flow to load listeners for cannot be null");
-		List listenersToAttach = new LinkedList();
-		for (Iterator it = listeners.iterator(); it.hasNext();) {
-			ConditionalFlowExecutionListenerHolder listenerHolder = (ConditionalFlowExecutionListenerHolder) it.next();
+		List<FlowExecutionListener> listenersToAttach = new LinkedList<FlowExecutionListener>();
+		for (ConditionalFlowExecutionListenerHolder listenerHolder : listeners) {
 			if (listenerHolder.listenerAppliesTo(flowDefinition)) {
 				listenersToAttach.add(listenerHolder.getListener());
 			}
@@ -88,7 +87,7 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 					+ " listeners for this execution request for flow '" + flowDefinition.getId()
 					+ "', the listeners to attach are " + StylerUtils.style(listenersToAttach));
 		}
-		return (FlowExecutionListener[]) listenersToAttach.toArray(new FlowExecutionListener[listenersToAttach.size()]);
+		return listenersToAttach.toArray(new FlowExecutionListener[listenersToAttach.size()]);
 	}
 
 	// internal helpers
@@ -99,9 +98,9 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 * @return the holder, or null if not found
 	 */
 	private ConditionalFlowExecutionListenerHolder getHolder(FlowExecutionListener listener) {
-		Iterator it = listeners.iterator();
+		Iterator<ConditionalFlowExecutionListenerHolder> it = listeners.iterator();
 		while (it.hasNext()) {
-			ConditionalFlowExecutionListenerHolder next = (ConditionalFlowExecutionListenerHolder) it.next();
+			ConditionalFlowExecutionListenerHolder next = it.next();
 			if (next.getListener().equals(listener)) {
 				return next;
 			}

@@ -20,6 +20,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
+@SuppressWarnings("deprecation")
 public class JpaFlowExecutionListenerTests extends TestCase {
 
 	private EntityManagerFactory entityManagerFactory;

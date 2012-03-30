@@ -25,7 +25,7 @@ import java.util.Map;
  * 
  * @author Keith Donald
  */
-public interface SharedMap extends Map {
+public interface SharedMap<K, V> extends Map<K, V> {
 
 	/**
 	 * Returns the shared mutex that may be synchronized on using a synchronized block. The returned mutex is guaranteed

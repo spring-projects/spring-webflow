@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -32,18 +33,18 @@ import org.springframework.binding.collection.MapAdaptable;
  */
 public class MapAdaptableELResolver extends ELResolver {
 
-	public Class getCommonPropertyType(ELContext context, Object base) {
+	public Class<?> getCommonPropertyType(ELContext context, Object base) {
 		if (base instanceof MapAdaptable) {
 			return Object.class;
 		}
 		return null;
 	}
 
-	public Iterator getFeatureDescriptors(ELContext context, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext context, Object base, Object property) throws NullPointerException,
+	public Class<?> getType(ELContext context, Object base, Object property) throws NullPointerException,
 			PropertyNotFoundException, ELException {
 		if (context == null) {
 			throw new NullPointerException("The ELContext is null.");
@@ -102,8 +103,9 @@ public class MapAdaptableELResolver extends ELResolver {
 		}
 	}
 
-	private Map adapt(Object base) {
-		MapAdaptable adaptable = (MapAdaptable) base;
+	@SuppressWarnings("unchecked")
+	private Map<Object, Object> adapt(Object base) {
+		MapAdaptable<Object, Object> adaptable = (MapAdaptable<Object, Object>) base;
 		return adaptable.asMap();
 	}
 

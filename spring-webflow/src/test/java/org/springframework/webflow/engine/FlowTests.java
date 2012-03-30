@@ -170,7 +170,7 @@ public class FlowTests extends TestCase {
 
 	public void testStart() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		flow.start(context, new LocalAttributeMap());
+		flow.start(context, new LocalAttributeMap<Object>());
 		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
 	}
 
@@ -189,7 +189,7 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		TestAction action = new TestAction();
 		flow.getStartActionList().add(action);
-		flow.start(context, new LocalAttributeMap());
+		flow.start(context, new LocalAttributeMap<Object>());
 		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
 		assertEquals(1, action.getExecutionCount());
 	}
@@ -198,13 +198,13 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		flow.addVariable(new FlowVariable("var1", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {
-				return new ArrayList();
+				return new ArrayList<Object>();
 			}
 
 			public void restoreReferences(Object value, RequestContext context) {
 			}
 		}));
-		flow.start(context, new LocalAttributeMap());
+		flow.start(context, new LocalAttributeMap<Object>());
 		context.getFlowScope().getRequired("var1", ArrayList.class);
 	}
 
@@ -212,12 +212,12 @@ public class FlowTests extends TestCase {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 		Expression x = parser.parseExpression("attr", new FluentParserContext().evaluate(AttributeMap.class));
-		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression y = parser.parseExpression("flowScope.attr",
+				new FluentParserContext().evaluate(RequestContext.class));
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		LocalAttributeMap sessionInput = new LocalAttributeMap();
+		LocalAttributeMap<Object> sessionInput = new LocalAttributeMap<Object>();
 		sessionInput.put("attr", "foo");
 		flow.start(context, sessionInput);
 		assertEquals("foo", context.getFlowScope().get("attr"));
@@ -227,12 +227,12 @@ public class FlowTests extends TestCase {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 		Expression x = parser.parseExpression("attr", new FluentParserContext().evaluate(AttributeMap.class));
-		Expression y = parser.parseExpression("flowScope.attr", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression y = parser.parseExpression("flowScope.attr",
+				new FluentParserContext().evaluate(RequestContext.class));
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		LocalAttributeMap sessionInput = new LocalAttributeMap();
+		LocalAttributeMap<Object> sessionInput = new LocalAttributeMap<Object>();
 		flow.start(context, sessionInput);
 		assertTrue(context.getFlowScope().contains("attr"));
 		assertNull(context.getFlowScope().get("attr"));
@@ -308,7 +308,7 @@ public class FlowTests extends TestCase {
 		TestAction action = new TestAction();
 		flow.getEndActionList().add(action);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		LocalAttributeMap sessionOutput = new LocalAttributeMap();
+		LocalAttributeMap<Object> sessionOutput = new LocalAttributeMap<Object>();
 		flow.end(context, "finish", sessionOutput);
 		assertEquals(1, action.getExecutionCount());
 	}
@@ -316,14 +316,14 @@ public class FlowTests extends TestCase {
 	public void testEndWithOutputMapper() {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
-		Expression x = parser.parseExpression("flowScope.attr", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression x = parser.parseExpression("flowScope.attr",
+				new FluentParserContext().evaluate(RequestContext.class));
 		Expression y = parser.parseExpression("attr", new FluentParserContext().evaluate(MutableAttributeMap.class));
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setOutputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlowScope().put("attr", "foo");
-		LocalAttributeMap sessionOutput = new LocalAttributeMap();
+		LocalAttributeMap<Object> sessionOutput = new LocalAttributeMap<Object>();
 		flow.end(context, "finish", sessionOutput);
 		assertEquals("foo", sessionOutput.get("attr"));
 	}

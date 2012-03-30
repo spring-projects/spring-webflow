@@ -42,7 +42,7 @@ public abstract class AnnotatedObject implements Annotated {
 	/**
 	 * Additional properties further describing this object. The properties set in this map may be arbitrary.
 	 */
-	private LocalAttributeMap attributes = new LocalAttributeMap();
+	private LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
 
 	// implementing Annotated
 
@@ -54,7 +54,7 @@ public abstract class AnnotatedObject implements Annotated {
 		return attributes.getString(DESCRIPTION_PROPERTY);
 	}
 
-	public MutableAttributeMap getAttributes() {
+	public MutableAttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 

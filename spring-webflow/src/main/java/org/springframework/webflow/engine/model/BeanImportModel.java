@@ -45,11 +45,11 @@ public class BeanImportModel extends AbstractModel {
 
 	}
 
-    public Model createCopy() {
-        return new BeanImportModel(resource);
-    }
+	public Model createCopy() {
+		return new BeanImportModel(resource);
+	}
 
-    /**
+	/**
 	 * @return the resource
 	 */
 	public String getResource() {

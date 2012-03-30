@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.config;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.BeansException;
@@ -58,7 +57,8 @@ import org.springframework.webflow.mvc.builder.MvcEnvironment;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, BeanClassLoaderAware, InitializingBean {
+class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationContextAware, BeanClassLoaderAware,
+		InitializingBean {
 
 	private static final String ALWAYS_REDIRECT_ON_PAUSE = "alwaysRedirectOnPause";
 
@@ -70,7 +70,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private Integer maxFlowExecutionSnapshots;
 
-	private Set flowExecutionAttributes;
+	private Set<FlowElementAttribute> flowExecutionAttributes;
 
 	private FlowExecutionListenerLoader flowExecutionListenerLoader;
 
@@ -112,7 +112,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 	 * Execution attributes may affect flow execution behavior.
 	 * @param flowExecutionAttributes the flow execution system attributes
 	 */
-	public void setFlowExecutionAttributes(Set flowExecutionAttributes) {
+	public void setFlowExecutionAttributes(Set<FlowElementAttribute> flowExecutionAttributes) {
 		this.flowExecutionAttributes = flowExecutionAttributes;
 	}
 
@@ -152,7 +152,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		if (conversionService == null) {
 			conversionService = new DefaultConversionService();
 		}
-		MutableAttributeMap executionAttributes = createFlowExecutionAttributes();
+		MutableAttributeMap<Object> executionAttributes = createFlowExecutionAttributes();
 		FlowExecutionImplFactory executionFactory = createFlowExecutionFactory(executionAttributes);
 		DefaultFlowExecutionRepository executionRepository = createFlowExecutionRepository(executionFactory);
 		executionFactory.setExecutionKeyFactory(executionRepository);
@@ -161,7 +161,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	// implementing FactoryBean
 
-	public Class getObjectType() {
+	public Class<?> getObjectType() {
 		return FlowExecutor.class;
 	}
 
@@ -169,15 +169,14 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		return true;
 	}
 
-	public Object getObject() throws Exception {
+	public FlowExecutor getObject() throws Exception {
 		return flowExecutor;
 	}
 
-	private MutableAttributeMap createFlowExecutionAttributes() {
-		LocalAttributeMap executionAttributes = new LocalAttributeMap();
+	private MutableAttributeMap<Object> createFlowExecutionAttributes() {
+		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
 		if (flowExecutionAttributes != null) {
-			for (Iterator it = flowExecutionAttributes.iterator(); it.hasNext();) {
-				FlowElementAttribute attribute = (FlowElementAttribute) it.next();
+			for (FlowElementAttribute attribute : flowExecutionAttributes) {
 				executionAttributes.put(attribute.getName(), getConvertedValue(attribute));
 			}
 		}
@@ -185,13 +184,13 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		return executionAttributes;
 	}
 
-	private void putDefaultFlowExecutionAttributes(LocalAttributeMap executionAttributes) {
+	private void putDefaultFlowExecutionAttributes(LocalAttributeMap<Object> executionAttributes) {
 		if (!executionAttributes.contains(ALWAYS_REDIRECT_ON_PAUSE)) {
-			boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			Boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
 			executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, redirect);
 		}
 		if (!executionAttributes.contains(REDIRECT_IN_SAME_STATE)) {
-			boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			Boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
 			executionAttributes.put(REDIRECT_IN_SAME_STATE, redirect);
 		}
 	}
@@ -226,7 +225,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		}
 	}
 
-	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap executionAttributes) {
+	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap<Object> executionAttributes) {
 		FlowExecutionImplFactory executionFactory = new FlowExecutionImplFactory();
 		executionFactory.setExecutionAttributes(executionAttributes);
 		if (flowExecutionListenerLoader != null) {
@@ -239,7 +238,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private Object getConvertedValue(FlowElementAttribute attribute) {
 		if (attribute.needsTypeConversion()) {
-			Class targetType = fromStringToClass(attribute.getType());
+			Class<?> targetType = fromStringToClass(attribute.getType());
 			ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetType);
 			return converter.execute(attribute.getValue());
 		} else {
@@ -247,8 +246,8 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		}
 	}
 
-	private Class fromStringToClass(String name) {
-		Class clazz = conversionService.getClassForAlias(name);
+	private Class<?> fromStringToClass(String name) {
+		Class<?> clazz = conversionService.getClassForAlias(name);
 		if (clazz != null) {
 			return clazz;
 		} else {

@@ -30,13 +30,13 @@ public abstract class AbstractStateModel extends AbstractModel {
 
 	private String parent;
 
-	private LinkedList attributes;
+	private LinkedList<AttributeModel> attributes;
 
 	private SecuredModel secured;
 
-	private LinkedList onEntryActions;
+	private LinkedList<AbstractActionModel> onEntryActions;
 
-	private LinkedList exceptionHandlers;
+	private LinkedList<ExceptionHandlerModel> exceptionHandlers;
 
 	public AbstractStateModel(String id) {
 		setId(id);
@@ -89,14 +89,14 @@ public abstract class AbstractStateModel extends AbstractModel {
 	/**
 	 * @return the attributes
 	 */
-	public LinkedList getAttributes() {
+	public LinkedList<AttributeModel> getAttributes() {
 		return attributes;
 	}
 
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(LinkedList attributes) {
+	public void setAttributes(LinkedList<AttributeModel> attributes) {
 		this.attributes = attributes;
 	}
 
@@ -117,28 +117,28 @@ public abstract class AbstractStateModel extends AbstractModel {
 	/**
 	 * @return the on entry actions
 	 */
-	public LinkedList getOnEntryActions() {
+	public LinkedList<AbstractActionModel> getOnEntryActions() {
 		return onEntryActions;
 	}
 
 	/**
 	 * @param onEntryActions the on entry actions to set
 	 */
-	public void setOnEntryActions(LinkedList onEntryActions) {
+	public void setOnEntryActions(LinkedList<AbstractActionModel> onEntryActions) {
 		this.onEntryActions = onEntryActions;
 	}
 
 	/**
 	 * @return the exception handlers
 	 */
-	public LinkedList getExceptionHandlers() {
+	public LinkedList<ExceptionHandlerModel> getExceptionHandlers() {
 		return exceptionHandlers;
 	}
 
 	/**
 	 * @param exceptionHandlers the exception handlers to set
 	 */
-	public void setExceptionHandlers(LinkedList exceptionHandlers) {
+	public void setExceptionHandlers(LinkedList<ExceptionHandlerModel> exceptionHandlers) {
 		this.exceptionHandlers = exceptionHandlers;
 	}
 

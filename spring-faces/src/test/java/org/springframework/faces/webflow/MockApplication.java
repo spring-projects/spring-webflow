@@ -115,41 +115,41 @@ public class MockApplication extends Application {
 		return null;
 	}
 
-	public Iterator getComponentTypes() {
+	public Iterator<String> getComponentTypes() {
 		return null;
 	}
 
 	public void addConverter(String converterId, String converterClass) {
 	}
 
-	public void addConverter(Class targetClass, String converterClass) {
+	public void addConverter(Class<?> targetClass, String converterClass) {
 	}
 
 	public Converter createConverter(String converterId) {
 		return null;
 	}
 
-	public Converter createConverter(Class targetClass) {
+	public Converter createConverter(Class<?> targetClass) {
 		return null;
 	}
 
-	public Iterator getConverterIds() {
+	public Iterator<String> getConverterIds() {
 		return null;
 	}
 
-	public Iterator getConverterTypes() {
+	public Iterator<Class<?>> getConverterTypes() {
 		return null;
 	}
 
-	public MethodBinding createMethodBinding(String ref, Class[] params) throws ReferenceSyntaxException {
+	public MethodBinding createMethodBinding(String ref, Class<?>[] params) throws ReferenceSyntaxException {
 		return null;
 	}
 
-	public Iterator getSupportedLocales() {
+	public Iterator<Locale> getSupportedLocales() {
 		return null;
 	}
 
-	public void setSupportedLocales(Collection locales) {
+	public void setSupportedLocales(Collection<Locale> locales) {
 	}
 
 	public void addValidator(String validatorId, String validatorClass) {
@@ -159,7 +159,7 @@ public class MockApplication extends Application {
 		return null;
 	}
 
-	public Iterator getValidatorIds() {
+	public Iterator<String> getValidatorIds() {
 		return null;
 	}
 

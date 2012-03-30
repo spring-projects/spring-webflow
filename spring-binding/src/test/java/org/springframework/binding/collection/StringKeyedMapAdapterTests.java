@@ -28,15 +28,15 @@ import junit.framework.TestCase;
  */
 public class StringKeyedMapAdapterTests extends TestCase {
 
-	private Map contents = new HashMap();
+	private Map<String, String> contents = new HashMap<String, String>();
 
-	private StringKeyedMapAdapter map = new StringKeyedMapAdapter() {
+	private StringKeyedMapAdapter<String> map = new StringKeyedMapAdapter<String>() {
 
-		protected Object getAttribute(String key) {
+		protected String getAttribute(String key) {
 			return contents.get(key);
 		}
 
-		protected Iterator getAttributeNames() {
+		protected Iterator<String> getAttributeNames() {
 			return contents.keySet().iterator();
 		}
 
@@ -44,7 +44,7 @@ public class StringKeyedMapAdapterTests extends TestCase {
 			contents.remove(key);
 		}
 
-		protected void setAttribute(String key, Object value) {
+		protected void setAttribute(String key, String value) {
 			contents.put(key, value);
 		}
 	};
@@ -67,7 +67,7 @@ public class StringKeyedMapAdapterTests extends TestCase {
 	}
 
 	public void testPutAll() {
-		Map all = new HashMap();
+		Map<String, String> all = new HashMap<String, String>();
 		all.put("foo", "bar");
 		all.put("bar", "baz");
 		map.putAll(all);
@@ -77,21 +77,21 @@ public class StringKeyedMapAdapterTests extends TestCase {
 	public void testEntrySet() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
-		Set entrySet = map.entrySet();
+		Set<Map.Entry<String, String>> entrySet = map.entrySet();
 		assertTrue(entrySet.size() == 2);
 	}
 
 	public void testKeySet() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
-		Set keySet = map.keySet();
+		Set<String> keySet = map.keySet();
 		assertTrue(keySet.size() == 2);
 	}
 
 	public void testValues() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
-		Collection values = map.values();
+		Collection<String> values = map.values();
 		assertTrue(values.size() == 2);
 	}
 }

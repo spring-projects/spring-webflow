@@ -22,7 +22,7 @@ package org.springframework.binding.expression;
  */
 public class EvaluationException extends RuntimeException {
 
-	private Class contextClass;
+	private Class<?> contextClass;
 
 	private String expressionString;
 
@@ -32,7 +32,7 @@ public class EvaluationException extends RuntimeException {
 	 * @param expressionString the string form of the expression that failed to evaluate
 	 * @param message the exception message
 	 */
-	public EvaluationException(Class contextClass, String expressionString, String message) {
+	public EvaluationException(Class<?> contextClass, String expressionString, String message) {
 		this(contextClass, expressionString, message, null);
 	}
 
@@ -43,7 +43,7 @@ public class EvaluationException extends RuntimeException {
 	 * @param message the exception message
 	 * @param cause the underlying cause of this evaluation exception
 	 */
-	public EvaluationException(Class contextClass, String expressionString, String message, Throwable cause) {
+	public EvaluationException(Class<?> contextClass, String expressionString, String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -51,7 +51,7 @@ public class EvaluationException extends RuntimeException {
 	 * The class of object upon which evaluation was attempted and failed.
 	 * @return the context class
 	 */
-	public Class getContextClass() {
+	public Class<?> getContextClass() {
 		return contextClass;
 	}
 

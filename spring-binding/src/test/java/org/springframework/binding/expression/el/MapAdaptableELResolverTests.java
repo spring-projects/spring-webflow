@@ -18,13 +18,13 @@ public class MapAdaptableELResolverTests extends TestCase {
 	}
 
 	public void testGetType() {
-		Class type = context.getELResolver().getType(context, new TestMapAdaptable(), "bar");
+		Class<?> type = context.getELResolver().getType(context, new TestMapAdaptable(), "bar");
 		assertTrue(context.isPropertyResolved());
 		assertEquals(String.class, type);
 	}
 
 	public void testGetType_UnknownProperty() {
-		Class type = context.getELResolver().getType(context, new TestMapAdaptable(), "foo");
+		Class<?> type = context.getELResolver().getType(context, new TestMapAdaptable(), "foo");
 		assertTrue(context.isPropertyResolved());
 		assertEquals(null, type);
 	}
@@ -42,27 +42,27 @@ public class MapAdaptableELResolverTests extends TestCase {
 	}
 
 	public void testSetValue() {
-		MapAdaptable testMap = new TestMapAdaptable();
+		MapAdaptable<String, String> testMap = new TestMapAdaptable();
 		context.getELResolver().setValue(context, testMap, "foo", "foo");
 		assertTrue(context.isPropertyResolved());
 		assertEquals("foo", testMap.asMap().get("foo"));
 	}
 
 	public void testSetValue_OverWrite() {
-		MapAdaptable testMap = new TestMapAdaptable();
+		MapAdaptable<String, String> testMap = new TestMapAdaptable();
 		context.getELResolver().setValue(context, testMap, "bar", "foo");
 		assertTrue(context.isPropertyResolved());
 		assertEquals("foo", testMap.asMap().get("bar"));
 	}
 
-	private class TestMapAdaptable implements MapAdaptable {
-		private Map map = new HashMap();
+	private class TestMapAdaptable implements MapAdaptable<String, String> {
+		private Map<String, String> map = new HashMap<String, String>();
 
 		public TestMapAdaptable() {
 			map.put("bar", "bar");
 		}
 
-		public Map asMap() {
+		public Map<String, String> asMap() {
 			return map;
 		}
 	}

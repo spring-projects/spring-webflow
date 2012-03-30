@@ -17,7 +17,6 @@ package org.springframework.faces.webflow;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,29 +46,27 @@ class TreeStructureManager {
 
 		// children
 		if (component.getChildCount() > 0) {
-			List childList = component.getChildren();
-			List structChildList = new ArrayList();
+			List<UIComponent> childList = component.getChildren();
+			List<TreeStructComponent> structChildList = new ArrayList<TreeStructComponent>();
 			for (int i = 0, len = childList.size(); i < len; i++) {
-				UIComponent child = (UIComponent) childList.get(i);
+				UIComponent child = childList.get(i);
 				if (!child.isTransient()) {
 					TreeStructComponent structChild = internalBuildTreeStructureToSave(child);
 					structChildList.add(structChild);
 				}
 			}
-			TreeStructComponent[] childArray = (TreeStructComponent[]) structChildList
-					.toArray(new TreeStructComponent[structChildList.size()]);
+			TreeStructComponent[] childArray = structChildList.toArray(new TreeStructComponent[structChildList.size()]);
 			structComp.setChildren(childArray);
 		}
 
 		// facets
-		Map facetMap = component.getFacets();
+		Map<String, UIComponent> facetMap = component.getFacets();
 		if (!facetMap.isEmpty()) {
-			List structFacetList = new ArrayList();
-			for (Iterator it = facetMap.entrySet().iterator(); it.hasNext();) {
-				Map.Entry entry = (Map.Entry) it.next();
-				UIComponent child = (UIComponent) entry.getValue();
+			List<Object[]> structFacetList = new ArrayList<Object[]>();
+			for (Map.Entry<String, UIComponent> entry : facetMap.entrySet()) {
+				UIComponent child = entry.getValue();
 				if (!child.isTransient()) {
-					String facetName = (String) entry.getKey();
+					String facetName = entry.getKey();
 					TreeStructComponent structChild = internalBuildTreeStructureToSave(child);
 					structFacetList.add(new Object[] { facetName, structChild });
 				}
@@ -103,9 +100,9 @@ class TreeStructureManager {
 		// children
 		TreeStructComponent[] childArray = treeStructComp.getChildren();
 		if (childArray != null) {
-			List childList = component.getChildren();
-			for (int i = 0, len = childArray.length; i < len; i++) {
-				UIComponent child = internalRestoreTreeStructure(childArray[i]);
+			List<UIComponent> childList = component.getChildren();
+			for (TreeStructComponent element : childArray) {
+				UIComponent child = internalRestoreTreeStructure(element);
 				childList.add(child);
 			}
 		}
@@ -113,9 +110,9 @@ class TreeStructureManager {
 		// facets
 		Object[] facetArray = treeStructComp.getFacets();
 		if (facetArray != null) {
-			Map facetMap = component.getFacets();
-			for (int i = 0, len = facetArray.length; i < len; i++) {
-				Object[] tuple = (Object[]) facetArray[i];
+			Map<String, UIComponent> facetMap = component.getFacets();
+			for (Object element : facetArray) {
+				Object[] tuple = (Object[]) element;
 				String facetName = (String) tuple[0];
 				TreeStructComponent structChild = (TreeStructComponent) tuple[1];
 				UIComponent child = internalRestoreTreeStructure(structChild);

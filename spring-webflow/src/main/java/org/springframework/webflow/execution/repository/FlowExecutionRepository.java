@@ -77,8 +77,8 @@ public interface FlowExecutionRepository {
 	public FlowExecution getFlowExecution(FlowExecutionKey key) throws FlowExecutionRepositoryException;
 
 	/**
-	 * Place the <code>FlowExecution</code> in this repository under the provided key. This should be called to save
-	 * or update the persistent state of an active (but paused) flow execution. Before calling this method, you should
+	 * Place the <code>FlowExecution</code> in this repository under the provided key. This should be called to save or
+	 * update the persistent state of an active (but paused) flow execution. Before calling this method, you should
 	 * acquire the lock for the keyed flow execution.
 	 * @param flowExecution the flow execution
 	 * @throws FlowExecutionRepositoryException the flow execution could not be stored

@@ -20,8 +20,8 @@ import org.springframework.util.Assert;
 
 /**
  * A specification for a method consisting of the methodName and an optional set of named arguments. This class provides
- * the ability to resolve a method with parameters and evaluate its argument values as part of a
- * {@link MethodInvoker method invoker attempt}.
+ * the ability to resolve a method with parameters and evaluate its argument values as part of a {@link MethodInvoker
+ * method invoker attempt}.
  * 
  * @author Keith Donald
  * @author Jeremy Grelle

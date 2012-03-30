@@ -59,7 +59,7 @@ public class MethodKeyTests extends TestCase {
 		new MethodKey(File.class, "listFiles", new Class[] { null });
 	}
 
-	private static final Method safeGetMethod(Class type, String name, Class[] argTypes) {
+	private static final Method safeGetMethod(Class<?> type, String name, Class<?>[] argTypes) {
 		try {
 			return type.getMethod(name, argTypes);
 		} catch (NoSuchMethodException e) {

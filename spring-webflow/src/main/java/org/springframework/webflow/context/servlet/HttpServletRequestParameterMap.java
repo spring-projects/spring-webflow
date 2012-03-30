@@ -31,7 +31,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * 
  * @author Keith Donald
  */
-public class HttpServletRequestParameterMap extends StringKeyedMapAdapter {
+public class HttpServletRequestParameterMap extends StringKeyedMapAdapter<Object> {
 
 	/**
 	 * The wrapped HTTP request.
@@ -72,15 +72,20 @@ public class HttpServletRequestParameterMap extends StringKeyedMapAdapter {
 		throw new UnsupportedOperationException("HttpServletRequest parameter maps are immutable");
 	}
 
-	protected Iterator getAttributeNames() {
+	protected Iterator<String> getAttributeNames() {
 		if (request instanceof MultipartHttpServletRequest) {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-			CompositeIterator iterator = new CompositeIterator();
+			CompositeIterator<String> iterator = new CompositeIterator<String>();
 			iterator.add(multipartRequest.getFileMap().keySet().iterator());
-			iterator.add(CollectionUtils.toIterator(request.getParameterNames()));
+			iterator.add(getRequestParameterNames());
 			return iterator;
 		} else {
-			return CollectionUtils.toIterator(request.getParameterNames());
+			return getRequestParameterNames();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Iterator<String> getRequestParameterNames() {
+		return CollectionUtils.toIterator(request.getParameterNames());
 	}
 }

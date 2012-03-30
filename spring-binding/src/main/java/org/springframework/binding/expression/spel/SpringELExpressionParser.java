@@ -71,7 +71,8 @@ public class SpringELExpressionParser implements ExpressionParser {
 	public Expression parseExpression(String expressionString, ParserContext parserContext) throws ParserException {
 		Assert.hasText(expressionString, "The expression string to parse is required and must not be empty");
 		parserContext = (parserContext == null) ? NullParserContext.INSTANCE : parserContext;
-		Map spelExpressionVariables = parseSpelExpressionVariables(parserContext.getExpressionVariables());
+		Map<String, Expression> spelExpressionVariables = parseSpelExpressionVariables(parserContext
+				.getExpressionVariables());
 		return new SpringELExpression(parseSpelExpression(expressionString, parserContext), spelExpressionVariables,
 				parserContext.getExpectedEvaluationResultType(), conversionService.getDelegateConversionService(),
 				propertyAccessors);
@@ -93,13 +94,12 @@ public class SpringELExpressionParser implements ExpressionParser {
 	 * @param expressionVariables an array of ExpressionVariable instances.
 	 * @return a Map or null if the input array is empty.
 	 */
-	private Map parseSpelExpressionVariables(ExpressionVariable[] expressionVariables) {
+	private Map<String, Expression> parseSpelExpressionVariables(ExpressionVariable[] expressionVariables) {
 		if (expressionVariables == null || expressionVariables.length == 0) {
 			return null;
 		}
-		Map spelExpressionVariables = new HashMap(expressionVariables.length);
-		for (int i = 0; i < expressionVariables.length; i++) {
-			ExpressionVariable var = expressionVariables[i];
+		Map<String, Expression> spelExpressionVariables = new HashMap<String, Expression>(expressionVariables.length);
+		for (ExpressionVariable var : expressionVariables) {
 			spelExpressionVariables.put(var.getName(),
 					parseExpression(var.getValueExpression(), var.getParserContext()));
 		}

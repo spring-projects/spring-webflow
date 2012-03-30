@@ -25,7 +25,9 @@ import javax.faces.el.PropertyResolver;
  * A JSF 1.1 {@link PropertyResolver} that delegates to a wrapped Unified EL resolver chain for property resolution.
  * 
  * @author Jeremy Grelle
+ * @deprecated Upgrade to JSF 2.0
  */
+@Deprecated
 public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 
 	private PropertyResolver nextResolver;
@@ -37,9 +39,9 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 		this.delegate = delegate;
 	}
 
-	public Class getType(Object base, int index) throws EvaluationException, PropertyNotFoundException {
+	public Class<?> getType(Object base, int index) throws EvaluationException, PropertyNotFoundException {
 		ELContext elContext = new SimpleELContext(delegate);
-		Class type = elContext.getELResolver().getType(elContext, base, new Integer(index));
+		Class<?> type = elContext.getELResolver().getType(elContext, base, new Integer(index));
 		if (elContext.isPropertyResolved()) {
 			return type;
 		} else {
@@ -47,9 +49,9 @@ public abstract class ELDelegatingPropertyResolver extends PropertyResolver {
 		}
 	}
 
-	public Class getType(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
+	public Class<?> getType(Object base, Object property) throws EvaluationException, PropertyNotFoundException {
 		ELContext elContext = new SimpleELContext(delegate);
-		Class type = elContext.getELResolver().getType(elContext, base, property);
+		Class<?> type = elContext.getELResolver().getType(elContext, base, property);
 		if (elContext.isPropertyResolved()) {
 			return type;
 		} else {

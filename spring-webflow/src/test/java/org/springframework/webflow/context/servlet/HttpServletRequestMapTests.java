@@ -68,10 +68,10 @@ public class HttpServletRequestMapTests extends TestCase {
 		request.setAttribute("Some key", "Some value");
 		request.removeAttribute("javax.servlet.context.tempdir");
 		// perform test
-		Iterator names = tested.getAttributeNames();
+		Iterator<String> names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String) names.next();
+		String name = names.next();
 		assertEquals("Some key", name);
 	}
 }

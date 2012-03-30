@@ -45,12 +45,12 @@ public class TextToTransitionCriteriaTests extends TestCase {
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
-		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convertSourceToTargetClass("*",
-				TransitionCriteria.class));
-		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convertSourceToTargetClass("",
-				TransitionCriteria.class));
-		assertSame(WildcardTransitionCriteria.INSTANCE, converter.convertSourceToTargetClass(null,
-				TransitionCriteria.class));
+		assertSame(WildcardTransitionCriteria.INSTANCE,
+				converter.convertSourceToTargetClass("*", TransitionCriteria.class));
+		assertSame(WildcardTransitionCriteria.INSTANCE,
+				converter.convertSourceToTargetClass("", TransitionCriteria.class));
+		assertSame(WildcardTransitionCriteria.INSTANCE,
+				converter.convertSourceToTargetClass(null, TransitionCriteria.class));
 	}
 
 	public void testStaticEventId() throws Exception {

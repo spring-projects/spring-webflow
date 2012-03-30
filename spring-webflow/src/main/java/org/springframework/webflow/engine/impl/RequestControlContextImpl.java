@@ -64,12 +64,12 @@ class RequestControlContextImpl implements RequestControlContext {
 	/**
 	 * The request scope data map. Never null, initially empty.
 	 */
-	private LocalAttributeMap requestScope = new LocalAttributeMap();
+	private LocalAttributeMap<Object> requestScope = new LocalAttributeMap<Object>();
 
 	/**
 	 * Holder for contextual properties describing the currently executing request; never null, initially empty.
 	 */
-	private LocalAttributeMap attributes = new LocalAttributeMap();
+	private LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
 
 	/**
 	 * The current event being processed by this flow; initially null.
@@ -114,11 +114,11 @@ class RequestControlContextImpl implements RequestControlContext {
 		return flowExecution.getMatchingTransition(eventId);
 	}
 
-	public MutableAttributeMap getRequestScope() {
+	public MutableAttributeMap<Object> getRequestScope() {
 		return requestScope;
 	}
 
-	public MutableAttributeMap getFlashScope() {
+	public MutableAttributeMap<Object> getFlashScope() {
 		return flowExecution.getFlashScope();
 	}
 
@@ -126,15 +126,15 @@ class RequestControlContextImpl implements RequestControlContext {
 		return flowExecution.isActive() && getCurrentState() != null && getCurrentState().isViewState();
 	}
 
-	public MutableAttributeMap getViewScope() throws IllegalStateException {
+	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException {
 		return flowExecution.getActiveSession().getViewScope();
 	}
 
-	public MutableAttributeMap getFlowScope() {
+	public MutableAttributeMap<Object> getFlowScope() {
 		return flowExecution.getActiveSession().getScope();
 	}
 
-	public MutableAttributeMap getConversationScope() {
+	public MutableAttributeMap<Object> getConversationScope() {
 		return flowExecution.getConversationScope();
 	}
 
@@ -166,7 +166,7 @@ class RequestControlContextImpl implements RequestControlContext {
 		return currentView;
 	}
 
-	public MutableAttributeMap getAttributes() {
+	public MutableAttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 
@@ -230,11 +230,11 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.removeAllFlowExecutionSnapshots();
 	}
 
-	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException {
+	public void start(Flow flow, MutableAttributeMap<?> input) throws FlowExecutionException {
 		flowExecution.start(flow, input, this);
 	}
 
-	public void endActiveFlowSession(String outcome, MutableAttributeMap output) throws IllegalStateException {
+	public void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output) throws IllegalStateException {
 		flowExecution.endActiveFlowSession(outcome, output, this);
 	}
 

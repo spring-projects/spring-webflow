@@ -46,12 +46,12 @@ public class EndStateModelTests extends TestCase {
 		parent.setCommit("true");
 		parent.setView("view");
 
-		LinkedList outputs = new LinkedList();
+		LinkedList<OutputModel> outputs = new LinkedList<OutputModel>();
 		outputs.add(new OutputModel("foo", "bar"));
 		parent.setOutputs(outputs);
 
 		child.merge(parent);
 		assertEquals("true", child.getCommit());
-		assertEquals("bar", ((OutputModel) child.getOutputs().get(0)).getValue());
+		assertEquals("bar", child.getOutputs().get(0).getValue());
 	}
 }

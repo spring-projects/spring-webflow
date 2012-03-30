@@ -62,7 +62,7 @@ public final class StaticExpression implements Expression {
 		this.value = value;
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return value.getClass();
 	}
 

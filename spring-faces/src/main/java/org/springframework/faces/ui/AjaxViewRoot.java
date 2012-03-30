@@ -61,7 +61,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	protected static final String PROCESS_ALL = "*";
 
-	private List events = new ArrayList();
+	private List<FacesEvent> events = new ArrayList<FacesEvent>();
 
 	private String[] processIds;
 
@@ -165,8 +165,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	protected String[] getProcessIds() {
 		if (processIds == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
-			String processIdsParam = (String) context.getExternalContext().getRequestParameterMap().get(
-					PROCESS_IDS_PARAM);
+			String processIdsParam = context.getExternalContext().getRequestParameterMap().get(PROCESS_IDS_PARAM);
 			if (StringUtils.hasText(processIdsParam) && processIdsParam.indexOf(PROCESS_ALL) != -1) {
 				processIds = new String[] { getOriginalViewRoot().getClientId(context) };
 			} else {
@@ -203,9 +202,9 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		// 3.2. adds outputScript to it
 		// 3.3. the parent of outputScript is changed from ViewRoot to "head" Panel component
 		// 4. outputScript is therefore no longer a child of ViewRoot
-		List children = new ArrayList(target.getChildren());
+		List<UIComponent> children = new ArrayList<UIComponent>(target.getChildren());
 		for (int i = 0; i < children.size(); i++) {
-			UIComponent child = (UIComponent) children.get(i);
+			UIComponent child = children.get(i);
 			child.setParent(target);
 		}
 	}
@@ -242,10 +241,10 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	}
 
 	private String[] removeNestedChildren(FacesContext context, String[] ids) {
-		List idList = Arrays.asList(ids);
-		final List trimmedIds = new ArrayList(idList);
-		for (final ListIterator i = trimmedIds.listIterator(); i.hasNext();) {
-			String id = (String) i.next();
+		List<String> idList = Arrays.asList(ids);
+		final List<String> trimmedIds = new ArrayList<String>(idList);
+		for (final ListIterator<String> i = trimmedIds.listIterator(); i.hasNext();) {
+			String id = i.next();
 			invokeOnComponent(context, id, new ContextCallback() {
 				public void invokeContextCallback(FacesContext context, UIComponent component) {
 					while (!(component.getParent() instanceof UIViewRoot)) {
@@ -257,18 +256,19 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 				}
 			});
 		}
-		return (String[]) trimmedIds.toArray(new String[trimmedIds.size()]);
+		return trimmedIds.toArray(new String[trimmedIds.size()]);
 	}
 
 	private void broadCastEvents(FacesContext context, PhaseId phaseId) {
-		List processedEvents = new ArrayList();
-		if (events.size() == 0)
+		List<FacesEvent> processedEvents = new ArrayList<FacesEvent>();
+		if (events.size() == 0) {
 			return;
+		}
 		boolean abort = false;
 		int phaseIdOrdinal = phaseId.getOrdinal();
-		Iterator i = events.iterator();
+		Iterator<FacesEvent> i = events.iterator();
 		while (i.hasNext()) {
-			FacesEvent event = (FacesEvent) i.next();
+			FacesEvent event = i.next();
 			int ordinal = event.getPhaseId().getOrdinal();
 			if (ordinal == PhaseId.ANY_PHASE.getOrdinal() || ordinal == phaseIdOrdinal) {
 				UIComponent source = event.getComponent();

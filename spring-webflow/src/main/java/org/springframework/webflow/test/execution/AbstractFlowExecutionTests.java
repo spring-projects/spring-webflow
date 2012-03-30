@@ -116,7 +116,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * execution during the start operation
 	 * @throws FlowExecutionException if an exception was thrown while starting the flow execution
 	 */
-	protected void startFlow(MutableAttributeMap input, ExternalContext context) throws FlowExecutionException {
+	protected void startFlow(MutableAttributeMap<?> input, ExternalContext context) throws FlowExecutionException {
 		flowExecution = getFlowExecutionFactory().createFlowExecution(getFlowDefinition());
 		flowExecution.start(input, context);
 		if (flowExecution.hasEnded()) {
@@ -174,7 +174,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Returns view scope.
 	 * @return view scope
 	 */
-	protected MutableAttributeMap getViewScope() throws IllegalStateException {
+	protected MutableAttributeMap<Object> getViewScope() throws IllegalStateException {
 		return getFlowExecution().getActiveSession().getViewScope();
 	}
 
@@ -182,7 +182,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Returns flow scope.
 	 * @return flow scope
 	 */
-	protected MutableAttributeMap getFlowScope() throws IllegalStateException {
+	protected MutableAttributeMap<Object> getFlowScope() throws IllegalStateException {
 		return getFlowExecution().getActiveSession().getScope();
 	}
 
@@ -190,7 +190,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Returns conversation scope.
 	 * @return conversation scope
 	 */
-	protected MutableAttributeMap getConversationScope() throws IllegalStateException {
+	protected MutableAttributeMap<Object> getConversationScope() throws IllegalStateException {
 		return getFlowExecution().getConversationScope();
 	}
 
@@ -222,7 +222,8 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
 	 */
-	protected Object getRequiredViewAttribute(String attributeName, Class requiredType) throws IllegalStateException {
+	protected Object getRequiredViewAttribute(String attributeName, Class<Object> requiredType)
+			throws IllegalStateException {
 		return getFlowExecution().getActiveSession().getViewScope().getRequired(attributeName, requiredType);
 	}
 
@@ -253,7 +254,8 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present or was of the wrong type
 	 */
-	protected Object getRequiredFlowAttribute(String attributeName, Class requiredType) throws IllegalStateException {
+	protected Object getRequiredFlowAttribute(String attributeName, Class<Object> requiredType)
+			throws IllegalStateException {
 		return getFlowExecution().getActiveSession().getScope().getRequired(attributeName, requiredType);
 	}
 
@@ -284,7 +286,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @return the attribute value
 	 * @throws IllegalStateException if the attribute was not present or not of the required type
 	 */
-	protected Object getRequiredConversationAttribute(String attributeName, Class requiredType)
+	protected Object getRequiredConversationAttribute(String attributeName, Class<?> requiredType)
 			throws IllegalStateException {
 		return getFlowExecution().getConversationScope().getRequired(attributeName, requiredType);
 	}

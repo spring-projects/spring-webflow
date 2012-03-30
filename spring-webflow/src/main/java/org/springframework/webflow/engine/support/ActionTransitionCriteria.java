@@ -22,8 +22,8 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A transition criteria that will execute an action when tested and return <code>true</code> if the action's result
- * is equal to the 'trueEventId', <code>false</code> otherwise.
+ * A transition criteria that will execute an action when tested and return <code>true</code> if the action's result is
+ * equal to the 'trueEventId', <code>false</code> otherwise.
  * <p>
  * This effectively adapts an <code>Action</code> to a <code>TransitionCriteria</code>.
  * 
@@ -84,8 +84,8 @@ public class ActionTransitionCriteria implements TransitionCriteria {
 	}
 
 	private boolean isTrueEvent(String eventId) {
-		for (int i = 0; i < trueEventIds.length; i++) {
-			if (trueEventIds[i].equals(eventId)) {
+		for (String trueEventId : trueEventIds) {
+			if (trueEventId.equals(eventId)) {
 				return true;
 			}
 		}

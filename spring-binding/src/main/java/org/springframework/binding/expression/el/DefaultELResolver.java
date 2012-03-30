@@ -47,7 +47,7 @@ public class DefaultELResolver extends CompositeELResolver {
 	 * that the base object has already been resolved by the time this resolver runs.
 	 * @param customResolvers the custom resolvers to apply before this resolver
 	 */
-	public DefaultELResolver(List customResolvers) {
+	public DefaultELResolver(List<? extends ELResolver> customResolvers) {
 		this(null, customResolvers);
 	}
 
@@ -56,7 +56,7 @@ public class DefaultELResolver extends CompositeELResolver {
 	 * @param target the target, or "root", object of the expression
 	 * @param customResolvers the custom resolvers to apply before this resolver
 	 */
-	public DefaultELResolver(Object target, List customResolvers) {
+	public DefaultELResolver(Object target, List<? extends ELResolver> customResolvers) {
 		this.target = target;
 		configureResolvers(customResolvers);
 	}
@@ -65,7 +65,7 @@ public class DefaultELResolver extends CompositeELResolver {
 		return target;
 	}
 
-	public Class getType(ELContext context, Object base, Object property) {
+	public Class<?> getType(ELContext context, Object base, Object property) {
 		if (base == null) {
 			return super.getType(context, target, property);
 		} else {
@@ -89,11 +89,11 @@ public class DefaultELResolver extends CompositeELResolver {
 		}
 	}
 
-	private void configureResolvers(List customResolvers) {
+	private void configureResolvers(List<? extends ELResolver> customResolvers) {
 		if (customResolvers != null) {
-			Iterator i = customResolvers.iterator();
+			Iterator<? extends ELResolver> i = customResolvers.iterator();
 			while (i.hasNext()) {
-				ELResolver resolver = (ELResolver) i.next();
+				ELResolver resolver = i.next();
 				add(resolver);
 			}
 		}

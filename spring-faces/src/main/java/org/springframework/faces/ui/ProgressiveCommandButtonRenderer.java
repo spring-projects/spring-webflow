@@ -46,20 +46,20 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 	private static String INPUT_TAG_NAME = "input";
 
 	static {
-		List tempList = new ArrayList();
+		List<String> tempList = new ArrayList<String>();
 		tempList.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
 		tempList.addAll(Arrays.asList(HTML.BUTTON_ATTRIBUTES));
 		tempList.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
 		tempList.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
 		tempList.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
 		ATTRIBUTES_TO_RENDER = new String[tempList.size()];
-		ListIterator i = tempList.listIterator();
+		ListIterator<String> i = tempList.listIterator();
 		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER[i.nextIndex()] = (String) i.next();
+			ATTRIBUTES_TO_RENDER[i.nextIndex()] = i.next();
 		}
 	}
 
-	private Map attributeCallbacks;
+	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
 	private RenderAttributeCallback onclickCallback = new RenderAttributeCallback() {
 
@@ -98,9 +98,9 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 
 	};
 
-	protected Map getAttributeCallbacks(UIComponent component) {
+	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
 		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap();
+			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
 			attributeCallbacks.putAll(super.getAttributeCallbacks(component));
 			attributeCallbacks.put("onclick", onclickCallback);
 		}

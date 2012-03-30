@@ -70,69 +70,69 @@ public class AbstractModelTests extends TestCase {
 	}
 
 	public void testListMergeAddAtEndFalse() {
-		LinkedList child = new LinkedList();
+		LinkedList<SecuredModel> child = new LinkedList<SecuredModel>();
 		child.add(new SecuredModel("1"));
 		child.add(new SecuredModel("3"));
-		LinkedList parent = new LinkedList();
+		LinkedList<SecuredModel> parent = new LinkedList<SecuredModel>();
 		parent.add(new SecuredModel("2"));
 		SecuredModel match = new SecuredModel("3");
 		match.setMatch("foo");
 		parent.add(match);
 		AbstractModel obj = new PersistenceContextModel();
-		LinkedList result = obj.merge(child, parent, false);
+		LinkedList<SecuredModel> result = obj.merge(child, parent, false);
 		assertEquals(3, result.size());
-		assertEquals("2", ((SecuredModel) result.get(0)).getAttributes());
-		assertEquals("1", ((SecuredModel) result.get(1)).getAttributes());
-		assertEquals("3", ((SecuredModel) result.get(2)).getAttributes());
+		assertEquals("2", result.get(0).getAttributes());
+		assertEquals("1", result.get(1).getAttributes());
+		assertEquals("3", result.get(2).getAttributes());
 		assertNotSame(parent.get(0), result.get(1));
-		assertEquals("foo", ((SecuredModel) result.get(2)).getMatch());
+		assertEquals("foo", result.get(2).getMatch());
 	}
 
 	public void testListMergeAddAtEndTrue() {
-		LinkedList child = new LinkedList();
+		LinkedList<SecuredModel> child = new LinkedList<SecuredModel>();
 		child.add(new SecuredModel("1"));
 		child.add(new SecuredModel("3"));
-		LinkedList parent = new LinkedList();
+		LinkedList<SecuredModel> parent = new LinkedList<SecuredModel>();
 		parent.add(new SecuredModel("2"));
 		SecuredModel match = new SecuredModel("3");
 		match.setMatch("foo");
 		parent.add(match);
 		AbstractModel obj = new PersistenceContextModel();
-		LinkedList result = obj.merge(child, parent, true);
+		LinkedList<SecuredModel> result = obj.merge(child, parent, true);
 		assertEquals(3, result.size());
-		assertEquals("1", ((SecuredModel) result.get(0)).getAttributes());
-		assertEquals("3", ((SecuredModel) result.get(1)).getAttributes());
-		assertEquals("2", ((SecuredModel) result.get(2)).getAttributes());
+		assertEquals("1", result.get(0).getAttributes());
+		assertEquals("3", result.get(1).getAttributes());
+		assertEquals("2", result.get(2).getAttributes());
 		assertNotSame(parent.get(0), result.get(1));
-		assertEquals("foo", ((SecuredModel) result.get(1)).getMatch());
+		assertEquals("foo", result.get(1).getMatch());
 	}
 
 	public void testListMergeNullParent() {
 		AbstractModel obj = new PersistenceContextModel();
-		LinkedList child = new LinkedList();
-		child.add("1");
-		LinkedList parent = null;
-		LinkedList result = obj.merge(child, parent);
+		LinkedList<SecuredModel> child = new LinkedList<SecuredModel>();
+		child.add(new SecuredModel("1"));
+		LinkedList<SecuredModel> parent = null;
+		LinkedList<SecuredModel> result = obj.merge(child, parent);
 		assertEquals(1, result.size());
-		assertEquals("1", result.get(0));
+		assertEquals("1", result.get(0).getAttributes());
 	}
 
 	public void testListMergeNullChild() {
-		LinkedList child = null;
-		LinkedList parent = new LinkedList();
+		LinkedList<SecuredModel> child = null;
+		LinkedList<SecuredModel> parent = new LinkedList<SecuredModel>();
 		parent.add(new SecuredModel("2"));
 		AbstractModel obj = new PersistenceContextModel();
-		LinkedList result = obj.merge(child, parent);
+		LinkedList<SecuredModel> result = obj.merge(child, parent);
 		assertEquals(1, result.size());
-		assertEquals("2", ((SecuredModel) result.get(0)).getAttributes());
+		assertEquals("2", result.get(0).getAttributes());
 		assertNotSame(parent.get(0), result.get(0));
 	}
 
 	public void testListMergeNulls() {
 		AbstractModel obj = new PersistenceContextModel();
-		LinkedList child = null;
-		LinkedList parent = null;
-		LinkedList result = obj.merge(child, parent);
+		LinkedList<Model> child = null;
+		LinkedList<Model> parent = null;
+		LinkedList<Model> result = obj.merge(child, parent);
 		assertEquals(null, result);
 	}
 

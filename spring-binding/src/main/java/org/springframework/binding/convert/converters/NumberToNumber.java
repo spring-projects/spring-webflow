@@ -22,16 +22,16 @@ import org.springframework.util.NumberUtils;
  */
 public class NumberToNumber implements Converter {
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return Number.class;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return Number.class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
-		return NumberUtils.convertNumberToTargetClass((Number) source, targetClass);
+	@SuppressWarnings("unchecked")
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+		return NumberUtils.convertNumberToTargetClass((Number) source, (Class<? extends Number>) targetClass);
 	}
-
 }

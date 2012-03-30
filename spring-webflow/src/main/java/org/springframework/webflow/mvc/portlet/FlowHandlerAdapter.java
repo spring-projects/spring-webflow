@@ -128,7 +128,7 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		if (flowExecutionKey != null) {
 			return resumeFlowRender(request, response, flowHandler, flowExecutionKey);
 		} else {
-			MutableAttributeMap input = flowHandler.createExecutionInputMap(request);
+			MutableAttributeMap<Object> input = flowHandler.createExecutionInputMap(request);
 			if (input == null) {
 				input = defaultCreateFlowExecutionInputMap(request);
 			}
@@ -145,7 +145,7 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		if (flowExecutionKey != null) {
 			return resumeFlowResource(request, response, flowHandler, flowExecutionKey);
 		} else {
-			MutableAttributeMap input = flowHandler.createResourceExecutionInputMap(request);
+			MutableAttributeMap<Object> input = flowHandler.createResourceExecutionInputMap(request);
 			if (input == null) {
 				input = defaultCreateFlowExecutionInputMap(request);
 			}
@@ -188,17 +188,17 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		return new PortletExternalContext(getPortletContext(), request, response);
 	}
 
-	protected MutableAttributeMap defaultCreateFlowExecutionInputMap(PortletRequest request) {
-		Map parameterMap = request.getParameterMap();
+	protected MutableAttributeMap<Object> defaultCreateFlowExecutionInputMap(PortletRequest request) {
+		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap.size() == 0) {
 			return null;
 		}
-		LocalAttributeMap inputMap = new LocalAttributeMap();
-		Iterator it = parameterMap.entrySet().iterator();
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>();
+		Iterator<Map.Entry<String, String[]>> it = parameterMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String name = (String) entry.getKey();
-			String[] values = (String[]) entry.getValue();
+			Map.Entry<String, String[]> entry = it.next();
+			String name = entry.getKey();
+			String[] values = entry.getValue();
 			if (values.length == 1) {
 				inputMap.put(name, values[0]);
 			} else {
@@ -273,8 +273,8 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 		}
 	}
 
-	private ModelAndView startFlowRender(FlowHandler flowHandler, MutableAttributeMap input, RenderRequest request,
-			RenderResponse response) {
+	private ModelAndView startFlowRender(FlowHandler flowHandler, MutableAttributeMap<Object> input,
+			RenderRequest request, RenderResponse response) {
 		PortletExternalContext context = createPortletExternalContext(request, response);
 		try {
 			FlowExecutionResult result = flowExecutor.launchExecution(flowHandler.getFlowId(), input, context);

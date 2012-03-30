@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * An ordered list of method parameters.
  * 
- * @author Keith
+ * @author Keith Donald
  */
 public class Parameters {
 
@@ -35,7 +35,7 @@ public class Parameters {
 	/**
 	 * The list.
 	 */
-	private List parameters;
+	private List<Parameter> parameters;
 
 	/**
 	 * Create a parameter list of the default size (3 elements).
@@ -49,7 +49,7 @@ public class Parameters {
 	 * @param size the size
 	 */
 	public Parameters(int size) {
-		this.parameters = new ArrayList(size);
+		this.parameters = new ArrayList<Parameter>(size);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Parameters {
 	 * @param parameter the single parameter
 	 */
 	public Parameters(Parameter parameter) {
-		this.parameters = new ArrayList(1);
+		this.parameters = new ArrayList<Parameter>(1);
 		add(parameter);
 	}
 
@@ -66,7 +66,7 @@ public class Parameters {
 	 * @param parameters the parameters
 	 */
 	public Parameters(Parameter[] parameters) {
-		this.parameters = new ArrayList(parameters.length);
+		this.parameters = new ArrayList<Parameter>(parameters.length);
 		addAll(parameters);
 	}
 
@@ -90,7 +90,7 @@ public class Parameters {
 	 * Return a parameter iterator.
 	 * @return the iterator
 	 */
-	public Iterator iterator() {
+	public Iterator<Parameter> iterator() {
 		return parameters.iterator();
 	}
 
@@ -99,11 +99,10 @@ public class Parameters {
 	 * parameters did not specify a parameter type.
 	 * @return the types
 	 */
-	public Class[] getTypesArray() {
+	public Class<?>[] getTypesArray() {
 		int i = 0;
-		Class[] types = new Class[parameters.size()];
-		for (Iterator it = parameters.iterator(); it.hasNext();) {
-			Parameter param = (Parameter) it.next();
+		Class<?>[] types = new Class[parameters.size()];
+		for (Parameter param : parameters) {
 			types[i] = param.getType();
 			i++;
 		}
@@ -125,7 +124,7 @@ public class Parameters {
 	 * @throws IndexOutOfBoundsException if the provided index is out of bounds
 	 */
 	public Parameter getParameter(int index) throws IndexOutOfBoundsException {
-		return (Parameter) parameters.get(index);
+		return parameters.get(index);
 	}
 
 	public boolean equals(Object obj) {

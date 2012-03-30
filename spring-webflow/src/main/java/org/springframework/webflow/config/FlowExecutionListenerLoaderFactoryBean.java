@@ -32,12 +32,12 @@ import org.springframework.webflow.execution.factory.FlowExecutionListenerLoader
  * 
  * @author Keith Donald
  */
-class FlowExecutionListenerLoaderFactoryBean implements FactoryBean, InitializingBean {
+class FlowExecutionListenerLoaderFactoryBean implements FactoryBean<FlowExecutionListenerLoader>, InitializingBean {
 
 	/**
 	 * The configured execution listeners and the criteria determining when they apply.
 	 */
-	private Map listenersWithCriteria;
+	private Map<FlowExecutionListener, String> listenersWithCriteria;
 
 	/**
 	 * The listener loader created by this factory. Is conditional, allowing listeners to apply to flow executions
@@ -54,26 +54,26 @@ class FlowExecutionListenerLoaderFactoryBean implements FactoryBean, Initializin
 	 * Sets the listeners eligible for loading, and the criteria for when they should be loaded.
 	 * @param listenersWithCriteria the listener-to-criteria map
 	 */
-	public void setListeners(Map listenersWithCriteria) {
+	public void setListeners(Map<FlowExecutionListener, String> listenersWithCriteria) {
 		this.listenersWithCriteria = listenersWithCriteria;
 	}
 
 	public void afterPropertiesSet() {
 		listenerLoader = new ConditionalFlowExecutionListenerLoader();
-		Iterator it = listenersWithCriteria.entrySet().iterator();
+		Iterator<Map.Entry<FlowExecutionListener, String>> it = listenersWithCriteria.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			FlowExecutionListener listener = (FlowExecutionListener) entry.getKey();
-			String criteria = (String) entry.getValue();
+			Map.Entry<FlowExecutionListener, String> entry = it.next();
+			FlowExecutionListener listener = entry.getKey();
+			String criteria = entry.getValue();
 			listenerLoader.addListener(listener, listenerCriteriaFactory.getListenerCriteria(criteria));
 		}
 	}
 
-	public Object getObject() throws Exception {
+	public FlowExecutionListenerLoader getObject() throws Exception {
 		return listenerLoader;
 	}
 
-	public Class getObjectType() {
+	public Class<?> getObjectType() {
 		return FlowExecutionListenerLoader.class;
 	}
 

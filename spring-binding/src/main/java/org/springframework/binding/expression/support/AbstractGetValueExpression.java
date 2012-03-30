@@ -34,7 +34,7 @@ public abstract class AbstractGetValueExpression implements Expression {
 		throw new UnsupportedOperationException("Setting this expression's value is not supported");
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return null;
 	}
 

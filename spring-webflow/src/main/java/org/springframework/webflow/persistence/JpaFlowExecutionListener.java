@@ -94,7 +94,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		this.transactionTemplate = new TransactionTemplate(transactionManager);
 	}
 
-	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
 		boolean reusePersistenceContext = false;
 		if (isParentPersistenceContext(session)) {
 			if (isPersistenceContext(session.getDefinition())) {
@@ -123,7 +123,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 	}
 
-	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output) {
+	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap<?> output) {
 		if (isParentPersistenceContext(session)) {
 			return;
 		}
@@ -142,7 +142,7 @@ public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
 		}
 	}
 
-	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap<?> output) {
 		if (isParentPersistenceContext(session)) {
 			if (!isPersistenceContext(session.getDefinition())) {
 				bind(getEntityManager(session.getParent()));

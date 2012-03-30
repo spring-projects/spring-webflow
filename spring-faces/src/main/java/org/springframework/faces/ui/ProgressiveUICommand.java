@@ -31,7 +31,6 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * type conversion.
  * 
  * @author Jeremy Grelle
- * 
  */
 public class ProgressiveUICommand extends UICommand {
 

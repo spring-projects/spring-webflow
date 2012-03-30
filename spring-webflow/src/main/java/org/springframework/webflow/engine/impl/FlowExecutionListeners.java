@@ -85,8 +85,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a request was submitted to the flow execution.
 	 */
 	public void fireRequestSubmitted(RequestContext context) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].requestSubmitted(context);
+		for (FlowExecutionListener listener : listeners) {
+			listener.requestSubmitted(context);
 		}
 	}
 
@@ -94,8 +94,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that the flow execution finished processing a request.
 	 */
 	public void fireRequestProcessed(RequestContext context) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].requestProcessed(context);
+		for (FlowExecutionListener listener : listeners) {
+			listener.requestProcessed(context);
 		}
 	}
 
@@ -103,8 +103,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution session is starting (about to be created).
 	 */
 	public void fireSessionCreating(RequestContext context, FlowDefinition flow) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionCreating(context, flow);
+		for (FlowExecutionListener listener : listeners) {
+			listener.sessionCreating(context, flow);
 		}
 	}
 
@@ -112,9 +112,9 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution session has been activated (created, on the stack and about
 	 * to start).
 	 */
-	public void fireSessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionStarting(context, session, input);
+	public void fireSessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
+		for (FlowExecutionListener listener : listeners) {
+			listener.sessionStarting(context, session, input);
 		}
 	}
 
@@ -122,8 +122,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution session has started (has entered its start state).
 	 */
 	public void fireSessionStarted(RequestContext context, FlowSession session) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionStarted(context, session);
+		for (FlowExecutionListener listener : listeners) {
+			listener.sessionStarted(context, session);
 		}
 	}
 
@@ -131,8 +131,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that an event was signaled in the flow execution.
 	 */
 	public void fireEventSignaled(RequestContext context, Event event) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].eventSignaled(context, event);
+		for (FlowExecutionListener listener : listeners) {
+			listener.eventSignaled(context, event);
 		}
 	}
 
@@ -140,8 +140,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a state is being entered in the flow execution.
 	 */
 	public void fireStateEntering(RequestContext context, StateDefinition nextState) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].stateEntering(context, nextState);
+		for (FlowExecutionListener listener : listeners) {
+			listener.stateEntering(context, nextState);
 		}
 	}
 
@@ -149,8 +149,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a state was entered in the flow execution.
 	 */
 	public void fireStateEntered(RequestContext context, StateDefinition previousState) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].stateEntered(context, previousState, context.getCurrentState());
+		for (FlowExecutionListener listener : listeners) {
+			listener.stateEntered(context, previousState, context.getCurrentState());
 		}
 	}
 
@@ -158,8 +158,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution view is rendering.
 	 */
 	public void fireViewRendering(RequestContext context, View view) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].viewRendering(context, view, context.getCurrentState());
+		for (FlowExecutionListener listener : listeners) {
+			listener.viewRendering(context, view, context.getCurrentState());
 		}
 	}
 
@@ -167,8 +167,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution has rendered.
 	 */
 	public void fireViewRendered(RequestContext context, View view) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].viewRendered(context, view, context.getCurrentState());
+		for (FlowExecutionListener listener : listeners) {
+			listener.viewRendered(context, view, context.getCurrentState());
 		}
 	}
 
@@ -176,8 +176,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a transition is being entered in the flow execution.
 	 */
 	public void fireTransitionExecuting(RequestContext context, TransitionDefinition transition) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].transitionExecuting(context, transition);
+		for (FlowExecutionListener listener : listeners) {
+			listener.transitionExecuting(context, transition);
 		}
 	}
 
@@ -185,8 +185,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow session was paused in the flow execution.
 	 */
 	public void firePaused(RequestContext context) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].paused(context);
+		for (FlowExecutionListener listener : listeners) {
+			listener.paused(context);
 		}
 	}
 
@@ -194,8 +194,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that the flow execution was resumed.
 	 */
 	public void fireResuming(RequestContext context) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].resuming(context);
+		for (FlowExecutionListener listener : listeners) {
+			listener.resuming(context);
 		}
 	}
 
@@ -203,18 +203,18 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that the active flow execution session is ending.
 	 */
 	public void fireSessionEnding(RequestContext context, FlowSession session, String outcomeId,
-			MutableAttributeMap output) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionEnding(context, session, outcomeId, output);
+			MutableAttributeMap<?> output) {
+		for (FlowExecutionListener listener : listeners) {
+			listener.sessionEnding(context, session, outcomeId, output);
 		}
 	}
 
 	/**
 	 * Notify all interested listeners that a flow execution session has ended.
 	 */
-	public void fireSessionEnded(RequestContext context, FlowSession session, String outcomeId, AttributeMap output) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].sessionEnded(context, session, outcomeId, output);
+	public void fireSessionEnded(RequestContext context, FlowSession session, String outcomeId, AttributeMap<?> output) {
+		for (FlowExecutionListener listener : listeners) {
+			listener.sessionEnded(context, session, outcomeId, output);
 		}
 	}
 
@@ -222,8 +222,8 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution threw an exception.
 	 */
 	public void fireExceptionThrown(RequestContext context, FlowExecutionException exception) {
-		for (int i = 0; i < listeners.length; i++) {
-			listeners[i].exceptionThrown(context, exception);
+		for (FlowExecutionListener listener : listeners) {
+			listener.exceptionThrown(context, exception);
 		}
 	}
 }

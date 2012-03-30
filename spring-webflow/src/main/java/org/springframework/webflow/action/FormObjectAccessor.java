@@ -140,7 +140,7 @@ public class FormObjectAccessor {
 	 * @param scopeType the scope to obtain the form object from
 	 * @return the form object, or null if not found
 	 */
-	public Object getFormObject(String formObjectName, Class formObjectClass, ScopeType scopeType) {
+	public Object getFormObject(String formObjectName, Class<?> formObjectClass, ScopeType scopeType) {
 		return scopeType.getScope(context).get(formObjectName, formObjectClass);
 	}
 
@@ -203,7 +203,7 @@ public class FormObjectAccessor {
 	 * @return the form object errors instance, or null if not found
 	 */
 	public Errors getFormErrors(String formObjectName, ScopeType scopeType) {
-		return (Errors) scopeType.getScope(context).get(ERRORS_PREFIX + formObjectName, Errors.class);
+		return scopeType.getScope(context).get(ERRORS_PREFIX + formObjectName, Errors.class);
 	}
 
 	/**

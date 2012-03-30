@@ -74,7 +74,7 @@ public class ResourceHelper {
 	 * @throws IOException
 	 */
 	public static void renderScriptLink(FacesContext facesContext, String scriptPath) throws IOException {
-		renderScriptLink(facesContext, scriptPath, Collections.EMPTY_MAP);
+		renderScriptLink(facesContext, scriptPath, Collections.<String, Object> emptyMap());
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ResourceHelper {
 	 * @param attributes - a map of additional attributes to render on the script tag
 	 * @throws IOException
 	 */
-	public static void renderScriptLink(FacesContext facesContext, String scriptPath, Map attributes)
+	public static void renderScriptLink(FacesContext facesContext, String scriptPath, Map<String, Object> attributes)
 			throws IOException {
 		if (alreadyRendered(facesContext, scriptPath)) {
 			return;
@@ -92,9 +92,9 @@ public class ResourceHelper {
 		ResponseWriter writer = facesContext.getResponseWriter();
 		writer.startElement(SCRIPT_ELEMENT, null);
 		writer.writeAttribute("type", "text/javascript", null);
-		Iterator i = attributes.keySet().iterator();
+		Iterator<String> i = attributes.keySet().iterator();
 		while (i.hasNext()) {
-			String key = (String) i.next();
+			String key = i.next();
 			writer.writeAttribute(key, attributes.get(key), null);
 		}
 		String src = facesContext.getExternalContext().getRequestContextPath() + "/resources" + scriptPath;
@@ -145,7 +145,7 @@ public class ResourceHelper {
 	}
 
 	public static void beginCombineStyles(FacesContext facesContext) {
-		List combinedResources = new ArrayList();
+		List<String> combinedResources = new ArrayList<String>();
 		facesContext.getExternalContext().getRequestMap().put(COMBINED_RESOURCES_KEY, combinedResources);
 	}
 
@@ -154,16 +154,15 @@ public class ResourceHelper {
 	}
 
 	private static void addStyle(FacesContext facesContext, String stylePath) {
-		List combinedResources = (List) facesContext.getExternalContext().getRequestMap().get(COMBINED_RESOURCES_KEY);
+		List<String> combinedResources = getCombinedResources(facesContext);
 		combinedResources.add(stylePath);
 	}
 
 	public static void endCombineStyles(FacesContext facesContext) throws IOException {
-		List combinedResources = (List) facesContext.getExternalContext().getRequestMap()
-				.remove(COMBINED_RESOURCES_KEY);
+		List<String> combinedResources = getCombinedResources(facesContext);
 		StringBuffer combinedPath = new StringBuffer();
 		for (int i = 0; i < combinedResources.size(); i++) {
-			String resourcePath = (String) combinedResources.get(i);
+			String resourcePath = combinedResources.get(i);
 			if (i == 1) {
 				combinedPath.append("?appended=");
 			}
@@ -189,17 +188,28 @@ public class ResourceHelper {
 	}
 
 	private static void markRendered(FacesContext facesContext, String scriptPath) {
-		Set renderedResources = (Set) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
+		Set<String> renderedResources = getRenderedResources(facesContext);
 		if (renderedResources == null) {
-			renderedResources = new HashSet();
+			renderedResources = new HashSet<String>();
 			facesContext.getExternalContext().getRequestMap().put(RENDERED_RESOURCES_KEY, renderedResources);
 		}
 		renderedResources.add(scriptPath);
 	}
 
 	private static boolean alreadyRendered(FacesContext facesContext, String scriptPath) {
-		Set renderedResources = (Set) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
+		Set<String> renderedResources = getRenderedResources(facesContext);
 		return renderedResources != null && renderedResources.contains(scriptPath);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<String> getCombinedResources(FacesContext facesContext) {
+		return (List<String>) facesContext.getExternalContext().getRequestMap().get(COMBINED_RESOURCES_KEY);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Set<String> getRenderedResources(FacesContext facesContext) {
+		return (Set<String>) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
+
 	}
 
 }

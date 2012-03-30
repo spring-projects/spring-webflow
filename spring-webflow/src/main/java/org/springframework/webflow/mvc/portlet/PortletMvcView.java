@@ -45,7 +45,7 @@ public class PortletMvcView extends AbstractMvcView {
 		super(view, context);
 	}
 
-	protected void doRender(Map model) throws Exception {
+	protected void doRender(Map<String, ?> model) throws Exception {
 		RequestContext context = getRequestContext();
 		ExternalContext externalContext = context.getExternalContext();
 		View view = getView();

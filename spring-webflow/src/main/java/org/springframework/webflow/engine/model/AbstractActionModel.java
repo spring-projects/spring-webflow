@@ -24,7 +24,7 @@ import java.util.LinkedList;
  */
 public abstract class AbstractActionModel extends AbstractModel {
 
-	private LinkedList attributes;
+	private LinkedList<AttributeModel> attributes;
 
 	/**
 	 * Actions are not mergeable
@@ -49,14 +49,14 @@ public abstract class AbstractActionModel extends AbstractModel {
 	/**
 	 * @return the attributes
 	 */
-	public LinkedList getAttributes() {
+	public LinkedList<AttributeModel> getAttributes() {
 		return attributes;
 	}
 
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(LinkedList attributes) {
+	public void setAttributes(LinkedList<AttributeModel> attributes) {
 		this.attributes = attributes;
 	}
 

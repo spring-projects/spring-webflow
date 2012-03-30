@@ -44,7 +44,7 @@ public class MockFlowSession implements FlowSession {
 
 	private State state;
 
-	private MutableAttributeMap scope = new LocalAttributeMap();
+	private MutableAttributeMap<Object> scope = new LocalAttributeMap<Object>();
 
 	private FlowSession parent;
 
@@ -73,7 +73,7 @@ public class MockFlowSession implements FlowSession {
 	 * @param flow the flow definition for the session
 	 * @param input initial contents of 'flow scope'
 	 */
-	public MockFlowSession(Flow flow, AttributeMap input) {
+	public MockFlowSession(Flow flow, AttributeMap<?> input) {
 		setDefinition(flow);
 		scope.putAll(input);
 	}
@@ -88,11 +88,12 @@ public class MockFlowSession implements FlowSession {
 		return state;
 	}
 
-	public MutableAttributeMap getScope() {
+	public MutableAttributeMap<Object> getScope() {
 		return scope;
 	}
 
-	public MutableAttributeMap getViewScope() throws IllegalStateException {
+	@SuppressWarnings("unchecked")
+	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException {
 		if (state == null) {
 			throw new IllegalStateException("The current state of this flow '" + definition.getId()
 					+ "' is [null] - cannot access view scope");
@@ -101,7 +102,7 @@ public class MockFlowSession implements FlowSession {
 			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '"
 					+ definition.getId() + "' is not a view state - view scope not accessible");
 		}
-		return (MutableAttributeMap) scope.get(VIEW_MAP_ATTRIBUTE);
+		return (MutableAttributeMap<Object>) scope.get(VIEW_MAP_ATTRIBUTE);
 	}
 
 	public boolean isEmbeddedMode() {
@@ -142,7 +143,7 @@ public class MockFlowSession implements FlowSession {
 	 * Set the scope data maintained by this flow session. This will be the flow scope data of the ongoing flow
 	 * execution.
 	 */
-	public void setScope(MutableAttributeMap scope) {
+	public void setScope(MutableAttributeMap<Object> scope) {
 		this.scope = scope;
 	}
 
@@ -180,7 +181,7 @@ public class MockFlowSession implements FlowSession {
 	// internal helpers
 
 	private void initViewScope() {
-		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
+		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap<Object>());
 	}
 
 	private void destroyViewScope() {

@@ -103,7 +103,7 @@ public class EndState extends State {
 			context.endActiveFlowSession(getId(), createSessionOutput(context));
 		} else {
 			// there is a parent flow that will resume (this flow is a subflow)
-			LocalAttributeMap sessionOutput = createSessionOutput(context);
+			LocalAttributeMap<Object> sessionOutput = createSessionOutput(context);
 			context.endActiveFlowSession(getId(), sessionOutput);
 		}
 	}
@@ -112,8 +112,8 @@ public class EndState extends State {
 	 * Returns the subflow output map. This will invoke the output mapper (if any) to map data available in the flow
 	 * execution request context into a newly created empty map.
 	 */
-	protected LocalAttributeMap createSessionOutput(RequestContext context) {
-		LocalAttributeMap output = new LocalAttributeMap();
+	protected LocalAttributeMap<Object> createSessionOutput(RequestContext context) {
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		if (outputMapper != null) {
 			MappingResults results = outputMapper.map(context, output);
 			if (results != null && results.hasErrorResults()) {

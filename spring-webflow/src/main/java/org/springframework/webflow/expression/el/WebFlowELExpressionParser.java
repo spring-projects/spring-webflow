@@ -52,7 +52,7 @@ public class WebFlowELExpressionParser extends ELExpressionParser {
 	private static class RequestContextELContextFactory implements ELContextFactory {
 		public ELContext getELContext(Object target) {
 			RequestContext context = (RequestContext) target;
-			List customResolvers = new ArrayList();
+			List<ELResolver> customResolvers = new ArrayList<ELResolver>();
 			customResolvers.add(new RequestContextELResolver(context));
 			customResolvers.add(new FlowResourceELResolver(context));
 			customResolvers.add(new ImplicitFlowVariableELResolver(context));

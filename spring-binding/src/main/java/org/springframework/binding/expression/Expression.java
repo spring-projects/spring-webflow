@@ -48,7 +48,7 @@ public interface Expression {
 	 * information cannot be determined
 	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
-	public Class getValueType(Object context) throws EvaluationException;
+	public Class<?> getValueType(Object context) throws EvaluationException;
 
 	/**
 	 * Returns the original string used to create this expression, unmodified.

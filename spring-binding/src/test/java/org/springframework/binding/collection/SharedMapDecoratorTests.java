@@ -27,7 +27,8 @@ import junit.framework.TestCase;
  */
 public class SharedMapDecoratorTests extends TestCase {
 
-	private SharedMapDecorator map = new SharedMapDecorator(new HashMap());
+	private SharedMapDecorator<String, String> map = new SharedMapDecorator<String, String>(
+			new HashMap<String, String>());
 
 	public void testGetPutRemove() {
 		assertTrue(map.size() == 0);
@@ -47,7 +48,7 @@ public class SharedMapDecoratorTests extends TestCase {
 	}
 
 	public void testPutAll() {
-		Map all = new HashMap();
+		Map<String, String> all = new HashMap<String, String>();
 		all.put("foo", "bar");
 		all.put("bar", "baz");
 		map.putAll(all);
@@ -57,21 +58,21 @@ public class SharedMapDecoratorTests extends TestCase {
 	public void testEntrySet() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
-		Set entrySet = map.entrySet();
+		Set<Map.Entry<String, String>> entrySet = map.entrySet();
 		assertTrue(entrySet.size() == 2);
 	}
 
 	public void testKeySet() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
-		Set keySet = map.keySet();
+		Set<String> keySet = map.keySet();
 		assertTrue(keySet.size() == 2);
 	}
 
 	public void testValues() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
-		Collection values = map.values();
+		Collection<String> values = map.values();
 		assertTrue(values.size() == 2);
 	}
 }

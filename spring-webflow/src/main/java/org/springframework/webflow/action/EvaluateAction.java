@@ -64,7 +64,7 @@ public class EvaluateAction extends AbstractAction {
 	/**
 	 * Create a new evaluate action.
 	 * @param expression the expression to evaluate (required)
-	 * @param evaluationResultExposer the strategy for how the expression result will be exposed to the flow (optional)
+	 * @param resultExpression the strategy for how the expression result will be exposed to the flow (optional)
 	 * @param resultEventFactory the factory that will map the evaluation result to a Web Flow event (optional)
 	 */
 	public EvaluateAction(Expression expression, Expression resultExpression, ResultEventFactory resultEventFactory) {

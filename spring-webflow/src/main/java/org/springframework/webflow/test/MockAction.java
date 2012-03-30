@@ -38,7 +38,7 @@ public class MockAction implements Action {
 
 	private String resultEventId;
 
-	private AttributeMap resultAttributes;
+	private AttributeMap<Object> resultAttributes;
 
 	/**
 	 * Constructs a new mock action that returns the default <code>success</code> execution result.
@@ -67,7 +67,7 @@ public class MockAction implements Action {
 	 * Sets attributes to associate with a returned action execution outcome.
 	 * @param resultAttributes the action execution result attributes
 	 */
-	public void setResultAttributes(AttributeMap resultAttributes) {
+	public void setResultAttributes(AttributeMap<Object> resultAttributes) {
 		this.resultAttributes = resultAttributes;
 	}
 

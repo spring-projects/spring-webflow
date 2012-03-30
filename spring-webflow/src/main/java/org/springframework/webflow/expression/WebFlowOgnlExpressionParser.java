@@ -39,6 +39,7 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  */
+@SuppressWarnings("rawtypes")
 public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 
 	/**
@@ -70,6 +71,7 @@ public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {
 	 * Resolves Mutable Attribute Map properties, also capable of setting properties.
 	 */
 	private static class MutableAttributeMapPropertyAccessor extends MapAdaptablePropertyAccessor {
+		@SuppressWarnings("unchecked")
 		public void setProperty(Map context, Object target, Object name, Object value) throws OgnlException {
 			((MutableAttributeMap) target).put((String) name, value);
 		}

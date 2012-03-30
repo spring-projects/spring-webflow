@@ -26,7 +26,7 @@ public class StringToLong extends StringToObject {
 		super(Long.class);
 	}
 
-	public Object toObject(String string, Class objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) throws Exception {
 		return Long.valueOf(string);
 	}
 

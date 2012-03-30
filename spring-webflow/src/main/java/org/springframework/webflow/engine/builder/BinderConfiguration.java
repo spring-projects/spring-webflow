@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
  */
 public class BinderConfiguration {
 
-	private Set bindings = new LinkedHashSet();
+	private Set<Binding> bindings = new LinkedHashSet<Binding>();
 
 	/**
 	 * Adds a new binding to this binding configuration.
@@ -30,7 +30,7 @@ public class BinderConfiguration {
 	/**
 	 * Returns the set of bindings associated with this binding configuration.
 	 */
-	public Set getBindings() {
+	public Set<Binding> getBindings() {
 		return bindings;
 	}
 
@@ -40,9 +40,9 @@ public class BinderConfiguration {
 	 * @return the binding
 	 */
 	public Binding getBinding(String name) {
-		Iterator it = bindings.iterator();
+		Iterator<Binding> it = bindings.iterator();
 		while (it.hasNext()) {
-			Binding binding = (Binding) it.next();
+			Binding binding = it.next();
 			if (name.equals(binding.getProperty())) {
 				return binding;
 			}
@@ -129,8 +129,8 @@ public class BinderConfiguration {
 		}
 
 		public String toString() {
-			return new ToStringCreator(this).append("property", property).append("converter", converter).append(
-					"required", required).toString();
+			return new ToStringCreator(this).append("property", property).append("converter", converter)
+					.append("required", required).toString();
 		}
 	}
 

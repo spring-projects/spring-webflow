@@ -30,7 +30,8 @@ import org.springframework.core.NamedThreadLocal;
  */
 public class RequestContextHolder {
 
-	private static final ThreadLocal requestContextHolder = new NamedThreadLocal("Flow RequestContext");
+	private static final ThreadLocal<RequestContext> requestContextHolder = new NamedThreadLocal<RequestContext>(
+			"Flow RequestContext");
 
 	/**
 	 * Associate the given RequestContext with the current thread.
@@ -46,7 +47,7 @@ public class RequestContextHolder {
 	 * @throws IllegalStateException if no RequestContext is bound to this thread
 	 */
 	public static RequestContext getRequestContext() {
-		return (RequestContext) requestContextHolder.get();
+		return requestContextHolder.get();
 	}
 
 	// not instantiable

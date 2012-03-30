@@ -36,7 +36,7 @@ public class AttributeMapBindingEvent extends EventObject {
 	 * @param attributeName the name that this attribute was bound with
 	 * @param attributeValue the attribute
 	 */
-	public AttributeMapBindingEvent(AttributeMap source, String attributeName, Object attributeValue) {
+	public AttributeMapBindingEvent(AttributeMap<?> source, String attributeName, Object attributeValue) {
 		super(source);
 		this.source = source;
 		this.attributeName = attributeName;

@@ -36,7 +36,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	/**
 	 * The list of row data objects to
 	 */
-	private OneSelectionTrackingListDataModel dataModel;
+	private OneSelectionTrackingListDataModel<Object> dataModel;
 
 	/**
 	 * The delegate action listener that should be called
@@ -51,11 +51,11 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	public void setUp() throws Exception {
 		jsfMockHelper.setUp();
 		viewToTest = new UIViewRoot();
-		List rows = new ArrayList();
+		List<Object> rows = new ArrayList<Object>();
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
-		dataModel = new OneSelectionTrackingListDataModel(rows);
+		dataModel = new OneSelectionTrackingListDataModel<Object>(rows);
 	}
 
 	protected void tearDown() throws Exception {

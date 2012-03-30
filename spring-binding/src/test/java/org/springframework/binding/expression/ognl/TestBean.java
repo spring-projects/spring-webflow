@@ -27,7 +27,7 @@ public class TestBean {
 
 	private Date date;
 
-	private List list = new ArrayList();
+	private List<Object> list = new ArrayList<Object>();
 
 	public boolean isFlag() {
 		return flag;
@@ -45,11 +45,11 @@ public class TestBean {
 		this.number = number;
 	}
 
-	public List getList() {
+	public List<Object> getList() {
 		return list;
 	}
 
-	public void setList(List list) {
+	public void setList(List<Object> list) {
 		this.list = list;
 	}
 

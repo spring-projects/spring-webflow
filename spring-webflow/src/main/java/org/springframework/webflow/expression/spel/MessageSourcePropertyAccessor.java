@@ -43,7 +43,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class MessageSourcePropertyAccessor implements PropertyAccessor {
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return new Class[] { MessageSource.class };
 	}
 

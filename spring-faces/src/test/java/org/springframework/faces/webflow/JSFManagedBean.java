@@ -7,7 +7,7 @@ public class JSFManagedBean {
 
 	String prop1;
 	JSFModel model;
-	List values = new ArrayList();
+	List<String> values = new ArrayList<String>();
 
 	public JSFModel getModel() {
 		return model;
@@ -29,7 +29,7 @@ public class JSFManagedBean {
 		values.add(value);
 	}
 
-	public List getValues() {
+	public List<String> getValues() {
 		return values;
 	}
 }

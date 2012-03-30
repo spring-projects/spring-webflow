@@ -239,7 +239,7 @@ public class EventFactorySupport {
 	 * @param attributes the event payload attributes
 	 * @return the event
 	 */
-	public Event event(Object source, String eventId, AttributeMap attributes) {
+	public Event event(Object source, String eventId, AttributeMap<Object> attributes) {
 		return new Event(source, eventId, attributes);
 	}
 

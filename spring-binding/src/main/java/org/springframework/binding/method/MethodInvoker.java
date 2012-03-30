@@ -44,9 +44,9 @@ public class MethodInvoker {
 	/**
 	 * A cache of invoked bean methods, keyed weakly.
 	 */
-	private CachingMapDecorator methodCache = new CachingMapDecorator(true) {
-		public Object create(Object key) {
-			return ((MethodKey) key).getMethod();
+	private CachingMapDecorator<MethodKey, Method> methodCache = new CachingMapDecorator<MethodKey, Method>(true) {
+		public Method create(MethodKey key) {
+			return key.getMethod();
 		}
 	};
 
@@ -74,7 +74,7 @@ public class MethodInvoker {
 			Object argument = parameter.evaluateArgument(argumentSource);
 			arguments[i] = applyTypeConversion(argument, parameter.getType());
 		}
-		Class[] parameterTypes = parameters.getTypesArray();
+		Class<?>[] parameterTypes = parameters.getTypesArray();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			if (parameterTypes[i] == null) {
 				Object argument = arguments[i];
@@ -85,7 +85,7 @@ public class MethodInvoker {
 		}
 		MethodKey key = new MethodKey(bean.getClass(), signature.getMethodName(), parameterTypes);
 		try {
-			Method method = (Method) methodCache.get(key);
+			Method method = methodCache.get(key);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking method with signature [" + key + "] with arguments "
 						+ StylerUtils.style(arguments) + " on bean [" + bean + "]");
@@ -110,7 +110,7 @@ public class MethodInvoker {
 	 * @param targetType the target type for the conversion
 	 * @return the converted result
 	 */
-	protected Object applyTypeConversion(Object value, Class targetType) {
+	protected Object applyTypeConversion(Object value, Class<?> targetType) {
 		if (value == null || targetType == null) {
 			return value;
 		}

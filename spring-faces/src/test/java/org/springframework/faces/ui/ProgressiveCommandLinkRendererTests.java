@@ -31,8 +31,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.setId("foo");
 		form.getChildren().add(link);
 
-		RenderAttributeCallback callback = (RenderAttributeCallback) renderer.getAttributeCallbacks(link)
-				.get("onclick");
+		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
 
 		jsf.facesContext().getResponseWriter().startElement("a", link);
 
@@ -62,8 +61,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.getChildren().add(param1);
 		link.getChildren().add(param2);
 
-		RenderAttributeCallback callback = (RenderAttributeCallback) renderer.getAttributeCallbacks(link)
-				.get("onclick");
+		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
 
 		jsf.facesContext().getResponseWriter().startElement("a", link);
 
@@ -84,8 +82,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.setAjaxEnabled(Boolean.FALSE);
 		form.getChildren().add(link);
 
-		RenderAttributeCallback callback = (RenderAttributeCallback) renderer.getAttributeCallbacks(link)
-				.get("onclick");
+		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
 
 		jsf.facesContext().getResponseWriter().startElement("a", link);
 
@@ -116,8 +113,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.getChildren().add(param1);
 		link.getChildren().add(param2);
 
-		RenderAttributeCallback callback = (RenderAttributeCallback) renderer.getAttributeCallbacks(link)
-				.get("onclick");
+		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
 
 		jsf.facesContext().getResponseWriter().startElement("a", link);
 

@@ -374,7 +374,7 @@ public class ValidationHelperTests extends TestCase {
 			fallbackInvoked = true;
 		}
 
-		public boolean supports(Class clazz) {
+		public boolean supports(Class<?> clazz) {
 			return true;
 		}
 	}

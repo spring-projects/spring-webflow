@@ -57,15 +57,15 @@ public class OgnlExpressionParser extends AbstractExpressionParser {
 	 * @param clazz the class that contains properties needing access
 	 * @param propertyAccessor the property access strategy
 	 */
-	public void addPropertyAccessor(Class clazz, PropertyAccessor propertyAccessor) {
+	public void addPropertyAccessor(Class<?> clazz, PropertyAccessor propertyAccessor) {
 		OgnlRuntime.setPropertyAccessor(clazz, propertyAccessor);
 	}
 
 	protected Expression doParseExpression(String expressionString, ParserContext context) throws ParserException {
 		try {
-			return new OgnlExpression(Ognl.parseExpression(expressionString), parseVariableExpressions(context
-					.getExpressionVariables()), context.getExpectedEvaluationResultType(), expressionString,
-					conversionService);
+			return new OgnlExpression(Ognl.parseExpression(expressionString),
+					parseVariableExpressions(context.getExpressionVariables()),
+					context.getExpectedEvaluationResultType(), expressionString, conversionService);
 		} catch (OgnlException e) {
 			throw new ParserException(expressionString, e);
 		}

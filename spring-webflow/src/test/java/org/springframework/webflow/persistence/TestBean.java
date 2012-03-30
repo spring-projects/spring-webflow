@@ -24,7 +24,7 @@ public class TestBean {
 
 	private String name;
 
-	private Set addresses = new HashSet();
+	private Set<TestAddress> addresses = new HashSet<TestAddress>();
 
 	private int count;
 
@@ -57,11 +57,11 @@ public class TestBean {
 		return name;
 	}
 
-	public Set getAddresses() {
+	public Set<TestAddress> getAddresses() {
 		return addresses;
 	}
 
-	public void setAddresses(Set addresses) {
+	public void setAddresses(Set<TestAddress> addresses) {
 		this.addresses = addresses;
 	}
 

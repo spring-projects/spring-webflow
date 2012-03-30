@@ -18,8 +18,6 @@ import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
-import org.springframework.webflow.executor.FlowExecutor;
-import org.springframework.webflow.test.MockExternalContext;
 
 public class FlowExecutorFactoryBeanTests extends TestCase {
 	private FlowExecutorFactoryBean factoryBean;
@@ -62,7 +60,7 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 				return flow;
 			}
 		});
-		Set attributes = new HashSet();
+		Set<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
 		factoryBean.setFlowExecutionAttributes(attributes);
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
@@ -72,9 +70,6 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 		factoryBean.setMaxFlowExecutionSnapshots(2);
 		factoryBean.setMaxFlowExecutions(1);
 		factoryBean.afterPropertiesSet();
-		FlowExecutor executor = (FlowExecutor) factoryBean.getObject();
-		MockExternalContext context = new MockExternalContext();
-
-		MockExternalContext context2 = new MockExternalContext();
+		factoryBean.getObject();
 	}
 }

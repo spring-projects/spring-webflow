@@ -25,13 +25,13 @@ class BindingValueExpression extends ValueExpression {
 
 	private ValueExpression targetExpression;
 
-	private Class expectedType;
+	private Class<?> expectedType;
 
 	private ConversionService conversionService;
 
 	private boolean template;
 
-	public BindingValueExpression(ValueExpression targetExpression, Class expectedType,
+	public BindingValueExpression(ValueExpression targetExpression, Class<?> expectedType,
 			ConversionService conversionService, boolean template) {
 		Assert.notNull(expectedType, "The expectedType Class is required");
 		Assert.notNull(conversionService, "The ConversionService to perform type coersions is required");
@@ -41,11 +41,11 @@ class BindingValueExpression extends ValueExpression {
 		this.template = template;
 	}
 
-	public Class getExpectedType() {
+	public Class<?> getExpectedType() {
 		return targetExpression.getExpectedType();
 	}
 
-	public Class getType(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
+	public Class<?> getType(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
 		return targetExpression.getType(context);
 	}
 
@@ -90,7 +90,7 @@ class BindingValueExpression extends ValueExpression {
 		return targetExpression.hashCode();
 	}
 
-	private Object convertValueIfNecessary(Object value, Class expectedType, Object context)
+	private Object convertValueIfNecessary(Object value, Class<?> expectedType, Object context)
 			throws ValueCoercionException {
 		if (expectedType == null) {
 			return value;

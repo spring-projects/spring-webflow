@@ -98,7 +98,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 	 * Useful for assigning attributes that influence flow execution behavior.
 	 * @param executionAttributes the system attributes to assign
 	 */
-	protected void setFlowExecutionAttributes(AttributeMap executionAttributes) {
+	protected void setFlowExecutionAttributes(AttributeMap<Object> executionAttributes) {
 		getFlowExecutionImplFactory().setExecutionAttributes(executionAttributes);
 	}
 

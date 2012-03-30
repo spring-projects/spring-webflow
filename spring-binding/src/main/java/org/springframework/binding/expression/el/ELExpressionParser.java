@@ -46,7 +46,7 @@ public class ELExpressionParser implements ExpressionParser {
 
 	private ExpressionFactory expressionFactory;
 
-	private Map contextFactories = new HashMap();
+	private Map<Class<?>, ELContextFactory> contextFactories = new HashMap<Class<?>, ELContextFactory>();
 
 	private ConversionService conversionService = new DefaultConversionService();
 
@@ -79,7 +79,7 @@ public class ELExpressionParser implements ExpressionParser {
 	 * @param contextType the expression context class
 	 * @param contextFactory the context factory to use for expressions that evaluate those types of contexts
 	 */
-	public void putContextFactory(Class contextType, ELContextFactory contextFactory) {
+	public void putContextFactory(Class<?> contextType, ELContextFactory contextFactory) {
 		Assert.notNull(contextFactory, "The EL context factory cannot be null");
 		contextFactories.put(contextType, contextFactory);
 	}
@@ -117,16 +117,16 @@ public class ELExpressionParser implements ExpressionParser {
 		return new BindingValueExpression(expression, getExpectedType(context), conversionService, context.isTemplate());
 	}
 
-	private Class getExpectedType(ParserContext context) {
-		Class expectedType = context.getExpectedEvaluationResultType();
+	private Class<?> getExpectedType(ParserContext context) {
+		Class<?> expectedType = context.getExpectedEvaluationResultType();
 		return expectedType != null ? expectedType : Object.class;
 	}
 
-	private ELContextFactory getContextFactory(Class expressionTargetType, String expressionString) {
+	private ELContextFactory getContextFactory(Class<?> expressionTargetType, String expressionString) {
 		if (contextFactories.containsKey(expressionTargetType)) {
-			return (ELContextFactory) contextFactories.get(expressionTargetType);
+			return contextFactories.get(expressionTargetType);
 		} else {
-			return (ELContextFactory) contextFactories.get(Object.class);
+			return contextFactories.get(Object.class);
 		}
 	}
 
@@ -172,8 +172,7 @@ public class ELExpressionParser implements ExpressionParser {
 		public void mapVariables(ExpressionVariable[] variables, ExpressionFactory expressionFactory) {
 			if (variables != null && variables.length > 0) {
 				variableMapper = new VariableMapperImpl();
-				for (int i = 0; i < variables.length; i++) {
-					ExpressionVariable var = variables[i];
+				for (ExpressionVariable var : variables) {
 					ParserContext context = var.getParserContext() != null ? var.getParserContext()
 							: NullParserContext.INSTANCE;
 					ValueExpression expr;
@@ -191,14 +190,14 @@ public class ELExpressionParser implements ExpressionParser {
 	}
 
 	private static class VariableMapperImpl extends VariableMapper {
-		private Map variables = new HashMap();
+		private Map<String, ValueExpression> variables = new HashMap<String, ValueExpression>();
 
 		public ValueExpression resolveVariable(String name) {
-			return (ValueExpression) variables.get(name);
+			return variables.get(name);
 		}
 
 		public ValueExpression setVariable(String name, ValueExpression value) {
-			return (ValueExpression) variables.put(name, value);
+			return variables.put(name, value);
 		}
 
 		public String toString() {

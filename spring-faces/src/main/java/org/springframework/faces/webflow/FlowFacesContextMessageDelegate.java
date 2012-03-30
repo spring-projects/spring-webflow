@@ -29,7 +29,7 @@ import org.springframework.webflow.execution.RequestContext;
  * Helper delegate class for use with the {@link FlowFacesContext} that handles all faces message methods.
  * 
  * @author Jeremy Grelle
- * @author Phil Webb
+ * @author Phillip Webb
  */
 public class FlowFacesContextMessageDelegate {
 
@@ -48,9 +48,9 @@ public class FlowFacesContextMessageDelegate {
 	/**
 	 * Mappings between {@link FacesMessage} and {@link Severity}.
 	 */
-	private static final Map FACESSEVERITY_TO_SPRINGSEVERITY;
+	private static final Map<FacesMessage.Severity, Severity> FACESSEVERITY_TO_SPRINGSEVERITY;
 	static {
-		FACESSEVERITY_TO_SPRINGSEVERITY = new HashMap();
+		FACESSEVERITY_TO_SPRINGSEVERITY = new HashMap<FacesMessage.Severity, Severity>();
 		FACESSEVERITY_TO_SPRINGSEVERITY.put(FacesMessage.SEVERITY_INFO, Severity.INFO);
 		FACESSEVERITY_TO_SPRINGSEVERITY.put(FacesMessage.SEVERITY_WARN, Severity.WARNING);
 		FACESSEVERITY_TO_SPRINGSEVERITY.put(FacesMessage.SEVERITY_ERROR, Severity.ERROR);
@@ -95,14 +95,15 @@ public class FlowFacesContextMessageDelegate {
 			return null;
 		}
 		FacesMessage.Severity max = FacesMessage.SEVERITY_INFO;
-		Iterator i = getMessages();
+		Iterator<FacesMessage> i = getMessages();
 		while (i.hasNext()) {
-			FacesMessage message = (FacesMessage) i.next();
+			FacesMessage message = i.next();
 			if (message.getSeverity().getOrdinal() > max.getOrdinal()) {
 				max = message.getSeverity();
 			}
-			if (max.getOrdinal() == FacesMessage.SEVERITY_FATAL.getOrdinal())
+			if (max.getOrdinal() == FacesMessage.SEVERITY_FATAL.getOrdinal()) {
 				break;
+			}
 		}
 		return max;
 	}
@@ -174,8 +175,8 @@ public class FlowFacesContextMessageDelegate {
 			for (int i = 0; i < summaryMessages.length; i++) {
 				messages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
 			}
-			for (int z = 0; z < userMessages.length; z++) {
-				messages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			for (Message userMessage : userMessages) {
+				messages.add(toFacesMessage(userMessage, userMessage));
 			}
 		}
 
@@ -188,8 +189,8 @@ public class FlowFacesContextMessageDelegate {
 			for (int i = 0; i < summaryMessages.length; i++) {
 				messages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
 			}
-			for (int z = 0; z < userMessages.length; z++) {
-				messages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			for (Message userMessage : userMessages) {
+				messages.add(toFacesMessage(userMessage, userMessage));
 			}
 		}
 
@@ -336,7 +337,7 @@ public class FlowFacesContextMessageDelegate {
 			String detail = (String) ois.readObject();
 			int severityOrdinal = ois.readInt();
 			FacesMessage.Severity severity = FacesMessage.SEVERITY_INFO;
-			for (Iterator iterator = FacesMessage.VALUES.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = FacesMessage.VALUES.iterator(); iterator.hasNext();) {
 				FacesMessage.Severity value = (FacesMessage.Severity) iterator.next();
 				if (value.getOrdinal() == severityOrdinal) {
 					severity = value;
@@ -381,7 +382,7 @@ public class FlowFacesContextMessageDelegate {
 		public Severity getSeverity() {
 			Severity severity = null;
 			if (facesMessage.getSeverity() != null) {
-				severity = (Severity) FACESSEVERITY_TO_SPRINGSEVERITY.get(facesMessage.getSeverity());
+				severity = FACESSEVERITY_TO_SPRINGSEVERITY.get(facesMessage.getSeverity());
 			}
 			return (severity == null ? Severity.INFO : severity);
 		}

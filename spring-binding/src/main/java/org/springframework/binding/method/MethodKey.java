@@ -34,7 +34,7 @@ public class MethodKey implements Serializable {
 	/**
 	 * The class the method is a member of.
 	 */
-	private Class declaredType;
+	private Class<?> declaredType;
 
 	/**
 	 * The method name.
@@ -45,7 +45,7 @@ public class MethodKey implements Serializable {
 	 * The method's actual parameter types. Could contain null values if the user did not specify a parameter type for
 	 * the corresponding parameter
 	 */
-	private Class[] parameterTypes;
+	private Class<?>[] parameterTypes;
 
 	/**
 	 * A cached handle to the resolved method (may be null).
@@ -58,7 +58,7 @@ public class MethodKey implements Serializable {
 	 * @param methodName the method name
 	 * @param parameterTypes the method's parameter types, or <code>null</code> if the method has no parameters
 	 */
-	public MethodKey(Class declaredType, String methodName, Class[] parameterTypes) {
+	public MethodKey(Class<?> declaredType, String methodName, Class<?>[] parameterTypes) {
 		Assert.notNull(declaredType, "The method's declared type is required");
 		Assert.notNull(methodName, "The method name is required");
 		this.declaredType = declaredType;
@@ -69,7 +69,7 @@ public class MethodKey implements Serializable {
 	/**
 	 * Return the class the method is a member of.
 	 */
-	public Class getDeclaredType() {
+	public Class<?> getDeclaredType() {
 		return declaredType;
 	}
 
@@ -84,7 +84,7 @@ public class MethodKey implements Serializable {
 	 * Returns the method parameter types. Could contain null values if no type was specified for the corresponding
 	 * parameter.
 	 */
-	public Class[] getParameterTypes() {
+	public Class<?>[] getParameterTypes() {
 		return parameterTypes;
 	}
 
@@ -121,17 +121,17 @@ public class MethodKey implements Serializable {
 	 */
 	protected Method findMethodConsiderAssignableParameterTypes() {
 		Method[] candidateMethods = getDeclaredType().getMethods();
-		for (int i = 0; i < candidateMethods.length; i++) {
-			if (candidateMethods[i].getName().equals(methodName)) {
+		for (Method candidateMethod : candidateMethods) {
+			if (candidateMethod.getName().equals(methodName)) {
 				// Check if the method has the correct number of parameters.
-				Class[] candidateParameterTypes = candidateMethods[i].getParameterTypes();
+				Class<?>[] candidateParameterTypes = candidateMethod.getParameterTypes();
 				if (candidateParameterTypes.length == parameterTypes.length) {
 					int numberOfCorrectArguments = 0;
 					for (int j = 0; j < candidateParameterTypes.length; j++) {
 						// Check if the candidate type is assignable to the sig
 						// parameter type.
-						Class candidateType = candidateParameterTypes[j];
-						Class parameterType = parameterTypes[j];
+						Class<?> candidateType = candidateParameterTypes[j];
+						Class<?> parameterType = parameterTypes[j];
 						if (parameterType != null) {
 							if (isAssignable(candidateType, parameterType)) {
 								numberOfCorrectArguments++;
@@ -142,7 +142,7 @@ public class MethodKey implements Serializable {
 						}
 					}
 					if (numberOfCorrectArguments == parameterTypes.length) {
-						return candidateMethods[i];
+						return candidateMethod;
 					}
 				}
 			}
@@ -159,7 +159,7 @@ public class MethodKey implements Serializable {
 				&& parameterTypesEqual(other.parameterTypes);
 	}
 
-	private boolean parameterTypesEqual(Class[] other) {
+	private boolean parameterTypesEqual(Class<?>[] other) {
 		if (parameterTypes == other) {
 			return true;
 		}
@@ -183,10 +183,9 @@ public class MethodKey implements Serializable {
 			return 0;
 		}
 		int hash = 0;
-		for (int i = 0; i < parameterTypes.length; i++) {
-			Class parameterType = parameterTypes[i];
+		for (Class<?> parameterType : parameterTypes) {
 			if (parameterType != null) {
-				hash += parameterTypes[i].hashCode();
+				hash += parameterType.hashCode();
 			}
 		}
 		return hash;
@@ -225,24 +224,23 @@ public class MethodKey implements Serializable {
 	 * @param valueType the value type that should be assigned to the target type
 	 * @return if the target type is assignable from the value type
 	 */
-	private static boolean isAssignable(Class targetType, Class valueType) {
-		return (targetType.isAssignableFrom(valueType) || targetType.equals(primitiveWrapperTypeMap.get(valueType)));
+	private static boolean isAssignable(Class<?> targetType, Class<?> valueType) {
+		return (targetType.isAssignableFrom(valueType) || targetType.equals(PRIMITIVE_WRAPPER_TYPE_MAP.get(valueType)));
 	}
 
 	/**
 	 * Map with primitive wrapper type as key and corresponding primitive type as value, for example: Integer.class ->
 	 * int.class.
 	 */
-	private static final Map primitiveWrapperTypeMap = new HashMap(8);
-
+	private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_TYPE_MAP = new HashMap<Class<?>, Class<?>>(8);
 	static {
-		primitiveWrapperTypeMap.put(Boolean.class, boolean.class);
-		primitiveWrapperTypeMap.put(Byte.class, byte.class);
-		primitiveWrapperTypeMap.put(Character.class, char.class);
-		primitiveWrapperTypeMap.put(Double.class, double.class);
-		primitiveWrapperTypeMap.put(Float.class, float.class);
-		primitiveWrapperTypeMap.put(Integer.class, int.class);
-		primitiveWrapperTypeMap.put(Long.class, long.class);
-		primitiveWrapperTypeMap.put(Short.class, short.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Boolean.class, boolean.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Byte.class, byte.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Character.class, char.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Double.class, double.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Float.class, float.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Integer.class, int.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Long.class, long.class);
+		PRIMITIVE_WRAPPER_TYPE_MAP.put(Short.class, short.class);
 	}
 }

@@ -55,7 +55,7 @@ public interface FlowHandler {
 	 * @param request the current request
 	 * @return the input map
 	 */
-	public MutableAttributeMap createExecutionInputMap(RenderRequest request);
+	public MutableAttributeMap<Object> createExecutionInputMap(RenderRequest request);
 
 	/**
 	 * Creates the flow execution input map to pass to a new instance of the flow being started in a resource request.
@@ -63,7 +63,7 @@ public interface FlowHandler {
 	 * @param request the current request
 	 * @return the input map
 	 */
-	public MutableAttributeMap createResourceExecutionInputMap(ResourceRequest request);
+	public MutableAttributeMap<Object> createResourceExecutionInputMap(ResourceRequest request);
 
 	/**
 	 * Handles a specific flow execution outcome. Used to change portlet modes after the flow ends.

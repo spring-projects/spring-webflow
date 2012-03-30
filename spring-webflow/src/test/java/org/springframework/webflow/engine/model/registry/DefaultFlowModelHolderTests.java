@@ -25,7 +25,7 @@ public class DefaultFlowModelHolderTests extends TestCase {
 	public void testGetFlowDefinition() {
 		FlowModel flow = holder.getFlowModel();
 		assertNull(flow.getStartStateId());
-		assertEquals("end", ((AbstractStateModel) flow.getStates().get(0)).getId());
+		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
 	public void testGetFlowDefinitionWithChangesRefreshed() {
@@ -33,14 +33,14 @@ public class DefaultFlowModelHolderTests extends TestCase {
 		holder.refresh();
 		flow = holder.getFlowModel();
 		assertNull(flow.getStartStateId());
-		assertEquals("end", ((AbstractStateModel) flow.getStates().get(0)).getId());
+		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
 	public class SimpleFlowBuilder implements FlowModelBuilder {
 
 		public FlowModel getFlowModel() throws FlowModelBuilderException {
 			FlowModel flow = new FlowModel();
-			flow.setStates(new LinkedList(Collections.singletonList(new EndStateModel("end"))));
+			flow.setStates(new LinkedList<AbstractStateModel>(Collections.singletonList(new EndStateModel("end"))));
 			return flow;
 		}
 

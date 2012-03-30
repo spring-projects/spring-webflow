@@ -13,6 +13,7 @@ import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.mapping.Mapping;
+import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.impl.DefaultMappingResults;
 import org.springframework.binding.mapping.results.TypeConversionError;
 import org.springframework.binding.message.DefaultMessageContext;
@@ -66,10 +67,11 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals(new Integer(3), model.getRawFieldValue("datum2"));
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testGetFieldValueConvertedWithCustomConverter() {
 		testBean.datum2 = 3;
 		conversionService.addConverter("customConverter", new StringToObject(Integer.class) {
-			protected Object toObject(String string, Class targetClass) throws Exception {
+			protected Object toObject(String string, Class<?> targetClass) throws Exception {
 				return Integer.valueOf(string);
 			}
 
@@ -84,9 +86,9 @@ public abstract class AbstractBindingModelTests extends TestCase {
 	}
 
 	public void testGetFieldValueError() {
-		Map source = new HashMap();
+		Map<String, String> source = new HashMap<String, String>();
 		source.put("datum2", "bogus");
-		List mappingResults = new ArrayList();
+		List<MappingResult> mappingResults = new ArrayList<MappingResult>();
 		Mapping mapping = new Mapping() {
 			public Expression getSourceExpression() {
 				return expressionParser.parseExpression("datum2", null);
@@ -124,7 +126,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals(null, error.getRejectedValue());
 		assertTrue(!error.isBindingFailure());
 
-		FieldError error2 = (FieldError) model.getFieldErrors().get(0);
+		FieldError error2 = model.getFieldErrors().get(0);
 		assertEquals(error, error2);
 	}
 
@@ -150,7 +152,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		model.pushNestedPath("nestedBean");
 		assertEquals("test", model.getFieldValue("datum1"));
 		assertEquals("0", model.getFieldValue("datum2"));
-		Class clazz = model.getFieldType("datum2");
+		Class<?> clazz = model.getFieldType("datum2");
 		assertTrue(int.class.equals(clazz) || Integer.class.equals(clazz));
 
 		messages.addMessage(new MessageBuilder().source("nestedBean.datum2").error().defaultText("Error").build());

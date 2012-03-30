@@ -88,12 +88,10 @@ public class FlowHandlerMappingTests extends TestCase {
 		}
 
 		public ApplicationContext getApplicationContext() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public ClassLoader getClassLoader() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
@@ -102,37 +100,30 @@ public class FlowHandlerMappingTests extends TestCase {
 		}
 
 		public String[] getPossibleOutcomes() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public StateDefinition getStartState() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public StateDefinition getState(String id) throws IllegalArgumentException {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public boolean inDevelopment() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public MutableAttributeMap getAttributes() {
-			// TODO Auto-generated method stub
+		public MutableAttributeMap<Object> getAttributes() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public String getCaption() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public String getDescription() {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
@@ -143,8 +134,7 @@ public class FlowHandlerMappingTests extends TestCase {
 
 	public static class CustomFlowHandler implements FlowHandler {
 
-		public MutableAttributeMap createExecutionInputMap(HttpServletRequest request) {
-			// TODO Auto-generated method stub
+		public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
@@ -153,13 +143,11 @@ public class FlowHandlerMappingTests extends TestCase {
 		}
 
 		public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response) {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
 		public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 				HttpServletResponse response) {
-			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

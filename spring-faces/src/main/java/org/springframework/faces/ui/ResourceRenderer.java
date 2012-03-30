@@ -33,7 +33,6 @@ import org.springframework.util.Assert;
  * </p>
  * 
  * @author Jeremy Grelle
- * 
  */
 public class ResourceRenderer extends Renderer {
 

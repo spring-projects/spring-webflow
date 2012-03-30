@@ -18,7 +18,6 @@ package org.springframework.webflow.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -77,14 +76,13 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		parserContext.popAndRegisterContainingComponent();
 	}
 
-	private List parseLocations(Element element) {
-		List locationElements = DomUtils.getChildElementsByTagName(element, "flow-location");
+	private List<FlowLocation> parseLocations(Element element) {
+		List<Element> locationElements = DomUtils.getChildElementsByTagName(element, "flow-location");
 		if (locationElements.isEmpty()) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
-		List locations = new ArrayList(locationElements.size());
-		for (Iterator it = locationElements.iterator(); it.hasNext();) {
-			Element locationElement = (Element) it.next();
+		List<FlowLocation> locations = new ArrayList<FlowLocation>(locationElements.size());
+		for (Element locationElement : locationElements) {
 			String id = locationElement.getAttribute("id");
 			String path = locationElement.getAttribute("path");
 			locations.add(new FlowLocation(id, path, parseAttributes(locationElement)));
@@ -92,27 +90,26 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		return locations;
 	}
 
-	private List parseLocationPatterns(Element element) {
-		List locationPatternElements = DomUtils.getChildElementsByTagName(element, "flow-location-pattern");
+	private List<String> parseLocationPatterns(Element element) {
+		List<Element> locationPatternElements = DomUtils.getChildElementsByTagName(element, "flow-location-pattern");
 		if (locationPatternElements.isEmpty()) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
-		List locationPatterns = new ArrayList(locationPatternElements.size());
-		for (Iterator it = locationPatternElements.iterator(); it.hasNext();) {
-			Element locationPatternElement = (Element) it.next();
+		List<String> locationPatterns = new ArrayList<String>(locationPatternElements.size());
+		for (Element locationPatternElement : locationPatternElements) {
 			String value = locationPatternElement.getAttribute("value");
 			locationPatterns.add(value);
 		}
 		return locationPatterns;
 	}
 
-	private Set parseAttributes(Element element) {
+	private Set<FlowElementAttribute> parseAttributes(Element element) {
 		Element definitionAttributesElement = DomUtils.getChildElementByTagName(element, "flow-definition-attributes");
 		if (definitionAttributesElement != null) {
-			List attributeElements = DomUtils.getChildElementsByTagName(definitionAttributesElement, "attribute");
-			HashSet attributes = new HashSet(attributeElements.size());
-			for (Iterator it = attributeElements.iterator(); it.hasNext();) {
-				Element attributeElement = (Element) it.next();
+			List<Element> attributeElements = DomUtils.getChildElementsByTagName(definitionAttributesElement,
+					"attribute");
+			Set<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>(attributeElements.size());
+			for (Element attributeElement : attributeElements) {
 				String name = attributeElement.getAttribute("name");
 				String value = attributeElement.getAttribute("value");
 				String type = attributeElement.getAttribute("type");
@@ -124,14 +121,13 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		}
 	}
 
-	private List parseFlowBuilders(Element element) {
-		List builderElements = DomUtils.getChildElementsByTagName(element, "flow-builder");
+	private List<FlowBuilderInfo> parseFlowBuilders(Element element) {
+		List<Element> builderElements = DomUtils.getChildElementsByTagName(element, "flow-builder");
 		if (builderElements.isEmpty()) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
-		List builders = new ArrayList(builderElements.size());
-		for (Iterator it = builderElements.iterator(); it.hasNext();) {
-			Element builderElement = (Element) it.next();
+		List<FlowBuilderInfo> builders = new ArrayList<FlowBuilderInfo>(builderElements.size());
+		for (Element builderElement : builderElements) {
 			String id = builderElement.getAttribute("id");
 			String className = builderElement.getAttribute("class");
 			builders.add(new FlowBuilderInfo(id, className, parseAttributes(builderElement)));

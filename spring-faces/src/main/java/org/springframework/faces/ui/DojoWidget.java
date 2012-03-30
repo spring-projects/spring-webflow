@@ -24,7 +24,6 @@ import javax.faces.el.ValueBinding;
  * component with enhanced client-side behavior.
  * 
  * @author Jeremy Grelle
- * 
  */
 public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 

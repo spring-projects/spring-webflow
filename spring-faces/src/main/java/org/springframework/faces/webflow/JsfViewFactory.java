@@ -179,9 +179,9 @@ public class JsfViewFactory implements ViewFactory {
 		if (binding != null) {
 			binding.setValue(context, component);
 		}
-		Iterator it = component.getFacetsAndChildren();
+		Iterator<UIComponent> it = component.getFacetsAndChildren();
 		while (it.hasNext()) {
-			UIComponent child = (UIComponent) it.next();
+			UIComponent child = it.next();
 			processTree(context, child);
 		}
 	}

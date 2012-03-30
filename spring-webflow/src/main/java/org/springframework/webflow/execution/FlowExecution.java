@@ -36,7 +36,7 @@ public interface FlowExecution extends FlowExecutionContext {
 	 * @throws FlowExecutionException if an exception was thrown within a state of the flow execution during request
 	 * processing
 	 */
-	public void start(MutableAttributeMap input, ExternalContext context) throws FlowExecutionException;
+	public void start(MutableAttributeMap<?> input, ExternalContext context) throws FlowExecutionException;
 
 	/**
 	 * Resume this flow execution. May be called when the flow execution is paused.

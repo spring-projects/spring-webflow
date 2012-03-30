@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.model.builder.xml;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -213,123 +212,124 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		return flow;
 	}
 
-	private LinkedList parseAttributes(Element element) {
-		List attributeElements = DomUtils.getChildElementsByTagName(element, "attribute");
+	private LinkedList<AttributeModel> parseAttributes(Element element) {
+		List<Element> attributeElements = DomUtils.getChildElementsByTagName(element, "attribute");
 		if (attributeElements.isEmpty()) {
 			return null;
 		}
-		LinkedList attributes = new LinkedList();
-		for (Iterator it = attributeElements.iterator(); it.hasNext();) {
-			attributes.add(parseAttribute((Element) it.next()));
+		LinkedList<AttributeModel> attributes = new LinkedList<AttributeModel>();
+		for (Element element2 : attributeElements) {
+			attributes.add(parseAttribute(element2));
 		}
 		return attributes;
 	}
 
-	private LinkedList parseVars(Element element) {
-		List varElements = DomUtils.getChildElementsByTagName(element, "var");
+	private LinkedList<VarModel> parseVars(Element element) {
+		List<Element> varElements = DomUtils.getChildElementsByTagName(element, "var");
 		if (varElements.isEmpty()) {
 			return null;
 		}
-		LinkedList vars = new LinkedList();
-		for (Iterator it = varElements.iterator(); it.hasNext();) {
-			vars.add(parseVar((Element) it.next()));
+		LinkedList<VarModel> vars = new LinkedList<VarModel>();
+		for (Element element2 : varElements) {
+			vars.add(parseVar(element2));
 		}
 		return vars;
 	}
 
-	private LinkedList parseInputs(Element element) {
-		List inputElements = DomUtils.getChildElementsByTagName(element, "input");
+	private LinkedList<InputModel> parseInputs(Element element) {
+		List<Element> inputElements = DomUtils.getChildElementsByTagName(element, "input");
 		if (inputElements.isEmpty()) {
 			return null;
 		}
-		LinkedList inputs = new LinkedList();
-		for (Iterator it = inputElements.iterator(); it.hasNext();) {
-			inputs.add(parseInput((Element) it.next()));
+		LinkedList<InputModel> inputs = new LinkedList<InputModel>();
+		for (Element element2 : inputElements) {
+			inputs.add(parseInput(element2));
 		}
 		return inputs;
 	}
 
-	private LinkedList parseOutputs(Element element) {
-		List outputElements = DomUtils.getChildElementsByTagName(element, "output");
+	private LinkedList<OutputModel> parseOutputs(Element element) {
+		List<Element> outputElements = DomUtils.getChildElementsByTagName(element, "output");
 		if (outputElements.isEmpty()) {
 			return null;
 		}
-		LinkedList outputs = new LinkedList();
-		for (Iterator it = outputElements.iterator(); it.hasNext();) {
-			outputs.add(parseOutput((Element) it.next()));
+		LinkedList<OutputModel> outputs = new LinkedList<OutputModel>();
+		for (Element element2 : outputElements) {
+			outputs.add(parseOutput(element2));
 		}
 		return outputs;
 	}
 
-	private LinkedList parseActions(Element element) {
-		List actionElements = DomUtils.getChildElementsByTagName(element, new String[] { "evaluate", "render", "set" });
+	private LinkedList<AbstractActionModel> parseActions(Element element) {
+		List<Element> actionElements = DomUtils.getChildElementsByTagName(element, new String[] { "evaluate", "render",
+				"set" });
 		if (actionElements.isEmpty()) {
 			return null;
 		}
-		LinkedList actions = new LinkedList();
-		for (Iterator it = actionElements.iterator(); it.hasNext();) {
-			actions.add(parseAction((Element) it.next()));
+		LinkedList<AbstractActionModel> actions = new LinkedList<AbstractActionModel>();
+		for (Element element2 : actionElements) {
+			actions.add(parseAction(element2));
 		}
 		return actions;
 	}
 
-	private LinkedList parseStates(Element element) {
-		List stateElements = DomUtils.getChildElementsByTagName(element, new String[] { "view-state", "action-state",
-				"decision-state", "subflow-state", "end-state" });
+	private LinkedList<AbstractStateModel> parseStates(Element element) {
+		List<Element> stateElements = DomUtils.getChildElementsByTagName(element, new String[] { "view-state",
+				"action-state", "decision-state", "subflow-state", "end-state" });
 		if (stateElements.isEmpty()) {
 			return null;
 		}
-		LinkedList states = new LinkedList();
-		for (Iterator it = stateElements.iterator(); it.hasNext();) {
-			states.add(parseState((Element) it.next()));
+		LinkedList<AbstractStateModel> states = new LinkedList<AbstractStateModel>();
+		for (Element element2 : stateElements) {
+			states.add(parseState(element2));
 		}
 		return states;
 	}
 
-	private LinkedList parseTransitions(Element element) {
-		List transitionElements = DomUtils.getChildElementsByTagName(element, "transition");
+	private LinkedList<TransitionModel> parseTransitions(Element element) {
+		List<Element> transitionElements = DomUtils.getChildElementsByTagName(element, "transition");
 		if (transitionElements.isEmpty()) {
 			return null;
 		}
-		LinkedList transitions = new LinkedList();
-		for (Iterator it = transitionElements.iterator(); it.hasNext();) {
-			transitions.add(parseTransition((Element) it.next()));
+		LinkedList<TransitionModel> transitions = new LinkedList<TransitionModel>();
+		for (Element element2 : transitionElements) {
+			transitions.add(parseTransition(element2));
 		}
 		return transitions;
 	}
 
-	private LinkedList parseExceptionHandlers(Element element) {
-		List exceptionHandlerElements = DomUtils.getChildElementsByTagName(element, "exception-handler");
+	private LinkedList<ExceptionHandlerModel> parseExceptionHandlers(Element element) {
+		List<Element> exceptionHandlerElements = DomUtils.getChildElementsByTagName(element, "exception-handler");
 		if (exceptionHandlerElements.isEmpty()) {
 			return null;
 		}
-		LinkedList exceptionHandlers = new LinkedList();
-		for (Iterator it = exceptionHandlerElements.iterator(); it.hasNext();) {
-			exceptionHandlers.add(parseExceptionHandler((Element) it.next()));
+		LinkedList<ExceptionHandlerModel> exceptionHandlers = new LinkedList<ExceptionHandlerModel>();
+		for (Element element2 : exceptionHandlerElements) {
+			exceptionHandlers.add(parseExceptionHandler(element2));
 		}
 		return exceptionHandlers;
 	}
 
-	private LinkedList parseBeanImports(Element element) {
-		List importElements = DomUtils.getChildElementsByTagName(element, "bean-import");
+	private LinkedList<BeanImportModel> parseBeanImports(Element element) {
+		List<Element> importElements = DomUtils.getChildElementsByTagName(element, "bean-import");
 		if (importElements.isEmpty()) {
 			return null;
 		}
-		LinkedList beanImports = new LinkedList();
-		for (Iterator it = importElements.iterator(); it.hasNext();) {
-			beanImports.add(parseBeanImport((Element) it.next()));
+		LinkedList<BeanImportModel> beanImports = new LinkedList<BeanImportModel>();
+		for (Element element2 : importElements) {
+			beanImports.add(parseBeanImport(element2));
 		}
 		return beanImports;
 	}
 
-	private LinkedList parseIfs(Element element) {
-		List ifElements = DomUtils.getChildElementsByTagName(element, "if");
+	private LinkedList<IfModel> parseIfs(Element element) {
+		List<Element> ifElements = DomUtils.getChildElementsByTagName(element, "if");
 		if (ifElements.isEmpty()) {
 			return null;
 		}
-		LinkedList ifs = new LinkedList();
-		for (Iterator it = ifElements.iterator(); it.hasNext();) {
-			ifs.add(parseIf((Element) it.next()));
+		LinkedList<IfModel> ifs = new LinkedList<IfModel>();
+		for (Element element2 : ifElements) {
+			ifs.add(parseIf(element2));
 		}
 		return ifs;
 	}
@@ -362,7 +362,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
-	private LinkedList parseGlobalTransitions(Element element) {
+	private LinkedList<TransitionModel> parseGlobalTransitions(Element element) {
 		element = DomUtils.getChildElementByTagName(element, "global-transitions");
 		if (element == null) {
 			return null;
@@ -456,7 +456,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		return ifModel;
 	}
 
-	private LinkedList parseOnStartActions(Element element) {
+	private LinkedList<AbstractActionModel> parseOnStartActions(Element element) {
 		Element onStartElement = DomUtils.getChildElementByTagName(element, "on-start");
 		if (onStartElement != null) {
 			return parseActions(onStartElement);
@@ -465,7 +465,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
-	private LinkedList parseOnEntryActions(Element element) {
+	private LinkedList<AbstractActionModel> parseOnEntryActions(Element element) {
 		Element onEntryElement = DomUtils.getChildElementByTagName(element, "on-entry");
 		if (onEntryElement != null) {
 			return parseActions(onEntryElement);
@@ -474,7 +474,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
-	private LinkedList parseOnRenderActions(Element element) {
+	private LinkedList<AbstractActionModel> parseOnRenderActions(Element element) {
 		Element onRenderElement = DomUtils.getChildElementByTagName(element, "on-render");
 		if (onRenderElement != null) {
 			return parseActions(onRenderElement);
@@ -494,14 +494,14 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
-	private LinkedList parseBindings(Element element) {
-		List bindingElements = DomUtils.getChildElementsByTagName(element, "binding");
+	private LinkedList<BindingModel> parseBindings(Element element) {
+		List<Element> bindingElements = DomUtils.getChildElementsByTagName(element, "binding");
 		if (bindingElements.isEmpty()) {
 			return null;
 		}
-		LinkedList bindings = new LinkedList();
-		for (Iterator it = bindingElements.iterator(); it.hasNext();) {
-			bindings.add(parseBinding((Element) it.next()));
+		LinkedList<BindingModel> bindings = new LinkedList<BindingModel>();
+		for (Element element2 : bindingElements) {
+			bindings.add(parseBinding(element2));
 		}
 		return bindings;
 	}
@@ -511,7 +511,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 				element.getAttribute("required"));
 	}
 
-	private LinkedList parseOnExitActions(Element element) {
+	private LinkedList<AbstractActionModel> parseOnExitActions(Element element) {
 		Element onExitElement = DomUtils.getChildElementByTagName(element, "on-exit");
 		if (onExitElement != null) {
 			return parseActions(onExitElement);
@@ -520,7 +520,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
-	private LinkedList parseOnEndActions(Element element) {
+	private LinkedList<AbstractActionModel> parseOnEndActions(Element element) {
 		Element onEndElement = DomUtils.getChildElementByTagName(element, "on-end");
 		if (onEndElement != null) {
 			return parseActions(onEndElement);
@@ -624,9 +624,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private void mergeFlows() {
 		if (flowModel.getParent() != null) {
-			List parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
-			for (Iterator it = parents.iterator(); it.hasNext();) {
-				String parentFlowId = (String) it.next();
+			List<String> parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
+			for (String parentFlowId : parents) {
 				if (StringUtils.hasText(parentFlowId)) {
 					try {
 						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
@@ -643,8 +642,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (flowModel.getStates() == null) {
 			return;
 		}
-		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
-			AbstractStateModel childState = (AbstractStateModel) it.next();
+		for (AbstractStateModel childState : flowModel.getStates()) {
 			String parent = childState.getParent();
 			if (childState.getParent() != null) {
 				String flowId;

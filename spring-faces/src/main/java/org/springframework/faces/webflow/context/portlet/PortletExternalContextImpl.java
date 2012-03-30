@@ -79,7 +79,7 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	private Map<String, String[]> requestParameterValuesMap;
 
-	private MapAdaptable sessionMap;
+	private MapAdaptable<String, Object> sessionMap;
 
 	public PortletExternalContextImpl(PortletContext portletContext, PortletRequest portletRequest,
 			PortletResponse portletResponse) {
@@ -122,7 +122,6 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getApplicationMap() {
 		if (applicationMap == null) {
 			applicationMap = new PortletContextMap(portletContext);
@@ -146,7 +145,6 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getInitParameterMap() {
 		if (initParameterMap == null) {
 			initParameterMap = new InitParameterMap(portletContext);
@@ -175,29 +173,22 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getRequestCookieMap() {
-		return Collections.EMPTY_MAP;
+		return Collections.emptyMap();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getRequestHeaderMap() {
 		if (requestHeaderMap == null) {
-			RequestPropertyMap map = new RequestPropertyMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.FALSE);
-			requestHeaderMap = map;
+			requestHeaderMap = new SingleValueRequestPropertyMap(portletRequest);
 		}
 		return requestHeaderMap;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String[]> getRequestHeaderValuesMap() {
 		if (requestHeaderValuesMap == null) {
-			RequestPropertyMap map = new RequestPropertyMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.TRUE);
-			requestHeaderValuesMap = map;
+			requestHeaderValuesMap = new MultiValueRequestPropertyMap(portletRequest);
 		}
 		return requestHeaderValuesMap;
 	}
@@ -208,13 +199,11 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<Locale> getRequestLocales() {
 		return CollectionUtils.toIterator(portletRequest.getLocales());
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getRequestMap() {
 		if (requestMap == null) {
 			requestMap = new PortletRequestMap(portletRequest);
@@ -223,29 +212,22 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getRequestParameterMap() {
 		if (requestParameterMap == null) {
-			RequestParameterMap map = new RequestParameterMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.FALSE);
-			requestParameterMap = map;
+			requestParameterMap = new SingleValueRequestParameterMap(portletRequest);
 		}
 		return requestParameterMap;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<String> getRequestParameterNames() {
 		return CollectionUtils.toIterator(portletRequest.getParameterNames());
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String[]> getRequestParameterValuesMap() {
 		if (requestParameterValuesMap == null) {
-			RequestParameterMap map = new RequestParameterMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.TRUE);
-			requestParameterValuesMap = map;
+			requestParameterValuesMap = new MultiValueRequestParameterMap(portletRequest);
 		}
 		return requestParameterValuesMap;
 	}
@@ -302,10 +284,9 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getSessionMap() {
 		if (sessionMap == null) {
-			sessionMap = new LocalAttributeMap(new PortletSessionMap(portletRequest));
+			sessionMap = new LocalAttributeMap<Object>(new PortletSessionMap(portletRequest));
 		}
 		return sessionMap.asMap();
 	}

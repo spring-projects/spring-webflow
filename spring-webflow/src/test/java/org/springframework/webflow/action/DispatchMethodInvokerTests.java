@@ -52,6 +52,7 @@ public class DispatchMethodInvokerTests extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private class MockClass {
 		private boolean methodCalled = false;
 

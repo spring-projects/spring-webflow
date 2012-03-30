@@ -30,7 +30,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
  */
 public class MapAdaptablePropertyAccessor implements PropertyAccessor {
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return new Class[] { MapAdaptable.class };
 	}
 
@@ -39,7 +39,7 @@ public class MapAdaptablePropertyAccessor implements PropertyAccessor {
 	}
 
 	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
-		MapAdaptable map = (MapAdaptable) target;
+		MapAdaptable<?, ?> map = (MapAdaptable<?, ?>) target;
 		return new TypedValue(map.asMap().get(name));
 	}
 
@@ -47,6 +47,7 @@ public class MapAdaptablePropertyAccessor implements PropertyAccessor {
 		return (target instanceof MutableAttributeMap);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
 		MutableAttributeMap map = (MutableAttributeMap) target;
 		map.put(name, newValue);

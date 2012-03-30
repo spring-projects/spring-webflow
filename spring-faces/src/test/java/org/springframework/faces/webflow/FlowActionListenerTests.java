@@ -24,14 +24,14 @@ public class FlowActionListenerTests extends TestCase {
 
 	JSFMockHelper jsfMock = new JSFMockHelper();
 
-	RequestContext context = (RequestContext) EasyMock.createMock(RequestContext.class);
+	RequestContext context = EasyMock.createMock(RequestContext.class);
 
 	protected void setUp() throws Exception {
 		jsfMock.setUp();
 
 		listener = new FlowActionListener(jsfMock.application().getActionListener());
 		RequestContextHolder.setRequestContext(context);
-		LocalAttributeMap flash = new LocalAttributeMap();
+		LocalAttributeMap<Object> flash = new LocalAttributeMap<Object>();
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flash);
 		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
 		EasyMock.replay(new Object[] { context });
@@ -79,7 +79,7 @@ public class FlowActionListenerTests extends TestCase {
 			this.result = result;
 		}
 
-		public Class getType(FacesContext context) throws MethodNotFoundException {
+		public Class<?> getType(FacesContext context) throws MethodNotFoundException {
 			return String.class;
 		}
 

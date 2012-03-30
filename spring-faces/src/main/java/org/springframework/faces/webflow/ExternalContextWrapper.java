@@ -37,7 +37,7 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.encodeResourceURL(url);
 	}
 
-	public Map getApplicationMap() {
+	public Map<String, Object> getApplicationMap() {
 		return delegate.getApplicationMap();
 	}
 
@@ -53,6 +53,7 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.getInitParameter(name);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Map getInitParameterMap() {
 		return delegate.getInitParameterMap();
 	}
@@ -77,15 +78,15 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.getRequestContextPath();
 	}
 
-	public Map getRequestCookieMap() {
+	public Map<String, Object> getRequestCookieMap() {
 		return delegate.getRequestCookieMap();
 	}
 
-	public Map getRequestHeaderMap() {
+	public Map<String, String> getRequestHeaderMap() {
 		return delegate.getRequestHeaderMap();
 	}
 
-	public Map getRequestHeaderValuesMap() {
+	public Map<String, String[]> getRequestHeaderValuesMap() {
 		return delegate.getRequestHeaderValuesMap();
 	}
 
@@ -93,23 +94,23 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.getRequestLocale();
 	}
 
-	public Iterator getRequestLocales() {
+	public Iterator<Locale> getRequestLocales() {
 		return delegate.getRequestLocales();
 	}
 
-	public Map getRequestMap() {
+	public Map<String, Object> getRequestMap() {
 		return delegate.getRequestMap();
 	}
 
-	public Map getRequestParameterMap() {
+	public Map<String, String> getRequestParameterMap() {
 		return delegate.getRequestParameterMap();
 	}
 
-	public Iterator getRequestParameterNames() {
+	public Iterator<String> getRequestParameterNames() {
 		return delegate.getRequestParameterNames();
 	}
 
-	public Map getRequestParameterValuesMap() {
+	public Map<String, String[]> getRequestParameterValuesMap() {
 		return delegate.getRequestParameterValuesMap();
 	}
 
@@ -129,7 +130,7 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.getResourceAsStream(path);
 	}
 
-	public Set getResourcePaths(String path) {
+	public Set<String> getResourcePaths(String path) {
 		return delegate.getResourcePaths(path);
 	}
 
@@ -149,7 +150,7 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.getSession(create);
 	}
 
-	public Map getSessionMap() {
+	public Map<String, Object> getSessionMap() {
 		return delegate.getSessionMap();
 	}
 

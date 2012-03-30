@@ -58,7 +58,7 @@ public class FlowArtifactFactory {
 	 * null
 	 * @return the initial flow instance, ready for assembly by a FlowBuilder
 	 */
-	public Flow createFlow(String id, AttributeMap attributes) {
+	public Flow createFlow(String id, AttributeMap<?> attributes) {
 		return Flow.create(id, attributes);
 	}
 
@@ -82,7 +82,7 @@ public class FlowArtifactFactory {
 	 */
 	public State createViewState(String id, Flow flow, ViewVariable[] variables, Action[] entryActions,
 			ViewFactory viewFactory, Boolean redirect, boolean popup, Action[] renderActions, Transition[] transitions,
-			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
+			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap<?> attributes) {
 		ViewState viewState = new ViewState(flow, id, viewFactory);
 		viewState.addVariables(variables);
 		viewState.setRedirect(redirect);
@@ -109,7 +109,7 @@ public class FlowArtifactFactory {
 	 */
 	public State createActionState(String id, Flow flow, Action[] entryActions, Action[] actions,
 			Transition[] transitions, FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions,
-			AttributeMap attributes) {
+			AttributeMap<?> attributes) {
 		ActionState actionState = new ActionState(flow, id);
 		actionState.getActionList().addAll(actions);
 		configureCommonProperties(actionState, entryActions, transitions, exceptionHandlers, exitActions, attributes);
@@ -131,7 +131,7 @@ public class FlowArtifactFactory {
 	 * @return the fully initialized decision state instance
 	 */
 	public State createDecisionState(String id, Flow flow, Action[] entryActions, Transition[] transitions,
-			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
+			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap<?> attributes) {
 		DecisionState decisionState = new DecisionState(flow, id);
 		configureCommonProperties(decisionState, entryActions, transitions, exceptionHandlers, exitActions, attributes);
 		return decisionState;
@@ -155,7 +155,7 @@ public class FlowArtifactFactory {
 	 */
 	public State createSubflowState(String id, Flow flow, Action[] entryActions, Expression subflow,
 			SubflowAttributeMapper attributeMapper, Transition[] transitions,
-			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
+			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap<?> attributes) {
 		SubflowState subflowState = new SubflowState(flow, id, subflow);
 		if (attributeMapper != null) {
 			subflowState.setAttributeMapper(attributeMapper);
@@ -179,7 +179,7 @@ public class FlowArtifactFactory {
 	 * @return the fully initialized subflow state instance
 	 */
 	public State createEndState(String id, Flow flow, Action[] entryActions, Action finalResponseAction,
-			Mapper outputMapper, FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap attributes) {
+			Mapper outputMapper, FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap<?> attributes) {
 		EndState endState = new EndState(flow, id);
 		if (finalResponseAction != null) {
 			endState.setFinalResponseAction(finalResponseAction);
@@ -203,7 +203,7 @@ public class FlowArtifactFactory {
 	 * @return the fully initialized transition instance
 	 */
 	public Transition createTransition(TargetStateResolver targetStateResolver, TransitionCriteria matchingCriteria,
-			TransitionCriteria executionCriteria, AttributeMap attributes) {
+			TransitionCriteria executionCriteria, AttributeMap<?> attributes) {
 		Transition transition = new Transition(targetStateResolver);
 		if (matchingCriteria != null) {
 			transition.setMatchingCriteria(matchingCriteria);
@@ -221,7 +221,7 @@ public class FlowArtifactFactory {
 	 * Configure common properties for a transitionable state.
 	 */
 	private void configureCommonProperties(TransitionableState state, Action[] entryActions, Transition[] transitions,
-			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap attributes) {
+			FlowExecutionExceptionHandler[] exceptionHandlers, Action[] exitActions, AttributeMap<?> attributes) {
 		configureCommonProperties(state, entryActions, exceptionHandlers, attributes);
 		state.getTransitionSet().addAll(transitions);
 		state.getExitActionList().addAll(exitActions);
@@ -231,7 +231,7 @@ public class FlowArtifactFactory {
 	 * Configure common properties for a state.
 	 */
 	private void configureCommonProperties(State state, Action[] entryActions,
-			FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap attributes) {
+			FlowExecutionExceptionHandler[] exceptionHandlers, AttributeMap<?> attributes) {
 		state.getEntryActionList().addAll(entryActions);
 		state.getExceptionHandlerSet().addAll(exceptionHandlers);
 		state.getAttributes().putAll(attributes);

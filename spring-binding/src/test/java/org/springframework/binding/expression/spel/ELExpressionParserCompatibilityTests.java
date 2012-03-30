@@ -147,7 +147,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
 		TestBean context = new TestBean();
-		Class clazz = exp.getValueType(context);
+		Class<?> clazz = exp.getValueType(context);
 		assertTrue(int.class.equals(clazz) || Integer.class.equals(clazz));
 	}
 
@@ -207,7 +207,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 					TypeDescriptor.valueOf(String.class));
 		}
 
-		public Class[] getSpecificTargetClasses() {
+		public Class<?>[] getSpecificTargetClasses() {
 			return null;
 		}
 

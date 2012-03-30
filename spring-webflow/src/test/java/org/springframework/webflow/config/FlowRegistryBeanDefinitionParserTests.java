@@ -56,12 +56,12 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 	}
 
 	public void testDefaultFlowBuilderServices() {
-		Map flowBuilderServicesBeans = context.getBeansOfType(FlowBuilderServices.class);
+		Map<String, FlowBuilderServices> flowBuilderServicesBeans = context.getBeansOfType(FlowBuilderServices.class);
 		assertTrue(flowBuilderServicesBeans.size() > 0);
 
-		Iterator i = flowBuilderServicesBeans.values().iterator();
+		Iterator<FlowBuilderServices> i = flowBuilderServicesBeans.values().iterator();
 		while (i.hasNext()) {
-			FlowBuilderServices builderServices = (FlowBuilderServices) i.next();
+			FlowBuilderServices builderServices = i.next();
 			assertNotNull(builderServices);
 			assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 			assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);

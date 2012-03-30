@@ -37,7 +37,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	/**
 	 * The ordered chain of TransitionCriteria objects.
 	 */
-	private List criteriaChain = new LinkedList();
+	private List<TransitionCriteria> criteriaChain = new LinkedList<TransitionCriteria>();
 
 	/**
 	 * Creates an initially empty transition criteria chain.
@@ -65,9 +65,9 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	}
 
 	public boolean test(RequestContext context) {
-		Iterator it = criteriaChain.iterator();
+		Iterator<TransitionCriteria> it = criteriaChain.iterator();
 		while (it.hasNext()) {
-			TransitionCriteria criteria = (TransitionCriteria) it.next();
+			TransitionCriteria criteria = it.next();
 			if (!criteria.test(context)) {
 				return false;
 			}
@@ -90,8 +90,8 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 			return WildcardTransitionCriteria.INSTANCE;
 		}
 		TransitionCriteriaChain chain = new TransitionCriteriaChain();
-		for (int i = 0; i < actions.length; i++) {
-			chain.add(new ActionTransitionCriteria(actions[i]));
+		for (Action action : actions) {
+			chain.add(new ActionTransitionCriteria(action));
 		}
 		return chain;
 	}

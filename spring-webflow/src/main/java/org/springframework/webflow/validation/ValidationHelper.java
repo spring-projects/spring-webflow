@@ -18,7 +18,6 @@ package org.springframework.webflow.validation;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -279,16 +278,15 @@ public class ValidationHelper {
 		return false;
 	}
 
-	private Method findValidationMethod(Object model, Object validator, String methodName, Class context) {
-		Class modelClass = AopUtils.getTargetClass(model);
+	private Method findValidationMethod(Object model, Object validator, String methodName, Class<?> context) {
+		Class<?> modelClass = AopUtils.getTargetClass(model);
 
-		List modelSearchClasses = new ArrayList();
+		List<Class<?>> modelSearchClasses = new ArrayList<Class<?>>();
 		while (modelClass != null) {
 			modelSearchClasses.add(modelClass);
 			modelClass = modelClass.getSuperclass();
 		}
-		for (Iterator iterator = modelSearchClasses.iterator(); iterator.hasNext();) {
-			Class searchClass = (Class) iterator.next();
+		for (Class<?> searchClass : modelSearchClasses) {
 			Method method = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] { searchClass,
 					context });
 			if (method != null) {

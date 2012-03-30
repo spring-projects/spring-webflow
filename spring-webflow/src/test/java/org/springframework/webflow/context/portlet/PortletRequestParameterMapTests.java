@@ -76,10 +76,10 @@ public class PortletRequestParameterMapTests extends TestCase {
 	public void testGetAttributeNames() {
 		request.setParameter("Some param", "Some value");
 		// perform test
-		Iterator names = tested.getAttributeNames();
+		Iterator<String> names = tested.getAttributeNames();
 		assertNotNull("Null result unexpected", names);
 		assertTrue("More elements", names.hasNext());
-		String name = (String) names.next();
+		String name = names.next();
 		assertEquals("Some param", name);
 	}
 }

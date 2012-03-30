@@ -23,7 +23,7 @@ package org.springframework.webflow.core.collection;
  * 
  * @author Keith Donald
  */
-public interface MutableAttributeMap extends AttributeMap {
+public interface MutableAttributeMap<V> extends AttributeMap<V> {
 
 	/**
 	 * Put the attribute into this map.
@@ -36,27 +36,27 @@ public interface MutableAttributeMap extends AttributeMap {
 	 * @param attributeValue the attribute value
 	 * @return the previous value of the attribute, or <code>null</code> of there was no previous value
 	 */
-	public Object put(String attributeName, Object attributeValue);
+	public V put(String attributeName, V attributeValue);
 
 	/**
 	 * Put all the attributes into this map.
 	 * @param attributes the attributes to put into this map
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap putAll(AttributeMap attributes);
+	public MutableAttributeMap<V> putAll(AttributeMap<? extends V> attributes);
 
 	/**
 	 * Remove all attributes in the map provided from this map.
 	 * @param attributes the attributes to remove from this map
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap removeAll(MutableAttributeMap attributes);
+	public MutableAttributeMap<V> removeAll(MutableAttributeMap<? extends V> attributes);
 
 	/**
 	 * Remove an attribute from this map.
 	 * @param attributeName the name of the attribute to remove
-	 * @return previous value associated with specified attribute name, or <tt>null</tt> if there was no mapping for
-	 * the name
+	 * @return previous value associated with specified attribute name, or <tt>null</tt> if there was no mapping for the
+	 * name
 	 */
 	public Object remove(String attributeName);
 
@@ -71,13 +71,14 @@ public interface MutableAttributeMap extends AttributeMap {
 	 * Remove all attributes in this map.
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap clear();
+	public MutableAttributeMap<V> clear();
 
 	/**
 	 * Replace the contents of this attribute map with the contents of the provided collection.
 	 * @param attributes the attribute collection
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap replaceWith(AttributeMap attributes) throws UnsupportedOperationException;
+	public MutableAttributeMap<V> replaceWith(AttributeMap<? extends V> attributes)
+			throws UnsupportedOperationException;
 
 }

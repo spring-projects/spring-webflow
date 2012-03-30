@@ -20,7 +20,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 	}
 
 	public void testGetFlowRegistry() throws Exception {
-		HashSet attributes = new HashSet();
+		HashSet<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
 		attributes.add(new FlowElementAttribute("bar", "2", "integer"));
 		FlowLocation location1 = new FlowLocation("flow1", "org/springframework/webflow/config/flow.xml", attributes);
@@ -29,7 +29,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 		factoryBean.setFlowBuilderServices(TestFlowBuilderServicesFactory.getServices());
 		factoryBean.setFlowLocations(flowLocations);
 		factoryBean.afterPropertiesSet();
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
+		FlowDefinitionRegistry registry = factoryBean.getObject();
 		FlowDefinition def = registry.getFlowDefinition("flow1");
 		assertNotNull(def);
 		assertEquals("flow1", def.getId());
@@ -46,7 +46,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 		factoryBean.setFlowBuilderServices(TestFlowBuilderServicesFactory.getServices());
 		factoryBean.setFlowLocations(flowLocations);
 		factoryBean.afterPropertiesSet();
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
+		FlowDefinitionRegistry registry = factoryBean.getObject();
 		FlowDefinition def = registry.getFlowDefinition("flow");
 		assertNotNull(def);
 		assertEquals("flow", def.getId());
@@ -59,7 +59,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 		factoryBean.setFlowLocations(flowLocations);
 		factoryBean.setFlowBuilderServices(TestFlowBuilderServicesFactory.getServices());
 		factoryBean.afterPropertiesSet();
-		FlowDefinitionRegistry registry = (FlowDefinitionRegistry) factoryBean.getObject();
+		FlowDefinitionRegistry registry = factoryBean.getObject();
 		FlowDefinition def = registry.getFlowDefinition("flow");
 		assertNotNull(def);
 		assertEquals("flow", def.getId());
