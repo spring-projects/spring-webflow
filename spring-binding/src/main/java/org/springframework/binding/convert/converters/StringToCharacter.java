@@ -21,7 +21,7 @@ public class StringToCharacter extends StringToObject {
 		super(Character.class);
 	}
 
-	protected Object toObject(String string, Class targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) throws Exception {
 		return new Character(string.charAt(0));
 	}
 

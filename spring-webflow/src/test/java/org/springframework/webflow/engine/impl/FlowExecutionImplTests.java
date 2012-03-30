@@ -89,7 +89,7 @@ public class FlowExecutionImplTests extends TestCase {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
 		MockFlowExecutionListener mockListener = new MockFlowExecutionListener() {
-			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
 				super.sessionStarting(context, session, input);
 				context.getMessageContext().addMessage(new MessageBuilder().source("foo").defaultText("bar").build());
 			}
@@ -131,7 +131,7 @@ public class FlowExecutionImplTests extends TestCase {
 			}
 		};
 		MockFlowExecutionListener mockListener = new MockFlowExecutionListener() {
-			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
 				super.sessionStarting(context, session, input);
 				assertNotNull(input);
 			}
@@ -395,7 +395,7 @@ public class FlowExecutionImplTests extends TestCase {
 			}
 		};
 		state.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("finish")));
-		EndState end = new EndState(flow, "finish");
+		new EndState(flow, "finish");
 		MockFlowExecutionListener mockListener = new MockFlowExecutionListener();
 		FlowExecutionListener[] listeners = new FlowExecutionListener[] { mockListener };
 		FlowExecutionImpl execution = new FlowExecutionImpl(flow);
@@ -437,10 +437,6 @@ public class FlowExecutionImplTests extends TestCase {
 			return handled;
 		}
 
-		public void setHandled(boolean handled) {
-			this.handled = handled;
-		}
-
 		public boolean canHandle(FlowExecutionException exception) {
 			return true;
 		}
@@ -448,7 +444,6 @@ public class FlowExecutionImplTests extends TestCase {
 		public void handle(FlowExecutionException exception, RequestControlContext context) {
 			handled = true;
 		}
-
 	}
 
 	private static class ExceptionThrowingExceptionHandler implements FlowExecutionExceptionHandler {

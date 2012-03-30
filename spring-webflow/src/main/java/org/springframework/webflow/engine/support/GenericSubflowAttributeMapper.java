@@ -49,9 +49,9 @@ public final class GenericSubflowAttributeMapper implements SubflowAttributeMapp
 		this.outputMapper = outputMapper;
 	}
 
-	public MutableAttributeMap createSubflowInput(RequestContext context) {
+	public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
 		if (inputMapper != null) {
-			LocalAttributeMap input = new LocalAttributeMap();
+			LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
 			MappingResults results = inputMapper.map(context, input);
 			if (results != null && results.hasErrorResults()) {
 				throw new FlowInputMappingException(context.getActiveFlow().getId(), context.getCurrentState().getId(),
@@ -59,11 +59,11 @@ public final class GenericSubflowAttributeMapper implements SubflowAttributeMapp
 			}
 			return input;
 		} else {
-			return new LocalAttributeMap();
+			return new LocalAttributeMap<Object>();
 		}
 	}
 
-	public void mapSubflowOutput(AttributeMap output, RequestContext context) {
+	public void mapSubflowOutput(AttributeMap<?> output, RequestContext context) {
 		if (outputMapper != null && output != null) {
 			MappingResults results = outputMapper.map(output, context);
 			if (results != null && results.hasErrorResults()) {

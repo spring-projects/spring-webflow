@@ -40,7 +40,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	private String flowId;
 
-	private AttributeMap flowAttributes;
+	private AttributeMap<Object> flowAttributes;
 
 	private FlowDefinitionLocator flowDefinitionLocator;
 
@@ -55,7 +55,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * @param flowDefinitionLocator a locator to find dependent subflows
 	 * @param flowBuilderServices a parameter object providing access to additional services needed by the flow builder
 	 */
-	public FlowBuilderContextImpl(String flowId, AttributeMap flowAttributes,
+	public FlowBuilderContextImpl(String flowId, AttributeMap<Object> flowAttributes,
 			FlowDefinitionLocator flowDefinitionLocator, FlowBuilderServices flowBuilderServices) {
 		Assert.hasText(flowId, "The flow id is required");
 		Assert.notNull(flowDefinitionLocator, "The flow definition locator is required");
@@ -77,7 +77,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return flowId;
 	}
 
-	public AttributeMap getFlowAttributes() {
+	public AttributeMap<Object> getFlowAttributes() {
 		return flowAttributes;
 	}
 
@@ -124,7 +124,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return service;
 	}
 
-	private void initFlowAttributes(AttributeMap flowAttributes) {
+	private void initFlowAttributes(AttributeMap<Object> flowAttributes) {
 		if (flowAttributes != null) {
 			this.flowAttributes = flowAttributes;
 		} else {
@@ -136,32 +136,30 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * A little proxy that refreshes the externally configured conversion service reference on each invocation.
 	 */
 	private class ParentConversionServiceProxy implements ConversionService {
-		public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+		public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException {
 			return getFlowBuilderServices().getConversionService().executeConversion(source, targetClass);
 		}
 
-		public Object executeConversion(String converterId, Object source, Class targetClass) {
+		public Object executeConversion(String converterId, Object source, Class<?> targetClass) {
 			return getFlowBuilderServices().getConversionService().executeConversion(converterId, source, targetClass);
 		}
 
-		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+		public ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
 				throws ConversionExecutionException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
 
-		public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+		public ConversionExecutor getConversionExecutor(String id, Class<?> sourceClass, Class<?> targetClass)
 				throws ConversionExecutorNotFoundException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(id, sourceClass, targetClass);
 		}
 
-		public Class getClassForAlias(String name) {
+		public Class<?> getClassForAlias(String name) {
 			return getFlowBuilderServices().getConversionService().getClassForAlias(name);
 		}
 
 		public org.springframework.core.convert.ConversionService getDelegateConversionService() {
 			return getFlowBuilderServices().getConversionService().getDelegateConversionService();
 		}
-
 	}
-
 }

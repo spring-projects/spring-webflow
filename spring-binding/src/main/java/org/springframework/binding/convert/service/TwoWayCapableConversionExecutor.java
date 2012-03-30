@@ -27,9 +27,9 @@ import org.springframework.binding.convert.converters.TwoWayConverter;
  */
 class TwoWayCapableConversionExecutor implements ConversionExecutor {
 
-	private Class sourceClass;
+	private Class<?> sourceClass;
 
-	private Class targetClass;
+	private Class<?> targetClass;
 
 	private TwoWayConverter converter;
 
@@ -39,17 +39,17 @@ class TwoWayCapableConversionExecutor implements ConversionExecutor {
 	 * @param targetClass the target class to convert from (or to)
 	 * @param converter the two way converter
 	 */
-	public TwoWayCapableConversionExecutor(Class sourceClass, Class targetClass, TwoWayConverter converter) {
+	public TwoWayCapableConversionExecutor(Class<?> sourceClass, Class<?> targetClass, TwoWayConverter converter) {
 		this.sourceClass = sourceClass;
 		this.targetClass = targetClass;
 		this.converter = converter;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return sourceClass;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 

@@ -67,7 +67,7 @@ public class ResultEventFactorySelector {
 	 * @param resultType the result type
 	 * @return the result event factory
 	 */
-	protected ResultEventFactory forType(Class resultType) {
+	protected ResultEventFactory forType(Class<?> resultType) {
 		if (resultObjectBasedEventFactory.isMappedValueType(resultType)) {
 			return resultObjectBasedEventFactory;
 		} else {

@@ -46,7 +46,7 @@ public class ValidateAllRenderer extends BaseSpringJavascriptDecorationRenderer 
 			throw new FacesException("ValidateAll expects to have a child of type UICommand.");
 		}
 
-		UIComponent advisedChild = (UIComponent) component.getChildren().get(0);
+		UIComponent advisedChild = component.getChildren().get(0);
 
 		ResourceHelper.beginScriptBlock(context);
 

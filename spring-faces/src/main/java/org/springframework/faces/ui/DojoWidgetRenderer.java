@@ -17,8 +17,9 @@ public class DojoWidgetRenderer extends DojoElementDecorationRenderer {
 
 			if (value != null) {
 
-				if (attrs.length() > 0)
+				if (attrs.length() > 0) {
 					attrs.append(", ");
+				}
 
 				attrs.append(key + " : ");
 

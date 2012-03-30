@@ -65,7 +65,7 @@ public class AjaxTilesView extends TilesView {
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
 		tilesRequestContextFactory = new ServletTilesRequestContextFactory();
-		tilesRequestContextFactory.init(new HashMap());
+		tilesRequestContextFactory.init(new HashMap<String, String>());
 	}
 
 	public AjaxHandler getAjaxHandler() {
@@ -76,8 +76,8 @@ public class AjaxTilesView extends TilesView {
 		this.ajaxHandler = ajaxHandler;
 	}
 
-	protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
 		ServletContext servletContext = getServletContext();
 		if (ajaxHandler.isAjaxRequest(request, response)) {
@@ -101,12 +101,12 @@ public class AjaxTilesView extends TilesView {
 			exposeModelAsRequestAttributes(model, request);
 			JstlUtils.exposeLocalizationContext(new RequestContext(request, servletContext));
 
-			TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(container
-					.getApplicationContext(), new Object[] { request, response });
+			TilesRequestContext tilesRequestContext = tilesRequestContextFactory.createRequestContext(
+					container.getApplicationContext(), new Object[] { request, response });
 			Definition compositeDefinition = container.getDefinitionsFactory().getDefinition(getUrl(),
 					tilesRequestContext);
 
-			Map flattenedAttributeMap = new HashMap();
+			Map<String, Attribute> flattenedAttributeMap = new HashMap<String, Attribute>();
 			flattenAttributeMap(container, tilesRequestContext, flattenedAttributeMap, compositeDefinition, request,
 					response);
 			addRuntimeAttributes(container, flattenedAttributeMap, request, response);
@@ -115,11 +115,11 @@ public class AjaxTilesView extends TilesView {
 				request.setAttribute(ServletUtil.FORCE_INCLUDE_ATTRIBUTE_NAME, true);
 			}
 
-			for (int i = 0; i < fragmentsToRender.length; i++) {
-				Attribute attributeToRender = (Attribute) flattenedAttributeMap.get(fragmentsToRender[i]);
+			for (String element : fragmentsToRender) {
+				Attribute attributeToRender = flattenedAttributeMap.get(element);
 
 				if (attributeToRender == null) {
-					throw new ServletException("No tiles attribute with a name of '" + fragmentsToRender[i]
+					throw new ServletException("No tiles attribute with a name of '" + element
 							+ "' could be found for the current view: " + this);
 				} else {
 					container.startContext(request, response).inheritCascadedAttributes(compositeDefinition);
@@ -132,7 +132,8 @@ public class AjaxTilesView extends TilesView {
 		}
 	}
 
-	protected String[] getRenderFragments(Map model, HttpServletRequest request, HttpServletResponse response) {
+	protected String[] getRenderFragments(Map<String, Object> model, HttpServletRequest request,
+			HttpServletResponse response) {
 		String attrName = request.getParameter(FRAGMENTS_PARAM);
 		String[] renderFragments = StringUtils.commaDelimitedListToStringArray(attrName);
 		return StringUtils.trimArrayElements(renderFragments);
@@ -153,10 +154,11 @@ public class AjaxTilesView extends TilesView {
 	 * @param response the servlet response
 	 */
 	protected void flattenAttributeMap(BasicTilesContainer container, TilesRequestContext requestContext,
-			Map resultMap, Definition compositeDefinition, HttpServletRequest request, HttpServletResponse response) {
-		Iterator iterator = compositeDefinition.getAttributeNames();
+			Map<String, Attribute> resultMap, Definition compositeDefinition, HttpServletRequest request,
+			HttpServletResponse response) {
+		Iterator<String> iterator = compositeDefinition.getAttributeNames();
 		while (iterator.hasNext()) {
-			String attributeName = (String) iterator.next();
+			String attributeName = iterator.next();
 			Attribute attribute = compositeDefinition.getAttribute(attributeName);
 			if (attribute.getValue() == null || !(attribute.getValue() instanceof String)) {
 				continue;
@@ -184,19 +186,19 @@ public class AjaxTilesView extends TilesView {
 	 * @param request the Servlet request
 	 * @param response the Servlet response
 	 */
-	protected void addRuntimeAttributes(BasicTilesContainer container, Map resultMap, HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void addRuntimeAttributes(BasicTilesContainer container, Map<String, Attribute> resultMap,
+			HttpServletRequest request, HttpServletResponse response) {
 		AttributeContext attributeContext = container.getAttributeContext(new Object[] { request, response });
-		Set attributeNames = new HashSet();
+		Set<String> attributeNames = new HashSet<String>();
 		if (attributeContext.getLocalAttributeNames() != null) {
 			attributeNames.addAll(attributeContext.getLocalAttributeNames());
 		}
 		if (attributeContext.getCascadedAttributeNames() != null) {
 			attributeNames.addAll(attributeContext.getCascadedAttributeNames());
 		}
-		Iterator iterator = attributeNames.iterator();
+		Iterator<String> iterator = attributeNames.iterator();
 		while (iterator.hasNext()) {
-			String name = (String) iterator.next();
+			String name = iterator.next();
 			Attribute attr = attributeContext.getAttribute(name);
 			resultMap.put(name, attr);
 		}

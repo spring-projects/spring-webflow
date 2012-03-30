@@ -47,7 +47,7 @@ public interface FlowUrlHandler {
 	 * @param request the current request
 	 * @return the flow definition url
 	 */
-	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request);
+	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request);
 
 	/**
 	 * Create a URL that when addressed will resume an existing execution of a flow.

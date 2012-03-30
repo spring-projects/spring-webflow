@@ -137,7 +137,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		assertNotNull(context.getSessionMap().get("foo"));
 	}
 
-	private byte[] passivate(SharedAttributeMap session) throws Exception {
+	private byte[] passivate(SharedAttributeMap<Object> session) throws Exception {
 		// session is serialized out
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		ObjectOutputStream oout = new ObjectOutputStream(bout);
@@ -145,9 +145,10 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		return bout.toByteArray();
 	}
 
-	private SharedAttributeMap activate(byte[] sessionData) throws Exception {
+	@SuppressWarnings("unchecked")
+	private SharedAttributeMap<Object> activate(byte[] sessionData) throws Exception {
 		// session is serialized back in
-		return (SharedAttributeMap) new ObjectInputStream(new ByteArrayInputStream(sessionData)).readObject();
+		return (SharedAttributeMap<Object>) new ObjectInputStream(new ByteArrayInputStream(sessionData)).readObject();
 	}
 
 }

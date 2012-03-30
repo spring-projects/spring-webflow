@@ -35,12 +35,12 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	/**
 	 * The source value type this executor will attempt to convert from.
 	 */
-	private final Class sourceClass;
+	private final Class<?> sourceClass;
 
 	/**
 	 * The target value type this executor will attempt to convert to.
 	 */
-	private final Class targetClass;
+	private final Class<?> targetClass;
 
 	/**
 	 * The converter that will perform the conversion.
@@ -53,7 +53,7 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	 * @param targetClass the target type that the converter will convert to
 	 * @param converter the converter that will perform the conversion
 	 */
-	public StaticConversionExecutor(Class sourceClass, Class targetClass, Converter converter) {
+	public StaticConversionExecutor(Class<?> sourceClass, Class<?> targetClass, Converter converter) {
 		Assert.notNull(sourceClass, "The source class is required");
 		Assert.notNull(targetClass, "The target class is required");
 		Assert.notNull(converter, "The converter is required");
@@ -66,7 +66,7 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	 * Returns the source class of conversions performed by this executor.
 	 * @return the source class
 	 */
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return sourceClass;
 	}
 
@@ -74,7 +74,7 @@ public class StaticConversionExecutor implements ConversionExecutor {
 	 * Returns the target class of conversions performed by this executor.
 	 * @return the target class
 	 */
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 

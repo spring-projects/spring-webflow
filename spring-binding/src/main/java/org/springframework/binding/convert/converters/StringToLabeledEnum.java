@@ -24,6 +24,7 @@ import org.springframework.core.enums.StaticLabeledEnumResolver;
  * 
  * @author Keith Donald
  */
+@Deprecated
 public class StringToLabeledEnum extends StringToObject {
 
 	private LabeledEnumResolver labeledEnumResolver = StaticLabeledEnumResolver.instance();
@@ -32,7 +33,7 @@ public class StringToLabeledEnum extends StringToObject {
 		super(LabeledEnum.class);
 	}
 
-	protected Object toObject(String string, Class targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) throws Exception {
 		return labeledEnumResolver.getLabeledEnumByLabel(targetClass, string);
 	}
 

@@ -30,12 +30,12 @@ public class PropertyEditorConverter extends StringToObject {
 	 * @param propertyEditor the property editor to adapt
 	 * @param targetClass the {@link PropertyEditor#getValue() value class} this property editor converts to from string
 	 */
-	public PropertyEditorConverter(PropertyEditor propertyEditor, Class targetClass) {
+	public PropertyEditorConverter(PropertyEditor propertyEditor, Class<?> targetClass) {
 		super(targetClass);
 		this.propertyEditor = propertyEditor;
 	}
 
-	protected Object toObject(String string, Class targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) throws Exception {
 		synchronized (propertyEditor) {
 			propertyEditor.setAsText(string);
 			return propertyEditor.getValue();

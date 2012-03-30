@@ -93,10 +93,10 @@ public class CompositeAction extends AbstractAction {
 	public Event doExecute(RequestContext context) throws Exception {
 		Action[] actions = getActions();
 		String eventId = getEventFactorySupport().getSuccessEventId();
-		MutableAttributeMap eventAttributes = new LocalAttributeMap();
-		List actionResults = new ArrayList(actions.length);
-		for (int i = 0; i < actions.length; i++) {
-			Event result = actions[i].execute(context);
+		MutableAttributeMap<Object> eventAttributes = new LocalAttributeMap<Object>();
+		List<Event> actionResults = new ArrayList<Event>(actions.length);
+		for (Action action : actions) {
+			Event result = action.execute(context);
 			actionResults.add(result);
 			if (result != null) {
 				eventId = result.getId();

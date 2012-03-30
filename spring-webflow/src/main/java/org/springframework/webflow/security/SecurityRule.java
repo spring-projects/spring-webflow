@@ -42,7 +42,7 @@ public class SecurityRule {
 	 */
 	public static final short COMPARISON_ALL = 2;
 
-	private Collection attributes;
+	private Collection<String> attributes;
 
 	private short comparisonType = COMPARISON_ANY;
 
@@ -51,9 +51,9 @@ public class SecurityRule {
 	 * @param attributes the attributes to convert
 	 * @return comma separated String
 	 */
-	public static String securityAttributesToCommaDelimitedList(Collection attributes) {
+	public static String securityAttributesToCommaDelimitedList(Collection<?> attributes) {
 		StringBuffer attrs = new StringBuffer();
-		Iterator attributeIt = attributes.iterator();
+		Iterator<?> attributeIt = attributes.iterator();
 		while (attributeIt.hasNext()) {
 			if (attrs.length() != 0) {
 				attrs.append(", ");
@@ -68,11 +68,11 @@ public class SecurityRule {
 	 * @param attributes the attributes to convert
 	 * @return comma parsed Collection
 	 */
-	public static Collection commaDelimitedListToSecurityAttributes(String attributes) {
-		Collection attrs = new HashSet();
-		Iterator attributeIt = Arrays.asList(attributes.split(",")).iterator();
+	public static Collection<String> commaDelimitedListToSecurityAttributes(String attributes) {
+		Collection<String> attrs = new HashSet<String>();
+		Iterator<String> attributeIt = Arrays.asList(attributes.split(",")).iterator();
 		while (attributeIt.hasNext()) {
-			String attribute = ((String) attributeIt.next()).trim();
+			String attribute = attributeIt.next().trim();
 			if (!"".equals(attribute)) {
 				attrs.add(attribute);
 			}
@@ -84,7 +84,7 @@ public class SecurityRule {
 	 * Gets security attributes
 	 * @return security attributes
 	 */
-	public Collection getAttributes() {
+	public Collection<String> getAttributes() {
 		return attributes;
 	}
 
@@ -92,7 +92,7 @@ public class SecurityRule {
 	 * Sets security attributes
 	 * @param attributes security attributes
 	 */
-	public void setAttributes(Collection attributes) {
+	public void setAttributes(Collection<String> attributes) {
 		this.attributes = attributes;
 	}
 

@@ -68,7 +68,7 @@ public class AjaxEventInterceptorRenderer extends DojoElementDecorationRenderer 
 
 	private String getElementId(FacesContext context, UIComponent component) {
 		if (component.getChildCount() > 0) {
-			UIComponent child = (UIComponent) component.getChildren().get(0);
+			UIComponent child = component.getChildren().get(0);
 			if (!(child instanceof SpringJavascriptElementDecoration)) {
 				return child.getClientId(context);
 			} else {
@@ -81,8 +81,8 @@ public class AjaxEventInterceptorRenderer extends DojoElementDecorationRenderer 
 
 	public void decode(FacesContext context, UIComponent component) {
 		if (context.getExternalContext().getRequestParameterMap().containsKey("ajaxSource")
-				&& context.getExternalContext().getRequestParameterMap().get("ajaxSource").equals(
-						component.getClientId(context))) {
+				&& context.getExternalContext().getRequestParameterMap().get("ajaxSource")
+						.equals(component.getClientId(context))) {
 			component.queueEvent(new ActionEvent(component));
 		}
 	}

@@ -36,7 +36,7 @@ import org.springframework.webflow.execution.AnnotatedAction;
  */
 public class ActionPropertyAccessor implements PropertyAccessor {
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return new Class[] { Action.class };
 	}
 

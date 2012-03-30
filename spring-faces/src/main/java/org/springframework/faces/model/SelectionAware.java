@@ -24,7 +24,7 @@ import javax.faces.model.DataModel;
  * 
  * @author Jeremy Grelle
  */
-public interface SelectionAware {
+public interface SelectionAware<T> {
 
 	/**
 	 * Checks whether the row pointed to by the model's current index is selected.
@@ -42,13 +42,13 @@ public interface SelectionAware {
 	 * Sets the list of selected row data objects for the model.
 	 * @param selections the list of selected row data objects
 	 */
-	public void setSelections(List selections);
+	public void setSelections(List<T> selections);
 
 	/**
 	 * Returns the list of selected row data objects for the model.
 	 * @return the list of selected row data objects
 	 */
-	public List getSelections();
+	public List<T> getSelections();
 
 	/**
 	 * Selects all row data objects in the model.
@@ -59,5 +59,5 @@ public interface SelectionAware {
 	 * Selects the given row data object in the model.
 	 * @param rowData the row data object to select.
 	 */
-	public void select(Object rowData);
+	public void select(T rowData);
 }

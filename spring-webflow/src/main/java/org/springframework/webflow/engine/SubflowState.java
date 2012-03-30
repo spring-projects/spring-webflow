@@ -88,11 +88,11 @@ public class SubflowState extends TransitionableState {
 	 * @throws FlowExecutionException if an exception occurs in this state
 	 */
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
-		MutableAttributeMap flowInput;
+		MutableAttributeMap<Object> flowInput;
 		if (subflowAttributeMapper != null) {
 			flowInput = subflowAttributeMapper.createSubflowInput(context);
 		} else {
-			flowInput = new LocalAttributeMap();
+			flowInput = new LocalAttributeMap<Object>();
 		}
 		Flow subflow = (Flow) this.subflow.getValue(context);
 		if (logger.isDebugEnabled()) {
@@ -107,7 +107,7 @@ public class SubflowState extends TransitionableState {
 	 */
 	public boolean handleEvent(RequestControlContext context) {
 		if (subflowAttributeMapper != null) {
-			AttributeMap subflowOutput = context.getCurrentEvent().getAttributes();
+			AttributeMap<Object> subflowOutput = context.getCurrentEvent().getAttributes();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Mapping subflow output " + subflowOutput);
 			}

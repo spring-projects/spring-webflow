@@ -61,7 +61,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	/**
 	 * The session data model ("flow scope").
 	 */
-	private MutableAttributeMap scope = new LocalAttributeMap();
+	private MutableAttributeMap<Object> scope = new LocalAttributeMap<Object>();
 
 	/**
 	 * The parent session of this session (may be <code>null</code> if this is a root session.)
@@ -105,11 +105,12 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 		return state;
 	}
 
-	public MutableAttributeMap getScope() {
+	public MutableAttributeMap<Object> getScope() {
 		return scope;
 	}
 
-	public MutableAttributeMap getViewScope() throws IllegalStateException {
+	@SuppressWarnings("unchecked")
+	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException {
 		if (state == null) {
 			throw new IllegalStateException("The current state of this flow '" + flow.getId()
 					+ "' is [null] - cannot access view scope");
@@ -118,7 +119,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '" + flow.getId()
 					+ "' is not a view state - view scope not accessible");
 		}
-		return (MutableAttributeMap) scope.get(VIEW_SCOPE_ATTRIBUTE);
+		return (MutableAttributeMap<Object>) scope.get(VIEW_SCOPE_ATTRIBUTE);
 	}
 
 	public boolean isEmbeddedMode() {
@@ -147,10 +148,11 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 
 	// custom serialization
 
+	@SuppressWarnings("unchecked")
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		flowId = (String) in.readObject();
 		stateId = (String) in.readObject();
-		scope = (MutableAttributeMap) in.readObject();
+		scope = (MutableAttributeMap<Object>) in.readObject();
 		parent = (FlowSessionImpl) in.readObject();
 	}
 
@@ -244,7 +246,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * Initialize the view scope data structure.
 	 */
 	private void initViewScope() {
-		scope.put(VIEW_SCOPE_ATTRIBUTE, new LocalAttributeMap());
+		scope.put(VIEW_SCOPE_ATTRIBUTE, new LocalAttributeMap<Object>());
 	}
 
 	/**

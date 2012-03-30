@@ -30,23 +30,23 @@ import org.springframework.util.Assert;
  * 
  * @author Jeremy Grelle
  */
-public class SerializableListDataModel extends DataModel implements Serializable {
+public class SerializableListDataModel<T> extends DataModel<T> implements Serializable {
 
 	private int rowIndex = 0;
 
-	private List data;
+	private List<T> data;
 
 	public SerializableListDataModel() {
-		this(new ArrayList());
+		this(new ArrayList<T>());
 	}
 
 	/**
 	 * Adapt the list to a data model;
 	 * @param list the list
 	 */
-	public SerializableListDataModel(List list) {
+	public SerializableListDataModel(List<T> list) {
 		if (list == null) {
-			list = new ArrayList();
+			list = new ArrayList<T>();
 		}
 		setWrappedData(list);
 	}
@@ -55,7 +55,7 @@ public class SerializableListDataModel extends DataModel implements Serializable
 		return data.size();
 	}
 
-	public Object getRowData() {
+	public T getRowData() {
 		Assert.isTrue(isRowAvailable(), getClass()
 				+ " is in an illegal state - no row is available at the current index.");
 		return data.get(rowIndex);
@@ -65,7 +65,7 @@ public class SerializableListDataModel extends DataModel implements Serializable
 		return rowIndex;
 	}
 
-	public Object getWrappedData() {
+	public List<T> getWrappedData() {
 		return data;
 	}
 
@@ -83,18 +83,19 @@ public class SerializableListDataModel extends DataModel implements Serializable
 			Object row = isRowAvailable() ? getRowData() : null;
 			DataModelEvent event = new DataModelEvent(this, rowIndex, row);
 			DataModelListener[] listeners = getDataModelListeners();
-			for (int i = 0; i < listeners.length; i++) {
-				listeners[i].rowSelected(event);
+			for (DataModelListener listener : listeners) {
+				listener.rowSelected(event);
 			}
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setWrappedData(Object data) {
 		if (data == null) {
-			data = new ArrayList();
+			data = new ArrayList<T>();
 		}
 		Assert.isInstanceOf(List.class, data, "The data object for " + getClass() + " must be a List");
-		this.data = (List) data;
+		this.data = (List<T>) data;
 		int newRowIndex = 0;
 		setRowIndex(newRowIndex);
 	}

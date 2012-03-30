@@ -28,7 +28,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class PortletRequestMap extends StringKeyedMapAdapter {
+public class PortletRequestMap extends StringKeyedMapAdapter<Object> {
 
 	/**
 	 * The wrapped portlet request.
@@ -54,7 +54,7 @@ public class PortletRequestMap extends StringKeyedMapAdapter {
 		request.removeAttribute(key);
 	}
 
-	protected Iterator getAttributeNames() {
+	protected Iterator<String> getAttributeNames() {
 		return CollectionUtils.toIterator(request.getAttributeNames());
 	}
 }

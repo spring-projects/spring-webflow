@@ -43,7 +43,7 @@ class ContainedConversation implements Conversation, Serializable {
 
 	private ConversationLock lock;
 
-	private Map attributes;
+	private Map<Object, Object> attributes;
 
 	/**
 	 * Create a new contained conversation.
@@ -55,7 +55,7 @@ class ContainedConversation implements Conversation, Serializable {
 		this.container = container;
 		this.id = id;
 		this.lock = lock;
-		this.attributes = new HashMap();
+		this.attributes = new HashMap<Object, Object>();
 	}
 
 	public ConversationId getId() {
@@ -104,7 +104,7 @@ class ContainedConversation implements Conversation, Serializable {
 		// a clustered environment
 		// we do this after releasing the lock since we're no longer
 		// manipulating the contents of the conversation
-		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
+		SharedAttributeMap<Object> sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
 			sessionMap.put(container.getSessionKey(), container);
 		}

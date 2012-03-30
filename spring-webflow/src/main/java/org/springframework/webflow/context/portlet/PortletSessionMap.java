@@ -33,7 +33,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class PortletSessionMap extends StringKeyedMapAdapter implements SharedMap {
+public class PortletSessionMap extends StringKeyedMapAdapter<Object> implements SharedMap<String, Object> {
 
 	/**
 	 * The wrapped portlet request, providing access to the session.
@@ -89,9 +89,9 @@ public class PortletSessionMap extends StringKeyedMapAdapter implements SharedMa
 		}
 	}
 
-	protected Iterator getAttributeNames() {
+	protected Iterator<String> getAttributeNames() {
 		PortletSession session = getSession();
-		return session == null ? CollectionUtils.EMPTY_ITERATOR : CollectionUtils.toIterator(session
+		return session == null ? CollectionUtils.<String> emptyIterator() : CollectionUtils.toIterator(session
 				.getAttributeNames());
 	}
 

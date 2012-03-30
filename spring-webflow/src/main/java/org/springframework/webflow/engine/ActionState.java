@@ -82,12 +82,12 @@ public class ActionState extends TransitionableState {
 	}
 
 	/**
-	 * Specialization of State's <code>doEnter</code> template method that executes behavior specific to this state
-	 * type in polymorphic fashion.
+	 * Specialization of State's <code>doEnter</code> template method that executes behavior specific to this state type
+	 * in polymorphic fashion.
 	 * <p>
 	 * This implementation iterates over each configured <code>Action</code> instance and executes it. Execution
-	 * continues until an <code>Action</code> returns a result event that matches a transition in this request
-	 * context, or the set of all actions is exhausted.
+	 * continues until an <code>Action</code> returns a result event that matches a transition in this request context,
+	 * or the set of all actions is exhausted.
 	 * @param context the control context for the currently executing flow, used by this state to manipulate the flow
 	 * execution
 	 * @throws FlowExecutionException if an exception occurs in this state
@@ -95,9 +95,9 @@ public class ActionState extends TransitionableState {
 	protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 		int executionCount = 0;
 		String[] eventIds = new String[actionList.size()];
-		Iterator it = actionList.iterator();
+		Iterator<Action> it = actionList.iterator();
 		while (it.hasNext()) {
-			Action action = (Action) it.next();
+			Action action = it.next();
 			Event event = ActionExecutor.execute(action, context);
 			if (event != null) {
 				eventIds[executionCount] = event.getId();
@@ -117,12 +117,10 @@ public class ActionState extends TransitionableState {
 				}
 			} else {
 				if (logger.isDebugEnabled()) {
-					logger
-							.debug("Action execution ["
-									+ (executionCount + 1)
-									+ "] returned a [null] event"
-									+ (it.hasNext() ? ": proceeding to the next action in the list"
-											: ": action list exhausted"));
+					logger.debug("Action execution ["
+							+ (executionCount + 1)
+							+ "] returned a [null] event"
+							+ (it.hasNext() ? ": proceeding to the next action in the list" : ": action list exhausted"));
 				}
 				eventIds[executionCount] = null;
 			}

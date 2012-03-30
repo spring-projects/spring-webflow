@@ -6,14 +6,14 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 public class MapAccessorTests extends TestCase {
-	private MapAccessor accessor;
+	private MapAccessor<String, Object> accessor;
 
 	protected void setUp() throws Exception {
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("string", "hello");
 		map.put("integer", new Integer(9));
 		map.put("null", null);
-		this.accessor = new MapAccessor(map);
+		this.accessor = new MapAccessor<String, Object>(map);
 	}
 
 	public void testAccessNullAttribute() {

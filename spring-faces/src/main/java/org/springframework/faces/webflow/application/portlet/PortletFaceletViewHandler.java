@@ -92,12 +92,11 @@ public class PortletFaceletViewHandler extends FaceletViewHandler {
 		return writer;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected String getResponseEncoding(FacesContext context, String originalEncoding) {
 		String encoding = originalEncoding;
 
-		Map requestMap = context.getExternalContext().getRequestMap();
-		Map sessionMap = context.getExternalContext().getSessionMap();
+		Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
+		Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
 
 		// 1. check the request attribute
 		if (requestMap.containsKey(FACELETS_ENCODING_KEY)) {

@@ -15,6 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.FacesException;
@@ -40,11 +41,13 @@ public class Jsf2FlowViewHandler extends FlowViewHandler {
 		return getDelegate().calculateCharacterEncoding(context);
 	}
 
-	public String getBookmarkableURL(FacesContext context, String viewId, Map parameters, boolean includeViewParams) {
+	public String getBookmarkableURL(FacesContext context, String viewId, Map<String, List<String>> parameters,
+			boolean includeViewParams) {
 		return getDelegate().getBookmarkableURL(context, viewId, parameters, includeViewParams);
 	}
 
-	public String getRedirectURL(FacesContext context, String viewId, Map parameters, boolean includeViewParams) {
+	public String getRedirectURL(FacesContext context, String viewId, Map<String, List<String>> parameters,
+			boolean includeViewParams) {
 		return getDelegate().getRedirectURL(context, viewId, parameters, includeViewParams);
 	}
 

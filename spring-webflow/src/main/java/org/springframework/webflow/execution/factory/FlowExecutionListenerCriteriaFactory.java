@@ -102,8 +102,8 @@ public class FlowExecutionListenerCriteriaFactory {
 		}
 
 		public boolean appliesTo(FlowDefinition definition) {
-			for (int i = 0; i < flowIds.length; i++) {
-				if (flowIds[i].equals(definition.getId())) {
+			for (String flowId : flowIds) {
+				if (flowId.equals(definition.getId())) {
 					return true;
 				}
 			}

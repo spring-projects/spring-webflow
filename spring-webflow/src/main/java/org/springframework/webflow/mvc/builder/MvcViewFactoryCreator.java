@@ -149,7 +149,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	 * to be used, the resolvers should be ordered in the manner they should be applied.
 	 * @param viewResolvers the view resolver list
 	 */
-	public void setViewResolvers(List viewResolvers) {
+	public void setViewResolvers(List<ViewResolver> viewResolvers) {
 		this.flowViewResolver = new DelegatingFlowViewResolver(viewResolvers);
 	}
 

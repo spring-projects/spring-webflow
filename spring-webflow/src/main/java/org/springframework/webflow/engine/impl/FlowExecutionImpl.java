@@ -92,7 +92,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * The stack of active, currently executing flow sessions. As subflows are spawned, they are pushed onto the stack.
 	 * As they end, they are popped off the stack.
 	 */
-	private LinkedList flowSessions;
+	private LinkedList<FlowSessionImpl> flowSessions;
 
 	/**
 	 * A thread-safe listener list, holding listeners monitoring the lifecycle of this flow execution.
@@ -116,14 +116,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * <p>
 	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
-	private transient MutableAttributeMap conversationScope;
+	private transient MutableAttributeMap<Object> conversationScope;
 
 	/**
 	 * A data structure for runtime system execution attributes.
 	 * <p>
 	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
-	private transient AttributeMap attributes;
+	private transient AttributeMap<Object> attributes;
 
 	/**
 	 * The outcome reached by this flow execution when it ends.
@@ -147,9 +147,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		status = FlowExecutionStatus.NOT_STARTED;
 		listeners = new FlowExecutionListeners();
 		attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-		flowSessions = new LinkedList();
-		conversationScope = new LocalAttributeMap();
-		conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap());
+		flowSessions = new LinkedList<FlowSessionImpl>();
+		conversationScope = new LocalAttributeMap<Object>();
+		conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap<Object>());
 	}
 
 	public String getCaption() {
@@ -194,21 +194,22 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return getActiveSessionInternal();
 	}
 
-	public MutableAttributeMap getFlashScope() {
-		return (MutableAttributeMap) conversationScope.get(FLASH_SCOPE_ATTRIBUTE);
+	@SuppressWarnings("unchecked")
+	public MutableAttributeMap<Object> getFlashScope() {
+		return (MutableAttributeMap<Object>) conversationScope.get(FLASH_SCOPE_ATTRIBUTE);
 	}
 
-	public MutableAttributeMap getConversationScope() {
+	public MutableAttributeMap<Object> getConversationScope() {
 		return conversationScope;
 	}
 
-	public AttributeMap getAttributes() {
+	public AttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 
 	// methods implementing FlowExecution
 
-	public void start(MutableAttributeMap input, ExternalContext externalContext) throws FlowExecutionException,
+	public void start(MutableAttributeMap<?> input, ExternalContext externalContext) throws FlowExecutionException,
 			IllegalStateException {
 		Assert.state(!hasStarted(), "This flow has already been started; you cannot call 'start()' more than once");
 		if (logger.isDebugEnabled()) {
@@ -299,9 +300,10 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	// custom serialization (implementation of Externalizable for optimized storage)
 
+	@SuppressWarnings("unchecked")
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		status = (FlowExecutionStatus) in.readObject();
-		flowSessions = (LinkedList) in.readObject();
+		flowSessions = (LinkedList<FlowSessionImpl>) in.readObject();
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
@@ -348,14 +350,14 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 
 	// package private request control context callbacks
 
-	void start(Flow flow, MutableAttributeMap input, RequestControlContext context) {
+	void start(Flow flow, MutableAttributeMap<?> input, RequestControlContext context) {
 		listeners.fireSessionCreating(context, flow);
 		FlowSessionImpl session = activateSession(flow);
 		if (session.isRoot()) {
 			status = FlowExecutionStatus.ACTIVE;
 		}
 		if (input == null) {
-			input = new LocalAttributeMap();
+			input = new LocalAttributeMap<Object>();
 		}
 		if (hasEmbeddedModeAttribute(input)) {
 			session.setEmbeddedMode();
@@ -393,7 +395,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return transition.execute((State) getActiveSession().getState(), context);
 	}
 
-	void endActiveFlowSession(String outcome, MutableAttributeMap output, RequestControlContext context) {
+	void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output, RequestControlContext context) {
 		FlowSessionImpl session = getActiveSessionInternal();
 		listeners.fireSessionEnding(context, session, outcome, output);
 		session.getFlow().end(context, outcome, output);
@@ -456,7 +458,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		this.listeners = new FlowExecutionListeners(listeners);
 	}
 
-	void setAttributes(AttributeMap attributes) {
+	void setAttributes(AttributeMap<Object> attributes) {
 		this.attributes = attributes;
 	}
 
@@ -473,7 +475,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	/**
 	 * Returns the list of flow session maintained by this flow execution.
 	 */
-	LinkedList getFlowSessions() {
+	LinkedList<FlowSessionImpl> getFlowSessions() {
 		return flowSessions;
 	}
 
@@ -495,13 +497,13 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * Returns the flow session for the root flow of this flow execution.
 	 */
 	FlowSessionImpl getRootSession() {
-		return (FlowSessionImpl) flowSessions.getFirst();
+		return flowSessions.getFirst();
 	}
 
 	/**
 	 * Returns an iterator looping over the subflow sessions in this flow execution.
 	 */
-	Iterator getSubflowSessionIterator() {
+	Iterator<FlowSessionImpl> getSubflowSessionIterator() {
 		return flowSessions.listIterator(1);
 	}
 
@@ -515,7 +517,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	/**
 	 * Restore conversation scope for this flow execution.
 	 */
-	void setConversationScope(MutableAttributeMap conversationScope) {
+	void setConversationScope(MutableAttributeMap<Object> conversationScope) {
 		this.conversationScope = conversationScope;
 	}
 
@@ -554,7 +556,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		if (flowSessions.isEmpty()) {
 			return null;
 		}
-		return (FlowSessionImpl) flowSessions.getLast();
+		return flowSessions.getLast();
 	}
 
 	private void saveFlashMessages(RequestContext context) {
@@ -645,7 +647,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return getActiveSessionInternal().getFlow().handleException(exception, context);
 	}
 
-	private boolean hasEmbeddedModeAttribute(AttributeMap input) {
+	private boolean hasEmbeddedModeAttribute(AttributeMap<?> input) {
 		if (input != null) {
 			String mode = (String) input.get("mode");
 			if (mode != null && mode.trim().toLowerCase().equals("embedded")) {

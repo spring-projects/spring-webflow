@@ -30,7 +30,7 @@ public class Parameter {
 	/**
 	 * The class of the parameter, e.g "springbank.AccountNumber".
 	 */
-	private Class type;
+	private Class<?> type;
 
 	/**
 	 * The name of the parameter as an evaluatable expression, e.g "accountNumber".
@@ -43,7 +43,7 @@ public class Parameter {
 	 * @param type the parameter type, may be null
 	 * @param name the name the method argument expression (required)
 	 */
-	public Parameter(Class type, Expression name) {
+	public Parameter(Class<?> type, Expression name) {
 		Assert.notNull(name, "The parameter name expression is required");
 		this.type = type;
 		this.name = name;
@@ -52,7 +52,7 @@ public class Parameter {
 	/**
 	 * Returns the parameter type. Could be null if no parameter type was specified.
 	 */
-	public Class getType() {
+	public Class<?> getType() {
 		return type;
 	}
 

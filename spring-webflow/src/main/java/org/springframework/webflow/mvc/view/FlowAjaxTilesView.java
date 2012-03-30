@@ -39,7 +39,8 @@ import org.springframework.webflow.execution.View;
  */
 public class FlowAjaxTilesView extends AjaxTilesView {
 
-	protected String[] getRenderFragments(Map model, HttpServletRequest request, HttpServletResponse response) {
+	protected String[] getRenderFragments(Map<String, Object> model, HttpServletRequest request,
+			HttpServletResponse response) {
 		RequestContext context = RequestContextHolder.getRequestContext();
 		if (context == null) {
 			return super.getRenderFragments(model, request, response);

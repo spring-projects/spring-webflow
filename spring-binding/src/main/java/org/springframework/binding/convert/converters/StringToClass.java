@@ -31,12 +31,12 @@ public class StringToClass extends StringToObject {
 		this.classLoader = classLoader;
 	}
 
-	public Object toObject(String string, Class objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) throws Exception {
 		return ClassUtils.forName(string, classLoader);
 	}
 
 	public String toString(Object object) throws Exception {
-		Class clazz = (Class) object;
+		Class<?> clazz = (Class<?>) object;
 		return clazz.getName();
 	}
 }

@@ -67,7 +67,7 @@ public class MethodInvokerTests extends TestCase {
 		assertEquals(Boolean.TRUE, methodInvoker.invoke(method, new TestObject(), null));
 	}
 
-	private static class TestObject {
+	static class TestObject {
 
 		public void test() {
 			throw new IllegalArgumentException("just testing");
@@ -82,7 +82,7 @@ public class MethodInvokerTests extends TestCase {
 		}
 	}
 
-	private static class Bean {
+	static class Bean {
 		String value;
 	}
 }

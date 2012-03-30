@@ -43,7 +43,7 @@ public class JsfFlowHandlerAdapterTests extends TestCase {
 			throw new UnsupportedOperationException("Not expected");
 		}
 
-		public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
+		public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap<?> input, ExternalContext context)
 				throws FlowException {
 			throw new UnsupportedOperationException("Not expected");
 		}

@@ -42,7 +42,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 
 	private static final Log logger = LogFactory.getLog(FlowExecutionImplFactory.class);
 
-	private AttributeMap executionAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+	private AttributeMap<Object> executionAttributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 
 	private FlowExecutionListenerLoader executionListenerLoader = StaticFlowExecutionListenerLoader.EMPTY_INSTANCE;
 
@@ -53,7 +53,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	 * execution behavior.
 	 * @param executionAttributes flow execution system attributes
 	 */
-	public void setExecutionAttributes(AttributeMap executionAttributes) {
+	public void setExecutionAttributes(AttributeMap<Object> executionAttributes) {
 		this.executionAttributes = executionAttributes;
 	}
 
@@ -85,7 +85,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	}
 
 	public FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
-			FlowExecutionKey flowExecutionKey, MutableAttributeMap conversationScope,
+			FlowExecutionKey flowExecutionKey, MutableAttributeMap<Object> conversationScope,
 			FlowDefinitionLocator subflowDefinitionLocator) {
 		Assert.isInstanceOf(FlowExecutionImpl.class, flowExecution, "FlowExecution is of the wrong type: ");
 		Assert.isInstanceOf(Flow.class, flowDefinition, "FlowDefinition is of the wrong type: ");
@@ -97,8 +97,8 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 			rootSession.setFlow(flow);
 			rootSession.setState(flow.getStateInstance(rootSession.getStateId()));
 			if (execution.hasSubflowSessions()) {
-				for (Iterator it = execution.getSubflowSessionIterator(); it.hasNext();) {
-					FlowSessionImpl subflowSession = (FlowSessionImpl) it.next();
+				for (Iterator<FlowSessionImpl> it = execution.getSubflowSessionIterator(); it.hasNext();) {
+					FlowSessionImpl subflowSession = it.next();
 					Flow subflowDef = (Flow) subflowDefinitionLocator.getFlowDefinition(subflowSession.getFlowId());
 					subflowSession.setFlow(subflowDef);
 					subflowSession.setState(subflowDef.getStateInstance(subflowSession.getStateId()));
@@ -107,7 +107,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 		}
 		execution.setKey(flowExecutionKey);
 		if (conversationScope == null) {
-			conversationScope = new LocalAttributeMap();
+			conversationScope = new LocalAttributeMap<Object>();
 		}
 		execution.setConversationScope(conversationScope);
 		execution.setAttributes(executionAttributes);

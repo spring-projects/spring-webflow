@@ -96,14 +96,14 @@ public interface RequestContext {
 	 * exist for the duration of this request only.</b>
 	 * @return the request scope
 	 */
-	public MutableAttributeMap getRequestScope();
+	public MutableAttributeMap<Object> getRequestScope();
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flash scope. <b>Flash scoped attributes exist
 	 * until the next event is signaled in the flow execution.</b>
 	 * @return the flash scope
 	 */
-	public MutableAttributeMap getFlashScope();
+	public MutableAttributeMap<Object> getFlashScope();
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in view scope. <b>View scoped attributes exist for
@@ -113,7 +113,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if this flow is not in a view-state or the flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public MutableAttributeMap getViewScope() throws IllegalStateException;
+	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist for
@@ -123,7 +123,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if the flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public MutableAttributeMap getFlowScope() throws IllegalStateException;
+	public MutableAttributeMap<Object> getFlowScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable accessor for accessing and/or setting attributes in conversation scope. <b>Conversation scoped
@@ -131,7 +131,7 @@ public interface RequestContext {
 	 * @return the conversation scope
 	 * @see FlowExecutionContext
 	 */
-	public MutableAttributeMap getConversationScope();
+	public MutableAttributeMap<Object> getConversationScope();
 
 	/**
 	 * Returns the immutable input parameters associated with this request into Spring Web Flow. The map returned is
@@ -198,7 +198,7 @@ public interface RequestContext {
 	 * used to influence flow execution behavior.
 	 * @return the current attributes of this request, or empty if none are set
 	 */
-	public MutableAttributeMap getAttributes();
+	public MutableAttributeMap<Object> getAttributes();
 
 	/**
 	 * Returns the URL of this flow execution. Needed by response writers that write out the URL of this flow execution

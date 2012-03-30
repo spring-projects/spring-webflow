@@ -3,6 +3,7 @@ package org.springframework.webflow.expression.el;
 import java.util.List;
 
 import javax.el.ELContext;
+import javax.el.ELResolver;
 
 import junit.framework.TestCase;
 
@@ -29,20 +30,20 @@ public abstract class FlowDependentELResolverTestCase extends TestCase {
 	}
 
 	public void testGetType_NoActiveFlow() {
-		assertNull("getType should return null when no flow is active", context.getELResolver().getType(context, null,
-				getBaseVariable()));
+		assertNull("getType should return null when no flow is active",
+				context.getELResolver().getType(context, null, getBaseVariable()));
 		assertFalse(context.isPropertyResolved());
 	}
 
 	public void testGetValue_NoActiveFlow() {
-		assertNull("getValue should return null when no flow is active", context.getELResolver().getValue(context,
-				null, getBaseVariable()));
+		assertNull("getValue should return null when no flow is active",
+				context.getELResolver().getValue(context, null, getBaseVariable()));
 		assertFalse(context.isPropertyResolved());
 	}
 
 	public void testIsReadOnly_NoActiveFlow() {
-		assertFalse("isReadOnly should return false when no flow is active", context.getELResolver().isReadOnly(
-				context, null, getBaseVariable()));
+		assertFalse("isReadOnly should return false when no flow is active",
+				context.getELResolver().isReadOnly(context, null, getBaseVariable()));
 		assertFalse(context.isPropertyResolved());
 	}
 
@@ -62,6 +63,6 @@ public abstract class FlowDependentELResolverTestCase extends TestCase {
 
 	protected abstract String getBaseVariable();
 
-	protected abstract List getCustomResolvers();
+	protected abstract List<ELResolver> getCustomResolvers();
 
 }

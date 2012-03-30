@@ -42,7 +42,7 @@ class ConditionalFlowExecutionListenerHolder {
 	/**
 	 * The listener criteria set.
 	 */
-	private Set criteriaSet = new LinkedHashSet(3);
+	private Set<FlowExecutionListenerCriteria> criteriaSet = new LinkedHashSet<FlowExecutionListenerCriteria>(3);
 
 	/**
 	 * Create a new conditional flow execution listener holder.
@@ -88,9 +88,9 @@ class ConditionalFlowExecutionListenerHolder {
 	 * @return true if yes, false otherwise
 	 */
 	public boolean listenerAppliesTo(FlowDefinition flowDefinition) {
-		Iterator it = criteriaSet.iterator();
+		Iterator<FlowExecutionListenerCriteria> it = criteriaSet.iterator();
 		while (it.hasNext()) {
-			FlowExecutionListenerCriteria criteria = (FlowExecutionListenerCriteria) it.next();
+			FlowExecutionListenerCriteria criteria = it.next();
 			if (criteria.appliesTo(flowDefinition)) {
 				return true;
 			}

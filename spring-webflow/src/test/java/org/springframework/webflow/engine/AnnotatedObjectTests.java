@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.engine;
 
-import org.springframework.webflow.core.AnnotatedObject;
-
 import junit.framework.TestCase;
+
+import org.springframework.webflow.core.AnnotatedObject;
 
 public class AnnotatedObjectTests extends TestCase {
 

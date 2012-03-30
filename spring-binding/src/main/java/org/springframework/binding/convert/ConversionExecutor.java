@@ -28,13 +28,13 @@ public interface ConversionExecutor {
 	 * Returns the source class of conversions performed by this executor.
 	 * @return the source class
 	 */
-	public Class getSourceClass();
+	public Class<?> getSourceClass();
 
 	/**
 	 * Returns the target class of conversions performed by this executor.
 	 * @return the target class
 	 */
-	public Class getTargetClass();
+	public Class<?> getTargetClass();
 
 	/**
 	 * Execute the conversion for the provided source object.

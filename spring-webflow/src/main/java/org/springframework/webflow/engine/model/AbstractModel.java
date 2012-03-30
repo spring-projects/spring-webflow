@@ -80,7 +80,7 @@ public abstract class AbstractModel implements Model {
 	 * @param parent the parent list to merge
 	 * @return the merged list
 	 */
-	protected LinkedList merge(LinkedList child, LinkedList parent) {
+	protected <T extends Model> LinkedList<T> merge(LinkedList<T> child, LinkedList<T> parent) {
 		return merge(child, parent, true);
 	}
 
@@ -92,7 +92,8 @@ public abstract class AbstractModel implements Model {
 	 * @param addAtEnd if true new items will be added at the end of the list, otherwise the beginning
 	 * @return the merged list
 	 */
-	protected LinkedList merge(LinkedList child, LinkedList parent, boolean addAtEnd) {
+	@SuppressWarnings("unchecked")
+	protected <T extends Model> LinkedList<T> merge(LinkedList<T> child, LinkedList<T> parent, boolean addAtEnd) {
 		if (child == null) {
 			if (parent == null) {
 				return null;
@@ -103,14 +104,14 @@ public abstract class AbstractModel implements Model {
 			return child;
 		} else {
 			if (!addAtEnd) {
-				parent = new LinkedList(parent);
+				parent = new LinkedList<T>(parent);
 				Collections.reverse(parent);
 			}
-			for (Iterator parentIt = parent.iterator(); parentIt.hasNext();) {
-				Model parentElement = (Model) parentIt.next();
+			for (Iterator<T> parentIt = parent.iterator(); parentIt.hasNext();) {
+				Model parentElement = parentIt.next();
 				boolean matchFound = false;
-				for (Iterator childIt = child.iterator(); !matchFound && childIt.hasNext();) {
-					Model childElement = (Model) childIt.next();
+				for (Iterator<T> childIt = child.iterator(); !matchFound && childIt.hasNext();) {
+					Model childElement = childIt.next();
 					if (childElement.isMergeableWith(parentElement)) {
 						matchFound = true;
 						childElement.merge(parentElement);
@@ -118,9 +119,9 @@ public abstract class AbstractModel implements Model {
 				}
 				if (!matchFound) {
 					if (addAtEnd) {
-						child.addLast(parentElement.createCopy());
+						child.addLast((T) parentElement.createCopy());
 					} else {
-						child.addFirst(parentElement.createCopy());
+						child.addFirst((T) parentElement.createCopy());
 					}
 				}
 			}
@@ -135,14 +136,14 @@ public abstract class AbstractModel implements Model {
 		return model.createCopy();
 	}
 
-	protected LinkedList copyList(LinkedList list) {
+	@SuppressWarnings("unchecked")
+	protected <T extends Model> LinkedList<T> copyList(LinkedList<T> list) {
 		if (list == null) {
 			return null;
 		}
-		LinkedList copy = new LinkedList();
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			Model model = (Model) it.next();
-			copy.add(model.createCopy());
+		LinkedList<T> copy = new LinkedList<T>();
+		for (T model : list) {
+			copy.add((T) model.createCopy());
 		}
 		return copy;
 	}

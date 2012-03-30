@@ -42,11 +42,11 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 
 	private FlowSession activeSession;
 
-	private MutableAttributeMap flashScope = new LocalAttributeMap();
+	private MutableAttributeMap<Object> flashScope = new LocalAttributeMap<Object>();
 
-	private MutableAttributeMap conversationScope = new LocalAttributeMap();
+	private MutableAttributeMap<Object> conversationScope = new LocalAttributeMap<Object>();
 
-	private MutableAttributeMap attributes = new LocalAttributeMap();
+	private MutableAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
 
 	private FlowExecutionOutcome outcome;
 
@@ -107,15 +107,15 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 		return activeSession;
 	}
 
-	public MutableAttributeMap getFlashScope() {
+	public MutableAttributeMap<Object> getFlashScope() {
 		return flashScope;
 	}
 
-	public MutableAttributeMap getConversationScope() {
+	public MutableAttributeMap<Object> getConversationScope() {
 		return conversationScope;
 	}
 
-	public AttributeMap getAttributes() {
+	public AttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 
@@ -158,14 +158,14 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	/**
 	 * Sets the flow execution flash scope.
 	 */
-	public void setFlashScope(MutableAttributeMap scope) {
+	public void setFlashScope(MutableAttributeMap<Object> scope) {
 		this.flashScope = scope;
 	}
 
 	/**
 	 * Sets the flow execution conversation scope.
 	 */
-	public void setConversationScope(MutableAttributeMap scope) {
+	public void setConversationScope(MutableAttributeMap<Object> scope) {
 		this.conversationScope = scope;
 	}
 
@@ -190,7 +190,7 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 	 * Returns the mutable execution attribute map.
 	 * @return the execution attribute map
 	 */
-	public MutableAttributeMap getAttributeMap() {
+	public MutableAttributeMap<Object> getAttributeMap() {
 		return attributes;
 	}
 

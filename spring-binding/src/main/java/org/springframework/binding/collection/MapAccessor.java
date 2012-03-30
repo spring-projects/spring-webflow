@@ -26,25 +26,25 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class MapAccessor implements MapAdaptable {
+public class MapAccessor<K, V> implements MapAdaptable<K, V> {
 
 	/**
 	 * The target map.
 	 */
-	private Map map;
+	private Map<K, V> map;
 
 	/**
 	 * Creates a new attribute map accessor.
 	 * @param map the map
 	 */
-	public MapAccessor(Map map) {
+	public MapAccessor(Map<K, V> map) {
 		Assert.notNull(map, "The map to decorate is required");
 		this.map = map;
 	}
 
 	// implementing MapAdaptable
 
-	public Map asMap() {
+	public Map<K, V> asMap() {
 		return map;
 	}
 
@@ -53,7 +53,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @param key the key
 	 * @return the value
 	 */
-	public Object get(Object key) {
+	public V get(Object key) {
 		return map.get(key);
 	}
 
@@ -63,7 +63,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @param defaultValue the default
 	 * @return the attribute value
 	 */
-	public Object get(Object key, Object defaultValue) {
+	public V get(Object key, V defaultValue) {
 		if (!map.containsKey(key)) {
 			return defaultValue;
 		}
@@ -78,7 +78,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @return the value
 	 * @throws IllegalArgumentException if the key is present but the value is not of the required type
 	 */
-	public Object get(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends V> T get(Object key, Class<T> requiredType) throws IllegalArgumentException {
 		return get(key, requiredType, null);
 	}
 
@@ -90,7 +90,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @return the attribute value
 	 * @throws IllegalArgumentException if the key is present but the value is not of the required type
 	 */
-	public Object get(Object key, Class requiredType, Object defaultValue) {
+	public <T extends V> T get(Object key, Class<T> requiredType, T defaultValue) {
 		if (!map.containsKey(key)) {
 			return defaultValue;
 		}
@@ -102,7 +102,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @param key the key
 	 * @return the value
 	 */
-	public Object getRequired(Object key) throws IllegalArgumentException {
+	public V getRequired(Object key) throws IllegalArgumentException {
 		assertContainsKey(key);
 		return map.get(key);
 	}
@@ -113,7 +113,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @param requiredType the required type
 	 * @return the value
 	 */
-	public Object getRequired(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends V> T getRequired(Object key, Class<T> requiredType) throws IllegalArgumentException {
 		assertContainsKey(key);
 		return assertKeyValueOfType(key, requiredType);
 	}
@@ -139,7 +139,7 @@ public class MapAccessor implements MapAdaptable {
 		if (!map.containsKey(key)) {
 			return defaultValue;
 		}
-		return (String) assertKeyValueOfType(key, String.class);
+		return assertKeyValueOfType(key, String.class);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class MapAccessor implements MapAdaptable {
 	 */
 	public String getRequiredString(Object key) throws IllegalArgumentException {
 		assertContainsKey(key);
-		return (String) assertKeyValueOfType(key, String.class);
+		return assertKeyValueOfType(key, String.class);
 	}
 
 	/**
@@ -159,11 +159,12 @@ public class MapAccessor implements MapAdaptable {
 	 * @return the collection value
 	 * @throws IllegalArgumentException if the key is present but the value is not a collection
 	 */
-	public Collection getCollection(Object key) throws IllegalArgumentException {
+	@SuppressWarnings("unchecked")
+	public Collection<V> getCollection(Object key) throws IllegalArgumentException {
 		if (!map.containsKey(key)) {
 			return null;
 		}
-		return (Collection) assertKeyValueOfType(key, Collection.class);
+		return assertKeyValueOfType(key, Collection.class);
 	}
 
 	/**
@@ -173,12 +174,12 @@ public class MapAccessor implements MapAdaptable {
 	 * @return the collection value
 	 * @throws IllegalArgumentException if the key is present but the value is not a collection
 	 */
-	public Collection getCollection(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends Collection<V>> T getCollection(Object key, Class<T> requiredType) throws IllegalArgumentException {
 		if (!map.containsKey(key)) {
 			return null;
 		}
 		assertAssignableTo(Collection.class, requiredType);
-		return (Collection) assertKeyValueOfType(key, requiredType);
+		return assertKeyValueOfType(key, requiredType);
 	}
 
 	/**
@@ -187,9 +188,10 @@ public class MapAccessor implements MapAdaptable {
 	 * @return the collection value
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not a collection
 	 */
-	public Collection getRequiredCollection(Object key) throws IllegalArgumentException {
+	@SuppressWarnings("unchecked")
+	public Collection<V> getRequiredCollection(Object key) throws IllegalArgumentException {
 		assertContainsKey(key);
-		return (Collection) assertKeyValueOfType(key, Collection.class);
+		return assertKeyValueOfType(key, Collection.class);
 	}
 
 	/**
@@ -200,10 +202,11 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not a collection of the
 	 * required type
 	 */
-	public Collection getRequiredCollection(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends Collection<V>> T getRequiredCollection(Object key, Class<T> requiredType)
+			throws IllegalArgumentException {
 		assertContainsKey(key);
 		assertAssignableTo(Collection.class, requiredType);
-		return (Collection) assertKeyValueOfType(key, requiredType);
+		return assertKeyValueOfType(key, requiredType);
 	}
 
 	/**
@@ -213,12 +216,12 @@ public class MapAccessor implements MapAdaptable {
 	 * @return the array value
 	 * @throws IllegalArgumentException if the key is present but the value is not an array of the required type
 	 */
-	public Object[] getArray(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends V> T[] getArray(Object key, Class<? extends T[]> requiredType) throws IllegalArgumentException {
 		assertAssignableTo(Object[].class, requiredType);
 		if (!map.containsKey(key)) {
 			return null;
 		}
-		return (Object[]) assertKeyValueOfType(key, requiredType);
+		return assertKeyValueOfType(key, requiredType);
 	}
 
 	/**
@@ -229,10 +232,11 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not a array of the
 	 * required type
 	 */
-	public Object[] getRequiredArray(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends V> T[] getRequiredArray(Object key, Class<? extends T[]> requiredType)
+			throws IllegalArgumentException {
 		assertContainsKey(key);
 		assertAssignableTo(Object[].class, requiredType);
-		return (Object[]) assertKeyValueOfType(key, requiredType);
+		return assertKeyValueOfType(key, requiredType);
 	}
 
 	/**
@@ -240,10 +244,10 @@ public class MapAccessor implements MapAdaptable {
 	 * found.
 	 * @param key the key
 	 * @param requiredType the required number type
-	 * @return the numbervalue
+	 * @return the number value
 	 * @throws IllegalArgumentException if the key is present but the value is not a number of the required type
 	 */
-	public Number getNumber(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends Number> T getNumber(Object key, Class<T> requiredType) throws IllegalArgumentException {
 		return getNumber(key, requiredType, null);
 	}
 
@@ -255,12 +259,13 @@ public class MapAccessor implements MapAdaptable {
 	 * @param defaultValue the default
 	 * @throws IllegalArgumentException if the key is present but the value is not a number of the required type
 	 */
-	public Number getNumber(Object key, Class requiredType, Number defaultValue) throws IllegalArgumentException {
+	public <T extends Number> T getNumber(Object key, Class<T> requiredType, T defaultValue)
+			throws IllegalArgumentException {
 		if (!map.containsKey(key)) {
 			return defaultValue;
 		}
 		assertAssignableTo(Number.class, requiredType);
-		return (Number) assertKeyValueOfType(key, requiredType);
+		return assertKeyValueOfType(key, requiredType);
 	}
 
 	/**
@@ -270,9 +275,9 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not a number of the
 	 * required type
 	 */
-	public Number getRequiredNumber(Object key, Class requiredType) throws IllegalArgumentException {
+	public <T extends Number> T getRequiredNumber(Object key, Class<T> requiredType) throws IllegalArgumentException {
 		assertContainsKey(key);
-		return (Number) assertKeyValueOfType(key, requiredType);
+		return assertKeyValueOfType(key, requiredType);
 	}
 
 	/**
@@ -293,7 +298,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is present but the value is not an integer
 	 */
 	public Integer getInteger(Object key, Integer defaultValue) throws IllegalArgumentException {
-		return (Integer) getNumber(key, Integer.class, defaultValue);
+		return getNumber(key, Integer.class, defaultValue);
 	}
 
 	/**
@@ -303,7 +308,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not an integer
 	 */
 	public Integer getRequiredInteger(Object key) throws IllegalArgumentException {
-		return (Integer) getRequiredNumber(key, Integer.class);
+		return getRequiredNumber(key, Integer.class);
 	}
 
 	/**
@@ -324,7 +329,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is present but the value is not a long
 	 */
 	public Long getLong(Object key, Long defaultValue) throws IllegalArgumentException {
-		return (Long) getNumber(key, Long.class, defaultValue);
+		return getNumber(key, Long.class, defaultValue);
 	}
 
 	/**
@@ -334,7 +339,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not a long
 	 */
 	public Long getRequiredLong(Object key) throws IllegalArgumentException {
-		return (Long) getRequiredNumber(key, Long.class);
+		return getRequiredNumber(key, Long.class);
 	}
 
 	/**
@@ -358,7 +363,7 @@ public class MapAccessor implements MapAdaptable {
 		if (!map.containsKey(key)) {
 			return defaultValue;
 		}
-		return (Boolean) assertKeyValueOfType(key, Boolean.class);
+		return assertKeyValueOfType(key, Boolean.class);
 	}
 
 	/**
@@ -369,7 +374,7 @@ public class MapAccessor implements MapAdaptable {
 	 */
 	public Boolean getRequiredBoolean(Object key) throws IllegalArgumentException {
 		assertContainsKey(key);
-		return (Boolean) assertKeyValueOfType(key, Boolean.class);
+		return assertKeyValueOfType(key, Boolean.class);
 	}
 
 	/**
@@ -389,7 +394,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @param key the attribute name
 	 * @return true if present and of the required type, false if not present.
 	 */
-	public boolean containsKey(Object key, Class requiredType) throws IllegalArgumentException {
+	public boolean containsKey(Object key, Class<?> requiredType) throws IllegalArgumentException {
 		if (map.containsKey(key)) {
 			assertKeyValueOfType(key, requiredType);
 			return true;
@@ -404,7 +409,7 @@ public class MapAccessor implements MapAdaptable {
 	 * @param requiredType the required attribute value type
 	 * @return the attribute value
 	 */
-	public Object assertKeyValueOfType(Object key, Class requiredType) {
+	public <T> T assertKeyValueOfType(Object key, Class<T> requiredType) {
 		return assertKeyValueInstanceOf(key, map.get(key), requiredType);
 	}
 
@@ -415,17 +420,18 @@ public class MapAccessor implements MapAdaptable {
 	 * @param requiredType the required type
 	 * @return the value
 	 */
-	public Object assertKeyValueInstanceOf(Object key, Object value, Class requiredType) {
+	@SuppressWarnings("unchecked")
+	public <T> T assertKeyValueInstanceOf(Object key, Object value, Class<T> requiredType) {
 		Assert.notNull(requiredType, "The required type to assert is required");
 		if (value != null && !requiredType.isInstance(value)) {
 			throw new IllegalArgumentException("Map key '" + key + "' has value [" + value
 					+ "] that is not of expected type [" + requiredType + "], instead it is of type ["
 					+ value.getClass().getName() + "]");
 		}
-		return value;
+		return (T) value;
 	}
 
-	private void assertAssignableTo(Class clazz, Class requiredType) {
+	private void assertAssignableTo(Class<?> clazz, Class<?> requiredType) {
 		Assert.isTrue(clazz.isAssignableFrom(requiredType), "The provided required type must be assignable to ["
 				+ clazz + "]");
 	}

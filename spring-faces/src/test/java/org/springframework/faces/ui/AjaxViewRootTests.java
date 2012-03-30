@@ -67,14 +67,16 @@ public class AjaxViewRootTests extends TestCase {
 
 		assertEquals(1, ajaxRoot.getProcessIds().length);
 		assertEquals(1, ajaxRoot.getRenderIds().length);
-		assertEquals(StringUtils.arrayToCommaDelimitedString(ajaxRoot.getProcessIds()), StringUtils
-				.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
+		assertEquals(StringUtils.arrayToCommaDelimitedString(ajaxRoot.getProcessIds()),
+				StringUtils.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
 	}
 
 	public void testEncodeAll_RenderIdsExpr() throws IOException {
 
-		jsf.externalContext().getRequestMap().put(View.RENDER_FRAGMENTS_ATTRIBUTE,
-				StringUtils.delimitedListToStringArray("foo:bar,foo:baz", ",", " "));
+		jsf.externalContext()
+				.getRequestMap()
+				.put(View.RENDER_FRAGMENTS_ATTRIBUTE,
+						StringUtils.delimitedListToStringArray("foo:bar,foo:baz", ",", " "));
 
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
 

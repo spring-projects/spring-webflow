@@ -224,7 +224,7 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 		sessionCreatingCount++;
 	}
 
-	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
 		sessionStartingCount++;
 		sessionStarting = true;
 		flowNestingLevel++;
@@ -273,13 +273,13 @@ public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
 		resumingCount++;
 	}
 
-	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output) {
+	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap<?> output) {
 		sessionEnding = true;
 		sessionEndingCount++;
 		flowNestingLevel--;
 	}
 
-	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output) {
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap<?> output) {
 		assertStarted();
 		Assert.state(sessionEnding, "Should have been ending");
 		sessionEnding = false;

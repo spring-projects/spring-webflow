@@ -53,7 +53,7 @@ public class EventTests extends TestCase {
 	}
 
 	public void testNewEventWithAttributes() {
-		LocalAttributeMap attrs = new LocalAttributeMap();
+		LocalAttributeMap<Object> attrs = new LocalAttributeMap<Object>();
 		attrs.put("name", "value");
 		Event event = new Event(this, "id", attrs);
 		assertTrue(!event.getAttributes().isEmpty());

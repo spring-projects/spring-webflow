@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.springframework.util.StringUtils;
@@ -52,29 +51,29 @@ public class FlowModel extends AbstractModel {
 
 	private String startStateId;
 
-	private LinkedList attributes;
+	private LinkedList<AttributeModel> attributes;
 
 	private SecuredModel secured;
 
 	private PersistenceContextModel persistenceContext;
 
-	private LinkedList vars;
+	private LinkedList<VarModel> vars;
 
-	private LinkedList inputs;
+	private LinkedList<InputModel> inputs;
 
-	private LinkedList outputs;
+	private LinkedList<OutputModel> outputs;
 
-	private LinkedList onStartActions;
+	private LinkedList<AbstractActionModel> onStartActions;
 
-	private LinkedList states;
+	private LinkedList<AbstractStateModel> states;
 
-	private LinkedList globalTransitions;
+	private LinkedList<TransitionModel> globalTransitions;
 
-	private LinkedList onEndActions;
+	private LinkedList<AbstractActionModel> onEndActions;
 
-	private LinkedList exceptionHandlers;
+	private LinkedList<ExceptionHandlerModel> exceptionHandlers;
 
-	private LinkedList beanImports;
+	private LinkedList<BeanImportModel> beanImports;
 
 	/**
 	 * Create a flow model
@@ -185,14 +184,14 @@ public class FlowModel extends AbstractModel {
 	/**
 	 * @return the attributes
 	 */
-	public LinkedList getAttributes() {
+	public LinkedList<AttributeModel> getAttributes() {
 		return attributes;
 	}
 
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(LinkedList attributes) {
+	public void setAttributes(LinkedList<AttributeModel> attributes) {
 		this.attributes = attributes;
 	}
 
@@ -227,63 +226,63 @@ public class FlowModel extends AbstractModel {
 	/**
 	 * @return the vars
 	 */
-	public LinkedList getVars() {
+	public LinkedList<VarModel> getVars() {
 		return vars;
 	}
 
 	/**
 	 * @param vars the vars to set
 	 */
-	public void setVars(LinkedList vars) {
+	public void setVars(LinkedList<VarModel> vars) {
 		this.vars = vars;
 	}
 
 	/**
 	 * @return the input mappings
 	 */
-	public LinkedList getInputs() {
+	public LinkedList<InputModel> getInputs() {
 		return inputs;
 	}
 
 	/**
 	 * @param inputs the input mappings to set
 	 */
-	public void setInputs(LinkedList inputs) {
+	public void setInputs(LinkedList<InputModel> inputs) {
 		this.inputs = inputs;
 	}
 
 	/**
 	 * @return the output mappings
 	 */
-	public LinkedList getOutputs() {
+	public LinkedList<OutputModel> getOutputs() {
 		return outputs;
 	}
 
 	/**
 	 * @param outputs the output mappings to set
 	 */
-	public void setOutputs(LinkedList outputs) {
+	public void setOutputs(LinkedList<OutputModel> outputs) {
 		this.outputs = outputs;
 	}
 
 	/**
 	 * @return the on start actions
 	 */
-	public LinkedList getOnStartActions() {
+	public LinkedList<AbstractActionModel> getOnStartActions() {
 		return onStartActions;
 	}
 
 	/**
 	 * @param onStartActions the on start actions to set
 	 */
-	public void setOnStartActions(LinkedList onStartActions) {
+	public void setOnStartActions(LinkedList<AbstractActionModel> onStartActions) {
 		this.onStartActions = onStartActions;
 	}
 
 	/**
 	 * @return the states
 	 */
-	public LinkedList getStates() {
+	public LinkedList<AbstractStateModel> getStates() {
 		return states;
 	}
 
@@ -294,8 +293,7 @@ public class FlowModel extends AbstractModel {
 	 */
 	public AbstractStateModel getStateById(String id) {
 		if (states != null) {
-			for (Iterator it = states.iterator(); it.hasNext();) {
-				AbstractStateModel state = (AbstractStateModel) it.next();
+			for (AbstractStateModel state : states) {
 				if (id.equals(state.getId())) {
 					return state;
 				}
@@ -307,63 +305,63 @@ public class FlowModel extends AbstractModel {
 	/**
 	 * @param states the states to set
 	 */
-	public void setStates(LinkedList states) {
+	public void setStates(LinkedList<AbstractStateModel> states) {
 		this.states = states;
 	}
 
 	/**
 	 * @return the global transitions
 	 */
-	public LinkedList getGlobalTransitions() {
+	public LinkedList<TransitionModel> getGlobalTransitions() {
 		return globalTransitions;
 	}
 
 	/**
 	 * @param globalTransitions the global transitions to set
 	 */
-	public void setGlobalTransitions(LinkedList globalTransitions) {
+	public void setGlobalTransitions(LinkedList<TransitionModel> globalTransitions) {
 		this.globalTransitions = globalTransitions;
 	}
 
 	/**
 	 * @return the on end actions
 	 */
-	public LinkedList getOnEndActions() {
+	public LinkedList<AbstractActionModel> getOnEndActions() {
 		return onEndActions;
 	}
 
 	/**
 	 * @param onEndActions the on end actions to set
 	 */
-	public void setOnEndActions(LinkedList onEndActions) {
+	public void setOnEndActions(LinkedList<AbstractActionModel> onEndActions) {
 		this.onEndActions = onEndActions;
 	}
 
 	/**
 	 * @return the exception handlers
 	 */
-	public LinkedList getExceptionHandlers() {
+	public LinkedList<ExceptionHandlerModel> getExceptionHandlers() {
 		return exceptionHandlers;
 	}
 
 	/**
 	 * @param exceptionHandlers the exception handlers to set
 	 */
-	public void setExceptionHandlers(LinkedList exceptionHandlers) {
+	public void setExceptionHandlers(LinkedList<ExceptionHandlerModel> exceptionHandlers) {
 		this.exceptionHandlers = exceptionHandlers;
 	}
 
 	/**
 	 * @return the bean imports
 	 */
-	public LinkedList getBeanImports() {
+	public LinkedList<BeanImportModel> getBeanImports() {
 		return beanImports;
 	}
 
 	/**
 	 * @param beanImports the bean imports to set
 	 */
-	public void setBeanImports(LinkedList beanImports) {
+	public void setBeanImports(LinkedList<BeanImportModel> beanImports) {
 		this.beanImports = beanImports;
 	}
 

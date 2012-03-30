@@ -85,7 +85,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.resuming(context);
 		assertSessionBound();
 
-		hibernateTemplate.executeWithNativeSession(new HibernateCallback() {
+		hibernateTemplate.executeWithNativeSession(new HibernateCallback<Object>() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				assertSame("Should have been original instance", hibSession, session);
 				return null;
@@ -234,7 +234,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
-		TestBean bean = (TestBean) hibernateTemplate.get(TestBean.class, Long.valueOf(0));
+		TestBean bean = hibernateTemplate.get(TestBean.class, Long.valueOf(0));
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
 		hibernateListener.paused(context);
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
@@ -267,7 +267,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 				new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),
 				new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
 		factory.afterPropertiesSet();
-		return (SessionFactory) factory.getObject();
+		return factory.getObject();
 	}
 
 	private void assertSessionNotBound() {

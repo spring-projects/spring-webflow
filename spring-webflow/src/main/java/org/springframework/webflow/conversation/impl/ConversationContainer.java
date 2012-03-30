@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.JdkVersion;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationParameters;
@@ -53,7 +52,7 @@ class ConversationContainer implements Serializable {
 	/**
 	 * The contained conversations. A list of {@link ContainedConversation} objects.
 	 */
-	private List conversations;
+	private List<ContainedConversation> conversations;
 
 	/**
 	 * The sequence for unique conversation identifiers within this container.
@@ -68,7 +67,7 @@ class ConversationContainer implements Serializable {
 	public ConversationContainer(int maxConversations, String sessionKey) {
 		this.maxConversations = maxConversations;
 		this.sessionKey = sessionKey;
-		this.conversations = new ArrayList();
+		this.conversations = new ArrayList<ContainedConversation>();
 	}
 
 	/**
@@ -100,9 +99,8 @@ class ConversationContainer implements Serializable {
 		conversations.add(conversation);
 		if (maxExceeded()) {
 			if (logger.isDebugEnabled()) {
-				logger
-						.debug("The maximum number of flow executions has been exceeded for the current user. Removing the oldest conversation with id: "
-								+ ((Conversation) conversations.get(0)).getId());
+				logger.debug("The maximum number of flow executions has been exceeded for the current user. Removing the oldest conversation with id: "
+						+ ((Conversation) conversations.get(0)).getId());
 			}
 			// end oldest conversation
 			((Conversation) conversations.get(0)).end();
@@ -111,11 +109,7 @@ class ConversationContainer implements Serializable {
 	}
 
 	private ConversationId nextId() {
-		if (JdkVersion.isAtLeastJava15()) {
-			return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
-		} else {
-			return new SimpleConversationId(new Integer(++conversationIdSequence));
-		}
+		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
 	}
 
 	/**
@@ -125,8 +119,7 @@ class ConversationContainer implements Serializable {
 	 * @throws NoSuchConversationException if the conversation cannot be found
 	 */
 	public synchronized Conversation getConversation(ConversationId id) throws NoSuchConversationException {
-		for (Iterator it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = (ContainedConversation) it.next();
+		for (ContainedConversation conversation : conversations) {
 			if (conversation.getId().equals(id)) {
 				return conversation;
 			}
@@ -138,8 +131,8 @@ class ConversationContainer implements Serializable {
 	 * Remove identified conversation from this container.
 	 */
 	public synchronized void removeConversation(ConversationId id) {
-		for (Iterator it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = (ContainedConversation) it.next();
+		for (Iterator<ContainedConversation> it = conversations.iterator(); it.hasNext();) {
+			ContainedConversation conversation = it.next();
 			if (conversation.getId().equals(id)) {
 				it.remove();
 				break;

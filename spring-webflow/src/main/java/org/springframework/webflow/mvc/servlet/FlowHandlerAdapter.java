@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.servlet;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -188,7 +189,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		} else {
 			try {
 				String flowId = getFlowId(flowHandler, request);
-				MutableAttributeMap input = getInputMap(flowHandler, request);
+				MutableAttributeMap<Object> input = getInputMap(flowHandler, request);
 				ServletExternalContext context = createServletExternalContext(request, response);
 				FlowExecutionResult result = flowExecutor.launchExecution(flowId, input, context);
 				handleFlowExecutionResult(result, context, request, response, flowHandler);
@@ -233,17 +234,18 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * current request parameters as flow execution input attributes. Subclasses may override.
 	 * @param request the current request
 	 */
-	protected MutableAttributeMap defaultCreateFlowExecutionInputMap(HttpServletRequest request) {
-		Map parameterMap = request.getParameterMap();
+	protected MutableAttributeMap<Object> defaultCreateFlowExecutionInputMap(HttpServletRequest request) {
+		@SuppressWarnings("unchecked")
+		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap.size() == 0) {
 			return null;
 		}
-		LocalAttributeMap inputMap = new LocalAttributeMap(parameterMap.size(), 1);
-		Iterator it = parameterMap.entrySet().iterator();
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>(parameterMap.size(), 1);
+		Iterator<Map.Entry<String, String[]>> it = parameterMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String name = (String) entry.getKey();
-			String[] values = (String[]) entry.getValue();
+			Entry<String, String[]> entry = it.next();
+			String name = entry.getKey();
+			String[] values = entry.getValue();
 			if (values.length == 1) {
 				inputMap.put(name, values[0]);
 			} else {
@@ -376,7 +378,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private void sendFlowDefinitionRedirect(FlowExecutionResult result, ServletExternalContext context,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String flowId = context.getFlowRedirectFlowId();
-		MutableAttributeMap input = context.getFlowRedirectFlowInput();
+		MutableAttributeMap<Object> input = context.getFlowRedirectFlowInput();
 		if (result.isPaused()) {
 			input.put(REFERER_FLOW_EXECUTION_ATTRIBUTE, result.getPausedKey());
 		}
@@ -468,8 +470,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		}
 	}
 
-	private MutableAttributeMap getInputMap(FlowHandler handler, HttpServletRequest request) {
-		MutableAttributeMap input = handler.createExecutionInputMap(request);
+	private MutableAttributeMap<Object> getInputMap(FlowHandler handler, HttpServletRequest request) {
+		MutableAttributeMap<Object> input = handler.createExecutionInputMap(request);
 		if (input != null) {
 			return input;
 		} else {

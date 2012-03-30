@@ -58,7 +58,7 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	/**
 	 * The exceptionType to targetStateResolver map.
 	 */
-	private Map exceptionTargetStateMappings = new HashMap();
+	private Map<Class<? extends Throwable>, TargetStateResolver> exceptionTargetStateMappings = new HashMap<Class<? extends Throwable>, TargetStateResolver>();
 
 	/**
 	 * The list of actions to execute when this handler handles an exception.
@@ -71,7 +71,8 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	 * @param targetStateId the id of the state to transition to if the specified type of exception is handled
 	 * @return this handler, to allow for adding multiple mappings in a single statement
 	 */
-	public TransitionExecutingFlowExecutionExceptionHandler add(Class exceptionClass, String targetStateId) {
+	public TransitionExecutingFlowExecutionExceptionHandler add(Class<? extends Throwable> exceptionClass,
+			String targetStateId) {
 		return add(exceptionClass, new DefaultTargetStateResolver(targetStateId));
 	}
 
@@ -82,7 +83,7 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	 * exception is handled
 	 * @return this handler, to allow for adding multiple mappings in a single statement
 	 */
-	public TransitionExecutingFlowExecutionExceptionHandler add(Class exceptionClass,
+	public TransitionExecutingFlowExecutionExceptionHandler add(Class<? extends Throwable> exceptionClass,
 			TargetStateResolver targetStateResolver) {
 		Assert.notNull(exceptionClass, "The exception class is required");
 		Assert.notNull(targetStateResolver, "The target state resolver is required");
@@ -140,7 +141,7 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 		if (isRootCause(e)) {
 			return findTargetStateResolver(e.getClass());
 		} else {
-			targetStateResolver = (TargetStateResolver) exceptionTargetStateMappings.get(e.getClass());
+			targetStateResolver = exceptionTargetStateMappings.get(e.getClass());
 			if (targetStateResolver != null) {
 				return targetStateResolver;
 			} else {
@@ -162,12 +163,13 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	 * @param exceptionType the exception type to lookup
 	 * @return the target state id or null if not found
 	 */
-	private TargetStateResolver findTargetStateResolver(Class exceptionType) {
-		while (exceptionType != null && exceptionType != Object.class) {
-			if (exceptionTargetStateMappings.containsKey(exceptionType)) {
-				return (TargetStateResolver) exceptionTargetStateMappings.get(exceptionType);
+	private TargetStateResolver findTargetStateResolver(Class<? extends Throwable> exceptionType) {
+		Class<?> type = exceptionType;
+		while (type != null && type != Object.class) {
+			if (exceptionTargetStateMappings.containsKey(type)) {
+				return exceptionTargetStateMappings.get(type);
 			} else {
-				exceptionType = exceptionType.getSuperclass();
+				type = type.getSuperclass();
 			}
 		}
 		return null;

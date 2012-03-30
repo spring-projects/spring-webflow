@@ -128,7 +128,7 @@ public class FlowExecutorImpl implements FlowExecutor {
 		return executionRepository;
 	}
 
-	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
+	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap<?> input, ExternalContext context)
 			throws FlowException {
 		try {
 			if (logger.isDebugEnabled()) {

@@ -40,7 +40,7 @@ public class ServletMvcView extends AbstractMvcView {
 		super(view, context);
 	}
 
-	protected void doRender(Map model) throws Exception {
+	protected void doRender(Map<String, ?> model) throws Exception {
 		RequestContext context = getRequestContext();
 		ExternalContext externalContext = context.getExternalContext();
 		HttpServletRequest request = (HttpServletRequest) externalContext.getNativeRequest();

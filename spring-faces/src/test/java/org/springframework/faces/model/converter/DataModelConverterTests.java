@@ -16,28 +16,33 @@ public class DataModelConverterTests extends TestCase {
 
 	Converter converter = new DataModelConverter();
 
+	@SuppressWarnings("unchecked")
 	public void testConvertListToDataModel() throws Exception {
-		List sourceList = new ArrayList();
+		List<Object> sourceList = new ArrayList<Object>();
 
-		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList, DataModel.class);
+		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
+				DataModel.class);
 
 		assertNotNull(resultModel);
 		assertSame(sourceList, resultModel.getWrappedData());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testConvertListToListDataModel() throws Exception {
-		List sourceList = new ArrayList();
+		List<Object> sourceList = new ArrayList<Object>();
 
-		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList, ListDataModel.class);
+		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
+				ListDataModel.class);
 
 		assertNotNull(resultModel);
 		assertSame(sourceList, resultModel.getWrappedData());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testConvertListToSerializableListDataModel() throws Exception {
-		List sourceList = new ArrayList();
+		List<Object> sourceList = new ArrayList<Object>();
 
-		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList,
+		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
 				SerializableListDataModel.class);
 
 		assertNotNull(resultModel);
@@ -45,10 +50,11 @@ public class DataModelConverterTests extends TestCase {
 		assertTrue(resultModel instanceof Serializable);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testConvertListToSerializableListDataModelNullSource() throws Exception {
-		List sourceList = null;
+		List<Object> sourceList = null;
 
-		DataModel resultModel = (DataModel) converter.convertSourceToTargetClass(sourceList,
+		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
 				SerializableListDataModel.class);
 
 		assertNotNull(resultModel);

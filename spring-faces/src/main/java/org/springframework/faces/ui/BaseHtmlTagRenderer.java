@@ -75,13 +75,13 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 				String attribute = getAttributesToRender(component)[i];
 				String property = attribute;
 				if (getAttributeAliases(component).containsKey(attribute)) {
-					property = (String) getAttributeAliases(component).get(attribute);
+					property = getAttributeAliases(component).get(attribute);
 				}
 				Object attributeValue = component.getAttributes().get(property);
 
 				RenderAttributeCallback callback = defaultRenderAttributeCallback;
 				if (getAttributeCallbacks(null).containsKey(attribute)) {
-					callback = (RenderAttributeCallback) getAttributeCallbacks(component).get(attribute);
+					callback = getAttributeCallbacks(component).get(attribute);
 				}
 				callback.doRender(context, context.getResponseWriter(), component, attribute, attributeValue, property);
 			} catch (IllegalArgumentException ex) {
@@ -113,15 +113,15 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 	 * @return a map that returns the bean property name for any attribute that doesn't map directly (i.e., the 'class'
 	 * attribute maps to the 'styleClass' bean property)
 	 */
-	protected Map getAttributeAliases(UIComponent component) {
+	protected Map<String, String> getAttributeAliases(UIComponent component) {
 		return HTML.STANDARD_ATTRIBUTE_ALIASES;
 	};
 
 	/**
 	 * @return a map of registered RenderAttributeCallbacks for attributes that require special rendering logic
 	 */
-	protected Map getAttributeCallbacks(UIComponent component) {
-		return Collections.EMPTY_MAP;
+	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
+		return Collections.emptyMap();
 	}
 
 }

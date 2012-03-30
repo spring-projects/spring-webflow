@@ -47,9 +47,9 @@ class WebFlowEntityResolver implements EntityResolver {
 		if (systemId != null && systemId.indexOf("spring-webflow.xsd") > -1) {
 			return createInputSource(publicId, systemId, WEBFLOW_VERSIONS[0] + ".xsd");
 		}
-		for (int i = 0; i < WEBFLOW_VERSIONS.length; i++) {
-			if (systemId != null && systemId.indexOf(WEBFLOW_VERSIONS[i]) > systemId.lastIndexOf("/")) {
-				String fileName = systemId.substring(systemId.indexOf(WEBFLOW_VERSIONS[i]));
+		for (String element : WEBFLOW_VERSIONS) {
+			if (systemId != null && systemId.indexOf(element) > systemId.lastIndexOf("/")) {
+				String fileName = systemId.substring(systemId.indexOf(element));
 				return createInputSource(publicId, systemId, fileName);
 			}
 		}

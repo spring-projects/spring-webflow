@@ -101,7 +101,7 @@ public class BeanWrapperExpression implements Expression {
 		}
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		try {
 			BeanWrapperImpl beanWrapper = new BeanWrapperImpl(context);
 			return beanWrapper.getPropertyType(expression);

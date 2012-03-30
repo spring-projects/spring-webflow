@@ -61,7 +61,7 @@ public abstract class AbstractFlowBuilder implements FlowBuilder {
 	 */
 	protected Flow createFlow() {
 		String id = getContext().getFlowId();
-		AttributeMap attributes = getContext().getFlowAttributes();
+		AttributeMap<Object> attributes = getContext().getFlowAttributes();
 		return getContext().getFlowArtifactFactory().createFlow(id, attributes);
 	}
 

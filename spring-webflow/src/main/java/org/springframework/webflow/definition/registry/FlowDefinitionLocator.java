@@ -18,8 +18,8 @@ package org.springframework.webflow.definition.registry;
 import org.springframework.webflow.definition.FlowDefinition;
 
 /**
- * A runtime service locator interface for retrieving flow definitions by <code>id</code>. Flow locators are needed
- * by flow executors at runtime to retrieve fully-configured flow definitions to support launching new flow executions.
+ * A runtime service locator interface for retrieving flow definitions by <code>id</code>. Flow locators are needed by
+ * flow executors at runtime to retrieve fully-configured flow definitions to support launching new flow executions.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet

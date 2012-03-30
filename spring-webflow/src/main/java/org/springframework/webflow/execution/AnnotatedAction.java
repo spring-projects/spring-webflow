@@ -23,8 +23,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.AnnotatedObject;
 
 /**
- * An action proxy/decorator that stores arbitrary properties about a target <code>Action</code> implementation for
- * use within a specific Action execution context, for example an <code>ActionState</code> definition, a
+ * An action proxy/decorator that stores arbitrary properties about a target <code>Action</code> implementation for use
+ * within a specific Action execution context, for example an <code>ActionState</code> definition, a
  * <code>TransitionCriteria</code> definition, or in a test environment.
  * <p>
  * An annotated action is an action that wraps another action (referred to as the <i>target</i> action), setting up the

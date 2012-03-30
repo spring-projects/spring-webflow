@@ -28,7 +28,7 @@ public class PropertyNotFoundException extends EvaluationException {
 	 * @param property the property that could not be found
 	 * @param cause root cause of the failure
 	 */
-	public PropertyNotFoundException(Class contextClass, String property, Throwable cause) {
+	public PropertyNotFoundException(Class<?> contextClass, String property, Throwable cause) {
 		super(contextClass, property, "Property not found", cause);
 	}
 

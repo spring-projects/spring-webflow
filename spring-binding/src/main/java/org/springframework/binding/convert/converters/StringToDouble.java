@@ -26,7 +26,7 @@ public class StringToDouble extends StringToObject {
 		super(Double.class);
 	}
 
-	public Object toObject(String string, Class objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) throws Exception {
 		return Double.valueOf(string);
 	}
 

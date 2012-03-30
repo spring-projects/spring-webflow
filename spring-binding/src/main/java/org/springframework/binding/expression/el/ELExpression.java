@@ -90,7 +90,7 @@ public class ELExpression implements Expression {
 		}
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
 			return valueExpression.getType(ctx);

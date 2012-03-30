@@ -32,13 +32,13 @@ import javax.faces.context.ExternalContext;
 
 public class MockJsfExternalContext extends ExternalContext {
 
-	private Map applicationMap = new HashMap();
+	private Map<String, Object> applicationMap = new HashMap<String, Object>();
 
-	private Map sessionMap = new HashMap();
+	private Map<String, Object> sessionMap = new HashMap<String, Object>();
 
-	private Map requestMap = new HashMap();
+	private Map<String, Object> requestMap = new HashMap<String, Object>();
 
-	private Map requestParameterMap = Collections.EMPTY_MAP;
+	private Map<String, String> requestParameterMap = Collections.emptyMap();
 
 	public void dispatch(String arg0) throws IOException {
 	}
@@ -55,7 +55,7 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Map getApplicationMap() {
+	public Map<String, Object> getApplicationMap() {
 		return applicationMap;
 	}
 
@@ -71,7 +71,7 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Map getInitParameterMap() {
+	public Map<String, Object> getInitParameterMap() {
 		return null;
 	}
 
@@ -87,15 +87,15 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Map getRequestCookieMap() {
+	public Map<String, Object> getRequestCookieMap() {
 		return null;
 	}
 
-	public Map getRequestHeaderMap() {
+	public Map<String, String> getRequestHeaderMap() {
 		return null;
 	}
 
-	public Map getRequestHeaderValuesMap() {
+	public Map<String, String[]> getRequestHeaderValuesMap() {
 		return null;
 	}
 
@@ -103,11 +103,11 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Iterator getRequestLocales() {
+	public Iterator<Locale> getRequestLocales() {
 		return null;
 	}
 
-	public Map getRequestMap() {
+	public Map<String, Object> getRequestMap() {
 		return requestMap;
 	}
 
@@ -115,11 +115,11 @@ public class MockJsfExternalContext extends ExternalContext {
 	 * Set the request map for this external context.
 	 * @param requestMap The requestMap to set.
 	 */
-	public void setRequestMap(Map requestMap) {
+	public void setRequestMap(Map<String, Object> requestMap) {
 		this.requestMap = requestMap;
 	}
 
-	public Map getRequestParameterMap() {
+	public Map<String, String> getRequestParameterMap() {
 		return requestParameterMap;
 	}
 
@@ -127,15 +127,15 @@ public class MockJsfExternalContext extends ExternalContext {
 	 * Set the request parameter map for this external context.
 	 * @param requestParameterMap the request parameter map to set.
 	 */
-	public void setRequestParameterMap(Map requestParameterMap) {
+	public void setRequestParameterMap(Map<String, String> requestParameterMap) {
 		this.requestParameterMap = requestParameterMap;
 	}
 
-	public Iterator getRequestParameterNames() {
+	public Iterator<String> getRequestParameterNames() {
 		return requestParameterMap.keySet().iterator();
 	}
 
-	public Map getRequestParameterValuesMap() {
+	public Map<String, String[]> getRequestParameterValuesMap() {
 		return null;
 	}
 
@@ -155,7 +155,7 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Set getResourcePaths(String arg0) {
+	public Set<String> getResourcePaths(String arg0) {
 		return null;
 	}
 
@@ -167,7 +167,7 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Map getSessionMap() {
+	public Map<String, Object> getSessionMap() {
 		return sessionMap;
 	}
 

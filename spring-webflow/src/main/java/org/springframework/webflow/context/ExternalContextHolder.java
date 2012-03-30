@@ -30,7 +30,8 @@ import org.springframework.core.NamedThreadLocal;
  */
 public final class ExternalContextHolder {
 
-	private static final ThreadLocal externalContextHolder = new NamedThreadLocal("Flow ExternalContext");
+	private static final ThreadLocal<ExternalContext> externalContextHolder = new NamedThreadLocal<ExternalContext>(
+			"Flow ExternalContext");
 
 	/**
 	 * Associate the given ExternalContext with the current thread.
@@ -45,7 +46,7 @@ public final class ExternalContextHolder {
 	 * @return the current ExternalContext
 	 */
 	public static ExternalContext getExternalContext() {
-		return (ExternalContext) externalContextHolder.get();
+		return externalContextHolder.get();
 	}
 
 	// not instantiable

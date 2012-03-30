@@ -47,12 +47,12 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	/**
 	 * The backing map storing the parameters.
 	 */
-	private Map parameters;
+	private Map<String, Object> parameters;
 
 	/**
 	 * A helper for accessing parameters. Marked transient and restored on deserialization.
 	 */
-	private transient MapAccessor parameterAccessor;
+	private transient MapAccessor<String, Object> parameterAccessor;
 
 	/**
 	 * A helper for converting string parameter values. Marked transient and restored on deserialization.
@@ -66,7 +66,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * have string keys, string values, and remain unmodifiable.
 	 * @param parameters the contents of this parameter map
 	 */
-	public LocalParameterMap(Map parameters) {
+	public LocalParameterMap(Map<String, Object> parameters) {
 		this(parameters, DEFAULT_CONVERSION_SERVICE);
 	}
 
@@ -78,7 +78,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * @param parameters the contents of this parameter map
 	 * @param conversionService a helper for performing type conversion of map entry values
 	 */
-	public LocalParameterMap(Map parameters, ConversionService conversionService) {
+	public LocalParameterMap(Map<String, Object> parameters, ConversionService conversionService) {
 		initParameters(parameters);
 		this.conversionService = conversionService;
 	}
@@ -95,7 +95,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		return parameters.hashCode();
 	}
 
-	public Map asMap() {
+	public Map<String, Object> asMap() {
 		return Collections.unmodifiableMap(parameterAccessor.asMap());
 	}
 
@@ -151,16 +151,16 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		}
 	}
 
-	public Object[] getArray(String parameterName, Class targetElementType) throws ConversionExecutionException {
+	public <T> T[] getArray(String parameterName, Class<T> targetElementType) throws ConversionExecutionException {
 		String[] parameters = getArray(parameterName);
 		return parameters != null ? convert(parameters, targetElementType) : null;
 	}
 
-	public Object get(String parameterName, Class targetType) throws ConversionExecutionException {
+	public <T> T get(String parameterName, Class<T> targetType) throws ConversionExecutionException {
 		return get(parameterName, targetType, null);
 	}
 
-	public Object get(String parameterName, Class targetType, Object defaultValue) throws ConversionExecutionException {
+	public <T> T get(String parameterName, Class<T> targetType, T defaultValue) throws ConversionExecutionException {
 		if (defaultValue != null) {
 			assertAssignableTo(targetType, defaultValue.getClass());
 		}
@@ -178,97 +178,98 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		return getArray(parameterName);
 	}
 
-	public Object[] getRequiredArray(String parameterName, Class targetElementType) throws IllegalArgumentException,
+	public <T> T[] getRequiredArray(String parameterName, Class<T> targetElementType) throws IllegalArgumentException,
 			ConversionExecutionException {
 		String[] parameters = getRequiredArray(parameterName);
 		return convert(parameters, targetElementType);
 	}
 
-	public Object getRequired(String parameterName, Class targetType) throws IllegalArgumentException,
+	public <T> T getRequired(String parameterName, Class<T> targetType) throws IllegalArgumentException,
 			ConversionExecutionException {
 		return convert(getRequired(parameterName), targetType);
 	}
 
-	public Number getNumber(String parameterName, Class targetType) throws ConversionExecutionException {
-		assertAssignableTo(Number.class, targetType);
-		return (Number) get(parameterName, targetType);
-	}
-
-	public Number getNumber(String parameterName, Class targetType, Number defaultValue)
+	public <T extends Number> T getNumber(String parameterName, Class<T> targetType)
 			throws ConversionExecutionException {
 		assertAssignableTo(Number.class, targetType);
-		return (Number) get(parameterName, targetType, defaultValue);
+		return get(parameterName, targetType);
 	}
 
-	public Number getRequiredNumber(String parameterName, Class targetType) throws IllegalArgumentException,
-			ConversionExecutionException {
+	public <T extends Number> T getNumber(String parameterName, Class<T> targetType, T defaultValue)
+			throws ConversionExecutionException {
 		assertAssignableTo(Number.class, targetType);
-		return (Number) getRequired(parameterName, targetType);
+		return get(parameterName, targetType, defaultValue);
+	}
+
+	public <T extends Number> T getRequiredNumber(String parameterName, Class<T> targetType)
+			throws IllegalArgumentException, ConversionExecutionException {
+		assertAssignableTo(Number.class, targetType);
+		return getRequired(parameterName, targetType);
 	}
 
 	public Integer getInteger(String parameterName) throws ConversionExecutionException {
-		return (Integer) get(parameterName, Integer.class);
+		return get(parameterName, Integer.class);
 	}
 
 	public Integer getInteger(String parameterName, Integer defaultValue) throws ConversionExecutionException {
-		return (Integer) get(parameterName, Integer.class, defaultValue);
+		return get(parameterName, Integer.class, defaultValue);
 	}
 
 	public Integer getRequiredInteger(String parameterName) throws IllegalArgumentException,
 			ConversionExecutionException {
-		return (Integer) getRequired(parameterName, Integer.class);
+		return getRequired(parameterName, Integer.class);
 	}
 
 	public Long getLong(String parameterName) throws ConversionExecutionException {
-		return (Long) get(parameterName, Long.class);
+		return get(parameterName, Long.class);
 	}
 
 	public Long getLong(String parameterName, Long defaultValue) throws ConversionExecutionException {
-		return (Long) get(parameterName, Long.class, defaultValue);
+		return get(parameterName, Long.class, defaultValue);
 	}
 
 	public Long getRequiredLong(String parameterName) throws IllegalArgumentException, ConversionExecutionException {
-		return (Long) getRequired(parameterName, Long.class);
+		return getRequired(parameterName, Long.class);
 	}
 
 	public Boolean getBoolean(String parameterName) throws ConversionExecutionException {
-		return (Boolean) get(parameterName, Boolean.class);
+		return get(parameterName, Boolean.class);
 	}
 
 	public Boolean getBoolean(String parameterName, Boolean defaultValue) throws ConversionExecutionException {
-		return (Boolean) get(parameterName, Boolean.class, defaultValue);
+		return get(parameterName, Boolean.class, defaultValue);
 	}
 
 	public Boolean getRequiredBoolean(String parameterName) throws IllegalArgumentException,
 			ConversionExecutionException {
-		return (Boolean) getRequired(parameterName, Boolean.class);
+		return getRequired(parameterName, Boolean.class);
 	}
 
 	public MultipartFile getMultipartFile(String parameterName) {
-		return (MultipartFile) parameterAccessor.get(parameterName, MultipartFile.class);
+		return parameterAccessor.get(parameterName, MultipartFile.class);
 	}
 
 	public MultipartFile getRequiredMultipartFile(String parameterName) throws IllegalArgumentException {
-		return (MultipartFile) parameterAccessor.getRequired(parameterName, MultipartFile.class);
+		return parameterAccessor.getRequired(parameterName, MultipartFile.class);
 	}
 
-	public AttributeMap asAttributeMap() {
-		return new LocalAttributeMap(getMapInternal());
+	public AttributeMap<Object> asAttributeMap() {
+		return new LocalAttributeMap<Object>(getMapInternal());
 	}
 
 	/**
 	 * Initializes this parameter map.
 	 * @param parameters the parameters
 	 */
-	protected void initParameters(Map parameters) {
+	protected void initParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
-		parameterAccessor = new MapAccessor(this.parameters);
+		parameterAccessor = new MapAccessor<String, Object>(this.parameters);
 	}
 
 	/**
 	 * Returns the wrapped, modifiable map implementation.
 	 */
-	protected Map getMapInternal() {
+	protected Map<String, Object> getMapInternal() {
 		return parameters;
 	}
 
@@ -277,26 +278,29 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	/**
 	 * Convert given String parameter to specified target type.
 	 */
-	private Object convert(String parameter, Class targetType) throws ConversionExecutionException {
-		return conversionService.getConversionExecutor(String.class, targetType).execute(parameter);
+	@SuppressWarnings("unchecked")
+	private <T> T convert(String parameter, Class<T> targetType) throws ConversionExecutionException {
+		return (T) conversionService.getConversionExecutor(String.class, targetType).execute(parameter);
 	}
 
 	/**
 	 * Convert given array of String parameters to specified target type and return the resulting array.
 	 */
-	private Object[] convert(String[] parameters, Class targetElementType) throws ConversionExecutionException {
-		List list = new ArrayList(parameters.length);
+	@SuppressWarnings("unchecked")
+	private <T> T[] convert(String[] parameters, Class<? extends T> targetElementType)
+			throws ConversionExecutionException {
+		List<T> list = new ArrayList<T>(parameters.length);
 		ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetElementType);
-		for (int i = 0; i < parameters.length; i++) {
-			list.add(converter.execute(parameters[i]));
+		for (String parameter : parameters) {
+			list.add((T) converter.execute(parameter));
 		}
-		return list.toArray((Object[]) Array.newInstance(targetElementType, parameters.length));
+		return list.toArray((T[]) Array.newInstance(targetElementType, parameters.length));
 	}
 
 	/**
 	 * Make sure clazz is assignable from requiredType.
 	 */
-	private void assertAssignableTo(Class clazz, Class requiredType) {
+	private void assertAssignableTo(Class<?> clazz, Class<?> requiredType) {
 		Assert.isTrue(clazz.isAssignableFrom(requiredType), "The provided required type must be assignable to ["
 				+ clazz + "]");
 	}
@@ -309,7 +313,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		parameterAccessor = new MapAccessor(parameters);
+		parameterAccessor = new MapAccessor<String, Object>(parameters);
 		conversionService = DEFAULT_CONVERSION_SERVICE;
 	}
 

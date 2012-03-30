@@ -44,10 +44,6 @@ public class FormActionTests extends TestCase {
 		public TestBean() {
 		}
 
-		public TestBean(String prop) {
-			this.prop = prop;
-		}
-
 		public String getProp() {
 			return prop;
 		}
@@ -58,16 +54,6 @@ public class FormActionTests extends TestCase {
 	}
 
 	private static class OtherTestBean {
-
-		private String otherProp;
-
-		public String getOtherProp() {
-			return otherProp;
-		}
-
-		public void setOtherProp(String otherProp) {
-			this.otherProp = otherProp;
-		}
 	}
 
 	public static class TestBeanValidator implements Validator {
@@ -77,7 +63,7 @@ public class FormActionTests extends TestCase {
 			return invoked;
 		}
 
-		public boolean supports(Class clazz) {
+		public boolean supports(Class<?> clazz) {
 			return TestBean.class.equals(clazz);
 		}
 
@@ -284,8 +270,8 @@ public class FormActionTests extends TestCase {
 		assertNotNull(formObject);
 		formObject = new TestBean();
 		TestBean testBean = formObject;
-		new FormObjectAccessor(context).putFormObject(formObject, action.getFormObjectName(), action
-				.getFormObjectScope());
+		new FormObjectAccessor(context).putFormObject(formObject, action.getFormObjectName(),
+				action.getFormObjectScope());
 		formObject = (TestBean) action.getFormObject(context);
 		assertSame(formObject, testBean);
 	}

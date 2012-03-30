@@ -25,7 +25,7 @@ import org.springframework.util.ObjectUtils;
  */
 public class ActionStateModel extends AbstractTransitionableStateModel {
 
-	private LinkedList actions;
+	private LinkedList<AbstractActionModel> actions;
 
 	/**
 	 * Create an action state model
@@ -65,14 +65,14 @@ public class ActionStateModel extends AbstractTransitionableStateModel {
 	/**
 	 * @return the actions
 	 */
-	public LinkedList getActions() {
+	public LinkedList<AbstractActionModel> getActions() {
 		return actions;
 	}
 
 	/**
 	 * @param actions the actions to set
 	 */
-	public void setActions(LinkedList actions) {
+	public void setActions(LinkedList<AbstractActionModel> actions) {
 		this.actions = actions;
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.el.ELResolver;
 import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 
@@ -27,8 +28,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
 
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertEquals("Message should resolve to a type of String", String.class, context.getELResolver().getType(
-				context, ms, "foo.bar"));
+		assertEquals("Message should resolve to a type of String", String.class,
+				context.getELResolver().getType(context, ms, "foo.bar"));
 	}
 
 	public void testGetType_InvalidCode() {
@@ -58,8 +59,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
 
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertEquals("Message should resolve to a valid message value", "hello", context.getELResolver().getValue(
-				context, ms, "foo.bar"));
+		assertEquals("Message should resolve to a valid message value", "hello",
+				context.getELResolver().getValue(context, ms, "foo.bar"));
 	}
 
 	public void testGetValue_InvalidCode() {
@@ -77,8 +78,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 
 	public void testIsReadOnly_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue("isReadOnly should return true for the base variable", context.getELResolver().isReadOnly(context,
-				null, getBaseVariable()));
+		assertTrue("isReadOnly should return true for the base variable",
+				context.getELResolver().isReadOnly(context, null, getBaseVariable()));
 	}
 
 	public void testIsReadOnly_MessageSourceBase() {
@@ -114,8 +115,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		return FlowResourceELResolver.RESOURCE_BUNDLE_KEY;
 	}
 
-	protected List getCustomResolvers() {
-		List resolvers = new ArrayList();
+	protected List<ELResolver> getCustomResolvers() {
+		List<ELResolver> resolvers = new ArrayList<ELResolver>();
 		resolvers.add(new FlowResourceELResolver());
 		return resolvers;
 	}

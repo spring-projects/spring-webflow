@@ -158,7 +158,7 @@ public class AbstractActionTests extends TestCase {
 	}
 
 	public void testCustomResultCollection() {
-		LocalAttributeMap collection = new LocalAttributeMap();
+		LocalAttributeMap<Object> collection = new LocalAttributeMap<Object>();
 		collection.put("result", "value");
 		Event event = action.result("custom", collection);
 		assertEquals("custom", event.getId());

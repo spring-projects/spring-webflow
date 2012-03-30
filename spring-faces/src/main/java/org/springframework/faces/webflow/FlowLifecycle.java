@@ -62,7 +62,7 @@ public class FlowLifecycle extends Lifecycle {
 	public void execute(FacesContext context) throws FacesException {
 		logger.debug("Executing view post back lifecycle");
 		for (int p = PhaseId.APPLY_REQUEST_VALUES.getOrdinal(); p <= PhaseId.INVOKE_APPLICATION.getOrdinal(); p++) {
-			PhaseId phaseId = (PhaseId) PhaseId.VALUES.get(p);
+			PhaseId phaseId = PhaseId.VALUES.get(p);
 			if (!skipPhase(context, phaseId)) {
 				if (isAtLeastJsf20()) {
 					context.setCurrentPhaseId(phaseId);

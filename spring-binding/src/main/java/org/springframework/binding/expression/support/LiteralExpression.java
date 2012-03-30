@@ -57,7 +57,7 @@ public class LiteralExpression implements Expression {
 						+ "If so, should the expression string be enclosed in eval delimiters?");
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return String.class;
 	}
 

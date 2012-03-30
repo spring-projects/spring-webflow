@@ -15,71 +15,72 @@
  */
 package org.springframework.faces.webflow.context.portlet;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 
+import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.webflow.context.portlet.PortletRequestParameterMap;
 
 /**
- * Map backed by a PortletContext for accessing Portlet request parameters. Request parameters can have multiple values.
- * The {@link RequestParameterMap#setUseArrayForMultiValueAttributes(Boolean)} property allows choosing whether the map
- * will return:
- * <ul>
- * <li>String - selects the first value in case of multiple value parameters</li>
- * <li>String[] - wraps single-values parameters as array</li>
- * <li>String or String[] - depends on the values of the parameter</li>
- * </ul>
+ * /** Base class for {@link Map}s allowing access to {@link PortletContext} request paramters.
  * 
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
  * @since 2.2.0
  * 
- * @see PortletRequest#getParameter(String)
- * @see PortletRequest#getParameterValues(String)
+ * @see SingleValueRequestParameterMap
+ * @see MultiValueRequestParameterMap
  */
-public class RequestParameterMap extends PortletRequestParameterMap {
-
-	private Boolean useArrayForMultiValueAttributes;
+public abstract class RequestParameterMap<V> extends StringKeyedMapAdapter<V> {
 
 	private PortletRequest portletRequest;
 
+	private Delegate delegate;
+
 	public RequestParameterMap(PortletRequest portletRequest) {
-		super(portletRequest);
 		this.portletRequest = portletRequest;
+		this.delegate = new Delegate(portletRequest);
 	}
 
-	public void setUseArrayForMultiValueAttributes(Boolean useArrayForMultiValueAttributes) {
-		this.useArrayForMultiValueAttributes = useArrayForMultiValueAttributes;
+	protected final PortletRequest getPortletRequest() {
+		return portletRequest;
 	}
 
-	/**
-	 * This property allows choosing what kind of attributes the map will return:
-	 * <ol>
-	 * <li>String - selects the first value in case of multiple value parameters</li>
-	 * <li>String[] - wraps single-values parameters as array</li>
-	 * <li>String or String[] - depends on the values of the parameter</li>
-	 * </ol>
-	 * The above choices correspond to the following values for useArrayForMultiValueAttributes:
-	 * <ol>
-	 * <li>False</li>
-	 * <li>True</li>
-	 * <li>null</li>
-	 * </ol>
-	 * 
-	 * @param useArrayForMultiValueAttributes
-	 */
-	public Boolean useArrayForMultiValueAttributes() {
-		return useArrayForMultiValueAttributes;
+	protected void setAttribute(String key, V value) {
+		delegate.setAttribute(key, value);
 	}
 
-	@Override
-	protected Object getAttribute(String key) {
-		if (null == useArrayForMultiValueAttributes) {
+	protected void removeAttribute(String key) {
+		delegate.removeAttribute(key);
+	}
+
+	protected Iterator<String> getAttributeNames() {
+		return delegate.getAttributeNames();
+	}
+
+	private static class Delegate extends PortletRequestParameterMap {
+
+		public Delegate(PortletRequest request) {
+			super(request);
+		}
+
+		public Object getAttribute(String key) {
 			return super.getAttribute(key);
-		} else {
-			if (useArrayForMultiValueAttributes) {
-				return portletRequest.getParameterValues(key);
-			} else {
-				return portletRequest.getParameter(key);
-			}
+		}
+
+		public void setAttribute(String key, Object value) {
+			super.setAttribute(key, value);
+		}
+
+		public void removeAttribute(String key) {
+			super.removeAttribute(key);
+		}
+
+		public Iterator<String> getAttributeNames() {
+			return super.getAttributeNames();
 		}
 	}
 

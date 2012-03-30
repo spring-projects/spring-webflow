@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
 import javax.el.ELContext;
@@ -25,8 +26,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * Custom EL resolver that resolves the current RequestContext under the variable {@link #REQUEST_CONTEXT_VARIABLE_NAME}.
- * Allows for accessing any property of the RequestContext instance. For example:
+ * Custom EL resolver that resolves the current RequestContext under the variable {@link #REQUEST_CONTEXT_VARIABLE_NAME}
+ * . Allows for accessing any property of the RequestContext instance. For example:
  * "#{flowRequestContext.conversationScope.myProperty}".
  * 
  * @author Jeremy Grelle
@@ -47,18 +48,18 @@ public class RequestContextELResolver extends ELResolver {
 		this.context = context;
 	}
 
-	public Class getCommonPropertyType(ELContext elContext, Object base) {
+	public Class<?> getCommonPropertyType(ELContext elContext, Object base) {
 		if (base == null) {
 			return RequestContext.class;
 		}
 		return null;
 	}
 
-	public Iterator getFeatureDescriptors(ELContext elContext, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext elContext, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext elContext, Object base, Object property) {
+	public Class<?> getType(ELContext elContext, Object base, Object property) {
 		if (base == null && REQUEST_CONTEXT_VARIABLE_NAME.equals(property)) {
 			elContext.setPropertyResolved(true);
 			return RequestContext.class;

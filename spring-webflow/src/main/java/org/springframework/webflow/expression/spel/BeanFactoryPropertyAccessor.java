@@ -35,7 +35,7 @@ public class BeanFactoryPropertyAccessor implements PropertyAccessor {
 
 	private static final BeanFactory EMPTY_BEAN_FACTORY = new StaticListableBeanFactory();
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return null;
 	}
 

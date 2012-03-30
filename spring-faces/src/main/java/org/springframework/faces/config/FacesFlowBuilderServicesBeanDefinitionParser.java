@@ -65,8 +65,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		parserContext.pushContainingComponent(componentDefinition);
 
 		parseConversionService(element, parserContext, definitionBuilder);
-		parseExpressionParser(element, parserContext, definitionBuilder, parseEnableManagedBeans(element,
-				definitionBuilder));
+		parseExpressionParser(element, parserContext, definitionBuilder,
+				parseEnableManagedBeans(element, definitionBuilder));
 		parseViewFactoryCreator(element, parserContext, definitionBuilder);
 		parseDevelopment(element, definitionBuilder);
 

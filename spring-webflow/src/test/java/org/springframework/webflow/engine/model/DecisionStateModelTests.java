@@ -45,13 +45,13 @@ public class DecisionStateModelTests extends TestCase {
 		DecisionStateModel parent = new DecisionStateModel("child");
 		parent.setSecured(new SecuredModel("secured"));
 
-		LinkedList ifs = new LinkedList();
+		LinkedList<IfModel> ifs = new LinkedList<IfModel>();
 		ifs.add(new IfModel("test", "foo"));
 		parent.setIfs(ifs);
 
 		child.merge(parent);
 		assertNotNull(child.getSecured());
-		assertNotNull("test", ((IfModel) child.getIfs().get(0)).getTest());
+		assertNotNull("test", child.getIfs().get(0).getTest());
 	}
 
 }

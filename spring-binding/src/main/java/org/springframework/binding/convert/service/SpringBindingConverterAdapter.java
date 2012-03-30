@@ -47,7 +47,7 @@ public class SpringBindingConverterAdapter implements GenericConverter {
 		}
 	}
 
-	public Set getConvertibleTypes() {
+	public Set<ConvertiblePair> getConvertibleTypes() {
 		return Collections.singleton(new ConvertiblePair(converter.getSourceClass(), converter.getTargetClass()));
 	}
 

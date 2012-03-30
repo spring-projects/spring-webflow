@@ -52,7 +52,7 @@ public interface FlowSession {
 	 * Return this session's local attributes; the basis for "flow scope" (flow session scope).
 	 * @return the flow scope attributes
 	 */
-	public MutableAttributeMap getScope();
+	public MutableAttributeMap<Object> getScope();
 
 	/**
 	 * Returns a mutable map for data held in "view scope". Attributes in this map are cleared out when the current view
@@ -60,7 +60,7 @@ public interface FlowSession {
 	 * @return view scope
 	 * @throws IllegalStateException if this flow session is not currently in a view state
 	 */
-	public MutableAttributeMap getViewScope() throws IllegalStateException;
+	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException;
 
 	/**
 	 * Returns true if the flow session was started in embedded page mode. An embedded flow can make different

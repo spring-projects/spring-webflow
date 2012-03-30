@@ -131,7 +131,7 @@ public interface RequestControlContext extends RequestContext {
 	 * start operation
 	 * @see Flow#start(RequestControlContext, MutableAttributeMap)
 	 */
-	public void start(Flow flow, MutableAttributeMap input) throws FlowExecutionException;
+	public void start(Flow flow, MutableAttributeMap<?> input) throws FlowExecutionException;
 
 	/**
 	 * End the active flow session of the current flow execution. This method should be called by clients that terminate
@@ -142,7 +142,7 @@ public interface RequestControlContext extends RequestContext {
 	 * @throws IllegalStateException when the flow execution is not active
 	 * @see Flow#end(RequestControlContext, String, MutableAttributeMap)
 	 */
-	public void endActiveFlowSession(String outcome, MutableAttributeMap output) throws IllegalStateException;
+	public void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output) throws IllegalStateException;
 
 	/**
 	 * Returns true if the 'redirect on pause' flow execution attribute is set to true, false otherwise.

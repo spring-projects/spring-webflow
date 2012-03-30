@@ -41,14 +41,14 @@ class DispatchMethodInvoker {
 	/**
 	 * The parameter types describing the dispatch method signature.
 	 */
-	private Class[] parameterTypes;
+	private Class<?>[] parameterTypes;
 
 	/**
 	 * The resolved method cache.
 	 */
-	private Map methodCache = new CachingMapDecorator() {
-		public Object create(Object key) {
-			String methodName = (String) key;
+	private Map<String, Method> methodCache = new CachingMapDecorator<String, Method>() {
+		public Method create(String key) {
+			String methodName = key;
 			try {
 				return new MethodKey(target.getClass(), methodName, parameterTypes).getMethod();
 			} catch (InvalidMethodKeyException e) {
@@ -64,7 +64,7 @@ class DispatchMethodInvoker {
 	 * @param target the target to dispatch to
 	 * @param parameterTypes the parameter types defining the argument signature of the dispatch methods
 	 */
-	public DispatchMethodInvoker(Object target, Class[] parameterTypes) {
+	public DispatchMethodInvoker(Object target, Class<?>[] parameterTypes) {
 		Assert.notNull(target, "The target of a dispatch method invocation is required");
 		this.target = target;
 		this.parameterTypes = parameterTypes;
@@ -80,7 +80,7 @@ class DispatchMethodInvoker {
 	/**
 	 * Returns the parameter types defining the argument signature of the dispatch methods.
 	 */
-	public Class[] getParameterTypes() {
+	public Class<?>[] getParameterTypes() {
 		return parameterTypes;
 	}
 
@@ -115,7 +115,7 @@ class DispatchMethodInvoker {
 	 * @throws MethodLookupException when the method cannot be resolved
 	 */
 	private Method getDispatchMethod(String methodName) throws MethodLookupException {
-		return (Method) methodCache.get(methodName);
+		return methodCache.get(methodName);
 	}
 
 	/**

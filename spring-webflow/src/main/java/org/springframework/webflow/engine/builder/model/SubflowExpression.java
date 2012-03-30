@@ -39,7 +39,7 @@ class SubflowExpression implements Expression {
 		throw new UnsupportedOperationException("Cannot set a subflow expression");
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return null;
 	}
 

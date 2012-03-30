@@ -24,7 +24,7 @@ public class ValueCoercionException extends EvaluationException {
 
 	private transient Object value;
 
-	private Class targetClass;
+	private Class<?> targetClass;
 
 	/**
 	 * Creates a new property not found exception
@@ -33,7 +33,7 @@ public class ValueCoercionException extends EvaluationException {
 	 * @param value the value that could not be coerced
 	 * @param targetClass the class the value could not be coerced to
 	 */
-	public ValueCoercionException(Class contextClass, String property, Object value, Class targetClass) {
+	public ValueCoercionException(Class<?> contextClass, String property, Object value, Class<?> targetClass) {
 		this(contextClass, property, value, targetClass, null);
 		this.value = value;
 		this.targetClass = targetClass;
@@ -47,7 +47,8 @@ public class ValueCoercionException extends EvaluationException {
 	 * @param targetClass the class the value could not be coerced to
 	 * @param cause root cause of the failure
 	 */
-	public ValueCoercionException(Class contextClass, String property, Object value, Class targetClass, Throwable cause) {
+	public ValueCoercionException(Class<?> contextClass, String property, Object value, Class<?> targetClass,
+			Throwable cause) {
 		super(contextClass, property,
 				"Value could not be converted to target class; is a suitable type converter registered?", cause);
 		this.value = value;
@@ -64,7 +65,7 @@ public class ValueCoercionException extends EvaluationException {
 	/**
 	 * @return the class the value could not be coerced to
 	 */
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return targetClass;
 	}
 

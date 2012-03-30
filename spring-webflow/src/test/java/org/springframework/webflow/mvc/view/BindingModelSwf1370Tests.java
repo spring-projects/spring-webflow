@@ -36,10 +36,10 @@ public class BindingModelSwf1370Tests extends TestCase {
 		assertEquals("111", model.getFieldValue("responses[1].value"));
 	}
 
-	private class Question {
+	public static class Question {
 	};
 
-	private class Response {
+	public static class Response {
 
 		private int value;
 
@@ -56,7 +56,7 @@ public class BindingModelSwf1370Tests extends TestCase {
 		}
 	}
 
-	private class TestBeanWithQuestionResponseMap {
+	public static class TestBeanWithQuestionResponseMap {
 		private Map<Question, Response> responses = new HashMap<Question, Response>();
 
 		public TestBeanWithQuestionResponseMap(Question question) {
@@ -72,7 +72,8 @@ public class BindingModelSwf1370Tests extends TestCase {
 		}
 	}
 
-	private class QuestionConverter implements org.springframework.core.convert.converter.Converter<Integer, Question> {
+	public static class QuestionConverter implements
+			org.springframework.core.convert.converter.Converter<Integer, Question> {
 
 		private Map<Integer, Question> map = new HashMap<Integer, Question>();
 

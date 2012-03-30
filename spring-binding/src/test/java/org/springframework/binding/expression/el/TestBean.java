@@ -23,7 +23,7 @@ public class TestBean {
 	private String value = "foo";
 	private int maximum = 2;
 	private TestBean bean;
-	private List list = new ArrayList();
+	private List<String> list = new ArrayList<String>();
 
 	public TestBean() {
 		initList();
@@ -65,7 +65,7 @@ public class TestBean {
 		this.maximum = maximum;
 	}
 
-	public List getList() {
+	public List<String> getList() {
 		return list;
 	}
 }

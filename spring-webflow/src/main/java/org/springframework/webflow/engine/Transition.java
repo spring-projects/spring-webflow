@@ -33,8 +33,9 @@ import org.springframework.webflow.execution.RequestContext;
  * {@link Event} from within a transitionable source state.
  * <p>
  * When an event occurs within this transition's source <code>TransitionableState</code> the determination of the
- * eligibility of this transition is made by a <code>TransitionCriteria</code> object called the <i>matching criteria</i>.
- * If the matching criteria returns <code>true</code> this transition is marked eligible for execution for that event.
+ * eligibility of this transition is made by a <code>TransitionCriteria</code> object called the <i>matching
+ * criteria</i>. If the matching criteria returns <code>true</code> this transition is marked eligible for execution for
+ * that event.
  * <p>
  * Determination as to whether an eligible transition should be allowed to execute is made by a
  * <code>TransitionCriteria</code> object called the <i>execution criteria</i>. If the execution criteria test fails

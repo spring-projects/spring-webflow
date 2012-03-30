@@ -86,7 +86,8 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		handler.add(TestException.class, "end");
 		flow.getExceptionHandlerSet().add(handler);
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
-			public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap output) {
+			@SuppressWarnings("unused")
+			public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap<?> output) {
 				assertTrue(context.getFlashScope().contains("flowExecutionException"));
 				assertTrue(context.getFlashScope().contains("rootCauseException"));
 				assertTrue(context.getFlashScope().get("rootCauseException") instanceof TestException);

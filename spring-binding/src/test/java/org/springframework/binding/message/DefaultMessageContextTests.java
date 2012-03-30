@@ -45,8 +45,8 @@ public class DefaultMessageContextTests extends TestCase {
 	}
 
 	public void testResolveMessageWithArgs() {
-		context.addMessage(new MessageBuilder().error().source(this).code("argmessage").arg("Keith").defaultText(
-				"Hello world fallback!").build());
+		context.addMessage(new MessageBuilder().error().source(this).code("argmessage").arg("Keith")
+				.defaultText("Hello world fallback!").build());
 		Message[] messages = context.getAllMessages();
 		assertEquals(1, messages.length);
 		assertEquals("Hello world Keith!", messages[0].getText());

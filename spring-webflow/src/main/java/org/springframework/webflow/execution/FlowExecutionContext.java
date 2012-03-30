@@ -102,19 +102,19 @@ public interface FlowExecutionContext {
 	 * rendering. Flash attributes survive flow execution refresh operations.
 	 * @return flash scope
 	 */
-	public MutableAttributeMap getFlashScope();
+	public MutableAttributeMap<Object> getFlashScope();
 
 	/**
 	 * Returns a mutable map for data held in "conversation scope". Conversation scope is a data structure that exists
 	 * for the life of this flow execution and is accessible to all flow sessions.
 	 * @return conversation scope
 	 */
-	public MutableAttributeMap getConversationScope();
+	public MutableAttributeMap<Object> getConversationScope();
 
 	/**
 	 * Returns runtime execution attributes that may influence the behavior of flow artifacts, such as states and
 	 * actions.
 	 * @return execution attributes
 	 */
-	public AttributeMap getAttributes();
+	public AttributeMap<Object> getAttributes();
 }

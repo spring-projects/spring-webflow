@@ -26,7 +26,7 @@ public class StringToShort extends StringToObject {
 		super(Short.class);
 	}
 
-	public Object toObject(String string, Class objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) throws Exception {
 		return Short.valueOf(string);
 	}
 

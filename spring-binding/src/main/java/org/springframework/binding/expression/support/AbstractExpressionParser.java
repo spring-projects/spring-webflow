@@ -170,7 +170,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 	 * @throws ParserException when the expressions cannot be parsed
 	 */
 	private Expression[] parseExpressions(String expressionString, ParserContext context) throws ParserException {
-		List expressions = new LinkedList();
+		List<Expression> expressions = new LinkedList<Expression>();
 		int startIdx = 0;
 		while (startIdx < expressionString.length()) {
 			int prefixIndex = expressionString.indexOf(getExpressionPrefix(), startIdx);
@@ -218,16 +218,15 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 				startIdx = expressionString.length();
 			}
 		}
-		return (Expression[]) expressions.toArray(new Expression[expressions.size()]);
+		return expressions.toArray(new Expression[expressions.size()]);
 	}
 
-	protected Map parseVariableExpressions(ExpressionVariable[] variables) throws ParserException {
+	protected Map<String, Expression> parseVariableExpressions(ExpressionVariable[] variables) throws ParserException {
 		if (variables == null || variables.length == 0) {
 			return null;
 		}
-		Map variableExpressions = new HashMap(variables.length, 1);
-		for (int i = 0; i < variables.length; i++) {
-			ExpressionVariable var = variables[i];
+		Map<String, Expression> variableExpressions = new HashMap<String, Expression>(variables.length, 1);
+		for (ExpressionVariable var : variables) {
 			variableExpressions.put(var.getName(), parseExpression(var.getValueExpression(), var.getParserContext()));
 		}
 		return variableExpressions;

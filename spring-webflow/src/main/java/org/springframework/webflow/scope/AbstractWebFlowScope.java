@@ -35,8 +35,8 @@ public abstract class AbstractWebFlowScope implements Scope {
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	public Object get(String name, ObjectFactory objectFactory) {
-		MutableAttributeMap scope = getScope();
+	public Object get(String name, ObjectFactory<?> objectFactory) {
+		MutableAttributeMap<Object> scope = getScope();
 		Object scopedObject = scope.get(name);
 		if (scopedObject == null) {
 			if (logger.isDebugEnabled()) {
@@ -60,7 +60,7 @@ public abstract class AbstractWebFlowScope implements Scope {
 	 * Template method that returns the target scope map.
 	 * @throws IllegalStateException if the scope could not be accessed
 	 */
-	protected abstract MutableAttributeMap getScope() throws IllegalStateException;
+	protected abstract MutableAttributeMap<Object> getScope() throws IllegalStateException;
 
 	/**
 	 * Always returns <code>null</code> as most Spring Web Flow scopes do not have obvious conversation ids. Subclasses

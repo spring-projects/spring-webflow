@@ -1,7 +1,5 @@
 package org.springframework.faces.config;
 
-import java.util.Set;
-
 import junit.framework.TestCase;
 
 import org.springframework.binding.convert.ConversionException;
@@ -91,29 +89,25 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 
 	public static class TestConversionService implements ConversionService {
 
-		public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+		public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public Object executeConversion(String converterId, Object source, Class targetClass) {
+		public Object executeConversion(String converterId, Object source, Class<?> targetClass) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+		public ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
 				throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+		public ConversionExecutor getConversionExecutor(String id, Class<?> sourceClass, Class<?> targetClass)
 				throws ConversionExecutorNotFoundException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public Set getConversionExecutors(Class sourceClass) {
-			throw new UnsupportedOperationException("Auto-generated method stub");
-		}
-
-		public Class getClassForAlias(String name) throws ConversionExecutionException {
+		public Class<?> getClassForAlias(String name) throws ConversionExecutionException {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

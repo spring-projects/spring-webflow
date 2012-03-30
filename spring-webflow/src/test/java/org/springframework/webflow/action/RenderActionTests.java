@@ -16,8 +16,7 @@ public class RenderActionTests extends TestCase {
 		MockRequestContext context = new MockRequestContext();
 		Event result = action.execute(context);
 		assertEquals("success", result.getId());
-		String[] fragments = (String[]) context.getFlashScope().getArray(View.RENDER_FRAGMENTS_ATTRIBUTE,
-				String[].class);
+		String[] fragments = context.getFlashScope().getArray(View.RENDER_FRAGMENTS_ATTRIBUTE, String[].class);
 		assertEquals("frag1", fragments[0]);
 		assertEquals("frag2", fragments[1]);
 	}

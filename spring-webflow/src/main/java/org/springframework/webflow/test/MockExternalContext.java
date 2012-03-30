@@ -41,13 +41,15 @@ public class MockExternalContext implements ExternalContext {
 
 	private ParameterMap requestParameterMap = new MockParameterMap();
 
-	private MutableAttributeMap requestMap = new LocalAttributeMap();
+	private MutableAttributeMap<Object> requestMap = new LocalAttributeMap<Object>();
 
-	private SharedAttributeMap sessionMap = new LocalSharedAttributeMap(new SharedMapDecorator(new HashMap()));
+	private SharedAttributeMap<Object> sessionMap = new LocalSharedAttributeMap<Object>(
+			new SharedMapDecorator<String, Object>(new HashMap<String, Object>()));
 
-	private SharedAttributeMap globalSessionMap = sessionMap;
+	private SharedAttributeMap<Object> globalSessionMap = sessionMap;
 
-	private SharedAttributeMap applicationMap = new LocalSharedAttributeMap(new SharedMapDecorator(new HashMap()));
+	private SharedAttributeMap<Object> applicationMap = new LocalSharedAttributeMap<Object>(
+			new SharedMapDecorator<String, Object>(new HashMap<String, Object>()));
 
 	private Object nativeContext = new Object();
 
@@ -71,7 +73,7 @@ public class MockExternalContext implements ExternalContext {
 
 	private String flowDefinitionRedirectFlowId;
 
-	private MutableAttributeMap flowDefinitionRedirectFlowInput;
+	private MutableAttributeMap<Object> flowDefinitionRedirectFlowInput;
 
 	private String externalRedirectUrl;
 
@@ -104,19 +106,19 @@ public class MockExternalContext implements ExternalContext {
 		return requestParameterMap;
 	}
 
-	public MutableAttributeMap getRequestMap() {
+	public MutableAttributeMap<Object> getRequestMap() {
 		return requestMap;
 	}
 
-	public SharedAttributeMap getSessionMap() {
+	public SharedAttributeMap<Object> getSessionMap() {
 		return sessionMap;
 	}
 
-	public SharedAttributeMap getGlobalSessionMap() {
+	public SharedAttributeMap<Object> getGlobalSessionMap() {
 		return globalSessionMap;
 	}
 
-	public SharedAttributeMap getApplicationMap() {
+	public SharedAttributeMap<Object> getApplicationMap() {
 		return applicationMap;
 	}
 
@@ -178,9 +180,12 @@ public class MockExternalContext implements ExternalContext {
 		recordResponseComplete();
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException {
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException {
 		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = input;
+		flowDefinitionRedirectFlowInput = new LocalAttributeMap<Object>();
+		if (input != null) {
+			flowDefinitionRedirectFlowInput.putAll(input);
+		}
 		recordResponseComplete();
 	}
 
@@ -218,7 +223,7 @@ public class MockExternalContext implements ExternalContext {
 	 * Set the request attribute map.
 	 * @see ExternalContext#getRequestMap()
 	 */
-	public void setRequestMap(MutableAttributeMap requestMap) {
+	public void setRequestMap(MutableAttributeMap<Object> requestMap) {
 		this.requestMap = requestMap;
 	}
 
@@ -226,7 +231,7 @@ public class MockExternalContext implements ExternalContext {
 	 * Set the session attribute map.
 	 * @see ExternalContext#getSessionMap()
 	 */
-	public void setSessionMap(SharedAttributeMap sessionMap) {
+	public void setSessionMap(SharedAttributeMap<Object> sessionMap) {
 		this.sessionMap = sessionMap;
 	}
 
@@ -235,7 +240,7 @@ public class MockExternalContext implements ExternalContext {
 	 * are one and the same.
 	 * @see ExternalContext#getGlobalSessionMap()
 	 */
-	public void setGlobalSessionMap(SharedAttributeMap globalSessionMap) {
+	public void setGlobalSessionMap(SharedAttributeMap<Object> globalSessionMap) {
 		this.globalSessionMap = globalSessionMap;
 	}
 
@@ -243,7 +248,7 @@ public class MockExternalContext implements ExternalContext {
 	 * Set the application attribute map.
 	 * @see ExternalContext#getApplicationMap()
 	 */
-	public void setApplicationMap(SharedAttributeMap applicationMap) {
+	public void setApplicationMap(SharedAttributeMap<Object> applicationMap) {
 		this.applicationMap = applicationMap;
 	}
 
@@ -391,7 +396,7 @@ public class MockExternalContext implements ExternalContext {
 	 * Returns the input to pass the flow definition through the redirect. Only set when
 	 * {@link #getFlowDefinitionRedirectRequested()} returns true.
 	 */
-	public MutableAttributeMap getFlowRedirectFlowInput() {
+	public MutableAttributeMap<Object> getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
 	}
 

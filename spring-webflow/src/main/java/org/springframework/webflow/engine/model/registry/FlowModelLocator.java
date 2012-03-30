@@ -18,8 +18,8 @@ package org.springframework.webflow.engine.model.registry;
 import org.springframework.webflow.engine.model.FlowModel;
 
 /**
- * A runtime service locator interface for retrieving flow definitions by <code>id</code>. Flow locators are needed
- * by flow executors at runtime to retrieve flow models to support loading flow definitions.
+ * A runtime service locator interface for retrieving flow definitions by <code>id</code>. Flow locators are needed by
+ * flow executors at runtime to retrieve flow models to support loading flow definitions.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet

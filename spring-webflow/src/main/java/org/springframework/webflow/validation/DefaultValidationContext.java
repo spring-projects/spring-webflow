@@ -43,9 +43,9 @@ public class DefaultValidationContext implements ValidationContext {
 
 	private MappingResult getMappingResult(String property) {
 		if (mappingResults != null) {
-			List results = mappingResults.getResults(new PropertyMappingResult(property));
+			List<MappingResult> results = mappingResults.getResults(new PropertyMappingResult(property));
 			if (!results.isEmpty()) {
-				return (MappingResult) results.get(0);
+				return results.get(0);
 			}
 		}
 		return null;

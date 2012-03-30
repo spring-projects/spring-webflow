@@ -24,7 +24,7 @@ import org.springframework.webflow.execution.RequestContext;
 /**
  * Helper class to provide information about the JSF runtime environment such as JSF version and implementation.
  * 
- * @author Phil Webb
+ * @author Phillip Webb
  */
 public class JsfRuntimeInformation {
 

@@ -33,7 +33,7 @@ public class TestBean implements Serializable {
 
 	public boolean executed;
 
-	public Map emptyMap;
+	public Map<String, Object> emptyMap;
 
 	public void execute() {
 		this.executed = true;
@@ -51,9 +51,9 @@ public class TestBean implements Serializable {
 		return datum3;
 	}
 
-	public Map getEmptyMap() {
+	public Map<String, Object> getEmptyMap() {
 		if (emptyMap == null) {
-			emptyMap = new HashMap();
+			emptyMap = new HashMap<String, Object>();
 			emptyMap.put("foo", null);
 		}
 		return emptyMap;

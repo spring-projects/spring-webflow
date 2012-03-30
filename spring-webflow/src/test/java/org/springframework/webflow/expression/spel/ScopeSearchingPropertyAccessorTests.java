@@ -37,7 +37,7 @@ public class ScopeSearchingPropertyAccessorTests extends TestCase {
 	}
 
 	public void testGetSpecificTargetClasses() throws Exception {
-		Class[] classes = accessor.getSpecificTargetClasses();
+		Class<?>[] classes = accessor.getSpecificTargetClasses();
 		assertEquals(1, classes.length);
 		assertEquals(RequestContext.class, classes[0]);
 	}

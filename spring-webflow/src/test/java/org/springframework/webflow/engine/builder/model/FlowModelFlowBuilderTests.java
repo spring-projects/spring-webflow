@@ -1,5 +1,6 @@
 package org.springframework.webflow.engine.builder.model;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import junit.framework.TestCase;
@@ -18,13 +19,14 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilderException;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
+import org.springframework.webflow.engine.model.AbstractActionModel;
+import org.springframework.webflow.engine.model.AbstractStateModel;
 import org.springframework.webflow.engine.model.AttributeModel;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.EvaluateModel;
 import org.springframework.webflow.engine.model.ExceptionHandlerModel;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.InputModel;
-import org.springframework.webflow.engine.model.Model;
 import org.springframework.webflow.engine.model.OutputModel;
 import org.springframework.webflow.engine.model.PersistenceContextModel;
 import org.springframework.webflow.engine.model.SecuredModel;
@@ -65,37 +67,19 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		}
 	}
 
-	private LinkedList singleList(Model model) {
-		LinkedList list = new LinkedList();
-		list.add(model);
-		return list;
-	}
-
-	private LinkedList doubleList(Model model, Model model2) {
-		LinkedList list = new LinkedList();
-		list.add(model);
-		list.add(model2);
-		return list;
-	}
-
-	private LinkedList quadList(Model model, Model model2, Model model3, Model model4) {
-		LinkedList list = new LinkedList();
-		list.add(model);
-		list.add(model2);
-		list.add(model3);
-		list.add(model4);
-		return list;
+	private <T> LinkedList<T> asList(Class<T> elementClass, T... a) {
+		return new LinkedList<T>(Arrays.asList(a));
 	}
 
 	public void testBuildFlowWithEndState() {
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertEquals("flow", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
 	}
 
 	public void testBuildFlowWithDefaultStartState() {
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertEquals("flow", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
@@ -103,7 +87,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testBuildFlowWithStartStateAttribute() {
 		model.setStartStateId("end");
-		model.setStates(doubleList(new EndStateModel("foo"), new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("foo"), new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertEquals("flow", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
@@ -113,9 +97,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		AttributeModel attribute1 = new AttributeModel("foo", "bar");
 		AttributeModel attribute2 = new AttributeModel("number", "1");
 		attribute2.setType("integer");
-		model.setAttributes(doubleList(attribute1, attribute2));
+		model.setAttributes(asList(AttributeModel.class, attribute1, attribute2));
 
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertEquals("bar", flow.getAttributes().get("foo"));
 		assertEquals(new Integer(1), flow.getAttributes().get("number"));
@@ -123,7 +107,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testPersistenceContextFlow() {
 		model.setPersistenceContext(new PersistenceContextModel());
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertNotNull(flow.getAttributes().get("persistenceContext"));
 		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
@@ -136,7 +120,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		input3.setType("integer");
 		InputModel input4 = new InputModel("required", "flowScope.boop");
 		input4.setRequired("true");
-		model.setInputs(quadList(input1, input2, input3, input4));
+		model.setInputs(asList(InputModel.class, input1, input2, input3, input4));
 
 		OutputModel output1 = new OutputModel("differentName", "flowScope.bar");
 		OutputModel output2 = new OutputModel("number", "flowScope.baz");
@@ -145,21 +129,21 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		output3.setType("integer");
 		output3.setRequired("true");
 		OutputModel output4 = new OutputModel("literal", "'a literal'");
-		model.setOutputs(quadList(output1, output2, output3, output4));
+		model.setOutputs(asList(OutputModel.class, output1, output2, output3, output4));
 
 		EndStateModel end = new EndStateModel("end");
-		end.setOutputs(singleList(new OutputModel("foo", "flowScope.foo")));
+		end.setOutputs(asList(OutputModel.class, new OutputModel("foo", "flowScope.foo")));
 
 		EndStateModel notReached = new EndStateModel("notReached");
-		notReached.setOutputs(singleList(new OutputModel("notReached", "flowScope.foo")));
+		notReached.setOutputs(asList(OutputModel.class, new OutputModel("notReached", "flowScope.foo")));
 
-		model.setStates(doubleList(end, notReached));
+		model.setStates(asList(AbstractStateModel.class, end, notReached));
 
 		Flow flow = getFlow(model);
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		FlowExecution execution = factory.createFlowExecution(flow);
 		MockExternalContext context = new MockExternalContext();
-		MutableAttributeMap map = new LocalAttributeMap();
+		MutableAttributeMap<Object> map = new LocalAttributeMap<Object>();
 		map.put("foo", "bar");
 		map.put("number", "3");
 		map.put("required", "9");
@@ -176,7 +160,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testFlowSecured() {
 		model.setSecured(new SecuredModel("ROLE_USER"));
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		SecurityRule rule = (SecurityRule) flow.getAttributes().get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
 		assertNotNull(rule);
@@ -188,7 +172,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testFlowSecuredState() {
 		EndStateModel end = new EndStateModel("end");
 		end.setSecured(new SecuredModel("ROLE_USER"));
-		model.setStates(singleList(end));
+		model.setStates(asList(AbstractStateModel.class, end));
 		Flow flow = getFlow(model);
 		SecurityRule rule = (SecurityRule) flow.getState("end").getAttributes()
 				.get(SecurityRule.SECURITY_ATTRIBUTE_NAME);
@@ -199,11 +183,11 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testFlowSecuredTransition() {
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		TransitionModel transition = new TransitionModel();
 		transition.setTo("end");
 		transition.setSecured(new SecuredModel("ROLE_USER"));
-		model.setGlobalTransitions(singleList(transition));
+		model.setGlobalTransitions(asList(TransitionModel.class, transition));
 		Flow flow = getFlow(model);
 		SecurityRule rule = (SecurityRule) flow.getGlobalTransitionSet().toArray()[0].getAttributes().get(
 				SecurityRule.SECURITY_ATTRIBUTE_NAME);
@@ -214,16 +198,16 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	public void testFlowVariable() {
-		model.setVars(singleList(new VarModel("flow-foo", "org.springframework.webflow.TestBean")));
-		model.setStates(singleList(new EndStateModel("end")));
+		model.setVars(asList(VarModel.class, new VarModel("flow-foo", "org.springframework.webflow.TestBean")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertEquals("flow-foo", flow.getVariable("flow-foo").getName());
 	}
 
 	public void testViewStateVariable() {
 		ViewStateModel view = new ViewStateModel("view");
-		view.setVars(singleList(new VarModel("foo", "org.springframework.webflow.TestBean")));
-		model.setStates(singleList(view));
+		view.setVars(asList(VarModel.class, new VarModel("foo", "org.springframework.webflow.TestBean")));
+		model.setStates(asList(AbstractStateModel.class, view));
 		Flow flow = getFlow(model);
 		assertNotNull(((ViewState) flow.getStateInstance("view")).getVariable("foo"));
 	}
@@ -231,7 +215,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testViewStateRedirect() {
 		ViewStateModel view = new ViewStateModel("view");
 		view.setRedirect("true");
-		model.setStates(singleList(view));
+		model.setStates(asList(AbstractStateModel.class, view));
 		Flow flow = getFlow(model);
 		assertTrue(((ViewState) flow.getStateInstance("view")).getRedirect());
 	}
@@ -239,7 +223,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testViewStatePopup() {
 		ViewStateModel view = new ViewStateModel("view");
 		view.setPopup("true");
-		model.setStates(singleList(view));
+		model.setStates(asList(AbstractStateModel.class, view));
 		Flow flow = getFlow(model);
 		assertTrue(((ViewState) flow.getStateInstance("view")).getPopup());
 	}
@@ -247,7 +231,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testViewStateFlowRedirect() {
 		ViewStateModel state = new ViewStateModel("view");
 		state.setView("flowRedirect:myFlow?input=#{flowScope.foo}");
-		model.setStates(singleList(state));
+		model.setStates(asList(AbstractStateModel.class, state));
 		Flow flow = getFlow(model);
 		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
 		assertTrue(vf instanceof ActionExecutingViewFactory);
@@ -258,7 +242,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testViewStateExternalRedirect() {
 		ViewStateModel state = new ViewStateModel("view");
 		state.setView("externalRedirect:http://www.paypal.com?_callbackUrl=#{flowExecutionUri}");
-		model.setStates(singleList(state));
+		model.setStates(asList(AbstractStateModel.class, state));
 		Flow flow = getFlow(model);
 		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
 		assertTrue(vf instanceof ActionExecutingViewFactory);
@@ -292,8 +276,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testExceptionHandlers() {
 		FlowModel model = new FlowModel();
-		model.setStates(singleList(new EndStateModel("state")));
-		model.setExceptionHandlers(singleList(new ExceptionHandlerModel("exceptionHandler")));
+		model.setStates(asList(AbstractStateModel.class, new EndStateModel("state")));
+		model.setExceptionHandlers(asList(ExceptionHandlerModel.class, new ExceptionHandlerModel("exceptionHandler")));
 		FlowExecutionExceptionHandler handler = new FlowExecutionExceptionHandler() {
 			public boolean canHandle(FlowExecutionException exception) {
 				return true;
@@ -313,8 +297,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	public void testSetActionWithResultType() throws Exception {
 		SetModel setModel = new SetModel("flowScope.stringArray", "intArray");
 		setModel.setType("java.lang.String[]");
-		model.setOnStartActions(singleList(setModel));
-		model.setStates(singleList(new ViewStateModel("view")));
+		model.setOnStartActions(asList(AbstractActionModel.class, setModel));
+		model.setStates(asList(AbstractStateModel.class, new ViewStateModel("view")));
 		Flow flow = getFlow(model);
 		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
 		MockRequestContext context = new MockRequestContext(flow);
@@ -327,9 +311,9 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testSetActionWithImplicitTypeConversion() throws Exception {
 		SetModel setModel = new SetModel("testBean.stringArray", "intArray");
-		model.setOnStartActions(singleList(setModel));
+		model.setOnStartActions(asList(AbstractActionModel.class, setModel));
 		ViewStateModel state = new ViewStateModel("view");
-		model.setStates(singleList(state));
+		model.setStates(asList(AbstractStateModel.class, state));
 		Flow flow = getFlow(model);
 		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
 		MockRequestContext context = new MockRequestContext(flow);
@@ -345,8 +329,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		EvaluateModel evaluateModel = new EvaluateModel("testBean.getIntegers()");
 		evaluateModel.setResult("flowScope.stringArray");
 		evaluateModel.setResultType("java.lang.String[]");
-		model.setOnStartActions(singleList(evaluateModel));
-		model.setStates(singleList(new ViewStateModel("view")));
+		model.setOnStartActions(asList(AbstractActionModel.class, evaluateModel));
+		model.setStates(asList(AbstractStateModel.class, new ViewStateModel("view")));
 		Flow flow = getFlow(model);
 		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
 		MockRequestContext context = new MockRequestContext(flow);
@@ -361,8 +345,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		EvaluateModel evaluateModel = new EvaluateModel("testBean.getIntegers()");
 		evaluateModel.setResult("flowScope.stringArray");
 		evaluateModel.setResultType("java.lang.String[]");
-		model.setOnStartActions(singleList(evaluateModel));
-		model.setStates(singleList(new ViewStateModel("view")));
+		model.setOnStartActions(asList(AbstractActionModel.class, evaluateModel));
+		model.setStates(asList(AbstractStateModel.class, new ViewStateModel("view")));
 		Flow flow = getFlow(model);
 		AnnotatedAction action = (AnnotatedAction) flow.getStartActionList().get(0);
 		MockRequestContext context = new MockRequestContext(flow);
@@ -376,6 +360,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	private static class TestBean {
 		public String[] stringArray;
 
+		@SuppressWarnings("unused")
 		public int[] getIntegers() {
 			return new int[] { 1, 2 };
 		}
@@ -406,10 +391,6 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 		public FlowModel getFlowModel() {
 			return model;
-		}
-
-		public String getFlowModelId() {
-			return "flow";
 		}
 
 		public Resource getFlowModelResource() {

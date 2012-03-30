@@ -36,7 +36,7 @@ public class WebFlow1FlowUrlHandlerTests extends TestCase {
 
 	public void testCreateFlowDefinitionUrlWithFlowInput() {
 		request.setRequestURI("/springtravel/app/flows");
-		LocalAttributeMap input = new LocalAttributeMap(new LinkedHashMap());
+		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>(new LinkedHashMap<String, Object>());
 		input.put("foo", "bar");
 		input.put("bar", "needs encoding");
 		input.put("baz", new Integer(1));

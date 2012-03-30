@@ -28,14 +28,14 @@ public class FlowExecutionOutcome {
 
 	private String id;
 
-	private AttributeMap output;
+	private AttributeMap<Object> output;
 
 	/**
 	 * Creates a new flow execution outcome
 	 * @param id the outcome id
 	 * @param output the output returned by the execution
 	 */
-	public FlowExecutionOutcome(String id, AttributeMap output) {
+	public FlowExecutionOutcome(String id, AttributeMap<Object> output) {
 		super();
 		this.id = id;
 		this.output = (output != null ? output : CollectionUtils.EMPTY_ATTRIBUTE_MAP);
@@ -53,7 +53,7 @@ public class FlowExecutionOutcome {
 	 * Returns the output returned by the flow execution.
 	 * @return the output that was returned
 	 */
-	public AttributeMap getOutput() {
+	public AttributeMap<Object> getOutput() {
 		return output;
 	}
 

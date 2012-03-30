@@ -15,7 +15,7 @@ import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
 public class JsfUtilsTests extends TestCase {
 
 	public void testBeforeListenersCalledInForwardOrder() throws Exception {
-		List list = new ArrayList();
+		List<OrderVerifyingPhaseListener> list = new ArrayList<OrderVerifyingPhaseListener>();
 		MockLifecycle lifecycle = new MockLifecycle();
 		PhaseListener listener1 = new OrderVerifyingPhaseListener(null, list);
 		lifecycle.addPhaseListener(listener1);
@@ -30,7 +30,7 @@ public class JsfUtilsTests extends TestCase {
 	}
 
 	public void testAfterListenersCalledInReverseOrder() throws Exception {
-		List list = new ArrayList();
+		List<OrderVerifyingPhaseListener> list = new ArrayList<OrderVerifyingPhaseListener>();
 		MockLifecycle lifecycle = new MockLifecycle();
 		PhaseListener listener1 = new OrderVerifyingPhaseListener(list, null);
 		lifecycle.addPhaseListener(listener1);
@@ -46,10 +46,11 @@ public class JsfUtilsTests extends TestCase {
 
 	private class OrderVerifyingPhaseListener implements PhaseListener {
 
-		private List afterPhaseList;
-		private List beforePhaseList;
+		private List<OrderVerifyingPhaseListener> afterPhaseList;
+		private List<OrderVerifyingPhaseListener> beforePhaseList;
 
-		public OrderVerifyingPhaseListener(List afterPhaseList, List beforePhaseList) {
+		public OrderVerifyingPhaseListener(List<OrderVerifyingPhaseListener> afterPhaseList,
+				List<OrderVerifyingPhaseListener> beforePhaseList) {
 			this.afterPhaseList = afterPhaseList;
 			this.beforePhaseList = beforePhaseList;
 		}

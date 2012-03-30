@@ -49,7 +49,7 @@ public interface FlowHandler {
 	 * @param request the current request
 	 * @return the input map, or null if the contents of the input map should be determined by the caller
 	 */
-	public MutableAttributeMap createExecutionInputMap(HttpServletRequest request);
+	public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request);
 
 	/**
 	 * Handles a specific flow execution outcome. Used by a Controller to get the location of the resource to redirect

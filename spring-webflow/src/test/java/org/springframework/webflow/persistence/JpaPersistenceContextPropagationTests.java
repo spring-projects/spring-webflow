@@ -10,6 +10,7 @@ import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
+@SuppressWarnings("deprecation")
 public class JpaPersistenceContextPropagationTests extends AbstractPersistenceContextPropagationTests {
 
 	private EntityManagerFactory entityManagerFactory;

@@ -81,7 +81,7 @@ public class StringToDate extends StringToObject {
 		this.locale = locale;
 	}
 
-	public Object toObject(String string, Class targetClass) throws Exception {
+	public Object toObject(String string, Class<?> targetClass) throws Exception {
 		if (!StringUtils.hasText(string)) {
 			return null;
 		}

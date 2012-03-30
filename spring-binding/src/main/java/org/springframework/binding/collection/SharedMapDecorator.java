@@ -28,18 +28,18 @@ import org.springframework.core.style.ToStringCreator;
  * 
  * @author Keith Donald
  */
-public class SharedMapDecorator implements SharedMap, Serializable {
+public class SharedMapDecorator<K, V> implements SharedMap<K, V>, Serializable {
 
 	/**
 	 * The wrapped, target map.
 	 */
-	private Map map;
+	private Map<K, V> map;
 
 	/**
 	 * Creates a new shared map decorator.
 	 * @param map the map that is shared by multiple threads, to be synced
 	 */
-	public SharedMapDecorator(Map map) {
+	public SharedMapDecorator(Map<K, V> map) {
 		this.map = map;
 	}
 
@@ -57,11 +57,11 @@ public class SharedMapDecorator implements SharedMap, Serializable {
 		return map.containsValue(value);
 	}
 
-	public Set entrySet() {
+	public Set<Entry<K, V>> entrySet() {
 		return map.entrySet();
 	}
 
-	public Object get(Object key) {
+	public V get(Object key) {
 		return map.get(key);
 	}
 
@@ -69,19 +69,19 @@ public class SharedMapDecorator implements SharedMap, Serializable {
 		return map.isEmpty();
 	}
 
-	public Set keySet() {
+	public Set<K> keySet() {
 		return map.keySet();
 	}
 
-	public Object put(Object key, Object value) {
+	public V put(K key, V value) {
 		return map.put(key, value);
 	}
 
-	public void putAll(Map map) {
+	public void putAll(Map<? extends K, ? extends V> map) {
 		this.map.putAll(map);
 	}
 
-	public Object remove(Object key) {
+	public V remove(Object key) {
 		return map.remove(key);
 	}
 
@@ -89,7 +89,7 @@ public class SharedMapDecorator implements SharedMap, Serializable {
 		return map.size();
 	}
 
-	public Collection values() {
+	public Collection<V> values() {
 		return map.values();
 	}
 

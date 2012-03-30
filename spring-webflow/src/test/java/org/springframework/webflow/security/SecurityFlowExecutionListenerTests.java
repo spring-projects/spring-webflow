@@ -1,7 +1,9 @@
 package org.springframework.webflow.security;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -13,7 +15,6 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.StubViewFactory;
@@ -37,7 +38,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		RequestContext context = new MockRequestContext();
 		Flow flow = new Flow("flow");
 		SecurityRule rule = getSecurityRuleAnyAuthorized();
-		((LocalAttributeMap) flow.getAttributes()).put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
+		flow.getAttributes().put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.sessionCreating(context, flow);
 	}
@@ -56,7 +57,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		Flow flow = new Flow("flow");
 		ViewState state = new ViewState(flow, "view", new StubViewFactory());
 		SecurityRule rule = getSecurityRuleAllAuthorized();
-		((LocalAttributeMap) state.getAttributes()).put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
+		state.getAttributes().put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.stateEntering(context, state);
 	}
@@ -73,7 +74,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		RequestContext context = new MockRequestContext();
 		Transition transition = new Transition(new DefaultTargetStateResolver("target"));
 		SecurityRule rule = getSecurityRuleAnyAuthorized();
-		((LocalAttributeMap) transition.getAttributes()).put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
+		transition.getAttributes().put(SecurityRule.SECURITY_ATTRIBUTE_NAME, rule);
 		configureSecurityContext();
 		listener.transitionExecuting(context, transition);
 	}
@@ -117,7 +118,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_A");
 		rule.setAttributes(attributes);
@@ -127,7 +128,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_A");
 		attributes.add("ROLE_B");
 		rule.setAttributes(attributes);
@@ -137,7 +138,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAllAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_3");
 		rule.setAttributes(attributes);
@@ -147,7 +148,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAllDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_A");
 		rule.setAttributes(attributes);
@@ -155,8 +156,8 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	}
 
 	private Authentication getAuthentication() {
-		GrantedAuthority[] authorities = { new GrantedAuthorityImpl("ROLE_1"), new GrantedAuthorityImpl("ROLE_2"),
-				new GrantedAuthorityImpl("ROLE_3") };
+		List<GrantedAuthority> authorities = Arrays.<GrantedAuthority> asList(new GrantedAuthorityImpl("ROLE_1"),
+				new GrantedAuthorityImpl("ROLE_2"), new GrantedAuthorityImpl("ROLE_3"));
 		return new UsernamePasswordAuthenticationToken("test", "", authorities);
 	}
 }

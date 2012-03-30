@@ -20,8 +20,8 @@ import java.util.Locale;
 import org.springframework.context.MessageSource;
 
 /**
- * A factory for a Message. Allows a Message to be internationalized and to be resolved from a
- * {@link MessageSource message resource bundle}.
+ * A factory for a Message. Allows a Message to be internationalized and to be resolved from a {@link MessageSource
+ * message resource bundle}.
  * 
  * @author Keith Donald
  * @see Message

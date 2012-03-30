@@ -81,7 +81,7 @@ public class MessageContextErrors extends AbstractErrors {
 
 	public void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage) {
 		field = fixedField(field);
-		Class fieldType;
+		Class<?> fieldType;
 		if (StringUtils.hasLength(field) && (expressionParser != null)) {
 			FluentParserContext parserContext = new FluentParserContext().evaluate(boundObject.getClass());
 			fieldType = expressionParser.parseExpression(field, parserContext).getValueType(boundObject);
@@ -100,9 +100,9 @@ public class MessageContextErrors extends AbstractErrors {
 	}
 
 	public void addAllErrors(Errors errors) {
-		Iterator it = errors.getAllErrors().iterator();
+		Iterator<ObjectError> it = errors.getAllErrors().iterator();
 		while (it.hasNext()) {
-			ObjectError error = (ObjectError) it.next();
+			ObjectError error = it.next();
 			MessageBuilder builder = new MessageBuilder().error().codes(error.getCodes()).args(error.getArguments())
 					.defaultText(error.getDefaultMessage());
 			if (error instanceof FieldError) {
@@ -117,27 +117,25 @@ public class MessageContextErrors extends AbstractErrors {
 		return objectName;
 	}
 
-	public List getGlobalErrors() {
+	public List<ObjectError> getGlobalErrors() {
 		Message[] messages = messageContext.getMessagesByCriteria(GLOBAL_ERROR);
 		if (messages.length == 0) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
-		List errors = new ArrayList(messages.length);
-		for (int i = 0; i < messages.length; i++) {
-			Message message = messages[i];
+		List<ObjectError> errors = new ArrayList<ObjectError>(messages.length);
+		for (Message message : messages) {
 			errors.add(new ObjectError(objectName, message.getText()));
 		}
 		return Collections.unmodifiableList(errors);
 	}
 
-	public List getFieldErrors() {
+	public List<FieldError> getFieldErrors() {
 		Message[] messages = messageContext.getMessagesByCriteria(FIELD_ERROR);
 		if (messages.length == 0) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
-		List errors = new ArrayList(messages.length);
-		for (int i = 0; i < messages.length; i++) {
-			Message message = messages[i];
+		List<FieldError> errors = new ArrayList<FieldError>(messages.length);
+		for (Message message : messages) {
 			errors.add(new FieldError(objectName, (String) message.getSource(), message.getText()));
 		}
 		return Collections.unmodifiableList(errors);
@@ -147,9 +145,9 @@ public class MessageContextErrors extends AbstractErrors {
 		field = fixedField(field);
 		// requires boundObject and expressionParser to be set to work
 		if (mappingResults != null) {
-			List results = mappingResults.getResults(new PropertyErrorMappingResult(field));
+			List<MappingResult> results = mappingResults.getResults(new PropertyErrorMappingResult(field));
 			if (!results.isEmpty()) {
-				MappingResult fieldError = (MappingResult) results.get(0);
+				MappingResult fieldError = results.get(0);
 				return fieldError.getOriginalValue();
 			}
 		}

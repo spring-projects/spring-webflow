@@ -49,7 +49,7 @@ public class MvcViewTests extends TestCase {
 
 	private boolean renderCalled;
 
-	private Map model;
+	private Map<String, ?> model;
 
 	public void testRender() throws Exception {
 		MockRequestControlContext context = new MockRequestControlContext();
@@ -269,7 +269,7 @@ public class MvcViewTests extends TestCase {
 				throw new EvaluationException(Object.class, "foo", "Model expression failed to evaluate");
 			}
 
-			public Class getValueType(Object context) throws EvaluationException {
+			public Class<?> getValueType(Object context) throws EvaluationException {
 				return Object.class;
 			}
 
@@ -449,6 +449,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals(null, bindBean.getBeanProperty().getName());
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testResumeEventModelBindingCustomConverter() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
@@ -642,7 +643,7 @@ public class MvcViewTests extends TestCase {
 			super(view, context);
 		}
 
-		protected void doRender(Map model) throws Exception {
+		protected void doRender(Map<String, ?> model) throws Exception {
 			getView().render(model, (HttpServletRequest) getRequestContext().getExternalContext().getNativeRequest(),
 					(HttpServletResponse) getRequestContext().getExternalContext().getNativeResponse());
 		}
@@ -655,7 +656,8 @@ public class MvcViewTests extends TestCase {
 			return "text/html";
 		}
 
-		public void render(Map model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
 			renderCalled = true;
 			MvcViewTests.this.model = model;
 		}
@@ -673,8 +675,8 @@ public class MvcViewTests extends TestCase {
 		private String[] stringArrayProperty;
 		private Integer[] integerArrayProperty;
 		private int[] primitiveArrayProperty;
-		private List listProperty;
-		private Map mapProperty;
+		private List<Object> listProperty;
+		private Map<Object, Object> mapProperty;
 		private boolean validationMethodInvoked;
 
 		public BindBean() {
@@ -753,19 +755,19 @@ public class MvcViewTests extends TestCase {
 			this.primitiveArrayProperty = primitiveArrayProperty;
 		}
 
-		public List getListProperty() {
+		public List<Object> getListProperty() {
 			return listProperty;
 		}
 
-		public void setListProperty(List listProperty) {
+		public void setListProperty(List<Object> listProperty) {
 			this.listProperty = listProperty;
 		}
 
-		public Map getMapProperty() {
+		public Map<Object, Object> getMapProperty() {
 			return mapProperty;
 		}
 
-		public void setMapProperty(Map mapProperty) {
+		public void setMapProperty(Map<Object, Object> mapProperty) {
 			this.mapProperty = mapProperty;
 		}
 

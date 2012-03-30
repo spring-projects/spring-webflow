@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AbstractAccessDecisionManager;
 import org.springframework.security.access.vote.AffirmativeBased;
@@ -90,12 +92,12 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 */
 	protected void decide(SecurityRule rule, Object object) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Collection configAttributes = getConfigAttributes(rule);
+		Collection<ConfigAttribute> configAttributes = getConfigAttributes(rule);
 		if (accessDecisionManager != null) {
 			accessDecisionManager.decide(authentication, object, configAttributes);
 		} else {
 			AbstractAccessDecisionManager abstractAccessDecisionManager;
-			List voters = new ArrayList();
+			List<AccessDecisionVoter> voters = new ArrayList<AccessDecisionVoter>();
 			voters.add(new RoleVoter());
 			if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
 				abstractAccessDecisionManager = new AffirmativeBased();
@@ -114,11 +116,11 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * @param rule the rule to convert
 	 * @return list of ConfigAttributes for Spring Security
 	 */
-	protected Collection getConfigAttributes(SecurityRule rule) {
-		List configAttributes = new ArrayList();
-		Iterator attributeIt = rule.getAttributes().iterator();
+	protected Collection<ConfigAttribute> getConfigAttributes(SecurityRule rule) {
+		List<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
+		Iterator<String> attributeIt = rule.getAttributes().iterator();
 		while (attributeIt.hasNext()) {
-			configAttributes.add(new SecurityConfig((String) attributeIt.next()));
+			configAttributes.add(new SecurityConfig(attributeIt.next()));
 		}
 		return configAttributes;
 	}

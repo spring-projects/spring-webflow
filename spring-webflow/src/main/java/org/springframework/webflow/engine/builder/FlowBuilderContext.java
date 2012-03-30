@@ -38,7 +38,7 @@ public interface FlowBuilderContext {
 	 * Returns externally configured attributes to assign to the flow definition being built.
 	 * @return the flow attributes
 	 */
-	public AttributeMap getFlowAttributes();
+	public AttributeMap<Object> getFlowAttributes();
 
 	/**
 	 * Returns the locator for locating dependent flows (subflows).

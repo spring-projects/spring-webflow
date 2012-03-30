@@ -53,7 +53,7 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 	public void testCanWrite() throws Exception {
 		assertFalse(accessor.canWrite(null, null, "myJsfBean"));
 
-		MutableAttributeMap map = requestContext.getExternalContext().getRequestMap();
+		MutableAttributeMap<Object> map = requestContext.getExternalContext().getRequestMap();
 		map.put("myJsfBean", new Object());
 		assertTrue(accessor.canWrite(null, null, "myJsfBean"));
 		map.clear();
@@ -73,7 +73,7 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 		Object jsfBean1 = new Object();
 		Object jsfBean2 = new Object();
 
-		MutableAttributeMap map = requestContext.getExternalContext().getRequestMap();
+		MutableAttributeMap<Object> map = requestContext.getExternalContext().getRequestMap();
 		accessor.write(null, null, "myJsfBean", jsfBean1);
 		assertNull("Write occurs only if bean is present in the map", map.get("myJsfBean"));
 

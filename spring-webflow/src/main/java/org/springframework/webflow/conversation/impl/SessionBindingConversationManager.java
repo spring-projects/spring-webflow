@@ -137,7 +137,7 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * existing container can be found.
 	 */
 	private ConversationContainer getConversationContainer() {
-		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
+		SharedAttributeMap<Object> sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
 			ConversationContainer container = (ConversationContainer) sessionMap.get(sessionKey);
 			if (container == null) {

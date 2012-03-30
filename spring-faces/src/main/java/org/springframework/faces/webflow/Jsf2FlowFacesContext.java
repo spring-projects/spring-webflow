@@ -156,7 +156,7 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 			return delegate.getContextName();
 		}
 
-		public void addResponseCookie(String name, String value, Map properties) {
+		public void addResponseCookie(String name, String value, Map<String, Object> properties) {
 			delegate.addResponseCookie(name, value, properties);
 		}
 
@@ -240,11 +240,11 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 			delegate.setResponseContentLength(length);
 		}
 
-		public String encodeBookmarkableURL(String baseUrl, Map parameters) {
+		public String encodeBookmarkableURL(String baseUrl, Map<String, List<String>> parameters) {
 			return delegate.encodeBookmarkableURL(baseUrl, parameters);
 		}
 
-		public String encodeRedirectURL(String baseUrl, Map parameters) {
+		public String encodeRedirectURL(String baseUrl, Map<String, List<String>> parameters) {
 			return delegate.encodeRedirectURL(baseUrl, parameters);
 		}
 

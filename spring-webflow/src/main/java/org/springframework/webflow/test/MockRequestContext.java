@@ -53,9 +53,9 @@ public class MockRequestContext implements RequestContext {
 
 	private MessageContext messageContext;
 
-	private MutableAttributeMap requestScope = new LocalAttributeMap();
+	private MutableAttributeMap<Object> requestScope = new LocalAttributeMap<Object>();
 
-	private MutableAttributeMap attributes = new LocalAttributeMap();
+	private MutableAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
 
 	private Event currentEvent;
 
@@ -135,23 +135,23 @@ public class MockRequestContext implements RequestContext {
 		return getFlowExecutionContext().isActive() && getCurrentState() != null && getCurrentState().isViewState();
 	}
 
-	public MutableAttributeMap getRequestScope() {
+	public MutableAttributeMap<Object> getRequestScope() {
 		return requestScope;
 	}
 
-	public MutableAttributeMap getFlashScope() {
+	public MutableAttributeMap<Object> getFlashScope() {
 		return getMockFlowExecutionContext().getFlashScope();
 	}
 
-	public MutableAttributeMap getViewScope() throws IllegalStateException {
+	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException {
 		return getMockFlowExecutionContext().getActiveSession().getViewScope();
 	}
 
-	public MutableAttributeMap getFlowScope() {
+	public MutableAttributeMap<Object> getFlowScope() {
 		return getFlowExecutionContext().getActiveSession().getScope();
 	}
 
-	public MutableAttributeMap getConversationScope() {
+	public MutableAttributeMap<Object> getConversationScope() {
 		return getMockFlowExecutionContext().getConversationScope();
 	}
 
@@ -183,7 +183,7 @@ public class MockRequestContext implements RequestContext {
 		return currentView;
 	}
 
-	public MutableAttributeMap getAttributes() {
+	public MutableAttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 
@@ -313,7 +313,7 @@ public class MockRequestContext implements RequestContext {
 	 * attributes.
 	 * @return the attribute map
 	 */
-	public MutableAttributeMap getAttributeMap() {
+	public MutableAttributeMap<Object> getAttributeMap() {
 		return attributes;
 	}
 

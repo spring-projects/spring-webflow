@@ -136,7 +136,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	/**
 	 * @see javax.faces.component.UIComponentBase#getAttributes()
 	 */
-	public Map getAttributes() {
+	public Map<String, Object> getAttributes() {
 		return original.getAttributes();
 	}
 
@@ -157,7 +157,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	/**
 	 * @see javax.faces.component.UIComponentBase#getChildren()
 	 */
-	public List getChildren() {
+	public List<UIComponent> getChildren() {
 		return original.getChildren();
 	}
 
@@ -195,14 +195,14 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	/**
 	 * @see javax.faces.component.UIComponentBase#getFacets()
 	 */
-	public Map getFacets() {
+	public Map<String, UIComponent> getFacets() {
 		return original.getFacets();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getFacetsAndChildren()
 	 */
-	public Iterator getFacetsAndChildren() {
+	public Iterator<UIComponent> getFacetsAndChildren() {
 		return original.getFacetsAndChildren();
 	}
 

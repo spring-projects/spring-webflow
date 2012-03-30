@@ -30,19 +30,19 @@ public class FlowExecutorImplTests extends TestCase {
 	private FlowExecutionLock lock;
 
 	protected void setUp() {
-		locator = (FlowDefinitionLocator) EasyMock.createMock(FlowDefinitionLocator.class);
-		definition = (FlowDefinition) EasyMock.createMock(FlowDefinition.class);
-		factory = (FlowExecutionFactory) EasyMock.createMock(FlowExecutionFactory.class);
-		execution = (FlowExecution) EasyMock.createMock(FlowExecution.class);
-		repository = (FlowExecutionRepository) EasyMock.createMock(FlowExecutionRepository.class);
-		lock = (FlowExecutionLock) EasyMock.createMock(FlowExecutionLock.class);
+		locator = EasyMock.createMock(FlowDefinitionLocator.class);
+		definition = EasyMock.createMock(FlowDefinition.class);
+		factory = EasyMock.createMock(FlowExecutionFactory.class);
+		execution = EasyMock.createMock(FlowExecution.class);
+		repository = EasyMock.createMock(FlowExecutionRepository.class);
+		lock = EasyMock.createMock(FlowExecutionLock.class);
 
 		flowExecutor = new FlowExecutorImpl(locator, factory, repository);
 	}
 
 	public void testLaunchFlowExecution() {
 		String flowId = "foo";
-		MutableAttributeMap input = null;
+		MutableAttributeMap<Object> input = null;
 		MockExternalContext context = new MockExternalContext();
 
 		EasyMock.expect(locator.getFlowDefinition(flowId)).andReturn(definition);
@@ -80,7 +80,7 @@ public class FlowExecutorImplTests extends TestCase {
 
 	public void testLaunchFlowExecutionEndsAfterProcessing() {
 		String flowId = "foo";
-		MutableAttributeMap input = null;
+		MutableAttributeMap<Object> input = null;
 		MockExternalContext context = new MockExternalContext();
 
 		EasyMock.expect(locator.getFlowDefinition(flowId)).andReturn(definition);
@@ -163,7 +163,7 @@ public class FlowExecutorImplTests extends TestCase {
 		EasyMock.expect(execution.getDefinition()).andReturn(definition);
 		EasyMock.expect(definition.getId()).andReturn("foo");
 
-		LocalAttributeMap output = new LocalAttributeMap();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("foo", "bar");
 		EasyMock.expect(execution.getOutcome()).andReturn(new FlowExecutionOutcome("finish", output));
 

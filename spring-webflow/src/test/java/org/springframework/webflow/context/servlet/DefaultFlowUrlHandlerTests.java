@@ -82,7 +82,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		request.setServletPath("/app");
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
-		LocalAttributeMap input = new LocalAttributeMap(new LinkedHashMap());
+		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>(new LinkedHashMap<String, Object>());
 		input.put("foo", "bar");
 		input.put("bar", "needs encoding");
 		input.put("baz", new Integer(1));

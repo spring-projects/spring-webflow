@@ -58,8 +58,8 @@ public class ActionExecutor {
 		} catch (Exception e) {
 			// wrap the exception as an ActionExecutionException
 			throw new ActionExecutionException(context.getActiveFlow().getId(),
-					context.getCurrentState() != null ? context.getCurrentState().getId() : null, action, context
-							.getAttributes(), e);
+					context.getCurrentState() != null ? context.getCurrentState().getId() : null, action,
+					context.getAttributes(), e);
 		}
 	}
 

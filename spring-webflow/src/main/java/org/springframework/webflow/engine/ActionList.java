@@ -38,12 +38,12 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Keith Donald
  */
-public class ActionList {
+public class ActionList implements Iterable<Action> {
 
 	/**
 	 * The lists of actions.
 	 */
-	private List actions = new LinkedList();
+	private List<Action> actions = new LinkedList<Action>();
 
 	/**
 	 * Add an action to this list.
@@ -98,7 +98,7 @@ public class ActionList {
 	 * @return the action the action
 	 */
 	public Action get(int index) throws IndexOutOfBoundsException {
-		return (Action) actions.get(index);
+		return actions.get(index);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class ActionList {
 	/**
 	 * Returns an iterator over this action list.
 	 */
-	public Iterator iterator() {
+	public Iterator<Action> iterator() {
 		return actions.iterator();
 	}
 
@@ -128,7 +128,7 @@ public class ActionList {
 	 * @return the action list, as a typed array
 	 */
 	public Action[] toArray() {
-		return (Action[]) actions.toArray(new Action[actions.size()]);
+		return actions.toArray(new Action[actions.size()]);
 	}
 
 	/**
@@ -150,9 +150,9 @@ public class ActionList {
 	 * @param context the action execution request context
 	 */
 	public void execute(RequestContext context) {
-		Iterator it = actions.iterator();
+		Iterator<Action> it = actions.iterator();
 		while (it.hasNext()) {
-			ActionExecutor.execute((Action) it.next(), context);
+			ActionExecutor.execute(it.next(), context);
 		}
 	}
 

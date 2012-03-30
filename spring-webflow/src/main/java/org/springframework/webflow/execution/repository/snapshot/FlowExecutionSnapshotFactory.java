@@ -48,6 +48,6 @@ public interface FlowExecutionSnapshotFactory {
 	 * @throws FlowExecutionRestorationFailureException if flow execution restoration fails
 	 */
 	public FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
-			MutableAttributeMap conversationScope, FlowExecutionKeyFactory keyFactory)
+			MutableAttributeMap<Object> conversationScope, FlowExecutionKeyFactory keyFactory)
 			throws FlowExecutionRestorationFailureException;
 }

@@ -38,7 +38,7 @@ public class FlowExecutionExceptionHandlerSet {
 	/**
 	 * The set of exception handlers.
 	 */
-	private List exceptionHandlers = new LinkedList();
+	private List<FlowExecutionExceptionHandler> exceptionHandlers = new LinkedList<FlowExecutionExceptionHandler>();
 
 	/**
 	 * Add a state exception handler to this set.
@@ -92,8 +92,7 @@ public class FlowExecutionExceptionHandlerSet {
 	 * @return the exception handler list, as a typed array
 	 */
 	public FlowExecutionExceptionHandler[] toArray() {
-		return (FlowExecutionExceptionHandler[]) exceptionHandlers
-				.toArray(new FlowExecutionExceptionHandler[exceptionHandlers.size()]);
+		return exceptionHandlers.toArray(new FlowExecutionExceptionHandler[exceptionHandlers.size()]);
 	}
 
 	/**
@@ -106,9 +105,9 @@ public class FlowExecutionExceptionHandlerSet {
 	 * @return true if the exception was handled
 	 */
 	public boolean handleException(FlowExecutionException exception, RequestControlContext context) {
-		Iterator it = exceptionHandlers.iterator();
+		Iterator<FlowExecutionExceptionHandler> it = exceptionHandlers.iterator();
 		while (it.hasNext()) {
-			FlowExecutionExceptionHandler handler = (FlowExecutionExceptionHandler) it.next();
+			FlowExecutionExceptionHandler handler = it.next();
 			if (handler.canHandle(exception)) {
 				handler.handle(exception, context);
 				return true;

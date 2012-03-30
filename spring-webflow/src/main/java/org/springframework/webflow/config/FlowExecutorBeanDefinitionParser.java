@@ -16,7 +16,6 @@
 package org.springframework.webflow.config;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -105,9 +104,9 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 				String value = redirectInSameStateElement.getAttribute("value");
 				attributes.add(new FlowElementAttribute("redirectInSameState", value, "boolean"));
 			}
-			List attributeElements = DomUtils.getChildElementsByTagName(executionAttributesElement, "attribute");
-			for (Iterator it = attributeElements.iterator(); it.hasNext();) {
-				Element attributeElement = (Element) it.next();
+			List<Element> attributeElements = DomUtils.getChildElementsByTagName(executionAttributesElement,
+					"attribute");
+			for (Element attributeElement : attributeElements) {
 				String name = attributeElement.getAttribute("name");
 				String value = attributeElement.getAttribute("value");
 				String type = attributeElement.getAttribute("type");

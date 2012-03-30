@@ -141,8 +141,9 @@ public class PortletFacesContextImpl extends FacesContext {
 					list.add(messages.get(i));
 				}
 			} else {
-				if (clientId.equals(current))
+				if (clientId.equals(current)) {
 					list.add(messages.get(i));
+				}
 			}
 		}
 		return list.iterator();

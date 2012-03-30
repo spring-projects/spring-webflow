@@ -23,8 +23,8 @@ import junit.framework.TestCase;
 public class CollectionUtilsTests extends TestCase {
 
 	public void testSingleEntryMap() {
-		AttributeMap map1 = CollectionUtils.singleEntryMap("foo", "bar");
-		AttributeMap map2 = CollectionUtils.singleEntryMap("foo", "bar");
+		AttributeMap<Object> map1 = CollectionUtils.<Object> singleEntryMap("foo", "bar");
+		AttributeMap<Object> map2 = CollectionUtils.<Object> singleEntryMap("foo", "bar");
 		assertEquals(map1, map2);
 	}
 }

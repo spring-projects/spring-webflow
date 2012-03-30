@@ -44,11 +44,11 @@ public class MessageBuilder {
 
 	private Object source;
 
-	private Set codes = new LinkedHashSet();
+	private Set<String> codes = new LinkedHashSet<String>();
 
 	private Severity severity;
 
-	private List args = new ArrayList();
+	private List<Object> args = new ArrayList<Object>();
 
 	private String defaultText;
 
@@ -173,8 +173,8 @@ public class MessageBuilder {
 		if (args == null) {
 			return this;
 		}
-		for (int i = 0; i < args.length; i++) {
-			this.args.add(new ResolvableArgument(args[i]));
+		for (Object arg : args) {
+			this.args.add(new ResolvableArgument(arg));
 		}
 		return this;
 	}
@@ -202,7 +202,7 @@ public class MessageBuilder {
 			throw new IllegalArgumentException(
 					"A message code or the message text is required to build this message resolver");
 		}
-		String[] codesArray = (String[]) codes.toArray(new String[codes.size()]);
+		String[] codesArray = codes.toArray(new String[codes.size()]);
 		Object[] argsArray = args.toArray(new Object[args.size()]);
 		return new DefaultMessageResolver(source, codesArray, severity, argsArray, defaultText);
 	}

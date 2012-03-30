@@ -13,6 +13,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 
+@SuppressWarnings("deprecation")
 public class ResourceServletTests extends TestCase {
 
 	ServletContext servletContext = new ResourceTestMockServletContext();
@@ -43,7 +44,7 @@ public class ResourceServletTests extends TestCase {
 
 		String requestPath = "/org/springframework/js/resource/TestResource1.js";
 		request.setPathInfo(requestPath);
-		Map params = new HashMap();
+		Map<String, String> params = new HashMap<String, String>();
 		params.put("appended", "/org/springframework/js/resource/TestResource2.js");
 		request.setParameters(params);
 		servlet.doGet(request, response);

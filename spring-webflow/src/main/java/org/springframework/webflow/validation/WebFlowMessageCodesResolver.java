@@ -1,7 +1,6 @@
 package org.springframework.webflow.validation;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.util.StringUtils;
@@ -82,21 +81,18 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 	 * See the {@link DefaultMessageCodesResolver class level Javadoc} for details on the generated codes.
 	 * @return the list of codes
 	 */
-	public String[] resolveMessageCodes(String errorCode, String objectName, String field, Class fieldType) {
-		List codeList = new ArrayList();
-		List fieldList = new ArrayList();
+	public String[] resolveMessageCodes(String errorCode, String objectName, String field, Class<?> fieldType) {
+		List<String> codeList = new ArrayList<String>();
+		List<String> fieldList = new ArrayList<String>();
 		buildFieldList(field, fieldList);
-		for (Iterator it = fieldList.iterator(); it.hasNext();) {
-			String fieldInList = (String) it.next();
-			codeList
-					.add(postProcessMessageCode(objectName + CODE_SEPARATOR + fieldInList + CODE_SEPARATOR + errorCode));
+		for (String fieldInList : fieldList) {
+			codeList.add(postProcessMessageCode(objectName + CODE_SEPARATOR + fieldInList + CODE_SEPARATOR + errorCode));
 		}
 		int dotIndex = field.lastIndexOf('.');
 		if (dotIndex != -1) {
 			buildFieldList(field.substring(dotIndex + 1), fieldList);
 		}
-		for (Iterator it = fieldList.iterator(); it.hasNext();) {
-			String fieldInList = (String) it.next();
+		for (String fieldInList : fieldList) {
 			codeList.add(postProcessMessageCode(fieldInList + CODE_SEPARATOR + errorCode));
 		}
 		if (fieldType != null) {
@@ -109,7 +105,7 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 	/**
 	 * Add both keyed and non-keyed entries for the supplied <code>field</code> to the supplied field list.
 	 */
-	protected void buildFieldList(String field, List fieldList) {
+	protected void buildFieldList(String field, List<String> fieldList) {
 		fieldList.add(field);
 		String plainField = field;
 		int keyIndex = plainField.lastIndexOf('[');

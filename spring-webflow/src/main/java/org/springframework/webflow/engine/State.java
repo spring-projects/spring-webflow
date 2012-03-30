@@ -75,8 +75,8 @@ public abstract class State extends AnnotatedObject implements StateDefinition {
 	private FlowExecutionExceptionHandlerSet exceptionHandlerSet = new FlowExecutionExceptionHandlerSet();
 
 	/**
-	 * Creates a state for the provided <code>flow</code> identified by the provided <code>id</code>. The id must
-	 * be locally unique to the owning flow. The state will be automatically added to the flow.
+	 * Creates a state for the provided <code>flow</code> identified by the provided <code>id</code>. The id must be
+	 * locally unique to the owning flow. The state will be automatically added to the flow.
 	 * @param flow the owning flow
 	 * @param id the state identifier (must be unique to the flow)
 	 * @throws IllegalArgumentException if this state cannot be added to the flow, for instance when the provided id is
@@ -223,8 +223,8 @@ public abstract class State extends AnnotatedObject implements StateDefinition {
 	}
 
 	public String toString() {
-		ToStringCreator creator = new ToStringCreator(this).append("id", getId()).append("flow", flow.getId()).append(
-				"entryActionList", entryActionList).append("exceptionHandlerSet", exceptionHandlerSet);
+		ToStringCreator creator = new ToStringCreator(this).append("id", getId()).append("flow", flow.getId())
+				.append("entryActionList", entryActionList).append("exceptionHandlerSet", exceptionHandlerSet);
 		appendToString(creator);
 		return creator.toString();
 	}

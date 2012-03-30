@@ -33,7 +33,7 @@ public class FlowControllerTests extends TestCase {
 	private ServletExternalContext context;
 
 	protected void setUp() throws Exception {
-		executor = (FlowExecutor) EasyMock.createMock(FlowExecutor.class);
+		executor = EasyMock.createMock(FlowExecutor.class);
 		controller = new FlowController();
 		FlowHandlerAdapter handlerAdapter = new FlowHandlerAdapter() {
 			protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
@@ -79,7 +79,7 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
 		executor.launchExecution("foo", null, context);
-		LocalAttributeMap output = new LocalAttributeMap();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -98,7 +98,7 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("POST");
 		request.addParameter("execution", "12345");
-		Map parameters = new HashMap();
+		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
 		executor.resumeExecution("12345", context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
@@ -116,10 +116,10 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("POST");
 		request.addParameter("execution", "12345");
-		Map parameters = new HashMap();
+		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
 		executor.resumeExecution("12345", context);
-		LocalAttributeMap output = new LocalAttributeMap();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -166,8 +166,8 @@ public class FlowControllerTests extends TestCase {
 		assertNull(mv);
 		assertEquals(null, response.getRedirectedUrl());
 		assertEquals("true", response.getHeader(SpringJavascriptAjaxHandler.POPUP_VIEW_HEADER));
-		assertEquals("/springtravel/app/foo?execution=12345", response
-				.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
+		assertEquals("/springtravel/app/foo?execution=12345",
+				response.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
 		EasyMock.verify(new Object[] { executor });
 	}
 
@@ -180,7 +180,7 @@ public class FlowControllerTests extends TestCase {
 		request.addParameter("ajaxSource", "this");
 		context.setAjaxRequest(true);
 		context.requestFlowExecutionRedirect();
-		LocalAttributeMap inputMap = new LocalAttributeMap();
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>();
 		inputMap.put("ajaxSource", "this");
 		executor.launchExecution("foo", inputMap, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -190,8 +190,8 @@ public class FlowControllerTests extends TestCase {
 		assertNull(mv);
 		assertEquals(null, response.getRedirectedUrl());
 		assertEquals(null, response.getHeader(SpringJavascriptAjaxHandler.POPUP_VIEW_HEADER));
-		assertEquals("/springtravel/app/foo?execution=12345", response
-				.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
+		assertEquals("/springtravel/app/foo?execution=12345",
+				response.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
 		EasyMock.verify(new Object[] { executor });
 	}
 
@@ -201,11 +201,11 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		LocalAttributeMap input = new LocalAttributeMap();
+		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
 		input.put("baz", "boop");
 		context.requestFlowDefinitionRedirect("bar", input);
 		executor.launchExecution("foo", null, context);
-		LocalAttributeMap output = new LocalAttributeMap();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -274,14 +274,14 @@ public class FlowControllerTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithCustomFlowHandler() throws Exception {
-		final LocalAttributeMap input = new LocalAttributeMap();
+		final LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
 		input.put("bar", "boop");
 		controller.registerFlowHandler(new FlowHandler() {
 			public String getFlowId() {
 				return "foo";
 			}
 
-			public MutableAttributeMap createExecutionInputMap(HttpServletRequest request) {
+			public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request) {
 				return input;
 			}
 
@@ -309,14 +309,14 @@ public class FlowControllerTests extends TestCase {
 	}
 
 	public void testHandleFlowOutcomeCustomFlowHandler() throws Exception {
-		final LocalAttributeMap input = new LocalAttributeMap();
+		final LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
 		input.put("bar", "boop");
 		controller.registerFlowHandler(new FlowHandler() {
 			public String getFlowId() {
 				return "foo";
 			}
 
-			public MutableAttributeMap createExecutionInputMap(HttpServletRequest request) {
+			public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request) {
 				return input;
 			}
 
@@ -339,7 +339,7 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
 		executor.launchExecution("foo", input, context);
-		LocalAttributeMap output = new LocalAttributeMap();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -360,7 +360,7 @@ public class FlowControllerTests extends TestCase {
 				return "foo";
 			}
 
-			public MutableAttributeMap createExecutionInputMap(HttpServletRequest request) {
+			public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request) {
 				return null;
 			}
 

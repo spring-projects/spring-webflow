@@ -23,8 +23,8 @@ import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.FlowExecutionExceptionHandler;
 
 /**
- * Interface to be implemented by objects that wish to listen and respond to the lifecycle of
- * {@link FlowExecution flow executions}.
+ * Interface to be implemented by objects that wish to listen and respond to the lifecycle of {@link FlowExecution flow
+ * executions}.
  * <p>
  * An 'observer' that is very aspect like, allowing you to insert 'cross cutting' behavior at well-defined points within
  * one or more well-defined flow execution lifecycles.
@@ -81,7 +81,7 @@ public interface FlowExecutionListener {
 	 * @param input a mutable input map - attributes placed in this map are eligible for input mapping by the flow
 	 * definition at startup
 	 */
-	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input);
+	public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input);
 
 	/**
 	 * Called after a new flow session has started. At this point the flow's start state has been entered and any other
@@ -157,7 +157,7 @@ public interface FlowExecutionListener {
 	 * @param output the flow output produced by the ending session, this map may be modified by this listener to affect
 	 * the output returned
 	 */
-	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap output);
+	public void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap<?> output);
 
 	/**
 	 * Called when a flow execution session ends. If the ended session was the root session of the flow execution, the
@@ -167,7 +167,7 @@ public interface FlowExecutionListener {
 	 * @param outcome the outcome reached by the ended session, generally the id of the terminating end-state
 	 * @param output the flow output returned by the ending session
 	 */
-	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap output);
+	public void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap<?> output);
 
 	/**
 	 * Called when an exception is thrown during a flow execution, before the exception is handled by any registered

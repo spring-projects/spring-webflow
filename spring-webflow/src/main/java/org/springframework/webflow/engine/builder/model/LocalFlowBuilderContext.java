@@ -50,7 +50,7 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 		return parent.getFlowId();
 	}
 
-	public AttributeMap getFlowAttributes() {
+	public AttributeMap<Object> getFlowAttributes() {
 		return parent.getFlowAttributes();
 	}
 

@@ -18,7 +18,7 @@ package org.springframework.webflow.validation;
 import org.springframework.validation.Errors;
 
 /**
- * Support class for {@link ValidationHelperTest}
+ * Support class for {@link ValidationHelperTests}
  */
 public class StubModelErrors {
 

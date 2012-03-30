@@ -27,7 +27,7 @@ import junit.framework.TestCase;
  */
 public class LocalAttributeMapTests extends TestCase {
 
-	private LocalAttributeMap attributeMap = new LocalAttributeMap();
+	private LocalAttributeMap<Object> attributeMap = new LocalAttributeMap<Object>();
 
 	public void setUp() {
 		attributeMap.put("string", "A string");
@@ -39,7 +39,7 @@ public class LocalAttributeMapTests extends TestCase {
 		attributeMap.put("bigDecimal", new BigDecimal("12345.67"));
 		attributeMap.put("bean", new TestBean());
 		attributeMap.put("stringArray", new String[] { "1", "2", "3" });
-		attributeMap.put("collection", new LinkedList());
+		attributeMap.put("collection", new LinkedList<Object>());
 	}
 
 	public void testGet() {
@@ -53,7 +53,7 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testGetRequiredType() {
-		TestBean bean = (TestBean) attributeMap.get("bean", TestBean.class);
+		TestBean bean = attributeMap.get("bean", TestBean.class);
 		assertNotNull(bean);
 	}
 
@@ -94,7 +94,7 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testGetRequiredOfType() {
-		TestBean bean = (TestBean) attributeMap.getRequired("bean", TestBean.class);
+		TestBean bean = attributeMap.getRequired("bean", TestBean.class);
 		assertNotNull(bean);
 	}
 
@@ -108,7 +108,7 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testGetNumber() {
-		BigDecimal bd = (BigDecimal) attributeMap.getNumber("bigDecimal", BigDecimal.class);
+		BigDecimal bd = attributeMap.getNumber("bigDecimal", BigDecimal.class);
 		assertEquals(new BigDecimal("12345.67"), bd);
 	}
 
@@ -123,20 +123,20 @@ public class LocalAttributeMapTests extends TestCase {
 
 	public void testGetNumberWithDefaultOption() {
 		BigDecimal d = new BigDecimal("1");
-		BigDecimal bd = (BigDecimal) attributeMap.getNumber("bigDecimal", BigDecimal.class, d);
+		BigDecimal bd = attributeMap.getNumber("bigDecimal", BigDecimal.class, d);
 		assertEquals(new BigDecimal("12345.67"), bd);
 		assertNotSame(d, bd);
 	}
 
 	public void testGetNumberWithDefault() {
 		BigDecimal d = new BigDecimal("1");
-		BigDecimal bd = (BigDecimal) attributeMap.getNumber("bogus", BigDecimal.class, d);
+		BigDecimal bd = attributeMap.getNumber("bogus", BigDecimal.class, d);
 		assertEquals(d, bd);
 		assertSame(d, bd);
 	}
 
 	public void testGetNumberRequired() {
-		BigDecimal bd = (BigDecimal) attributeMap.getRequiredNumber("bigDecimal", BigDecimal.class);
+		BigDecimal bd = attributeMap.getRequiredNumber("bigDecimal", BigDecimal.class);
 		assertEquals(new BigDecimal("12345.67"), bd);
 	}
 
@@ -246,17 +246,17 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testGetArray() {
-		String[] i = (String[]) attributeMap.getArray("stringArray", String[].class);
+		String[] i = attributeMap.getArray("stringArray", String[].class);
 		assertEquals(3, i.length);
 	}
 
 	public void testGetArrayNull() {
-		String[] i = (String[]) attributeMap.getArray("A bogus array", String[].class);
+		String[] i = attributeMap.getArray("A bogus array", String[].class);
 		assertNull(i);
 	}
 
 	public void testGetArrayRequired() {
-		String[] i = (String[]) attributeMap.getRequiredArray("stringArray", String[].class);
+		String[] i = attributeMap.getRequiredArray("stringArray", String[].class);
 		assertEquals(3, i.length);
 	}
 
@@ -269,18 +269,22 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetCollection() {
-		LinkedList i = (LinkedList) attributeMap.getCollection("collection", List.class);
+		List<Object> i = attributeMap.getCollection("collection", List.class);
+		assertTrue(i instanceof LinkedList);
 		assertEquals(0, i.size());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetCollectionNull() {
-		LinkedList i = (LinkedList) attributeMap.getCollection("bogus", List.class);
+		List<Object> i = attributeMap.getCollection("bogus", List.class);
 		assertNull(i);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetCollectionRequired() {
-		LinkedList i = (LinkedList) attributeMap.getRequiredCollection("collection", List.class);
+		List<Object> i = attributeMap.getRequiredCollection("collection", List.class);
 		assertEquals(0, i.size());
 	}
 
@@ -294,20 +298,20 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testGetMap() {
-		Map map = attributeMap.asMap();
+		Map<String, Object> map = attributeMap.asMap();
 		assertEquals(10, map.size());
 	}
 
 	public void testUnion() {
-		LocalAttributeMap one = new LocalAttributeMap();
+		LocalAttributeMap<Object> one = new LocalAttributeMap<Object>();
 		one.put("foo", "bar");
 		one.put("bar", "baz");
 
-		LocalAttributeMap two = new LocalAttributeMap();
+		LocalAttributeMap<Object> two = new LocalAttributeMap<Object>();
 		two.put("cat", "coz");
 		two.put("bar", "boo");
 
-		AttributeMap three = one.union(two);
+		AttributeMap<Object> three = one.union(two);
 		assertEquals(3, three.size());
 		assertEquals("bar", three.get("foo"));
 		assertEquals("coz", three.get("cat"));
@@ -315,10 +319,10 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testEquality() {
-		LocalAttributeMap map = new LocalAttributeMap();
+		LocalAttributeMap<String> map = new LocalAttributeMap<String>();
 		map.put("foo", "bar");
 
-		LocalAttributeMap map2 = new LocalAttributeMap();
+		LocalAttributeMap<Object> map2 = new LocalAttributeMap<Object>();
 		map2.put("foo", "bar");
 
 		assertEquals(map, map2);

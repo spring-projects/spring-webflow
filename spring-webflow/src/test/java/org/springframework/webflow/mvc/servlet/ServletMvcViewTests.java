@@ -23,7 +23,7 @@ public class ServletMvcViewTests extends TestCase {
 
 	private boolean renderCalled;
 
-	private Map model;
+	private Map<String, ?> model;
 
 	public void testRender() throws Exception {
 		MockRequestContext context = new MockRequestContext();
@@ -58,11 +58,11 @@ public class ServletMvcViewTests extends TestCase {
 			return "text/html";
 		}
 
-		public void render(Map model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
+				throws Exception {
 			renderCalled = true;
 			ServletMvcViewTests.this.model = model;
 		}
-
 	}
 
 	public static class BindBean {

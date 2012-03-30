@@ -37,7 +37,7 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 
 	public void testWriteFlowSerializedView() throws Exception {
 		EasyMock.expect(flowExecutionContext.getKey()).andReturn(new MockFlowExecutionKey("e1s1"));
-		LocalAttributeMap viewMap = new LocalAttributeMap();
+		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<Object>();
 		EasyMock.expect(requestContext.getViewScope()).andStubReturn(viewMap);
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andReturn(flowExecutionContext);
 		EasyMock.replay(requestContext, flowExecutionContext);
@@ -57,7 +57,7 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 		Object componentState = new Object();
 		FlowSerializedView flowSerializedView = new FlowSerializedView("viewId", treeStructure, componentState);
 
-		LocalAttributeMap viewMap = new LocalAttributeMap();
+		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<Object>();
 		viewMap.put(FlowViewStateManager.SERIALIZED_VIEW_STATE, flowSerializedView);
 		EasyMock.expect(requestContext.getViewScope()).andStubReturn(viewMap);
 		EasyMock.replay(requestContext);

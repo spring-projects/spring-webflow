@@ -59,26 +59,26 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 
 	static {
 
-		List tempList = new ArrayList();
+		List<String> tempList = new ArrayList<String>();
 		tempList.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
 		tempList.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
 		tempList.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
 		tempList.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
 		ATTRIBUTES_TO_RENDER_WHEN_DISABLED = new String[tempList.size()];
-		ListIterator i = tempList.listIterator();
+		ListIterator<String> i = tempList.listIterator();
 		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER_WHEN_DISABLED[i.nextIndex()] = (String) i.next();
+			ATTRIBUTES_TO_RENDER_WHEN_DISABLED[i.nextIndex()] = i.next();
 		}
 
 		tempList.addAll(Arrays.asList(HTML.ANCHOR_ATTRIBUTES));
 		ATTRIBUTES_TO_RENDER = new String[tempList.size()];
 		i = tempList.listIterator();
 		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER[i.nextIndex()] = (String) i.next();
+			ATTRIBUTES_TO_RENDER[i.nextIndex()] = i.next();
 		}
 	}
 
-	private Map attributeCallbacks;
+	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
 	private RenderAttributeCallback hrefCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
@@ -204,9 +204,9 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		return isProgressiveCommandDisabled(component) ? TAG_NAME_WHEN_DISABLED : TAG_NAME;
 	}
 
-	protected Map getAttributeCallbacks(UIComponent component) {
+	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
 		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap();
+			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
 			attributeCallbacks.putAll(super.getAttributeCallbacks(component));
 			attributeCallbacks.put("href", hrefCallback);
 			attributeCallbacks.put("class", classCallback);

@@ -123,7 +123,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 
 		private boolean destroyed;
 
-		public MutableAttributeMap getAttributes() {
+		public MutableAttributeMap<Object> getAttributes() {
 			return null;
 		}
 
@@ -174,7 +174,7 @@ public class FlowDefinitionRegistryImplTests extends TestCase {
 
 		private boolean destroyed;
 
-		public MutableAttributeMap getAttributes() {
+		public MutableAttributeMap<Object> getAttributes() {
 			return null;
 		}
 

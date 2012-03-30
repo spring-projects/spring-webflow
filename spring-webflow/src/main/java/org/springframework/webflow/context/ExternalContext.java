@@ -59,14 +59,14 @@ public interface ExternalContext {
 	 * request and accessible to both internal and external SWF artifacts.
 	 * @return the mutable request attribute map
 	 */
-	public MutableAttributeMap getRequestMap();
+	public MutableAttributeMap<Object> getRequestMap();
 
 	/**
 	 * Provides access to the external session map, providing a storage for data local to the current user session and
 	 * accessible to both internal and external SWF artifacts.
 	 * @return the mutable session attribute map
 	 */
-	public SharedAttributeMap getSessionMap();
+	public SharedAttributeMap<Object> getSessionMap();
 
 	/**
 	 * Provides access to the <i>global</i> external session map, providing a storage for data globally accross the user
@@ -77,14 +77,14 @@ public interface ExternalContext {
 	 * calling this method returns the same map as calling {@link #getSessionMap()}.
 	 * @return the mutable global session attribute map
 	 */
-	public SharedAttributeMap getGlobalSessionMap();
+	public SharedAttributeMap<Object> getGlobalSessionMap();
 
 	/**
 	 * Provides access to the external application map, providing a storage for data local to the current user
 	 * application and accessible to both internal and external SWF artifacts.
 	 * @return the mutable application attribute map
 	 */
-	public SharedAttributeMap getApplicationMap();
+	public SharedAttributeMap<Object> getApplicationMap();
 
 	/**
 	 * Returns true if the current request is an asynchronous Ajax request.
@@ -164,7 +164,7 @@ public interface ExternalContext {
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
 	 * @throws IllegalStateException if the response has completed
 	 */
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException;
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException;
 
 	/**
 	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this

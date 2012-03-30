@@ -26,7 +26,7 @@ public class StringToFloat extends StringToObject {
 		super(Float.class);
 	}
 
-	public Object toObject(String string, Class objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) throws Exception {
 		return Float.valueOf(string);
 	}
 

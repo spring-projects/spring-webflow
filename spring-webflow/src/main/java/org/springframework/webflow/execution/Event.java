@@ -52,7 +52,7 @@ public class Event extends EventObject {
 	/**
 	 * Additional event attributes that form this event's payload.
 	 */
-	private final AttributeMap attributes;
+	private final AttributeMap<Object> attributes;
 
 	/**
 	 * Create a new event with the specified <code>id</code> and no payload.
@@ -69,7 +69,7 @@ public class Event extends EventObject {
 	 * @param id the event identifier (required)
 	 * @param attributes additional event attributes
 	 */
-	public Event(Object source, String id, AttributeMap attributes) {
+	public Event(Object source, String id, AttributeMap<Object> attributes) {
 		super(source);
 		Assert.hasText(id, "The event id is required: please set this event's id to a non-blank string identifier");
 		this.id = id;
@@ -97,7 +97,7 @@ public class Event extends EventObject {
 	 * Returns an unmodifiable map storing the attributes of this event. Never returns <code>null</code>.
 	 * @return the event attributes (payload)
 	 */
-	public AttributeMap getAttributes() {
+	public AttributeMap<Object> getAttributes() {
 		return attributes;
 	}
 

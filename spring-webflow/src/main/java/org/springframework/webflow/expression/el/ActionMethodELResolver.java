@@ -15,6 +15,7 @@
  */
 package org.springframework.webflow.expression.el;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
 import javax.el.ELContext;
@@ -35,7 +36,7 @@ import org.springframework.webflow.execution.AnnotatedAction;
  */
 public class ActionMethodELResolver extends ELResolver {
 
-	public Class getCommonPropertyType(ELContext elContext, Object base) {
+	public Class<?> getCommonPropertyType(ELContext elContext, Object base) {
 		if (base instanceof Action) {
 			return String.class;
 		} else {
@@ -43,11 +44,11 @@ public class ActionMethodELResolver extends ELResolver {
 		}
 	}
 
-	public Iterator getFeatureDescriptors(ELContext elContext, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext elContext, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext elContext, Object base, Object property) {
+	public Class<?> getType(ELContext elContext, Object base, Object property) {
 		if (base instanceof Action) {
 			elContext.setPropertyResolved(true);
 			return Action.class;

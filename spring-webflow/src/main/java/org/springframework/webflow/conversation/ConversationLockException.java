@@ -1,6 +1,5 @@
 package org.springframework.webflow.conversation;
 
-
 /**
  * An exception occurred within the conversation locking system.
  * 

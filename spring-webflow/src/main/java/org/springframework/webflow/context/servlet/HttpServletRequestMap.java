@@ -27,7 +27,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * 
  * @author Keith Donald
  */
-public class HttpServletRequestMap extends StringKeyedMapAdapter {
+public class HttpServletRequestMap extends StringKeyedMapAdapter<Object> {
 
 	/**
 	 * The wrapped HTTP request.
@@ -53,7 +53,8 @@ public class HttpServletRequestMap extends StringKeyedMapAdapter {
 		request.removeAttribute(key);
 	}
 
-	protected Iterator getAttributeNames() {
+	@SuppressWarnings("unchecked")
+	protected Iterator<String> getAttributeNames() {
 		return CollectionUtils.toIterator(request.getAttributeNames());
 	}
 }

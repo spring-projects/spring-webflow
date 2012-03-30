@@ -20,7 +20,7 @@ package org.springframework.webflow.core.collection;
  * 
  * @author Keith Donald
  */
-public interface SharedAttributeMap extends MutableAttributeMap {
+public interface SharedAttributeMap<V> extends MutableAttributeMap<V> {
 
 	/**
 	 * Returns the shared map's mutex, which may be synchronized on to block access to the map by other threads.

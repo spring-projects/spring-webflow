@@ -36,8 +36,8 @@ public class ActionExecutionException extends FlowExecutionException {
 	 * @param executionAttributes action execution properties that may have contributed to this failure
 	 * @param cause the underlying cause
 	 */
-	public ActionExecutionException(String flowId, String stateId, Action action, AttributeMap executionAttributes,
-			Throwable cause) {
+	public ActionExecutionException(String flowId, String stateId, Action action,
+			AttributeMap<Object> executionAttributes, Throwable cause) {
 		super(flowId, stateId, "Exception thrown executing " + action + " in state '" + stateId + "' of flow '"
 				+ flowId + "' -- action execution attributes were '" + executionAttributes + "'", cause);
 	}
@@ -51,8 +51,8 @@ public class ActionExecutionException extends FlowExecutionException {
 	 * @param message a descriptive message
 	 * @param cause the underlying cause
 	 */
-	public ActionExecutionException(String flowId, String stateId, Action action, AttributeMap executionAttributes,
-			String message, Throwable cause) {
+	public ActionExecutionException(String flowId, String stateId, Action action,
+			AttributeMap<Object> executionAttributes, String message, Throwable cause) {
 		super(flowId, stateId, message, cause);
 	}
 

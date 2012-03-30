@@ -26,7 +26,7 @@ public class MockBaseFacesContext extends MockFacesContext20 {
 		super(externalContext, lifecycle);
 	}
 
-	public Map getAttributes() {
+	public Map<Object, Object> getAttributes() {
 		return super.getAttributes();
 	}
 

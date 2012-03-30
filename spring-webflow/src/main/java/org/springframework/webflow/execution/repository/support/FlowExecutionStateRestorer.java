@@ -40,5 +40,5 @@ public interface FlowExecutionStateRestorer {
 	 * @return the restored flow execution
 	 */
 	public FlowExecution restoreState(FlowExecution execution, FlowDefinition definition, FlowExecutionKey key,
-			MutableAttributeMap conversationScope, FlowDefinitionLocator subflowDefinitionLocator);
+			MutableAttributeMap<Object> conversationScope, FlowDefinitionLocator subflowDefinitionLocator);
 }

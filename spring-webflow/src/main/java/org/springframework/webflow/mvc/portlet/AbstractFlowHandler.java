@@ -40,11 +40,11 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public MutableAttributeMap createExecutionInputMap(RenderRequest request) {
+	public MutableAttributeMap<Object> createExecutionInputMap(RenderRequest request) {
 		return null;
 	}
 
-	public MutableAttributeMap createResourceExecutionInputMap(ResourceRequest request) {
+	public MutableAttributeMap<Object> createResourceExecutionInputMap(ResourceRequest request) {
 		return null;
 	}
 

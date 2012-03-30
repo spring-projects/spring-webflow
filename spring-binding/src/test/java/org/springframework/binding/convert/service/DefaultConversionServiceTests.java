@@ -45,11 +45,12 @@ import org.springframework.binding.format.DefaultNumberFormatFactory;
  * 
  * @author Keith Donald
  */
+@SuppressWarnings("deprecation")
 public class DefaultConversionServiceTests extends TestCase {
 
 	public void testConvertCompatibleTypes() {
 		DefaultConversionService service = new DefaultConversionService();
-		List lst = new ArrayList();
+		List<Object> lst = new ArrayList<Object>();
 		assertSame(lst, service.getConversionExecutor(ArrayList.class, List.class).execute(lst));
 	}
 
@@ -205,15 +206,17 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterArrayToList() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", String[].class, List.class);
-		List list = (List) executor.execute(new String[] { "princy1", "princy2" });
-		assertEquals("princy1", ((Principal) list.get(0)).getName());
-		assertEquals("princy2", ((Principal) list.get(1)).getName());
+		List<Principal> list = (List<Principal>) executor.execute(new String[] { "princy1", "princy2" });
+		assertEquals("princy1", (list.get(0)).getName());
+		assertEquals("princy2", (list.get(1)).getName());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterArrayToListReverse() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
@@ -228,7 +231,7 @@ public class DefaultConversionServiceTests extends TestCase {
 				return "princy2";
 			}
 		};
-		List p = (List) executor.execute(new Principal[] { princy1, princy2 });
+		List<String> p = (List<String>) executor.execute(new Principal[] { princy1, princy2 });
 		assertEquals("princy1", p.get(0));
 		assertEquals("princy2", p.get(1));
 	}
@@ -248,7 +251,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, Principal[].class);
-		List princyList = new ArrayList();
+		List<String> princyList = new ArrayList<String>();
 		princyList.add("princy1");
 		princyList.add("princy2");
 		Principal[] p = (Principal[]) executor.execute(princyList);
@@ -270,7 +273,7 @@ public class DefaultConversionServiceTests extends TestCase {
 				return "princy2";
 			}
 		};
-		List princyList = new ArrayList();
+		List<Principal> princyList = new ArrayList<Principal>();
 		princyList.add(princy1);
 		princyList.add(princy2);
 		String[] p = (String[]) executor.execute(princyList);
@@ -321,21 +324,23 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterObjectToList() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", String.class, List.class);
-		List list = (List) executor.execute("princy1");
-		assertEquals("princy1", ((Principal) list.get(0)).getName());
+		List<Principal> list = (List<Principal>) executor.execute("princy1");
+		assertEquals("princy1", list.get(0).getName());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterCsvStringToList() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new PrincipalCsvStringToListConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", String.class, List.class);
-		List list = (List) executor.execute("princy1,princy2");
-		assertEquals("princy1", ((Principal) list.get(0)).getName());
-		assertEquals("princy2", ((Principal) list.get(1)).getName());
+		List<Principal> list = (List<Principal>) executor.execute("princy1,princy2");
+		assertEquals("princy1", list.get(0).getName());
+		assertEquals("princy2", list.get(1).getName());
 	}
 
 	public void testRegisterCustomConverterObjectToListBogus() {
@@ -350,6 +355,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterObjectToListReverse() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
@@ -359,22 +365,24 @@ public class DefaultConversionServiceTests extends TestCase {
 				return "princy1";
 			}
 		};
-		List list = (List) executor.execute(princy1);
+		List<String> list = (List<String>) executor.execute(princy1);
 		assertEquals("princy1", list.get(0));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterListToList() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
-		List princyList = new ArrayList();
+		List<String> princyList = new ArrayList<String>();
 		princyList.add("princy1");
 		princyList.add("princy2");
-		List list = (List) executor.execute(princyList);
-		assertEquals("princy1", ((Principal) list.get(0)).getName());
-		assertEquals("princy2", ((Principal) list.get(1)).getName());
+		List<Principal> list = (List<Principal>) executor.execute(princyList);
+		assertEquals("princy1", list.get(0).getName());
+		assertEquals("princy2", list.get(1).getName());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRegisterCustomConverterListToListReverse() {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
@@ -389,10 +397,10 @@ public class DefaultConversionServiceTests extends TestCase {
 				return "princy2";
 			}
 		};
-		List princyList = new ArrayList();
+		List<Principal> princyList = new ArrayList<Principal>();
 		princyList.add(princy1);
 		princyList.add(princy2);
-		List list = (List) executor.execute(princyList);
+		List<String> list = (List<String>) executor.execute(princyList);
 		assertEquals("princy1", list.get(0));
 		assertEquals("princy2", list.get(1));
 	}
@@ -401,8 +409,8 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
-		List princyList = new ArrayList();
-		princyList.add(new Integer(1));
+		List<Integer> princyList = new ArrayList<Integer>();
+		princyList.add(1);
 		try {
 			executor.execute(princyList);
 			fail("Should have failed");
@@ -436,10 +444,11 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals(3, result[2]);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testArrayToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, List.class);
-		List result = (List) executor.execute(new String[] { "1", "2", "3" });
+		List<String> result = (List<String>) executor.execute(new String[] { "1", "2", "3" });
 		assertEquals("1", result.get(0));
 		assertEquals("2", result.get(1));
 		assertEquals("3", result.get(2));
@@ -448,7 +457,7 @@ public class DefaultConversionServiceTests extends TestCase {
 	public void testListToArrayConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(Collection.class, String[].class);
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("1");
 		list.add("2");
 		list.add("3");
@@ -458,14 +467,15 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("3", result[2]);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testSetToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(Set.class, List.class);
-		Set set = new LinkedHashSet();
+		Set<String> set = new LinkedHashSet<String>();
 		set.add("1");
 		set.add("2");
 		set.add("3");
-		List result = (List) executor.execute(set);
+		List<String> result = (List<String>) executor.execute(set);
 		assertEquals("1", result.get(0));
 		assertEquals("2", result.get(1));
 		assertEquals("3", result.get(2));
@@ -474,7 +484,7 @@ public class DefaultConversionServiceTests extends TestCase {
 	public void testListToArrayConversionWithComponentConversion() {
 		try {
 			DefaultConversionService service = new DefaultConversionService();
-			ConversionExecutor executor = service.getConversionExecutor(Collection.class, Integer[].class);
+			service.getConversionExecutor(Collection.class, Integer[].class);
 
 			// This test case is no longer supported:
 			// https://jira.springframework.org/browse/SPR-7496
@@ -493,10 +503,11 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testArrayToLinkedListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, LinkedList.class);
-		LinkedList result = (LinkedList) executor.execute(new String[] { "1", "2", "3" });
+		LinkedList<String> result = (LinkedList<String>) executor.execute(new String[] { "1", "2", "3" });
 		assertEquals("1", result.get(0));
 		assertEquals("2", result.get(1));
 		assertEquals("3", result.get(2));
@@ -521,10 +532,11 @@ public class DefaultConversionServiceTests extends TestCase {
 		assertEquals("3", result[2]);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testStringToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, List.class);
-		List result = (List) executor.execute("1,2,3");
+		List<String> result = (List<String>) executor.execute("1,2,3");
 		assertEquals(3, result.size());
 		assertEquals("1", result.get(0));
 		assertEquals("2", result.get(1));
@@ -541,7 +553,7 @@ public class DefaultConversionServiceTests extends TestCase {
 
 	private static class CustomConverter implements Converter {
 
-		public Object convertSourceToTargetClass(final Object source, Class targetClass) throws Exception {
+		public Object convertSourceToTargetClass(final Object source, Class<?> targetClass) throws Exception {
 			return new Principal() {
 				public String getName() {
 					return (String) source;
@@ -549,33 +561,33 @@ public class DefaultConversionServiceTests extends TestCase {
 			};
 		}
 
-		public Class getSourceClass() {
+		public Class<?> getSourceClass() {
 			return String.class;
 		}
 
-		public Class getTargetClass() {
+		public Class<?> getTargetClass() {
 			return Principal.class;
 		}
 
 	}
 
 	private static class CustomTwoWayConverter extends CustomConverter implements TwoWayConverter {
-		public Object convertTargetToSourceClass(Object target, Class sourceClass) throws Exception {
+		public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) throws Exception {
 			return ((Principal) target).getName();
 		}
 	}
 
 	private static class Trimmer implements Converter {
 
-		public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+		public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 			return ((String) source).trim();
 		}
 
-		public Class getSourceClass() {
+		public Class<?> getSourceClass() {
 			return String.class;
 		}
 
-		public Class getTargetClass() {
+		public Class<?> getTargetClass() {
 			return String.class;
 		}
 
@@ -587,8 +599,8 @@ public class DefaultConversionServiceTests extends TestCase {
 			super(List.class);
 		}
 
-		protected Object toObject(String string, Class targetClass) throws Exception {
-			List principals = new ArrayList();
+		protected Object toObject(String string, Class<?> targetClass) throws Exception {
+			List<Principal> principals = new ArrayList<Principal>();
 			StringTokenizer tokenizer = new StringTokenizer(string, ",");
 			while (tokenizer.hasMoreTokens()) {
 				final String name = tokenizer.nextToken();

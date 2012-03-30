@@ -25,13 +25,13 @@ import org.springframework.binding.collection.SharedMap;
  * 
  * @author Keith Donald
  */
-public class LocalSharedAttributeMap extends LocalAttributeMap implements SharedAttributeMap {
+public class LocalSharedAttributeMap<V> extends LocalAttributeMap<V> implements SharedAttributeMap<V> {
 
 	/**
 	 * Creates a new shared attribute map.
 	 * @param sharedMap the shared map
 	 */
-	public LocalSharedAttributeMap(SharedMap sharedMap) {
+	public LocalSharedAttributeMap(SharedMap<String, V> sharedMap) {
 		super(sharedMap);
 	}
 
@@ -42,7 +42,7 @@ public class LocalSharedAttributeMap extends LocalAttributeMap implements Shared
 	/**
 	 * Returns the wrapped shared map.
 	 */
-	protected SharedMap getSharedMap() {
-		return (SharedMap) getMapInternal();
+	protected SharedMap<String, V> getSharedMap() {
+		return (SharedMap<String, V>) getMapInternal();
 	}
 }

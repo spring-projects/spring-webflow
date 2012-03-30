@@ -15,19 +15,12 @@
  */
 package org.springframework.binding.convert.converters;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
+import org.springframework.core.CollectionFactory;
 import org.springframework.core.GenericCollectionTypeResolver;
-import org.springframework.core.JdkVersion;
 
 /**
  * Special two-way converter that converts an object to an single-element collection. Supports type conversion of the
@@ -36,6 +29,8 @@ import org.springframework.core.JdkVersion;
  * @author Keith Donald
  */
 public class ObjectToCollection implements Converter {
+
+	private static final int DEFAULT_INITIAL_CAPACITY = 16;
 
 	private ConversionService conversionService;
 
@@ -58,22 +53,21 @@ public class ObjectToCollection implements Converter {
 		this.elementConverter = elementConverter;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return Object.class;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return Collection.class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		if (source == null) {
 			return null;
 		}
-		Class collectionImplClass = getCollectionImplClass(targetClass);
-		Constructor constructor = collectionImplClass.getConstructor(null);
-		Collection collection = (Collection) constructor.newInstance(null);
-		ConversionExecutor converter = getElementConverter(source, targetClass);
+		Collection collection = CollectionFactory.createCollection(targetClass, DEFAULT_INITIAL_CAPACITY);
+		ConversionExecutor converter = getElementConverter(source, (Class<? extends Collection<?>>) targetClass);
 		Object value;
 		if (converter != null) {
 			value = converter.execute(source);
@@ -84,33 +78,14 @@ public class ObjectToCollection implements Converter {
 		return collection;
 	}
 
-	// this code is duplicated in ArrayToCollection and CollectionToCollection
-	private Class getCollectionImplClass(Class targetClass) {
-		if (targetClass.isInterface()) {
-			if (List.class.equals(targetClass)) {
-				return ArrayList.class;
-			} else if (Set.class.equals(targetClass)) {
-				return LinkedHashSet.class;
-			} else if (SortedSet.class.equals(targetClass)) {
-				return TreeSet.class;
-			} else {
-				throw new IllegalArgumentException("Unsupported collection interface [" + targetClass.getName() + "]");
-			}
-		} else {
-			return targetClass;
-		}
-	}
-
-	private ConversionExecutor getElementConverter(Object source, Class targetClass) {
+	private ConversionExecutor getElementConverter(Object source, Class<? extends Collection<?>> targetClass) {
 		if (elementConverter != null) {
 			return elementConverter;
 		} else {
-			if (JdkVersion.isAtLeastJava15()) {
-				Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
-				if (elementType != null) {
-					Class componentType = source.getClass().getComponentType();
-					return conversionService.getConversionExecutor(componentType, elementType);
-				}
+			Class<?> elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
+			if (elementType != null) {
+				Class<?> componentType = source.getClass().getComponentType();
+				return conversionService.getConversionExecutor(componentType, elementType);
 			}
 			return null;
 		}

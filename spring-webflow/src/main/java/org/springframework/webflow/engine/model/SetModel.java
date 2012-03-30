@@ -42,12 +42,12 @@ public class SetModel extends AbstractActionModel {
 		setValue(value);
 	}
 
-    public Model createCopy() {
-        final SetModel copy = new SetModel(name, value);
-        super.fillCopy(copy);
-        copy.setType(type);
-        return copy;
-    }
+	public Model createCopy() {
+		final SetModel copy = new SetModel(name, value);
+		super.fillCopy(copy);
+		copy.setType(type);
+		return copy;
+	}
 
 	/**
 	 * @return the name

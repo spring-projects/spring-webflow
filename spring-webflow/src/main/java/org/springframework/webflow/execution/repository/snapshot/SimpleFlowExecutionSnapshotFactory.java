@@ -26,8 +26,8 @@ import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.repository.FlowExecutionRestorationFailureException;
 
 /**
- * A factory that creates new flow execution snapshot instances that simply wraps an underlying
- * {@link FlowExecution flow execution} instance.
+ * A factory that creates new flow execution snapshot instances that simply wraps an underlying {@link FlowExecution
+ * flow execution} instance.
  * 
  * Note: this class is generally only suitable for use with a repository that has maxSnapshots set to 1, since no actual
  * copies of the execution data are made by this factory. This class exists to support the use case where taking copies
@@ -59,7 +59,7 @@ public class SimpleFlowExecutionSnapshotFactory implements FlowExecutionSnapshot
 	}
 
 	public FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
-			MutableAttributeMap conversationScope, FlowExecutionKeyFactory keyFactory)
+			MutableAttributeMap<Object> conversationScope, FlowExecutionKeyFactory keyFactory)
 			throws FlowExecutionRestorationFailureException {
 		SimpleFlowExecutionSnapshot snapshotImpl = (SimpleFlowExecutionSnapshot) snapshot;
 		FlowDefinition def = flowDefinitionLocator.getFlowDefinition(flowId);

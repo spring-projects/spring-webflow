@@ -72,7 +72,7 @@ public class ResourceServlet extends HttpServletBean {
 
 	private boolean gzipEnabled = true;
 
-	private Set allowedResourcePaths = new HashSet();
+	private Set<String> allowedResourcePaths = new HashSet<String>();
 	{
 		allowedResourcePaths.add("/**/*.css");
 		allowedResourcePaths.add("/**/*.gif");
@@ -90,7 +90,7 @@ public class ResourceServlet extends HttpServletBean {
 		allowedResourcePaths.add("META-INF/**/*.png");
 	};
 
-	private Map defaultMimeTypes = new HashMap();
+	private Map<String, String> defaultMimeTypes = new HashMap<String, String>();
 	{
 		defaultMimeTypes.put(".css", "text/css");
 		defaultMimeTypes.put(".gif", "image/gif");
@@ -101,7 +101,7 @@ public class ResourceServlet extends HttpServletBean {
 		defaultMimeTypes.put(".png", "image/png");
 	}
 
-	private Set compressedMimeTypes = new HashSet();
+	private Set<String> compressedMimeTypes = new HashSet<String>();
 	{
 		compressedMimeTypes.add("text/*");
 	}
@@ -131,8 +131,8 @@ public class ResourceServlet extends HttpServletBean {
 		OutputStream out = selectOutputStream(request, response);
 
 		try {
-			for (int i = 0; i < resources.length; i++) {
-				URLConnection resourceConn = resources[i].openConnection();
+			for (URL resource : resources) {
+				URLConnection resourceConn = resource.openConnection();
 				InputStream in = resourceConn.getInputStream();
 				try {
 					byte[] buffer = new byte[1024];
@@ -166,9 +166,9 @@ public class ResourceServlet extends HttpServletBean {
 
 	private boolean matchesCompressedMimeTypes(String mimeType) {
 		PathMatcher pathMatcher = new AntPathMatcher();
-		Iterator compressedMimeTypesIt = compressedMimeTypes.iterator();
+		Iterator<String> compressedMimeTypesIt = compressedMimeTypes.iterator();
 		while (compressedMimeTypesIt.hasNext()) {
-			String compressedMimeType = (String) compressedMimeTypesIt.next();
+			String compressedMimeType = compressedMimeTypesIt.next();
 			if (pathMatcher.match(compressedMimeType, mimeType)) {
 				return true;
 			}
@@ -181,16 +181,16 @@ public class ResourceServlet extends HttpServletBean {
 		long lastModified = -1;
 		int contentLength = 0;
 		String mimeType = null;
-		for (int i = 0; i < resources.length; i++) {
-			URLConnection resourceConn = resources[i].openConnection();
+		for (URL resource : resources) {
+			URLConnection resourceConn = resource.openConnection();
 			if (resourceConn.getLastModified() > lastModified) {
 				lastModified = resourceConn.getLastModified();
 			}
 
-			String currentMimeType = getServletContext().getMimeType(resources[i].getPath());
+			String currentMimeType = getServletContext().getMimeType(resource.getPath());
 			if (currentMimeType == null) {
-				String extension = resources[i].getPath().substring(resources[i].getPath().lastIndexOf('.'));
-				currentMimeType = (String) defaultMimeTypes.get(extension);
+				String extension = resource.getPath().substring(resource.getPath().lastIndexOf('.'));
+				currentMimeType = defaultMimeTypes.get(extension);
 			}
 			if (mimeType == null) {
 				mimeType = currentMimeType;
@@ -226,10 +226,10 @@ public class ResourceServlet extends HttpServletBean {
 
 		long lastModified = -1;
 
-		for (int i = 0; i < resources.length; i++) {
+		for (URL resource : resources) {
 			URLConnection resourceConn;
 			try {
-				resourceConn = resources[i].openConnection();
+				resourceConn = resource.openConnection();
 			} catch (IOException e) {
 				return -1;
 			}
@@ -298,9 +298,9 @@ public class ResourceServlet extends HttpServletBean {
 			return false;
 		}
 		PathMatcher pathMatcher = new AntPathMatcher();
-		Iterator allowedResourcePathsIt = allowedResourcePaths.iterator();
+		Iterator<String> allowedResourcePathsIt = allowedResourcePaths.iterator();
 		while (allowedResourcePathsIt.hasNext()) {
-			String pattern = (String) allowedResourcePathsIt.next();
+			String pattern = allowedResourcePathsIt.next();
 			if (pathMatcher.match(pattern, resourcePath)) {
 				return true;
 			}
@@ -380,14 +380,6 @@ public class ResourceServlet extends HttpServletBean {
 			}
 			gzipStream.write(b, off, len);
 		}
-
-		public boolean closed() {
-			return (this.closed);
-		}
-
-		public void reset() {
-			// noop
-		}
 	}
 
 	/**
@@ -404,8 +396,8 @@ public class ResourceServlet extends HttpServletBean {
 	 * @see AntPathMatcher
 	 */
 	public void setAllowedResourcePaths(String allowedResourcePaths) {
-		this.allowedResourcePaths = new HashSet(Arrays.asList(StringUtils.tokenizeToStringArray(allowedResourcePaths,
-				",", true, true)));
+		this.allowedResourcePaths = new HashSet<String>(Arrays.asList(StringUtils.tokenizeToStringArray(
+				allowedResourcePaths, ",", true, true)));
 	}
 
 	/**
@@ -415,8 +407,8 @@ public class ResourceServlet extends HttpServletBean {
 	 * @see AntPathMatcher
 	 */
 	public void setCompressedMimeTypes(String compressedMimeTypes) {
-		this.compressedMimeTypes = new HashSet(Arrays.asList(StringUtils.tokenizeToStringArray(compressedMimeTypes,
-				",", true, true)));
+		this.compressedMimeTypes = new HashSet<String>(Arrays.asList(StringUtils.tokenizeToStringArray(
+				compressedMimeTypes, ",", true, true)));
 	}
 
 	/**

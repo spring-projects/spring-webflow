@@ -29,7 +29,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class PortletContextMap extends StringKeyedMapAdapter implements SharedMap {
+public class PortletContextMap extends StringKeyedMapAdapter<Object> implements SharedMap<String, Object> {
 
 	/**
 	 * The wrapped portlet context.
@@ -55,7 +55,7 @@ public class PortletContextMap extends StringKeyedMapAdapter implements SharedMa
 		context.removeAttribute(key);
 	}
 
-	protected Iterator getAttributeNames() {
+	protected Iterator<String> getAttributeNames() {
 		return CollectionUtils.toIterator(context.getAttributeNames());
 	}
 

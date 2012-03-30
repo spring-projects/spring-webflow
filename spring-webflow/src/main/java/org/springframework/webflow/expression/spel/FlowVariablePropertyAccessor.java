@@ -47,7 +47,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class FlowVariablePropertyAccessor implements PropertyAccessor {
 
-	private static Map variables = new HashMap();
+	private static Map<String, FlowVariableAccessor> variables = new HashMap<String, FlowVariableAccessor>();
 
 	static {
 		variables.put("currentUser", new FlowVariableAccessor() {
@@ -67,7 +67,7 @@ public class FlowVariablePropertyAccessor implements PropertyAccessor {
 		});
 	}
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return null;
 	}
 
@@ -76,7 +76,7 @@ public class FlowVariablePropertyAccessor implements PropertyAccessor {
 	}
 
 	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
-		FlowVariableAccessor var = (FlowVariableAccessor) variables.get(name);
+		FlowVariableAccessor var = variables.get(name);
 		return new TypedValue(var.getVariable());
 	}
 

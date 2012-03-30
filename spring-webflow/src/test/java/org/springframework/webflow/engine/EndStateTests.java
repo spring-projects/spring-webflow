@@ -74,7 +74,9 @@ public class EndStateTests extends TestCase {
 
 	public void testEnterEndStateWithOutputMapper() {
 		Flow flow = new Flow("myFlow") {
-			public void end(RequestControlContext context, MutableAttributeMap output) throws FlowExecutionException {
+			@SuppressWarnings("unused")
+			public void end(RequestControlContext context, MutableAttributeMap<Object> output)
+					throws FlowExecutionException {
 				assertEquals("foo", output.get("y"));
 			}
 		};

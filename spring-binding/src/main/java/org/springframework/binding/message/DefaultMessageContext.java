@@ -44,9 +44,10 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 
 	private MessageSource messageSource;
 
-	private Map sourceMessages = new CachingMapDecorator(new LinkedHashMap()) {
-		protected Object create(Object source) {
-			return new ArrayList();
+	private Map<Object, List<Message>> sourceMessages = new CachingMapDecorator<Object, List<Message>>(
+			new LinkedHashMap<Object, List<Message>>()) {
+		protected List<Message> create(Object source) {
+			return new ArrayList<Message>();
 		}
 	};
 
@@ -73,39 +74,37 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	// implementing message context
 
 	public Message[] getAllMessages() {
-		List messages = new ArrayList();
-		for (Iterator it = sourceMessages.values().iterator(); it.hasNext();) {
-			messages.addAll((List) it.next());
+		List<Message> messages = new ArrayList<Message>();
+		for (List<Message> list : sourceMessages.values()) {
+			messages.addAll(list);
 		}
-		return (Message[]) messages.toArray(new Message[messages.size()]);
+		return messages.toArray(new Message[messages.size()]);
 	}
 
 	public Message[] getMessagesBySource(Object source) {
-		List messages = (List) sourceMessages.get(source);
-		return (Message[]) messages.toArray(new Message[messages.size()]);
+		List<Message> messages = sourceMessages.get(source);
+		return messages.toArray(new Message[messages.size()]);
 	}
 
 	public Message[] getMessagesByCriteria(MessageCriteria criteria) {
-		List messages = new ArrayList();
-		Iterator it = sourceMessages.values().iterator();
+		List<Message> messages = new ArrayList<Message>();
+		Iterator<List<Message>> it = sourceMessages.values().iterator();
 		while (it.hasNext()) {
-			List sourceMessages = (List) it.next();
-			for (Iterator it2 = sourceMessages.iterator(); it2.hasNext();) {
-				Message message = (Message) it2.next();
+			List<Message> sourceMessages = it.next();
+			for (Message message : sourceMessages) {
 				if (criteria.test(message)) {
 					messages.add(message);
 				}
 			}
 		}
-		return (Message[]) messages.toArray(new Message[messages.size()]);
+		return messages.toArray(new Message[messages.size()]);
 	}
 
 	public boolean hasErrorMessages() {
-		Iterator it = sourceMessages.values().iterator();
+		Iterator<List<Message>> it = sourceMessages.values().iterator();
 		while (it.hasNext()) {
-			List sourceMessages = (List) it.next();
-			for (Iterator it2 = sourceMessages.iterator(); it2.hasNext();) {
-				Message message = (Message) it2.next();
+			List<Message> sourceMessages = it.next();
+			for (Message message : sourceMessages) {
 				if (message.getSeverity() == Severity.ERROR) {
 					return true;
 				}
@@ -120,7 +119,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 			logger.debug("Resolving message using " + messageResolver);
 		}
 		Message message = messageResolver.resolveMessage(messageSource, currentLocale);
-		List messages = (List) sourceMessages.get(message.getSource());
+		List<Message> messages = sourceMessages.get(message.getSource());
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding resolved message " + message);
 		}
@@ -134,11 +133,12 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	// implementing state manageable message context
 
 	public Serializable createMessagesMemento() {
-		return new LinkedHashMap(sourceMessages);
+		return new LinkedHashMap<Object, List<Message>>(sourceMessages);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void restoreMessages(Serializable messagesMemento) {
-		sourceMessages.putAll((Map) messagesMemento);
+		sourceMessages.putAll((Map<Object, List<Message>>) messagesMemento);
 	}
 
 	public void setMessageSource(MessageSource messageSource) {

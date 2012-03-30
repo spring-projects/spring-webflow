@@ -33,7 +33,7 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 	/**
 	 * The map of loaded Flow models maintained in this registry.
 	 */
-	private Map flowModels;
+	private Map<String, FlowModelHolder> flowModels;
 
 	/**
 	 * An optional parent flow model registry.
@@ -41,7 +41,7 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 	private FlowModelRegistry parent;
 
 	public FlowModelRegistryImpl() {
-		flowModels = new TreeMap();
+		flowModels = new TreeMap<String, FlowModelHolder>();
 	}
 
 	// implementing FlowModelLocator
@@ -75,7 +75,7 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 	 * Returns the identified flow model holder. Throws an exception if it cannot be found.
 	 */
 	private FlowModelHolder getFlowModelHolder(String id) throws NoSuchFlowModelException {
-		FlowModelHolder holder = (FlowModelHolder) flowModels.get(id);
+		FlowModelHolder holder = flowModels.get(id);
 		if (holder == null) {
 			throw new NoSuchFlowModelException(id);
 		}

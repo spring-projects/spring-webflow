@@ -35,7 +35,7 @@ public class AbstractFlowHandler implements FlowHandler {
 		return null;
 	}
 
-	public MutableAttributeMap createExecutionInputMap(HttpServletRequest request) {
+	public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request) {
 		return null;
 	}
 

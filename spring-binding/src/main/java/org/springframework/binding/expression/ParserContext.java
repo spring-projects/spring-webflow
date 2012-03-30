@@ -26,14 +26,14 @@ public interface ParserContext {
 	 * value to install custom variable resolves for that particular type of context.
 	 * @return the evaluation context type
 	 */
-	public Class getEvaluationContextType();
+	public Class<?> getEvaluationContextType();
 
 	/**
 	 * Returns the expected type of object returned from evaluating the parsed expression. An expression parser may use
 	 * this value to coerce an raw evaluation result before it is returned.
 	 * @return the expected evaluation result type
 	 */
-	public Class getExpectedEvaluationResultType();
+	public Class<?> getExpectedEvaluationResultType();
 
 	/**
 	 * Returns additional expression variables or aliases that can be referenced during expression evaluation. An

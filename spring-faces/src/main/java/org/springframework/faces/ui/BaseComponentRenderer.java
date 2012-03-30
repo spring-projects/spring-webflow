@@ -32,7 +32,7 @@ import javax.faces.render.Renderer;
  */
 public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 
-	private Map attributeCallbacks;
+	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
 	private RenderAttributeCallback idCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
@@ -50,9 +50,9 @@ public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 		}
 	};
 
-	protected Map getAttributeCallbacks(UIComponent component) {
+	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
 		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap();
+			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
 			attributeCallbacks.put("id", idCallback);
 			attributeCallbacks.put("name", idCallback);
 			attributeCallbacks.put("disabled", disabledCallback);

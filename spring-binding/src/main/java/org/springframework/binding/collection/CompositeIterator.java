@@ -28,9 +28,9 @@ import org.springframework.util.Assert;
  * 
  * @author Erwin Vervaet
  */
-public class CompositeIterator implements Iterator {
+public class CompositeIterator<E> implements Iterator<E> {
 
-	private List iterators = new LinkedList();
+	private List<Iterator<E>> iterators = new LinkedList<Iterator<E>>();
 
 	private boolean inUse = false;
 
@@ -43,7 +43,7 @@ public class CompositeIterator implements Iterator {
 	/**
 	 * Add given iterator to this composite.
 	 */
-	public void add(Iterator iterator) {
+	public void add(Iterator<E> iterator) {
 		Assert.state(!inUse, "You can no longer add iterator to a composite iterator that's already in use");
 		if (iterators.contains(iterator)) {
 			throw new IllegalArgumentException("You cannot add the same iterator twice");
@@ -53,18 +53,17 @@ public class CompositeIterator implements Iterator {
 
 	public boolean hasNext() {
 		inUse = true;
-		for (Iterator it = iterators.iterator(); it.hasNext();) {
-			if (((Iterator) it.next()).hasNext()) {
+		for (Iterator<E> iterator : iterators) {
+			if (iterator.hasNext()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public Object next() {
+	public E next() {
 		inUse = true;
-		for (Iterator it = iterators.iterator(); it.hasNext();) {
-			Iterator iterator = (Iterator) it.next();
+		for (Iterator<E> iterator : iterators) {
 			if (iterator.hasNext()) {
 				return iterator.next();
 			}

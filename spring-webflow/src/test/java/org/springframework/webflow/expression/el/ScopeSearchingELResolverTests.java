@@ -3,6 +3,8 @@ package org.springframework.webflow.expression.el;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.el.ELResolver;
+
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -226,13 +228,13 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		return "foo";
 	}
 
-	protected List getCustomResolvers() {
-		List resolvers = new ArrayList();
+	protected List<ELResolver> getCustomResolvers() {
+		List<ELResolver> resolvers = new ArrayList<ELResolver>();
 		resolvers.add(new ScopeSearchingELResolver());
 		return resolvers;
 	}
 
-	private static class MyBean {
+	public static class MyBean {
 
 		private String bar = "";
 

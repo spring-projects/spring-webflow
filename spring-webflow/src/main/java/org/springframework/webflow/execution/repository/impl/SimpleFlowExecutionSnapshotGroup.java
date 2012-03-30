@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.springframework.core.JdkVersion;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 
@@ -35,13 +34,13 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	/**
 	 * The snapshot map; the key is a snapshot id, and the value is a {@link FlowExecutionSnapshot} object.
 	 */
-	private Map snapshots = new HashMap();
+	private Map<Serializable, FlowExecutionSnapshot> snapshots = new HashMap<Serializable, FlowExecutionSnapshot>();
 
 	/**
 	 * An ordered list of snapshot ids. Each snapshot id represents an pointer to a {@link FlowExecutionSnapshot} in the
 	 * map. The first element is the oldest snapshot and the last is the youngest.
 	 */
-	private LinkedList snapshotIds = new LinkedList();
+	private LinkedList<Serializable> snapshotIds = new LinkedList<Serializable>();
 
 	/**
 	 * The maximum number of snapshots allowed in this group. -1 indicates no max limit.
@@ -69,7 +68,7 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	}
 
 	public FlowExecutionSnapshot getSnapshot(Serializable snapshotId) throws SnapshotNotFoundException {
-		FlowExecutionSnapshot snapshot = (FlowExecutionSnapshot) snapshots.get(snapshotId);
+		FlowExecutionSnapshot snapshot = snapshots.get(snapshotId);
 		if (snapshot == null) {
 			throw new SnapshotNotFoundException(snapshotId);
 		}
@@ -109,12 +108,7 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	}
 
 	public Serializable nextSnapshotId() {
-		Integer nextSnapshotId;
-		if (JdkVersion.isAtLeastJava15()) {
-			nextSnapshotId = Integer.valueOf(snapshotIdSequence);
-		} else {
-			nextSnapshotId = new Integer(snapshotIdSequence);
-		}
+		Integer nextSnapshotId = Integer.valueOf(snapshotIdSequence);
 		snapshotIdSequence++;
 		return nextSnapshotId;
 	}

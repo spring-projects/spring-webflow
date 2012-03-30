@@ -39,7 +39,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = (RequestContext) EasyMock.createMock(RequestContext.class);
+	private RequestContext context = EasyMock.createMock(RequestContext.class);
 
 	private ViewHandler viewHandler = new NoRenderViewHandler();
 
@@ -74,9 +74,10 @@ public class JsfFinalResponseActionTests extends TestCase {
 		ext.setNativeRequest(new MockHttpServletRequest());
 		ext.setNativeResponse(new MockHttpServletResponse());
 		EasyMock.expect(context.getExternalContext()).andStubReturn(ext);
-		LocalAttributeMap requestMap = new LocalAttributeMap();
+		LocalAttributeMap<Object> requestMap = new LocalAttributeMap<Object>();
 		EasyMock.expect(context.getFlashScope()).andStubReturn(requestMap);
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(new LocalParameterMap(new HashMap()));
+		EasyMock.expect(context.getRequestParameters()).andStubReturn(
+				new LocalParameterMap(new HashMap<String, Object>()));
 	}
 
 	public void testRender() throws Exception {
@@ -116,7 +117,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private List phaseCallbacks = new ArrayList();
+		private List<String> phaseCallbacks = new ArrayList<String>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
@@ -135,11 +136,6 @@ public class JsfFinalResponseActionTests extends TestCase {
 		public PhaseId getPhaseId() {
 			return PhaseId.ANY_PHASE;
 		}
-
-		public List getPhaseCallbacks() {
-			return phaseCallbacks;
-		}
-
 	}
 
 	private class NoRenderViewHandler extends MockViewHandler {

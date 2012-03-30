@@ -37,7 +37,7 @@ public interface FlowExecutor {
 	 * @param input input to pass to the new execution on startup (optional)
 	 * @param context access to the calling environment (required)
 	 */
-	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap input, ExternalContext context)
+	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap<?> input, ExternalContext context)
 			throws FlowException;
 
 	/**

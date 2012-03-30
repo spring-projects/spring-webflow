@@ -54,7 +54,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	private LocalAttributeMap flashMap = new LocalAttributeMap();
+	private LocalAttributeMap<Object> flashMap = new LocalAttributeMap<Object>();
 
 	private ViewHandler viewHandler = new MockViewHandler();
 
@@ -80,7 +80,8 @@ public class JsfViewFactoryTests extends TestCase {
 		RequestContextHolder.setRequestContext(context);
 		EasyMock.expect(context.getFlashScope()).andStubReturn(flashMap);
 		EasyMock.expect(context.getExternalContext()).andStubReturn(extContext);
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(new LocalParameterMap(new HashMap()));
+		EasyMock.expect(context.getRequestParameters()).andStubReturn(
+				new LocalParameterMap(new HashMap<String, Object>()));
 	}
 
 	protected void tearDown() throws Exception {
@@ -299,7 +300,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private List phaseCallbacks = new ArrayList();
+		private List<String> phaseCallbacks = new ArrayList<String>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
@@ -318,11 +319,6 @@ public class JsfViewFactoryTests extends TestCase {
 		public PhaseId getPhaseId() {
 			return PhaseId.ANY_PHASE;
 		}
-
-		public List getPhaseCallbacks() {
-			return phaseCallbacks;
-		}
-
 	}
 
 	private class NormalViewState implements StateDefinition {
@@ -339,7 +335,7 @@ public class JsfViewFactoryTests extends TestCase {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 
-		public MutableAttributeMap getAttributes() {
+		public MutableAttributeMap<Object> getAttributes() {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

@@ -15,6 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
+import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
 import javax.el.ELContext;
@@ -37,15 +38,15 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class JsfManagedBeanResolver extends ELResolver {
 
-	public Class getCommonPropertyType(ELContext context, Object base) {
+	public Class<?> getCommonPropertyType(ELContext context, Object base) {
 		return Object.class;
 	}
 
-	public Iterator getFeatureDescriptors(ELContext context, Object base) {
+	public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
 		return null;
 	}
 
-	public Class getType(ELContext context, Object base, Object property) {
+	public Class<?> getType(ELContext context, Object base, Object property) {
 		if (base == null) {
 			Object bean = getFacesBean(property);
 			if (bean != null) {

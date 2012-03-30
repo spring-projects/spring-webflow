@@ -15,10 +15,10 @@
  */
 package org.springframework.webflow.engine.support;
 
+import junit.framework.TestCase;
+
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
 import org.springframework.webflow.test.MockRequestContext;
-
-import junit.framework.TestCase;
 
 /**
  * Unit tests for {@link NotTransitionCriteria}.
