@@ -17,7 +17,6 @@ package org.springframework.binding.mapping.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.binding.mapping.MappingResult;
@@ -61,9 +60,7 @@ public class DefaultMappingResults implements MappingResults {
 	}
 
 	public boolean hasErrorResults() {
-		Iterator<MappingResult> it = mappingResults.iterator();
-		while (it.hasNext()) {
-			MappingResult result = it.next();
+		for (MappingResult result : mappingResults) {
 			if (result.isError()) {
 				return true;
 			}
@@ -73,9 +70,7 @@ public class DefaultMappingResults implements MappingResults {
 
 	public List<MappingResult> getErrorResults() {
 		List<MappingResult> errorResults = new ArrayList<MappingResult>();
-		Iterator<MappingResult> it = mappingResults.iterator();
-		while (it.hasNext()) {
-			MappingResult result = it.next();
+		for (MappingResult result : mappingResults) {
 			if (result.isError()) {
 				errorResults.add(result);
 			}
@@ -85,9 +80,7 @@ public class DefaultMappingResults implements MappingResults {
 
 	public List<MappingResult> getResults(MappingResultsCriteria criteria) {
 		List<MappingResult> results = new ArrayList<MappingResult>();
-		Iterator<MappingResult> it = mappingResults.iterator();
-		while (it.hasNext()) {
-			MappingResult result = it.next();
+		for (MappingResult result : mappingResults) {
 			if (criteria.test(result)) {
 				results.add(result);
 			}

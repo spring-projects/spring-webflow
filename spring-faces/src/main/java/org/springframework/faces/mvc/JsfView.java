@@ -18,7 +18,6 @@ package org.springframework.faces.mvc;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.FactoryFinder;
@@ -89,11 +88,7 @@ public class JsfView extends AbstractUrlBasedView {
 	}
 
 	private void populateRequestMap(FacesContext facesContext, Map<String, Object> model) {
-		Iterator<String> i = model.keySet().iterator();
-		while (i.hasNext()) {
-			String key = i.next().toString();
-			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));
-		}
+		facesContext.getExternalContext().getRequestMap().putAll(model);
 	}
 
 	private Lifecycle createFacesLifecycle() {

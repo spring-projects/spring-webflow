@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -387,9 +386,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param model the model
 	 */
 	protected void addModelBindings(DefaultMapper mapper, Set<String> parameterNames, Object model) {
-		Iterator<Binding> it = binderConfiguration.getBindings().iterator();
-		while (it.hasNext()) {
-			Binding binding = it.next();
+		for (Binding binding : binderConfiguration.getBindings()) {
 			String parameterName = binding.getProperty();
 			if (parameterNames.contains(parameterName)) {
 				addMapping(mapper, binding, model);

@@ -150,9 +150,8 @@ public class ActionList implements Iterable<Action> {
 	 * @param context the action execution request context
 	 */
 	public void execute(RequestContext context) {
-		Iterator<Action> it = actions.iterator();
-		while (it.hasNext()) {
-			ActionExecutor.execute(it.next(), context);
+		for (Action action : actions) {
+			ActionExecutor.execute(action, context);
 		}
 	}
 

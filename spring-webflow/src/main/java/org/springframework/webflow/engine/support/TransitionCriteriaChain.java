@@ -16,7 +16,6 @@
 package org.springframework.webflow.engine.support;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,9 +64,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	}
 
 	public boolean test(RequestContext context) {
-		Iterator<TransitionCriteria> it = criteriaChain.iterator();
-		while (it.hasNext()) {
-			TransitionCriteria criteria = it.next();
+		for (TransitionCriteria criteria : criteriaChain) {
 			if (!criteria.test(context)) {
 				return false;
 			}

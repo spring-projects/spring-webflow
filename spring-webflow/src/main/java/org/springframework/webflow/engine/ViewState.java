@@ -16,7 +16,6 @@
 package org.springframework.webflow.engine;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -254,9 +253,7 @@ public class ViewState extends TransitionableState {
 	// internal helpers
 
 	private void createVariables(RequestContext context) {
-		Iterator<ViewVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			ViewVariable variable = it.next();
+		for (ViewVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating " + variable);
 			}
@@ -308,12 +305,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void restoreVariables(RequestContext context) {
-		Iterator<ViewVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			ViewVariable variable = it.next();
+		for (ViewVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restoring " + variable);
-
 			}
 			variable.restore(context);
 		}
@@ -336,12 +330,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void destroyVariables(RequestContext context) {
-		Iterator<ViewVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			ViewVariable variable = it.next();
+		for (ViewVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Destroying " + variable);
-
 			}
 			variable.destroy(context);
 		}

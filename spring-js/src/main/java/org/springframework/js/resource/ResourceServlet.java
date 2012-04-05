@@ -25,7 +25,6 @@ import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
@@ -166,9 +165,7 @@ public class ResourceServlet extends HttpServletBean {
 
 	private boolean matchesCompressedMimeTypes(String mimeType) {
 		PathMatcher pathMatcher = new AntPathMatcher();
-		Iterator<String> compressedMimeTypesIt = compressedMimeTypes.iterator();
-		while (compressedMimeTypesIt.hasNext()) {
-			String compressedMimeType = compressedMimeTypesIt.next();
+		for (String compressedMimeType : compressedMimeTypes) {
 			if (pathMatcher.match(compressedMimeType, mimeType)) {
 				return true;
 			}
@@ -298,9 +295,7 @@ public class ResourceServlet extends HttpServletBean {
 			return false;
 		}
 		PathMatcher pathMatcher = new AntPathMatcher();
-		Iterator<String> allowedResourcePathsIt = allowedResourcePaths.iterator();
-		while (allowedResourcePathsIt.hasNext()) {
-			String pattern = allowedResourcePathsIt.next();
+		for (String pattern : allowedResourcePaths) {
 			if (pathMatcher.match(pattern, resourcePath)) {
 				return true;
 			}

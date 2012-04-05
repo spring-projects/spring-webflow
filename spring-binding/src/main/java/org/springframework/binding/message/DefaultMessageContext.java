@@ -18,7 +18,6 @@ package org.springframework.binding.message;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -88,9 +87,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 
 	public Message[] getMessagesByCriteria(MessageCriteria criteria) {
 		List<Message> messages = new ArrayList<Message>();
-		Iterator<List<Message>> it = sourceMessages.values().iterator();
-		while (it.hasNext()) {
-			List<Message> sourceMessages = it.next();
+		for (List<Message> sourceMessages : this.sourceMessages.values()) {
 			for (Message message : sourceMessages) {
 				if (criteria.test(message)) {
 					messages.add(message);
@@ -101,9 +98,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	}
 
 	public boolean hasErrorMessages() {
-		Iterator<List<Message>> it = sourceMessages.values().iterator();
-		while (it.hasNext()) {
-			List<Message> sourceMessages = it.next();
+		for (List<Message> sourceMessages : this.sourceMessages.values()) {
 			for (Message message : sourceMessages) {
 				if (message.getSeverity() == Severity.ERROR) {
 					return true;

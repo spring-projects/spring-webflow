@@ -1,6 +1,5 @@
 package org.springframework.webflow.config;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -58,10 +57,7 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 	public void testDefaultFlowBuilderServices() {
 		Map<String, FlowBuilderServices> flowBuilderServicesBeans = context.getBeansOfType(FlowBuilderServices.class);
 		assertTrue(flowBuilderServicesBeans.size() > 0);
-
-		Iterator<FlowBuilderServices> i = flowBuilderServicesBeans.values().iterator();
-		while (i.hasNext()) {
-			FlowBuilderServices builderServices = i.next();
+		for (FlowBuilderServices builderServices : flowBuilderServicesBeans.values()) {
 			assertNotNull(builderServices);
 			assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
 			assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);

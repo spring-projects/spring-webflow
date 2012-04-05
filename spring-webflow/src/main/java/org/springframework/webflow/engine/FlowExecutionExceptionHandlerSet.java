@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,9 +104,7 @@ public class FlowExecutionExceptionHandlerSet {
 	 * @return true if the exception was handled
 	 */
 	public boolean handleException(FlowExecutionException exception, RequestControlContext context) {
-		Iterator<FlowExecutionExceptionHandler> it = exceptionHandlers.iterator();
-		while (it.hasNext()) {
-			FlowExecutionExceptionHandler handler = it.next();
+		for (FlowExecutionExceptionHandler handler : exceptionHandlers) {
 			if (handler.canHandle(exception)) {
 				handler.handle(exception, context);
 				return true;

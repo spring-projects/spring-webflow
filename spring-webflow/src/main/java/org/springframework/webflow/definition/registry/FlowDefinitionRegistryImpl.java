@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.definition.registry;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -108,9 +107,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	}
 
 	public void destroy() {
-		Iterator<FlowDefinitionHolder> it = flowDefinitions.values().iterator();
-		while (it.hasNext()) {
-			FlowDefinitionHolder holder = it.next();
+		for (FlowDefinitionHolder holder : flowDefinitions.values()) {
 			holder.destroy();
 		}
 	}

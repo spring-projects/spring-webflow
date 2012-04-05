@@ -1,7 +1,6 @@
 package org.springframework.binding.convert.converters;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -54,9 +53,7 @@ public class CollectionToCollection implements Converter {
 		Collection targetCollection = CollectionFactory.createCollection(targetClass, DEFAULT_INITIAL_SIZE);
 		ConversionExecutor elementConverter = getElementConverter(source, (Class<? extends Collection<?>>) targetClass);
 		Collection sourceCollection = (Collection) source;
-		Iterator it = sourceCollection.iterator();
-		while (it.hasNext()) {
-			Object value = it.next();
+		for (Object value : sourceCollection) {
 			if (elementConverter != null) {
 				value = elementConverter.execute(value);
 			}

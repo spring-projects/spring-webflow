@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.expression.el;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.el.ArrayELResolver;
@@ -91,9 +90,7 @@ public class DefaultELResolver extends CompositeELResolver {
 
 	private void configureResolvers(List<? extends ELResolver> customResolvers) {
 		if (customResolvers != null) {
-			Iterator<? extends ELResolver> i = customResolvers.iterator();
-			while (i.hasNext()) {
-				ELResolver resolver = i.next();
+			for (ELResolver resolver : customResolvers) {
 				add(resolver);
 			}
 		}

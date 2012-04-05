@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -88,9 +87,7 @@ class ConditionalFlowExecutionListenerHolder {
 	 * @return true if yes, false otherwise
 	 */
 	public boolean listenerAppliesTo(FlowDefinition flowDefinition) {
-		Iterator<FlowExecutionListenerCriteria> it = criteriaSet.iterator();
-		while (it.hasNext()) {
-			FlowExecutionListenerCriteria criteria = it.next();
+		for (FlowExecutionListenerCriteria criteria : criteriaSet) {
 			if (criteria.appliesTo(flowDefinition)) {
 				return true;
 			}

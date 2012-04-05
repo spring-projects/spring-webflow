@@ -16,7 +16,6 @@
 package org.springframework.binding.mapping.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -62,9 +61,7 @@ public class DefaultMapper implements Mapper {
 					+ target.getClass().getName() + "]");
 		}
 		DefaultMappingContext context = new DefaultMappingContext(source, target);
-		Iterator<DefaultMapping> it = mappings.iterator();
-		while (it.hasNext()) {
-			DefaultMapping mapping = it.next();
+		for (DefaultMapping mapping : mappings) {
 			mapping.map(context);
 		}
 		MappingResults results = context.getMappingResults();

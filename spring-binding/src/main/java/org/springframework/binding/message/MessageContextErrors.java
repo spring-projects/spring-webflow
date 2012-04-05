@@ -17,7 +17,6 @@ package org.springframework.binding.message;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.binding.expression.Expression;
@@ -100,9 +99,7 @@ public class MessageContextErrors extends AbstractErrors {
 	}
 
 	public void addAllErrors(Errors errors) {
-		Iterator<ObjectError> it = errors.getAllErrors().iterator();
-		while (it.hasNext()) {
-			ObjectError error = it.next();
+		for (ObjectError error : errors.getAllErrors()) {
 			MessageBuilder builder = new MessageBuilder().error().codes(error.getCodes()).args(error.getArguments())
 					.defaultText(error.getDefaultMessage());
 			if (error instanceof FieldError) {

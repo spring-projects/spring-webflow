@@ -16,7 +16,6 @@
 package org.springframework.webflow.engine;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -279,9 +278,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @return true if yes, false otherwise
 	 */
 	public boolean containsState(String stateId) {
-		Iterator<State> it = states.iterator();
-		while (it.hasNext()) {
-			State state = it.next();
+		for (State state : states) {
 			if (state.getId().equals(stateId)) {
 				return true;
 			}
@@ -337,9 +334,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		if (!StringUtils.hasText(stateId)) {
 			throw new IllegalArgumentException("The specified stateId is invalid: state identifiers must be non-blank");
 		}
-		Iterator<State> it = states.iterator();
-		while (it.hasNext()) {
-			State state = it.next();
+		for (State state : states) {
 			if (state.getId().equals(stateId)) {
 				return state;
 			}
@@ -356,9 +351,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	public String[] getStateIds() {
 		String[] stateIds = new String[getStateCount()];
 		int i = 0;
-		Iterator<State> it = states.iterator();
-		while (it.hasNext()) {
-			stateIds[i++] = it.next().getId();
+		for (State state : states) {
+			stateIds[i++] = state.getId();
 		}
 		return stateIds;
 	}
@@ -616,9 +610,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	private void createVariables(RequestContext context) {
-		Iterator<FlowVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			FlowVariable variable = it.next();
+		for (FlowVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating " + variable);
 			}
@@ -627,9 +619,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	public void restoreVariables(RequestContext context) {
-		Iterator<FlowVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			FlowVariable variable = it.next();
+		for (FlowVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restoring " + variable);
 			}

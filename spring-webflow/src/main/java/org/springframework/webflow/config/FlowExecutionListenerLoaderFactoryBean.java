@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.config;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.FactoryBean;
@@ -60,9 +59,7 @@ class FlowExecutionListenerLoaderFactoryBean implements FactoryBean<FlowExecutio
 
 	public void afterPropertiesSet() {
 		listenerLoader = new ConditionalFlowExecutionListenerLoader();
-		Iterator<Map.Entry<FlowExecutionListener, String>> it = listenersWithCriteria.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<FlowExecutionListener, String> entry = it.next();
+		for (Map.Entry<FlowExecutionListener, String> entry : listenersWithCriteria.entrySet()) {
 			FlowExecutionListener listener = entry.getKey();
 			String criteria = entry.getValue();
 			listenerLoader.addListener(listener, listenerCriteriaFactory.getListenerCriteria(criteria));

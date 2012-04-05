@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
@@ -37,7 +36,6 @@ import org.springframework.util.StringUtils;
  * {@link Renderer} for the {@code <sf:commandButton>} tag.
  * 
  * @author Jeremy Grelle
- * 
  */
 public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer {
 
@@ -46,17 +44,13 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 	private static String INPUT_TAG_NAME = "input";
 
 	static {
-		List<String> tempList = new ArrayList<String>();
-		tempList.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
-		tempList.addAll(Arrays.asList(HTML.BUTTON_ATTRIBUTES));
-		tempList.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
-		tempList.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
-		tempList.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
-		ATTRIBUTES_TO_RENDER = new String[tempList.size()];
-		ListIterator<String> i = tempList.listIterator();
-		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER[i.nextIndex()] = i.next();
-		}
+		List<String> attributes = new ArrayList<String>();
+		attributes.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
+		attributes.addAll(Arrays.asList(HTML.BUTTON_ATTRIBUTES));
+		attributes.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
+		attributes.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
+		attributes.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
+		ATTRIBUTES_TO_RENDER = attributes.toArray(new String[attributes.size()]);
 	}
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;

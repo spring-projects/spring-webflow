@@ -196,9 +196,7 @@ public class AjaxTilesView extends TilesView {
 		if (attributeContext.getCascadedAttributeNames() != null) {
 			attributeNames.addAll(attributeContext.getCascadedAttributeNames());
 		}
-		Iterator<String> iterator = attributeNames.iterator();
-		while (iterator.hasNext()) {
-			String name = iterator.next();
+		for (String name : attributeNames) {
 			Attribute attr = attributeContext.getAttribute(name);
 			resultMap.put(name, attr);
 		}

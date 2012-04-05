@@ -108,9 +108,8 @@ public class TransitionSet implements Iterable<Transition> {
 	public TransitionCriteria[] getTransitionCriterias() {
 		TransitionCriteria[] criterias = new TransitionCriteria[transitions.size()];
 		int i = 0;
-		Iterator<Transition> it = transitions.iterator();
-		while (it.hasNext()) {
-			criterias[i++] = it.next().getMatchingCriteria();
+		for (Transition transition : transitions) {
+			criterias[i++] = transition.getMatchingCriteria();
 		}
 		return criterias;
 	}
@@ -121,9 +120,7 @@ public class TransitionSet implements Iterable<Transition> {
 	 * @return the transition, or null if no transition matches
 	 */
 	public Transition getTransition(RequestContext context) {
-		Iterator<Transition> it = transitions.iterator();
-		while (it.hasNext()) {
-			Transition transition = it.next();
+		for (Transition transition : transitions) {
 			if (transition.matches(context)) {
 				return transition;
 			}

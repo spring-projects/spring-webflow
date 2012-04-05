@@ -16,7 +16,6 @@
 package org.springframework.webflow.engine.model;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -92,40 +91,41 @@ public abstract class AbstractModel implements Model {
 	 * @param addAtEnd if true new items will be added at the end of the list, otherwise the beginning
 	 * @return the merged list
 	 */
-	@SuppressWarnings("unchecked")
 	protected <T extends Model> LinkedList<T> merge(LinkedList<T> child, LinkedList<T> parent, boolean addAtEnd) {
 		if (child == null) {
-			if (parent == null) {
-				return null;
-			} else {
-				return copyList(parent);
-			}
-		} else if (parent == null) {
+			return copyList(parent);
+		}
+		if (parent == null) {
 			return child;
+		}
+		if (!addAtEnd) {
+			parent = new LinkedList<T>(parent);
+			Collections.reverse(parent);
+		}
+		for (T element : parent) {
+			if (!mergeElement(child, element)) {
+				addElement(child, element, addAtEnd);
+			}
+		}
+		return child;
+	}
+
+	private <T extends Model> boolean mergeElement(LinkedList<T> child, T element) {
+		for (T childElement : child) {
+			if (childElement.isMergeableWith(element)) {
+				childElement.merge(element);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Model> void addElement(LinkedList<T> child, T element, boolean addAtEnd) {
+		if (addAtEnd) {
+			child.addLast((T) element.createCopy());
 		} else {
-			if (!addAtEnd) {
-				parent = new LinkedList<T>(parent);
-				Collections.reverse(parent);
-			}
-			for (Iterator<T> parentIt = parent.iterator(); parentIt.hasNext();) {
-				Model parentElement = parentIt.next();
-				boolean matchFound = false;
-				for (Iterator<T> childIt = child.iterator(); !matchFound && childIt.hasNext();) {
-					Model childElement = childIt.next();
-					if (childElement.isMergeableWith(parentElement)) {
-						matchFound = true;
-						childElement.merge(parentElement);
-					}
-				}
-				if (!matchFound) {
-					if (addAtEnd) {
-						child.addLast((T) parentElement.createCopy());
-					} else {
-						child.addFirst((T) parentElement.createCopy());
-					}
-				}
-			}
-			return child;
+			child.addFirst((T) element.createCopy());
 		}
 	}
 

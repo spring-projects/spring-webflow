@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,11 +97,9 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 * @return the holder, or null if not found
 	 */
 	private ConditionalFlowExecutionListenerHolder getHolder(FlowExecutionListener listener) {
-		Iterator<ConditionalFlowExecutionListenerHolder> it = listeners.iterator();
-		while (it.hasNext()) {
-			ConditionalFlowExecutionListenerHolder next = it.next();
-			if (next.getListener().equals(listener)) {
-				return next;
+		for (ConditionalFlowExecutionListenerHolder holder : listeners) {
+			if (holder.getListener().equals(listener)) {
+				return holder;
 			}
 		}
 		return null;

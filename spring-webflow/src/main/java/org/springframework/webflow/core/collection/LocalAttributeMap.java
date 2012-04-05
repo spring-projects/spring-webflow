@@ -21,7 +21,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.binding.collection.MapAccessor;
@@ -243,10 +242,9 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 		if (attributes == null) {
 			return this;
 		}
-		Iterator<String> it = attributes.asMap().keySet().iterator();
 		Map<String, V> internal = getMapInternal();
-		while (it.hasNext()) {
-			internal.remove(it.next());
+		for (String attribute : attributes.asMap().keySet()) {
+			internal.remove(attribute);
 		}
 		return this;
 	}

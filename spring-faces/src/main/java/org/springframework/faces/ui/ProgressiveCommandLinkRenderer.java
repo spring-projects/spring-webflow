@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
@@ -58,24 +57,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	private static String TAG_NAME_WHEN_DISABLED = "span";
 
 	static {
-
-		List<String> tempList = new ArrayList<String>();
-		tempList.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
-		tempList.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
-		tempList.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
-		tempList.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
-		ATTRIBUTES_TO_RENDER_WHEN_DISABLED = new String[tempList.size()];
-		ListIterator<String> i = tempList.listIterator();
-		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER_WHEN_DISABLED[i.nextIndex()] = i.next();
-		}
-
-		tempList.addAll(Arrays.asList(HTML.ANCHOR_ATTRIBUTES));
-		ATTRIBUTES_TO_RENDER = new String[tempList.size()];
-		i = tempList.listIterator();
-		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER[i.nextIndex()] = i.next();
-		}
+		List<String> attributes = new ArrayList<String>();
+		attributes.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
+		attributes.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
+		attributes.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
+		attributes.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
+		ATTRIBUTES_TO_RENDER_WHEN_DISABLED = attributes.toArray(new String[attributes.size()]);
+		attributes.addAll(Arrays.asList(HTML.ANCHOR_ATTRIBUTES));
+		ATTRIBUTES_TO_RENDER = attributes.toArray(new String[attributes.size()]);
 	}
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;

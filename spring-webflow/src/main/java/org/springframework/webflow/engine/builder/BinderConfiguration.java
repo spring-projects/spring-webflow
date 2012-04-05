@@ -1,6 +1,5 @@
 package org.springframework.webflow.engine.builder;
 
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -40,9 +39,7 @@ public class BinderConfiguration {
 	 * @return the binding
 	 */
 	public Binding getBinding(String name) {
-		Iterator<Binding> it = bindings.iterator();
-		while (it.hasNext()) {
-			Binding binding = it.next();
+		for (Binding binding : bindings) {
 			if (name.equals(binding.getProperty())) {
 				return binding;
 			}

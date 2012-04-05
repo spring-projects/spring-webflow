@@ -18,7 +18,6 @@ package org.springframework.faces.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -266,9 +265,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 		}
 		boolean abort = false;
 		int phaseIdOrdinal = phaseId.getOrdinal();
-		Iterator<FacesEvent> i = events.iterator();
-		while (i.hasNext()) {
-			FacesEvent event = i.next();
+		for (FacesEvent event : events) {
 			int ordinal = event.getPhaseId().getOrdinal();
 			if (ordinal == PhaseId.ANY_PHASE.getOrdinal() || ordinal == phaseIdOrdinal) {
 				UIComponent source = event.getComponent();
