@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
@@ -58,24 +57,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	private static String TAG_NAME_WHEN_DISABLED = "span";
 
 	static {
-
-		List<String> tempList = new ArrayList<String>();
-		tempList.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
-		tempList.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
-		tempList.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
-		tempList.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
-		ATTRIBUTES_TO_RENDER_WHEN_DISABLED = new String[tempList.size()];
-		ListIterator<String> i = tempList.listIterator();
-		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER_WHEN_DISABLED[i.nextIndex()] = i.next();
-		}
-
-		tempList.addAll(Arrays.asList(HTML.ANCHOR_ATTRIBUTES));
-		ATTRIBUTES_TO_RENDER = new String[tempList.size()];
-		i = tempList.listIterator();
-		while (i.hasNext()) {
-			ATTRIBUTES_TO_RENDER[i.nextIndex()] = i.next();
-		}
+		List<String> attributes = new ArrayList<String>();
+		attributes.addAll(Arrays.asList(HTML.STANDARD_ATTRIBUTES));
+		attributes.addAll(Arrays.asList(HTML.COMMON_ELEMENT_EVENTS));
+		attributes.addAll(Arrays.asList(HTML.KEYBOARD_EVENTS));
+		attributes.addAll(Arrays.asList(HTML.MOUSE_EVENTS));
+		ATTRIBUTES_TO_RENDER_WHEN_DISABLED = attributes.toArray(new String[attributes.size()]);
+		attributes.addAll(Arrays.asList(HTML.ANCHOR_ATTRIBUTES));
+		ATTRIBUTES_TO_RENDER = attributes.toArray(new String[attributes.size()]);
 	}
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;
@@ -123,7 +112,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 				button.getAttributes().putAll(component.getAttributes());
 				BeanUtils.copyProperties(component, button);
 				button.setRendererType("spring.faces.ProgressiveCommandButtonRenderer");
-				button.setAjaxEnabled(Boolean.FALSE);
+				button.setAjaxEnabled(false);
 				button.encodeBegin(context);
 				button.encodeChildren(context);
 				button.encodeEnd(context);
@@ -160,7 +149,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		} else {
 			super.encodeEnd(context, component);
 
-			StringBuffer decorationParams = new StringBuffer();
+			StringBuilder decorationParams = new StringBuilder();
 			decorationParams.append("{");
 			decorationParams.append("elementId : '" + component.getClientId(context) + "'");
 
@@ -183,7 +172,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			}
 
 			decorationParams.append("}");
-			StringBuffer advisorScript = new StringBuffer();
+			StringBuilder advisorScript = new StringBuilder();
 			advisorScript.append("Spring.addDecoration(new Spring.CommandLinkDecoration(" + decorationParams.toString()
 					+ "));");
 			ResourceHelper.beginScriptBlock(context);
@@ -220,7 +209,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			return "";
 		} else {
 			String params = encodeParamsAsArray(context, component);
-			StringBuffer onclick = new StringBuffer();
+			StringBuilder onclick = new StringBuilder();
 			onclick.append("this.submitFormFromLink('" + RendererUtils.getFormId(context, component) + "','"
 					+ component.getClientId(context) + "', " + params + "); return false;");
 			return onclick.toString();
@@ -228,7 +217,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	}
 
 	protected String encodeParamsAsArray(FacesContext context, UIComponent component) {
-		StringBuffer paramArray = new StringBuffer();
+		StringBuilder paramArray = new StringBuilder();
 		paramArray.append("[");
 		for (int i = 0; i < component.getChildCount(); i++) {
 			if (component.getChildren().get(i) instanceof UIParameter) {

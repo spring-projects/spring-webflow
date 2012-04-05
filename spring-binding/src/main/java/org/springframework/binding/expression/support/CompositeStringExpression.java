@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,16 +36,16 @@ public class CompositeStringExpression implements Expression {
 	 * @param expressions the ordered set of expressions that when evaluated will have their results stringed together
 	 * to build the composite string
 	 */
-	public CompositeStringExpression(Expression[] expressions) {
+	public CompositeStringExpression(Expression... expressions) {
 		this.expressions = expressions;
 	}
 
 	public Object getValue(Object context) throws EvaluationException {
-		StringBuffer buffer = new StringBuffer(128);
+		StringBuilder value = new StringBuilder(128);
 		for (Expression expression : expressions) {
-			buffer.append(expression.getValue(context));
+			value.append(expression.getValue(context));
 		}
-		return buffer.toString();
+		return value.toString();
 	}
 
 	public void setValue(Object context, Object value) throws EvaluationException {

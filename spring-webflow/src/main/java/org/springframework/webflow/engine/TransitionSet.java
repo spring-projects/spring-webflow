@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class TransitionSet implements Iterable<Transition> {
 	 * @param transitions the transitions to add
 	 * @return true if this set's contents changed as a result of the add operation
 	 */
-	public boolean addAll(Transition[] transitions) {
+	public boolean addAll(Transition... transitions) {
 		return CollectionUtils.addAllNoDuplicates(this.transitions, transitions);
 	}
 
@@ -108,9 +108,8 @@ public class TransitionSet implements Iterable<Transition> {
 	public TransitionCriteria[] getTransitionCriterias() {
 		TransitionCriteria[] criterias = new TransitionCriteria[transitions.size()];
 		int i = 0;
-		Iterator<Transition> it = transitions.iterator();
-		while (it.hasNext()) {
-			criterias[i++] = it.next().getMatchingCriteria();
+		for (Transition transition : transitions) {
+			criterias[i++] = transition.getMatchingCriteria();
 		}
 		return criterias;
 	}
@@ -121,9 +120,7 @@ public class TransitionSet implements Iterable<Transition> {
 	 * @return the transition, or null if no transition matches
 	 */
 	public Transition getTransition(RequestContext context) {
-		Iterator<Transition> it = transitions.iterator();
-		while (it.hasNext()) {
-			Transition transition = it.next();
+		for (Transition transition : transitions) {
 			if (transition.matches(context)) {
 				return transition;
 			}

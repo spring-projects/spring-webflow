@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.springframework.faces.mvc;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.FactoryFinder;
@@ -89,11 +88,7 @@ public class JsfView extends AbstractUrlBasedView {
 	}
 
 	private void populateRequestMap(FacesContext facesContext, Map<String, Object> model) {
-		Iterator<String> i = model.keySet().iterator();
-		while (i.hasNext()) {
-			String key = i.next().toString();
-			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));
-		}
+		facesContext.getExternalContext().getRequestMap().putAll(model);
 	}
 
 	private Lifecycle createFacesLifecycle() {

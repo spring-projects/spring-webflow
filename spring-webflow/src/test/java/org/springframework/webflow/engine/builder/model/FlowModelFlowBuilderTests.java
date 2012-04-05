@@ -110,7 +110,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertNotNull(flow.getAttributes().get("persistenceContext"));
-		assertTrue(((Boolean) flow.getAttributes().get("persistenceContext")).booleanValue());
+		assertTrue((Boolean) flow.getAttributes().get("persistenceContext"));
 	}
 
 	public void testFlowInputOutputMapping() {

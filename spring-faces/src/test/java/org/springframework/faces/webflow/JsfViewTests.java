@@ -139,7 +139,7 @@ public class JsfViewTests extends TestCase {
 	public final void testProcessUserEvent_Restored_NoEvent() {
 
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
-				Boolean.FALSE);
+				false);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -165,7 +165,7 @@ public class JsfViewTests extends TestCase {
 	public final void testProcessUserEvent_Restored_Ajax_NoEvent() {
 
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
-				Boolean.FALSE);
+				false);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
@@ -191,7 +191,7 @@ public class JsfViewTests extends TestCase {
 	public final void testProcessUserEvent_Restored_EventSignaled() {
 
 		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
-				Boolean.FALSE);
+				false);
 		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 

@@ -83,7 +83,7 @@ public class FlowActionListenerTests extends TestCase {
 			return String.class;
 		}
 
-		public Object invoke(FacesContext context, Object[] args) throws EvaluationException, MethodNotFoundException {
+		public Object invoke(FacesContext context, Object... args) throws EvaluationException, MethodNotFoundException {
 			return this.result;
 		}
 

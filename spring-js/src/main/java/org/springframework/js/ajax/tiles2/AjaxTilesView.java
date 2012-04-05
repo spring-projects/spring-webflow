@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -196,9 +196,7 @@ public class AjaxTilesView extends TilesView {
 		if (attributeContext.getCascadedAttributeNames() != null) {
 			attributeNames.addAll(attributeContext.getCascadedAttributeNames());
 		}
-		Iterator<String> iterator = attributeNames.iterator();
-		while (iterator.hasNext()) {
-			String name = iterator.next();
+		for (String name : attributeNames) {
 			Attribute attr = attributeContext.getAttribute(name);
 			resultMap.put(name, attr);
 		}

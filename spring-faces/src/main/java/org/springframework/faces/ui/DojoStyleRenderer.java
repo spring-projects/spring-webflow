@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,12 +42,12 @@ public class DojoStyleRenderer extends Renderer {
 
 		if (component.getAttributes().containsKey(THEME_PATH_ATTR)) {
 			themePath = (String) component.getAttributes().get(THEME_PATH_ATTR);
-			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_PATH_SET, Boolean.TRUE);
+			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_PATH_SET, true);
 		}
 
 		if (component.getAttributes().containsKey(THEME_ATTR)) {
 			theme = (String) component.getAttributes().get(THEME_ATTR);
-			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_SET, Boolean.TRUE);
+			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_SET, true);
 		}
 
 		ResourceHelper.renderStyleLink(context, themePath + theme + "/" + theme + ".css");

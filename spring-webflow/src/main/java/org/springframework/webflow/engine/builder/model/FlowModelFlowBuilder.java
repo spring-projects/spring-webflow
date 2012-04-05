@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -338,9 +337,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		flowContext.getBeanFactory().registerScope("conversation", new ConversationScope());
 		Resource flowResource = flowModelHolder.getFlowModelResource();
 		flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
-		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
-		}
+		AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
 		registerFlowBeans(flowContext.getBeanFactory());
 		registerMessageSource(flowContext, flowResource);
@@ -349,7 +346,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private boolean isFlowInDevelopment() {
-		return getContext().getFlowAttributes().getBoolean("development", Boolean.FALSE).booleanValue();
+		return getContext().getFlowAttributes().getBoolean("development", false);
 	}
 
 	private void registerMessageSource(GenericApplicationContext flowContext, Resource flowResource) {
@@ -516,8 +513,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private void parseAndSetMappingRequired(AbstractMappingModel mappingModel, DefaultMapping mapping) {
 		if (StringUtils.hasText(mappingModel.getRequired())) {
-			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(mappingModel.getRequired()))
-					.booleanValue();
+			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(mappingModel.getRequired()));
 			mapping.setRequired(required);
 		}
 	}
@@ -530,7 +526,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 		boolean popup = false;
 		if (StringUtils.hasText(state.getPopup())) {
-			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup())).booleanValue();
+			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup()));
 		}
 		MutableAttributeMap<Object> attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
@@ -634,12 +630,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			BinderConfiguration binderConfiguration = new BinderConfiguration();
 			List<BindingModel> bindings = binderModel.getBindings();
 			for (BindingModel bindingModel : bindings) {
-				boolean required;
+				boolean required = false;
 				if (StringUtils.hasText(bindingModel.getRequired())) {
-					required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()))
-							.booleanValue();
-				} else {
-					required = false;
+					required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()));
 				}
 				Binding binding = new Binding(bindingModel.getProperty(), bindingModel.getConverter(), required);
 				binderConfiguration.addBinding(binding);
@@ -918,7 +911,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private void parseAndPutPersistenceContext(PersistenceContextModel persistenceContext,
 			MutableAttributeMap<Object> attributes) {
 		if (persistenceContext != null) {
-			attributes.put("persistenceContext", Boolean.TRUE);
+			attributes.put("persistenceContext", true);
 		}
 	}
 

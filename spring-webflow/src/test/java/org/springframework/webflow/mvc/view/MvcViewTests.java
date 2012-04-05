@@ -612,7 +612,7 @@ public class MvcViewTests extends TestCase {
 		BindBean bindBean = new ValidatingBindBean();
 		StaticExpression modelObject = new StaticExpression(bindBean);
 		modelObject.setExpressionString("bindBean");
-		context.getMockFlowExecutionContext().putAttribute("validateOnBindingErrors", Boolean.FALSE);
+		context.getMockFlowExecutionContext().putAttribute("validateOnBindingErrors", false);
 		context.getCurrentState().getAttributes().put("model", modelObject);
 		context.getFlowScope().put("bindBean", bindBean);
 		context.getMockExternalContext().setNativeContext(new MockServletContext());
@@ -666,7 +666,7 @@ public class MvcViewTests extends TestCase {
 
 	public static class BindBean {
 		private String stringProperty;
-		private Integer integerProperty = new Integer(3);
+		private Integer integerProperty = 3;
 		private Date dateProperty;
 		private boolean booleanProperty = true;
 		private NestedBean beanProperty;

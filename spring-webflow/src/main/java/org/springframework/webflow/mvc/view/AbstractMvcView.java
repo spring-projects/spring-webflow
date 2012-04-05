@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -303,7 +302,7 @@ public abstract class AbstractMvcView implements View {
 		if (transition == null) {
 			return true;
 		}
-		return transition.getAttributes().getBoolean("bind", Boolean.TRUE).booleanValue();
+		return transition.getAttributes().getBoolean("bind", true);
 	}
 
 	/**
@@ -387,9 +386,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param model the model
 	 */
 	protected void addModelBindings(DefaultMapper mapper, Set<String> parameterNames, Object model) {
-		Iterator<Binding> it = binderConfiguration.getBindings().iterator();
-		while (it.hasNext()) {
-			Binding binding = it.next();
+		for (Binding binding : binderConfiguration.getBindings()) {
 			String parameterName = binding.getProperty();
 			if (parameterNames.contains(parameterName)) {
 				addMapping(mapper, binding, model);
@@ -523,12 +520,12 @@ public abstract class AbstractMvcView implements View {
 	protected boolean shouldValidate(Object model, TransitionDefinition transition) {
 		Boolean validateAttribute = getValidateAttribute(transition);
 		if (validateAttribute != null) {
-			return validateAttribute.booleanValue();
+			return validateAttribute;
 		} else {
 			AttributeMap<Object> flowExecutionAttributes = requestContext.getFlowExecutionContext().getAttributes();
 			Boolean validateOnBindingErrors = flowExecutionAttributes.getBoolean("validateOnBindingErrors");
 			if (validateOnBindingErrors != null) {
-				if (!validateOnBindingErrors.booleanValue() && mappingResults.hasErrorResults()) {
+				if (!validateOnBindingErrors && mappingResults.hasErrorResults()) {
 					return false;
 				}
 			}
@@ -580,7 +577,7 @@ public abstract class AbstractMvcView implements View {
 	private Object getEmptyValue(Class<?> fieldType) {
 		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
 			// Special handling of boolean property.
-			return Boolean.FALSE;
+			return false;
 		} else if (fieldType != null && fieldType.isArray()) {
 			// Special handling of array property.
 			return Array.newInstance(fieldType.getComponentType(), 0);

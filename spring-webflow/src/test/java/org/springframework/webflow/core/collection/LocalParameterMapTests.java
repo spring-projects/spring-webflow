@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetWithDefaultAndConversion() {
-		Object value = parameterMap.get("bogus", Integer.class, new Integer(1));
+		Object value = parameterMap.get("bogus", Integer.class, 1);
 		assertEquals(new Integer(1), value);
 	}
 
@@ -226,7 +226,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetBooleanWithDefault() {
-		Boolean value = parameterMap.getBoolean("bogus", Boolean.TRUE);
+		Boolean value = parameterMap.getBoolean("bogus", true);
 		assertEquals(Boolean.TRUE, value);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,9 +49,9 @@ public class ResultObjectEventFactoryTests extends TestCase {
 	}
 
 	public void testBooleanResult() {
-		Event result = factory.createResultEvent(this, Boolean.TRUE, context);
+		Event result = factory.createResultEvent(this, true, context);
 		assertEquals("yes", result.getId());
-		result = factory.createResultEvent(this, Boolean.FALSE, context);
+		result = factory.createResultEvent(this, false, context);
 		assertEquals("no", result.getId());
 	}
 

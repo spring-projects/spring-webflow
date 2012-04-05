@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.springframework.webflow.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.security.access.AccessDecisionManager;
@@ -118,9 +117,8 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 */
 	protected Collection<ConfigAttribute> getConfigAttributes(SecurityRule rule) {
 		List<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
-		Iterator<String> attributeIt = rule.getAttributes().iterator();
-		while (attributeIt.hasNext()) {
-			configAttributes.add(new SecurityConfig(attributeIt.next()));
+		for (String attribute : rule.getAttributes()) {
+			configAttributes.add(new SecurityConfig(attribute));
 		}
 		return configAttributes;
 	}

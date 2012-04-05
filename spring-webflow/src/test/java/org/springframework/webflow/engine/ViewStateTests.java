@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(Boolean.TRUE);
+		state.setRedirect(true);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlashScope().put("foo", "bar");
 		state.enter(context);
@@ -123,7 +123,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(Boolean.FALSE);
+		state.setRedirect(false);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlashScope().put("foo", "bar");
 		state.enter(context);
@@ -136,7 +136,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(Boolean.TRUE);
+		state.setRedirect(true);
 		state.setPopup(true);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlashScope().put("foo", "bar");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.binding.collection.MapAccessor;
@@ -243,10 +242,9 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 		if (attributes == null) {
 			return this;
 		}
-		Iterator<String> it = attributes.asMap().keySet().iterator();
 		Map<String, V> internal = getMapInternal();
-		while (it.hasNext()) {
-			internal.remove(it.next());
+		for (String attribute : attributes.asMap().keySet()) {
+			internal.remove(attribute);
 		}
 		return this;
 	}

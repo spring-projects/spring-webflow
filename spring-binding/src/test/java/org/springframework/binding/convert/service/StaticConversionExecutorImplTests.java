@@ -51,7 +51,7 @@ public class StaticConversionExecutorImplTests extends TestCase {
 
 	public void testIllegalType() {
 		try {
-			conversionExecutor.execute(new StringBuffer());
+			conversionExecutor.execute(new StringBuilder());
 			fail();
 		} catch (ConversionExecutionException e) {
 			// expected

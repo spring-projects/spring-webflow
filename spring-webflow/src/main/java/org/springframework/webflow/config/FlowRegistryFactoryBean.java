@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,14 +85,14 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	 * Flow definitions defined in external files that should be registered in the registry produced by this factory
 	 * bean.
 	 */
-	public void setFlowLocations(FlowLocation[] flowLocations) {
+	public void setFlowLocations(FlowLocation... flowLocations) {
 		this.flowLocations = flowLocations;
 	}
 
 	/**
 	 * Resolvable path patterns to flows to register in the registry produced by this factory bean.
 	 */
-	public void setFlowLocationPatterns(String[] flowLocationPatterns) {
+	public void setFlowLocationPatterns(String... flowLocationPatterns) {
 		this.flowLocationPatterns = flowLocationPatterns;
 	}
 
@@ -100,7 +100,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	 * Java {@link FlowBuilder flow builder} classes that should be registered in the registry produced by this factory
 	 * bean.
 	 */
-	public void setFlowBuilders(FlowBuilderInfo[] flowBuilders) {
+	public void setFlowBuilders(FlowBuilderInfo... flowBuilders) {
 		this.flowBuilders = flowBuilders;
 	}
 
@@ -214,7 +214,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		MutableAttributeMap<Object> flowAttributes = null;
 		if (flowBuilderServices.getDevelopment()) {
 			flowAttributes = new LocalAttributeMap<Object>(1 + attributes.size(), 1);
-			flowAttributes.put("development", Boolean.TRUE);
+			flowAttributes.put("development", true);
 		}
 		if (!attributes.isEmpty()) {
 			if (flowAttributes == null) {

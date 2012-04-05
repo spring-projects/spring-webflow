@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,11 +97,9 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 * @return the holder, or null if not found
 	 */
 	private ConditionalFlowExecutionListenerHolder getHolder(FlowExecutionListener listener) {
-		Iterator<ConditionalFlowExecutionListenerHolder> it = listeners.iterator();
-		while (it.hasNext()) {
-			ConditionalFlowExecutionListenerHolder next = it.next();
-			if (next.getListener().equals(listener)) {
-				return next;
+		for (ConditionalFlowExecutionListenerHolder holder : listeners) {
+			if (holder.getListener().equals(listener)) {
+				return holder;
 			}
 		}
 		return null;

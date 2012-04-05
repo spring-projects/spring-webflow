@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -243,7 +243,7 @@ class RequestControlContextImpl implements RequestControlContext {
 			return true;
 		}
 		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
-		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
+		return redirectOnPause == null ? false : redirectOnPause;
 	}
 
 	public boolean getRedirectInSameState() {
@@ -251,7 +251,7 @@ class RequestControlContextImpl implements RequestControlContext {
 			return true;
 		}
 		Boolean redirectInSameState = flowExecution.getAttributes().getBoolean("redirectInSameState");
-		return (redirectInSameState != null) ? redirectInSameState.booleanValue() : getRedirectOnPause();
+		return (redirectInSameState != null) ? redirectInSameState : getRedirectOnPause();
 	}
 
 	public boolean getEmbeddedMode() {

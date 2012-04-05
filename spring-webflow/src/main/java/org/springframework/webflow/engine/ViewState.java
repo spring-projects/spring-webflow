@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.springframework.webflow.engine;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -97,7 +96,7 @@ public class ViewState extends TransitionableState {
 	 * Adds a set of view variables.
 	 * @param variables the variables
 	 */
-	public void addVariables(ViewVariable[] variables) {
+	public void addVariables(ViewVariable... variables) {
 		for (ViewVariable variable : variables) {
 			addVariable(variable);
 		}
@@ -122,7 +121,7 @@ public class ViewState extends TransitionableState {
 	 * Returns whether this view state should request a flow execution redirect when entered.
 	 */
 	public boolean getRedirect() {
-		return (redirect != null) ? redirect.booleanValue() : false;
+		return (redirect == null) ? false : redirect;
 	}
 
 	/**
@@ -254,9 +253,7 @@ public class ViewState extends TransitionableState {
 	// internal helpers
 
 	private void createVariables(RequestContext context) {
-		Iterator<ViewVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			ViewVariable variable = it.next();
+		for (ViewVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating " + variable);
 			}
@@ -266,7 +263,7 @@ public class ViewState extends TransitionableState {
 
 	private boolean shouldRedirect(RequestControlContext context) {
 		if (redirect != null) {
-			return redirect.booleanValue();
+			return redirect;
 		}
 		if (context.getExternalContext().isAjaxRequest() && context.getEmbeddedMode()) {
 			return false;
@@ -276,7 +273,7 @@ public class ViewState extends TransitionableState {
 
 	private boolean shouldRedirectInSameState(RequestControlContext context) {
 		if (redirect != null) {
-			return redirect.booleanValue();
+			return redirect;
 		}
 		if (context.getExternalContext().isAjaxRequest() && context.getEmbeddedMode()) {
 			return false;
@@ -308,12 +305,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void restoreVariables(RequestContext context) {
-		Iterator<ViewVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			ViewVariable variable = it.next();
+		for (ViewVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Restoring " + variable);
-
 			}
 			variable.restore(context);
 		}
@@ -336,12 +330,9 @@ public class ViewState extends TransitionableState {
 	}
 
 	private void destroyVariables(RequestContext context) {
-		Iterator<ViewVariable> it = variables.values().iterator();
-		while (it.hasNext()) {
-			ViewVariable variable = it.next();
+		for (ViewVariable variable : variables.values()) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Destroying " + variable);
-
 			}
 			variable.destroy(context);
 		}

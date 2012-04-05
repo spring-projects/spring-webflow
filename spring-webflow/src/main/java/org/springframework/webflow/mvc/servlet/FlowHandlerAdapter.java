@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 package org.springframework.webflow.mvc.servlet;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -241,16 +239,9 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			return null;
 		}
 		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>(parameterMap.size(), 1);
-		Iterator<Map.Entry<String, String[]>> it = parameterMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, String[]> entry = it.next();
-			String name = entry.getKey();
+		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 			String[] values = entry.getValue();
-			if (values.length == 1) {
-				inputMap.put(name, values[0]);
-			} else {
-				inputMap.put(name, values);
-			}
+			inputMap.put(entry.getKey(), values.length == 1 ? values[0] : values);
 		}
 		return inputMap;
 	}
@@ -432,7 +423,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		StringBuffer url = new StringBuffer(request.getContextPath());
+		StringBuilder url = new StringBuilder(request.getContextPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
@@ -442,7 +433,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		StringBuffer url = new StringBuffer(request.getContextPath());
+		StringBuilder url = new StringBuilder(request.getContextPath());
 		url.append(request.getServletPath());
 		if (!location.startsWith("/")) {
 			url.append('/');

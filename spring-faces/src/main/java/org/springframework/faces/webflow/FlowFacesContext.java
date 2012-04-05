@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,10 +148,7 @@ public class FlowFacesContext extends FacesContext {
 
 	public boolean getRenderResponse() {
 		Boolean renderResponse = context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
-		if (renderResponse == null) {
-			return false;
-		}
-		return renderResponse.booleanValue();
+		return (renderResponse == null ? false : renderResponse);
 	}
 
 	public boolean getResponseComplete() {
@@ -160,7 +157,7 @@ public class FlowFacesContext extends FacesContext {
 
 	public void renderResponse() {
 		// stored in flash scope to survive a redirect when transitioning from one view to another
-		context.getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
+		context.getFlashScope().put(RENDER_RESPONSE_KEY, true);
 	}
 
 	public void responseComplete() {

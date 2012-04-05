@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ public class ResultObjectBasedEventFactoryTests extends TestCase {
 	}
 
 	public void testBoolean() {
-		Event event = factory.createResultEvent(this, Boolean.TRUE, new MockRequestContext());
+		Event event = factory.createResultEvent(this, true, new MockRequestContext());
 		assertEquals(factory.getYesEventId(), event.getId());
-		event = factory.createResultEvent(this, Boolean.FALSE, new MockRequestContext());
+		event = factory.createResultEvent(this, false, new MockRequestContext());
 		assertEquals(factory.getNoEventId(), event.getId());
 	}
 

@@ -51,7 +51,7 @@ public class FlowExecutorImplTests extends TestCase {
 		execution.start(input, context);
 
 		execution.hasEnded();
-		EasyMock.expectLastCall().andReturn(Boolean.FALSE);
+		EasyMock.expectLastCall().andReturn(false);
 
 		MockFlowExecutionKey flowExecutionKey = new MockFlowExecutionKey("12345");
 		EasyMock.expect(execution.getKey()).andReturn(flowExecutionKey);
@@ -89,7 +89,7 @@ public class FlowExecutorImplTests extends TestCase {
 		execution.start(input, context);
 
 		execution.hasEnded();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.expect(execution.getDefinition()).andReturn(definition);
 		EasyMock.expect(definition.getId()).andReturn("foo");
@@ -121,7 +121,7 @@ public class FlowExecutorImplTests extends TestCase {
 		execution.resume(context);
 
 		execution.hasEnded();
-		EasyMock.expectLastCall().andReturn(Boolean.FALSE);
+		EasyMock.expectLastCall().andReturn(false);
 
 		repository.putFlowExecution(execution);
 
@@ -158,7 +158,7 @@ public class FlowExecutorImplTests extends TestCase {
 		execution.resume(context);
 
 		execution.hasEnded();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.expect(execution.getDefinition()).andReturn(definition);
 		EasyMock.expect(definition.getId()).andReturn("foo");

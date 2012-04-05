@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 			return true;
 		}
 		Boolean redirectOnPause = getMockFlowExecutionContext().getAttributes().getBoolean("alwaysRedirectOnPause");
-		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
+		return redirectOnPause == null ? false : redirectOnPause;
 	}
 
 	public boolean getRedirectInSameState() {
@@ -131,7 +131,7 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 		}
 		Boolean redirectInSameState = getMockFlowExecutionContext().getAttributes().getBoolean("redirectInSameState");
 		if (redirectInSameState != null) {
-			return redirectInSameState.booleanValue();
+			return redirectInSameState;
 		} else {
 			return getRedirectOnPause();
 		}

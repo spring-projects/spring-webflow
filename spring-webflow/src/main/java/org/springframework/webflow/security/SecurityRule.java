@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package org.springframework.webflow.security;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
+
+import org.springframework.util.StringUtils;
 
 /**
  * Encapsulates the rules for comparing security attributes
@@ -52,15 +52,7 @@ public class SecurityRule {
 	 * @return comma separated String
 	 */
 	public static String securityAttributesToCommaDelimitedList(Collection<?> attributes) {
-		StringBuffer attrs = new StringBuffer();
-		Iterator<?> attributeIt = attributes.iterator();
-		while (attributeIt.hasNext()) {
-			if (attrs.length() != 0) {
-				attrs.append(", ");
-			}
-			attrs.append(attributeIt.next());
-		}
-		return attrs.toString();
+		return StringUtils.collectionToDelimitedString(attributes, ", ");
 	}
 
 	/**
@@ -70,9 +62,8 @@ public class SecurityRule {
 	 */
 	public static Collection<String> commaDelimitedListToSecurityAttributes(String attributes) {
 		Collection<String> attrs = new HashSet<String>();
-		Iterator<String> attributeIt = Arrays.asList(attributes.split(",")).iterator();
-		while (attributeIt.hasNext()) {
-			String attribute = attributeIt.next().trim();
+		for (String attribute : attributes.split(",")) {
+			attribute = attribute.trim();
 			if (!"".equals(attribute)) {
 				attrs.add(attribute);
 			}

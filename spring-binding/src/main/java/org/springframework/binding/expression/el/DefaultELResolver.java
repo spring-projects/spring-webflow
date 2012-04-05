@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.binding.expression.el;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.el.ArrayELResolver;
@@ -91,9 +90,7 @@ public class DefaultELResolver extends CompositeELResolver {
 
 	private void configureResolvers(List<? extends ELResolver> customResolvers) {
 		if (customResolvers != null) {
-			Iterator<? extends ELResolver> i = customResolvers.iterator();
-			while (i.hasNext()) {
-				ELResolver resolver = i.next();
+			for (ELResolver resolver : customResolvers) {
 				add(resolver);
 			}
 		}

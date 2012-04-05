@@ -56,7 +56,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		group.addSnapshot(group.nextSnapshotId(), snapshot3);
 		assertEquals(2, group.getSnapshotCount());
 		try {
-			group.getSnapshot(new Integer(1));
+			group.getSnapshot(1);
 			fail("Should have failed");
 		} catch (SnapshotNotFoundException e) {
 
@@ -67,10 +67,10 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
 		group.addSnapshot(group.nextSnapshotId(), snapshot2);
 		assertEquals(2, group.getSnapshotCount());
-		group.removeSnapshot(new Integer(1));
+		group.removeSnapshot(1);
 		assertEquals(1, group.getSnapshotCount());
 		try {
-			group.getSnapshot(new Integer(1));
+			group.getSnapshot(1);
 			fail("Should have failed");
 		} catch (SnapshotNotFoundException e) {
 
@@ -87,15 +87,15 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 
 	public void testUpdateSnapshot() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
-		group.updateSnapshot(new Integer(1), snapshot2);
-		assertSame(snapshot2, group.getSnapshot(new Integer(1)));
+		group.updateSnapshot(1, snapshot2);
+		assertSame(snapshot2, group.getSnapshot(1));
 	}
 
 	public void testRemoveSnapshotDoesNotExist() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
-		group.removeSnapshot(new Integer(1));
+		group.removeSnapshot(1);
 		assertEquals(0, group.getSnapshotCount());
-		group.removeSnapshot(new Integer(1));
+		group.removeSnapshot(1);
 		assertEquals(0, group.getSnapshotCount());
 	}
 
@@ -109,7 +109,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 
 	public void testUpdateSnapshotDoesNotExist() {
 		assertEquals(0, group.getSnapshotCount());
-		group.updateSnapshot(new Integer(1), snapshot2);
+		group.updateSnapshot(1, snapshot2);
 		assertEquals(0, group.getSnapshotCount());
 	}
 

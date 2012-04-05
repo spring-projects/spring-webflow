@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class FlowExecutionExceptionHandlerSet {
 	 * @param exceptionHandlers the exception handlers to add
 	 * @return true if this set's contents changed as a result of the add operation
 	 */
-	public boolean addAll(FlowExecutionExceptionHandler[] exceptionHandlers) {
+	public boolean addAll(FlowExecutionExceptionHandler... exceptionHandlers) {
 		return CollectionUtils.addAllNoDuplicates(this.exceptionHandlers, exceptionHandlers);
 	}
 
@@ -105,9 +104,7 @@ public class FlowExecutionExceptionHandlerSet {
 	 * @return true if the exception was handled
 	 */
 	public boolean handleException(FlowExecutionException exception, RequestControlContext context) {
-		Iterator<FlowExecutionExceptionHandler> it = exceptionHandlers.iterator();
-		while (it.hasNext()) {
-			FlowExecutionExceptionHandler handler = it.next();
+		for (FlowExecutionExceptionHandler handler : exceptionHandlers) {
 			if (handler.canHandle(exception)) {
 				handler.handle(exception, context);
 				return true;

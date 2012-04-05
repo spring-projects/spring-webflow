@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class MethodKey implements Serializable {
 	 * @param methodName the method name
 	 * @param parameterTypes the method's parameter types, or <code>null</code> if the method has no parameters
 	 */
-	public MethodKey(Class<?> declaredType, String methodName, Class<?>[] parameterTypes) {
+	public MethodKey(Class<?> declaredType, String methodName, Class<?>... parameterTypes) {
 		Assert.notNull(declaredType, "The method's declared type is required");
 		Assert.notNull(methodName, "The method name is required");
 		this.declaredType = declaredType;
@@ -199,7 +199,7 @@ public class MethodKey implements Serializable {
 	 * Convenience method that returns the parameter types describing the signature of the method as a string.
 	 */
 	private String parameterTypesString() {
-		StringBuffer parameterTypesString = new StringBuffer();
+		StringBuilder parameterTypesString = new StringBuilder();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			if (parameterTypes[i] == null) {
 				parameterTypesString.append("<any>");

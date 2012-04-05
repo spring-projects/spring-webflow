@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public final class StaticFlowExecutionListenerLoader implements FlowExecutionLis
 	 * should not attempt to modify the passed in array as no deep copy is made.
 	 * @param listeners the listener array.
 	 */
-	public StaticFlowExecutionListenerLoader(FlowExecutionListener[] listeners) {
+	public StaticFlowExecutionListenerLoader(FlowExecutionListener... listeners) {
 		Assert.notNull(listeners, "The flow execution listener array is required");
 		this.listeners = listeners;
 	}

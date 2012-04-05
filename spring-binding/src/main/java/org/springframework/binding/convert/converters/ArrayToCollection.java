@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -101,8 +100,7 @@ public class ArrayToCollection implements TwoWayConverter {
 		Collection<?> collection = (Collection<?>) target;
 		Object array = Array.newInstance(sourceClass.getComponentType(), collection.size());
 		int i = 0;
-		for (Iterator<?> it = collection.iterator(); it.hasNext(); i++) {
-			Object value = it.next();
+		for (Object value : collection) {
 			if (value != null) {
 				ConversionExecutor converter;
 				if (elementConverter != null) {
@@ -113,7 +111,7 @@ public class ArrayToCollection implements TwoWayConverter {
 				}
 				value = converter.execute(value);
 			}
-			Array.set(array, i, value);
+			Array.set(array, i++, value);
 		}
 		return array;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class FlowExecutionListeners {
 	 * Create a flow execution listener helper that wraps the specified listener array.
 	 * @param listeners the listener array
 	 */
-	public FlowExecutionListeners(FlowExecutionListener[] listeners) {
+	public FlowExecutionListeners(FlowExecutionListener... listeners) {
 		if (listeners != null) {
 			this.listeners = listeners;
 		} else {

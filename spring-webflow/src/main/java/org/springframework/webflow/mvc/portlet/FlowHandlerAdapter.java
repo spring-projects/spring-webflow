@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.mvc.portlet;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -194,16 +193,9 @@ public class FlowHandlerAdapter extends PortletContentGenerator implements Handl
 			return null;
 		}
 		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>();
-		Iterator<Map.Entry<String, String[]>> it = parameterMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, String[]> entry = it.next();
-			String name = entry.getKey();
+		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 			String[] values = entry.getValue();
-			if (values.length == 1) {
-				inputMap.put(name, values[0]);
-			} else {
-				inputMap.put(name, values);
-			}
+			inputMap.put(entry.getKey(), values.length == 1 ? values[0] : values);
 		}
 		return inputMap;
 	}

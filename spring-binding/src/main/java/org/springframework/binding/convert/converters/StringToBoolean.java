@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,13 @@ public class StringToBoolean extends StringToObject {
 
 	protected Object toObject(String string, Class<?> targetClass) throws Exception {
 		if (trueString != null && string.equals(trueString)) {
-			return Boolean.TRUE;
+			return true;
 		} else if (falseString != null && string.equals(falseString)) {
-			return Boolean.FALSE;
+			return false;
 		} else if (trueString == null && string.equals(VALUE_TRUE)) {
-			return Boolean.TRUE;
+			return true;
 		} else if (falseString == null && string.equals(VALUE_FALSE)) {
-			return Boolean.FALSE;
+			return false;
 		} else {
 			throw new IllegalArgumentException("Invalid boolean value [" + string + "]");
 		}

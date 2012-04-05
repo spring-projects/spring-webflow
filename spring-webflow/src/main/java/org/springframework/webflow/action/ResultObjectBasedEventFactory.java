@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.action;
 
-import org.springframework.core.JdkVersion;
 import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.Event;
@@ -74,11 +73,11 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 			// by this class but the value is null
 			return event(source, getNullEventId());
 		} else if (isBoolean(resultObject.getClass())) {
-			return event(source, ((Boolean) resultObject).booleanValue());
+			return event(source, ((Boolean) resultObject));
 		} else if (isLabeledEnum(resultObject.getClass())) {
 			String resultId = ((LabeledEnum) resultObject).getLabel();
 			return event(source, resultId, getResultAttributeName(), resultObject);
-		} else if (isJdk5Enum(resultObject.getClass())) {
+		} else if (isEnum(resultObject.getClass())) {
 			String eventId = EnumUtils.getEnumName(resultObject);
 			return event(source, eventId, getResultAttributeName(), resultObject);
 		} else if (isString(resultObject.getClass())) {
@@ -101,7 +100,7 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	 * Check whether or not given type is mapped to a corresponding event using special mapping rules.
 	 */
 	public boolean isMappedValueType(Class<?> type) {
-		return isBoolean(type) || isLabeledEnum(type) || isJdk5Enum(type) || isString(type) || isEvent(type);
+		return isBoolean(type) || isLabeledEnum(type) || isEnum(type) || isString(type) || isEvent(type);
 	}
 
 	// internal helpers to determine the 'type' of a class
@@ -114,12 +113,8 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 		return LabeledEnum.class.isAssignableFrom(type);
 	}
 
-	private boolean isJdk5Enum(Class<?> type) {
-		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			return EnumUtils.isEnum(type);
-		} else {
-			return false;
-		}
+	private boolean isEnum(Class<?> type) {
+		return EnumUtils.isEnum(type);
 	}
 
 	private boolean isString(Class<?> type) {

@@ -31,7 +31,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 			public Event execute(RequestContext context) throws Exception {
 				assertSessionBound();
 				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) em.getReference(TestBean.class, new Integer(0));
+				TestBean bean = (TestBean) em.getReference(TestBean.class, 0);
 				bean.incrementCount();
 				assertNotNull(bean);
 				return new Event(this, "success");
@@ -46,7 +46,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 			public void execute(RequestContext context, int expected) throws Exception {
 				assertSessionBound();
 				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) em.getReference(TestBean.class, new Integer(0));
+				TestBean bean = (TestBean) em.getReference(TestBean.class, 0);
 				assertEquals(expected, bean.getCount());
 			}
 		};

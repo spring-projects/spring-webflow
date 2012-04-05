@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class ActionList implements Iterable<Action> {
 	 * @param actions the actions to add
 	 * @return true if this list's contents changed as a result of the add operation
 	 */
-	public boolean addAll(Action[] actions) {
+	public boolean addAll(Action... actions) {
 		if (actions == null) {
 			return false;
 		}
@@ -150,9 +150,8 @@ public class ActionList implements Iterable<Action> {
 	 * @param context the action execution request context
 	 */
 	public void execute(RequestContext context) {
-		Iterator<Action> it = actions.iterator();
-		while (it.hasNext()) {
-			ActionExecutor.execute(it.next(), context);
+		for (Action action : actions) {
+			ActionExecutor.execute(action, context);
 		}
 	}
 

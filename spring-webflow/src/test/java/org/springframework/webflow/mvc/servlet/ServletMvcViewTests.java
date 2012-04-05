@@ -67,7 +67,7 @@ public class ServletMvcViewTests extends TestCase {
 
 	public static class BindBean {
 		private String stringProperty;
-		private Integer integerProperty = new Integer(3);
+		private Integer integerProperty = 3;
 		private Date dateProperty;
 
 		public BindBean() {

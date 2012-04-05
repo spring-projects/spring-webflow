@@ -85,7 +85,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>(new LinkedHashMap<String, Object>());
 		input.put("foo", "bar");
 		input.put("bar", "needs encoding");
-		input.put("baz", new Integer(1));
+		input.put("baz", 1);
 		input.put("boop", null);
 		String url = urlHandler.createFlowDefinitionUrl("bookHotel", input, request);
 		assertEquals("/springtravel/app/bookHotel?foo=bar&bar=needs+encoding&baz=1&boop=", url);

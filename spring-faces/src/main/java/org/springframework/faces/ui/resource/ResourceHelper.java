@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,10 +91,8 @@ public class ResourceHelper {
 		ResponseWriter writer = facesContext.getResponseWriter();
 		writer.startElement(SCRIPT_ELEMENT, null);
 		writer.writeAttribute("type", "text/javascript", null);
-		Iterator<String> i = attributes.keySet().iterator();
-		while (i.hasNext()) {
-			String key = i.next();
-			writer.writeAttribute(key, attributes.get(key), null);
+		for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+			writer.writeAttribute(entry.getKey(), entry.getValue(), null);
 		}
 		String src = facesContext.getExternalContext().getRequestContextPath() + "/resources" + scriptPath;
 		writer.writeAttribute("src", src, null);
@@ -160,7 +157,7 @@ public class ResourceHelper {
 
 	public static void endCombineStyles(FacesContext facesContext) throws IOException {
 		List<String> combinedResources = getCombinedResources(facesContext);
-		StringBuffer combinedPath = new StringBuffer();
+		StringBuilder combinedPath = new StringBuilder();
 		for (int i = 0; i < combinedResources.size(); i++) {
 			String resourcePath = combinedResources.get(i);
 			if (i == 1) {

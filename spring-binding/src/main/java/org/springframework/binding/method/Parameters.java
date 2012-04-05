@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class Parameters {
 	 * Create a parameter list from the parameter array.
 	 * @param parameters the parameters
 	 */
-	public Parameters(Parameter[] parameters) {
+	public Parameters(Parameter... parameters) {
 		this.parameters = new ArrayList<Parameter>(parameters.length);
 		addAll(parameters);
 	}
@@ -82,7 +82,7 @@ public class Parameters {
 	 * Add new parameters to this list.
 	 * @param parameters the parameters
 	 */
-	public boolean addAll(Parameter[] parameters) {
+	public boolean addAll(Parameter... parameters) {
 		return this.parameters.addAll(Arrays.asList(parameters));
 	}
 

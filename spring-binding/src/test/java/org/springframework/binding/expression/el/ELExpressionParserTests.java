@@ -176,7 +176,7 @@ public class ELExpressionParserTests extends TestCase {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
 		TestBean context = new TestBean();
-		exp.setValue(context, new Integer(5));
+		exp.setValue(context, 5);
 		assertEquals(5, context.getMaximum());
 	}
 
