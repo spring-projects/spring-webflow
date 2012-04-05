@@ -123,7 +123,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 				button.getAttributes().putAll(component.getAttributes());
 				BeanUtils.copyProperties(component, button);
 				button.setRendererType("spring.faces.ProgressiveCommandButtonRenderer");
-				button.setAjaxEnabled(Boolean.FALSE);
+				button.setAjaxEnabled(false);
 				button.encodeBegin(context);
 				button.encodeChildren(context);
 				button.encodeEnd(context);

@@ -157,7 +157,7 @@ public class MockExternalContext implements ExternalContext {
 
 	public boolean isResponseAllowed() {
 		if (responseAllowed != null) {
-			return responseAllowed.booleanValue();
+			return responseAllowed;
 		} else {
 			return !responseComplete;
 		}

@@ -73,7 +73,7 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 			// by this class but the value is null
 			return event(source, getNullEventId());
 		} else if (isBoolean(resultObject.getClass())) {
-			return event(source, ((Boolean) resultObject).booleanValue());
+			return event(source, ((Boolean) resultObject));
 		} else if (isLabeledEnum(resultObject.getClass())) {
 			String resultId = ((LabeledEnum) resultObject).getLabel();
 			return event(source, resultId, getResultAttributeName(), resultObject);

@@ -97,14 +97,14 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 	 * Set the maximum number of allowed flow executions allowed per user.
 	 */
 	public void setMaxFlowExecutions(int maxFlowExecutions) {
-		this.maxFlowExecutions = new Integer(maxFlowExecutions);
+		this.maxFlowExecutions = maxFlowExecutions;
 	}
 
 	/**
 	 * Set the maximum number of history snapshots allowed per flow execution.
 	 */
 	public void setMaxFlowExecutionSnapshots(int maxFlowExecutionSnapshots) {
-		this.maxFlowExecutionSnapshots = new Integer(maxFlowExecutionSnapshots);
+		this.maxFlowExecutionSnapshots = maxFlowExecutionSnapshots;
 	}
 
 	/**
@@ -186,11 +186,11 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 
 	private void putDefaultFlowExecutionAttributes(LocalAttributeMap<Object> executionAttributes) {
 		if (!executionAttributes.contains(ALWAYS_REDIRECT_ON_PAUSE)) {
-			Boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			Boolean redirect = (environment != MvcEnvironment.PORTLET);
 			executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, redirect);
 		}
 		if (!executionAttributes.contains(REDIRECT_IN_SAME_STATE)) {
-			Boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			Boolean redirect = (environment != MvcEnvironment.PORTLET);
 			executionAttributes.put(REDIRECT_IN_SAME_STATE, redirect);
 		}
 	}
@@ -200,7 +200,7 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		FlowExecutionSnapshotFactory snapshotFactory = createFlowExecutionSnapshotFactory(executionFactory);
 		DefaultFlowExecutionRepository rep = new DefaultFlowExecutionRepository(conversationManager, snapshotFactory);
 		if (maxFlowExecutionSnapshots != null) {
-			rep.setMaxSnapshots(maxFlowExecutionSnapshots.intValue());
+			rep.setMaxSnapshots(maxFlowExecutionSnapshots);
 		}
 		return rep;
 	}
@@ -209,16 +209,15 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		if (conversationManager == null) {
 			conversationManager = new SessionBindingConversationManager();
 			if (maxFlowExecutions != null) {
-				((SessionBindingConversationManager) conversationManager).setMaxConversations(maxFlowExecutions
-						.intValue());
+				((SessionBindingConversationManager) conversationManager).setMaxConversations(maxFlowExecutions);
 			}
 		}
 		return this.conversationManager;
 	}
 
 	private FlowExecutionSnapshotFactory createFlowExecutionSnapshotFactory(FlowExecutionFactory executionFactory) {
-		if (maxFlowExecutionSnapshots != null && maxFlowExecutionSnapshots.intValue() == 0) {
-			maxFlowExecutionSnapshots = new Integer(1);
+		if (maxFlowExecutionSnapshots != null && maxFlowExecutionSnapshots == 0) {
+			maxFlowExecutionSnapshots = 1;
 			return new SimpleFlowExecutionSnapshotFactory(executionFactory, flowDefinitionLocator);
 		} else {
 			return new SerializedFlowExecutionSnapshotFactory(executionFactory, flowDefinitionLocator);

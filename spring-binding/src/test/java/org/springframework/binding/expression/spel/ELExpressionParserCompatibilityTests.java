@@ -51,7 +51,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 	public void testParseSimpleEvalExpressionNoParserContext() {
 		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, null);
-		assertEquals(new Integer(7), exp.getValue(null)); // Unified EL returns Long
+		assertEquals(7, exp.getValue(null)); // Unified EL returns Long
 	}
 
 	public void testParseNullExpressionString() {
@@ -174,7 +174,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
 		TestBean context = new TestBean();
-		exp.setValue(context, new Integer(5));
+		exp.setValue(context, 5);
 		assertEquals(5, context.getMaximum());
 	}
 

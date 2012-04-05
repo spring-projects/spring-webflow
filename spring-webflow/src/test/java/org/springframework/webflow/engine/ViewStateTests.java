@@ -110,7 +110,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(Boolean.TRUE);
+		state.setRedirect(true);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlashScope().put("foo", "bar");
 		state.enter(context);
@@ -123,7 +123,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(Boolean.FALSE);
+		state.setRedirect(false);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlashScope().put("foo", "bar");
 		state.enter(context);
@@ -136,7 +136,7 @@ public class ViewStateTests extends TestCase {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
 		ViewState state = new ViewState(flow, "viewState", viewFactory);
-		state.setRedirect(Boolean.TRUE);
+		state.setRedirect(true);
 		state.setPopup(true);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlashScope().put("foo", "bar");

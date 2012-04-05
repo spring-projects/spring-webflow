@@ -148,7 +148,7 @@ public class FlowActionListener implements ActionListener {
 		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
 		if (transition != null) {
 			if (transition.getAttributes().contains("validate")) {
-				return transition.getAttributes().getBoolean("validate").booleanValue();
+				return transition.getAttributes().getBoolean("validate");
 			}
 		}
 		return true;

@@ -125,7 +125,7 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 			flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
 		}
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributes().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", true);
 		flowSession.setState(endState);
 		return flowSession;
 	}

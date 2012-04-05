@@ -76,7 +76,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	private boolean parseEnableManagedBeans(Element element, BeanDefinitionBuilder definitionBuilder) {
 		String enableManagedBeans = element.getAttribute(ENABLE_MANAGED_BEANS_ATTR);
 		if (StringUtils.hasText(enableManagedBeans)) {
-			return Boolean.valueOf(enableManagedBeans).booleanValue();
+			return Boolean.valueOf(enableManagedBeans);
 		} else {
 			return false;
 		}

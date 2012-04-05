@@ -98,7 +98,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 				int.class });
 		indexMutator.setAccessible(true);
 
-		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), new Integer(1) });
+		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), 1 });
 
 		ActionEvent event = new ActionEvent(commandButton);
 
@@ -108,7 +108,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		assertSame(dataModel.getSelectedRow(), dataModel.getRowData());
 		assertTrue(delegateListener.processedEvent);
 
-		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), new Integer(2) });
+		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), 2 });
 		assertFalse(dataModel.isCurrentRowSelected());
 		assertTrue(dataModel.getSelectedRow() != dataModel.getRowData());
 	}

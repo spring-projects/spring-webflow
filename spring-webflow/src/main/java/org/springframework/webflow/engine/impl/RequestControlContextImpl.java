@@ -243,7 +243,7 @@ class RequestControlContextImpl implements RequestControlContext {
 			return true;
 		}
 		Boolean redirectOnPause = flowExecution.getAttributes().getBoolean("alwaysRedirectOnPause");
-		return redirectOnPause != null ? redirectOnPause.booleanValue() : false;
+		return redirectOnPause == null ? false : redirectOnPause;
 	}
 
 	public boolean getRedirectInSameState() {
@@ -251,7 +251,7 @@ class RequestControlContextImpl implements RequestControlContext {
 			return true;
 		}
 		Boolean redirectInSameState = flowExecution.getAttributes().getBoolean("redirectInSameState");
-		return (redirectInSameState != null) ? redirectInSameState.booleanValue() : getRedirectOnPause();
+		return (redirectInSameState != null) ? redirectInSameState : getRedirectOnPause();
 	}
 
 	public boolean getEmbeddedMode() {

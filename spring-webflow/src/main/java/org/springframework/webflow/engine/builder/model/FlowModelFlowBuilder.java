@@ -346,7 +346,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	}
 
 	private boolean isFlowInDevelopment() {
-		return getContext().getFlowAttributes().getBoolean("development", Boolean.FALSE).booleanValue();
+		return getContext().getFlowAttributes().getBoolean("development", false);
 	}
 
 	private void registerMessageSource(GenericApplicationContext flowContext, Resource flowResource) {
@@ -513,8 +513,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private void parseAndSetMappingRequired(AbstractMappingModel mappingModel, DefaultMapping mapping) {
 		if (StringUtils.hasText(mappingModel.getRequired())) {
-			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(mappingModel.getRequired()))
-					.booleanValue();
+			boolean required = ((Boolean) fromStringTo(Boolean.class).execute(mappingModel.getRequired()));
 			mapping.setRequired(required);
 		}
 	}
@@ -527,7 +526,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 		boolean popup = false;
 		if (StringUtils.hasText(state.getPopup())) {
-			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup())).booleanValue();
+			popup = ((Boolean) fromStringTo(Boolean.class).execute(state.getPopup()));
 		}
 		MutableAttributeMap<Object> attributes = parseMetaAttributes(state.getAttributes());
 		if (state.getModel() != null) {
@@ -631,12 +630,9 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			BinderConfiguration binderConfiguration = new BinderConfiguration();
 			List<BindingModel> bindings = binderModel.getBindings();
 			for (BindingModel bindingModel : bindings) {
-				boolean required;
+				boolean required = false;
 				if (StringUtils.hasText(bindingModel.getRequired())) {
-					required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()))
-							.booleanValue();
-				} else {
-					required = false;
+					required = ((Boolean) fromStringTo(Boolean.class).execute(bindingModel.getRequired()));
 				}
 				Binding binding = new Binding(bindingModel.getProperty(), bindingModel.getConverter(), required);
 				binderConfiguration.addBinding(binding);
@@ -915,7 +911,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private void parseAndPutPersistenceContext(PersistenceContextModel persistenceContext,
 			MutableAttributeMap<Object> attributes) {
 		if (persistenceContext != null) {
-			attributes.put("persistenceContext", Boolean.TRUE);
+			attributes.put("persistenceContext", true);
 		}
 	}
 

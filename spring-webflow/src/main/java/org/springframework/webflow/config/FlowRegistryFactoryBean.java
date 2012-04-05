@@ -214,7 +214,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		MutableAttributeMap<Object> flowAttributes = null;
 		if (flowBuilderServices.getDevelopment()) {
 			flowAttributes = new LocalAttributeMap<Object>(1 + attributes.size(), 1);
-			flowAttributes.put("development", Boolean.TRUE);
+			flowAttributes.put("development", true);
 		}
 		if (!attributes.isEmpty()) {
 			if (flowAttributes == null) {

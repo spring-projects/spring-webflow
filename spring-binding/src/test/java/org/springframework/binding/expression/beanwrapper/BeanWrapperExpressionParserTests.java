@@ -37,7 +37,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
-		assertFalse(b.booleanValue());
+		assertFalse(b);
 	}
 
 	public void testParseSimpleAllowDelimited() {
@@ -46,7 +46,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
-		assertFalse(b.booleanValue());
+		assertFalse(b);
 	}
 
 	public void testParseSimpleDelimitedNotAllowed() {

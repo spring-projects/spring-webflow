@@ -11,7 +11,7 @@ public class MapAccessorTests extends TestCase {
 	protected void setUp() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("string", "hello");
-		map.put("integer", new Integer(9));
+		map.put("integer", 9);
 		map.put("null", null);
 		this.accessor = new MapAccessor<String, Object>(map);
 	}

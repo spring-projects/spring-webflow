@@ -301,7 +301,7 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
 		flow.resume(context);
-		assertTrue(context.getFlowScope().getBoolean("renderCalled").booleanValue());
+		assertTrue(context.getFlowScope().getBoolean("renderCalled"));
 	}
 
 	public void testEnd() {

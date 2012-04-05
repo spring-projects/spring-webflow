@@ -42,12 +42,12 @@ public class DojoStyleRenderer extends Renderer {
 
 		if (component.getAttributes().containsKey(THEME_PATH_ATTR)) {
 			themePath = (String) component.getAttributes().get(THEME_PATH_ATTR);
-			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_PATH_SET, Boolean.TRUE);
+			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_PATH_SET, true);
 		}
 
 		if (component.getAttributes().containsKey(THEME_ATTR)) {
 			theme = (String) component.getAttributes().get(THEME_ATTR);
-			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_SET, Boolean.TRUE);
+			context.getViewRoot().getAttributes().put(DojoConstants.CUSTOM_THEME_SET, true);
 		}
 
 		ResourceHelper.renderStyleLink(context, themePath + theme + "/" + theme + ".css");

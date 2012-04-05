@@ -122,7 +122,7 @@ public class ViewState extends TransitionableState {
 	 * Returns whether this view state should request a flow execution redirect when entered.
 	 */
 	public boolean getRedirect() {
-		return (redirect != null) ? redirect.booleanValue() : false;
+		return (redirect == null) ? false : redirect;
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class ViewState extends TransitionableState {
 
 	private boolean shouldRedirect(RequestControlContext context) {
 		if (redirect != null) {
-			return redirect.booleanValue();
+			return redirect;
 		}
 		if (context.getExternalContext().isAjaxRequest() && context.getEmbeddedMode()) {
 			return false;
@@ -276,7 +276,7 @@ public class ViewState extends TransitionableState {
 
 	private boolean shouldRedirectInSameState(RequestControlContext context) {
 		if (redirect != null) {
-			return redirect.booleanValue();
+			return redirect;
 		}
 		if (context.getExternalContext().isAjaxRequest() && context.getEmbeddedMode()) {
 			return false;

@@ -116,7 +116,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributes().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", true);
 		flowSession.setState(endState);
 
 		hibernateListener.sessionEnding(context, flowSession, "success", null);
@@ -147,7 +147,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
-		endState.getAttributes().put("commit", Boolean.TRUE);
+		endState.getAttributes().put("commit", true);
 		flowSession.setState(endState);
 
 		hibernateListener.sessionEnding(context, flowSession, "success", null);
@@ -171,7 +171,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
-		endState.getAttributes().put("commit", Boolean.FALSE);
+		endState.getAttributes().put("commit", false);
 		flowSession.setState(endState);
 		hibernateListener.sessionEnding(context, flowSession, "success", null);
 		hibernateListener.sessionEnded(context, flowSession, "cancel", null);

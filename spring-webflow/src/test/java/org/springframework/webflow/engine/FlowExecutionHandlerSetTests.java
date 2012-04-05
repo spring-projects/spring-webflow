@@ -62,7 +62,7 @@ public class FlowExecutionHandlerSetTests extends TestCase {
 		}
 
 		public void handle(FlowExecutionException exception, RequestControlContext context) {
-			context.getFlowScope().put(resultName, Boolean.TRUE);
+			context.getFlowScope().put(resultName, true);
 		}
 	}
 

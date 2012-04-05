@@ -238,7 +238,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	public boolean inDevelopment() {
-		return getAttributes().getBoolean("development", Boolean.FALSE).booleanValue();
+		return getAttributes().getBoolean("development", false);
 	}
 
 	/**

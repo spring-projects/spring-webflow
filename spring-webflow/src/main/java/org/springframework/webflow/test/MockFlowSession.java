@@ -106,7 +106,7 @@ public class MockFlowSession implements FlowSession {
 	}
 
 	public boolean isEmbeddedMode() {
-		return (Boolean) scope.get(EMBEDDED_MODE_ATTRIBUTE, Boolean.FALSE);
+		return (Boolean) scope.get(EMBEDDED_MODE_ATTRIBUTE, false);
 	}
 
 	public FlowSession getParent() {

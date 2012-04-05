@@ -38,7 +38,7 @@ public class ProgressiveUICommand extends UICommand {
 
 	private Boolean disabled;
 
-	private Boolean ajaxEnabled = Boolean.TRUE;
+	private Boolean ajaxEnabled = true;
 
 	public String getType() {
 		return type;
@@ -53,7 +53,7 @@ public class ProgressiveUICommand extends UICommand {
 			return disabled;
 		}
 		ValueBinding vb = getValueBinding("disabled");
-		return vb != null ? (Boolean) vb.getValue(getFacesContext()) : Boolean.FALSE;
+		return vb != null ? (Boolean) vb.getValue(getFacesContext()) : false;
 	}
 
 	public void setDisabled(Boolean disabled) {

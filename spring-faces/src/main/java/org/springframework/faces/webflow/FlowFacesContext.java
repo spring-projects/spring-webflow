@@ -148,10 +148,7 @@ public class FlowFacesContext extends FacesContext {
 
 	public boolean getRenderResponse() {
 		Boolean renderResponse = context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
-		if (renderResponse == null) {
-			return false;
-		}
-		return renderResponse.booleanValue();
+		return (renderResponse == null ? false : renderResponse);
 	}
 
 	public boolean getResponseComplete() {
@@ -160,7 +157,7 @@ public class FlowFacesContext extends FacesContext {
 
 	public void renderResponse() {
 		// stored in flash scope to survive a redirect when transitioning from one view to another
-		context.getFlashScope().put(RENDER_RESPONSE_KEY, Boolean.TRUE);
+		context.getFlashScope().put(RENDER_RESPONSE_KEY, true);
 	}
 
 	public void responseComplete() {

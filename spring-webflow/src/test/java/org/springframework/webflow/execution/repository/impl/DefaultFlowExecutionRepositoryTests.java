@@ -258,7 +258,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 
 		public ConversationId parseConversationId(String encodedId) throws ConversationException {
 			try {
-				return new SimpleConversationId(new Integer(Integer.parseInt(encodedId)));
+				return new SimpleConversationId(Integer.parseInt(encodedId));
 			} catch (NumberFormatException e) {
 				throw new BadlyFormattedConversationIdException(encodedId, e);
 			}
@@ -266,7 +266,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 
 		private static class StubConversation implements Conversation {
 
-			private final ConversationId ID = new SimpleConversationId(new Integer(12345));
+			private final ConversationId ID = new SimpleConversationId(12345);
 
 			private boolean ended;
 

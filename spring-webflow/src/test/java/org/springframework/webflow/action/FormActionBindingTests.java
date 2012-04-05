@@ -76,7 +76,7 @@ public class FormActionBindingTests extends TestCase {
 		FormAction formAction = new FormAction() {
 			protected Object createFormObject(RequestContext context) throws Exception {
 				TestBean res = new TestBean();
-				res.setProp(new Long(-1));
+				res.setProp(-1L);
 				res.otherProp = "initialValue";
 				return res;
 			}

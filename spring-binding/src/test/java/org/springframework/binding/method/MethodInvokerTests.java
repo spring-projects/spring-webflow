@@ -62,7 +62,7 @@ public class MethodInvokerTests extends TestCase {
 
 	public void testPrimitiveArg() {
 		Parameters parameters = new Parameters();
-		parameters.add(new Parameter(Boolean.class, new StaticExpression(Boolean.TRUE)));
+		parameters.add(new Parameter(Boolean.class, new StaticExpression(true)));
 		MethodSignature method = new MethodSignature("testPrimitiveArg", parameters);
 		assertEquals(Boolean.TRUE, methodInvoker.invoke(method, new TestObject(), null));
 	}

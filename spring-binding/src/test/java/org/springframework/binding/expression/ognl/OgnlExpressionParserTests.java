@@ -37,7 +37,7 @@ public class OgnlExpressionParserTests extends TestCase {
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
-		assertFalse(b.booleanValue());
+		assertFalse(b);
 	}
 
 	public void testParseSimpleAllowDelimited() {
@@ -46,7 +46,7 @@ public class OgnlExpressionParserTests extends TestCase {
 		Expression e = parser.parseExpression(exp, null);
 		assertNotNull(e);
 		Boolean b = (Boolean) e.getValue(bean);
-		assertFalse(b.booleanValue());
+		assertFalse(b);
 	}
 
 	public void testParseSimpleDelimitedNotAllowed() {
@@ -141,7 +141,7 @@ public class OgnlExpressionParserTests extends TestCase {
 	public void testVariables() {
 		Expression exp = parser.parseExpression("#var",
 				new FluentParserContext().variable(new ExpressionVariable("var", "flag")));
-		assertEquals(false, ((Boolean) exp.getValue(bean)).booleanValue());
+		assertFalse((Boolean) exp.getValue(bean));
 	}
 
 	public void testVariablesWithCoersion() {
@@ -198,7 +198,7 @@ public class OgnlExpressionParserTests extends TestCase {
 		String expressionString = "number";
 		Expression exp = parser.parseExpression(expressionString, null);
 		TestBean context = new TestBean();
-		exp.setValue(context, new Integer(5));
+		exp.setValue(context, 5);
 		assertEquals(5, context.getNumber());
 	}
 

@@ -67,7 +67,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 		service.addConverter(customConverter);
 		executor = (StaticConversionExecutor) service.getConversionExecutor(String.class, Boolean.class);
-		assertTrue(((Boolean) executor.execute("ja")).booleanValue());
+		assertTrue(((Boolean) executor.execute("ja")));
 	}
 
 	public void testTargetClassNotSupported() {
@@ -83,10 +83,10 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3");
-		assertEquals(3, three.intValue());
+		assertEquals(new Integer(3), three);
 
 		ConversionExecutor executor2 = service.getConversionExecutor(Integer.class, String.class);
-		String threeString = (String) executor2.execute(new Integer(3));
+		String threeString = (String) executor2.execute(3);
 		assertEquals("3", threeString);
 	}
 
@@ -99,9 +99,9 @@ public class DefaultConversionServiceTests extends TestCase {
 		service.addConverter(converter);
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3,000");
-		assertEquals(3000, three.intValue());
+		assertEquals(new Integer(3000), three);
 		ConversionExecutor executor2 = service.getConversionExecutor(Integer.class, String.class);
-		String string = (String) executor2.execute(new Integer(3000));
+		String string = (String) executor2.execute(3000);
 		assertEquals("3,000", string);
 	}
 
@@ -114,9 +114,9 @@ public class DefaultConversionServiceTests extends TestCase {
 		service.addConverter("usaNumber", converter);
 		ConversionExecutor executor = service.getConversionExecutor("usaNumber", String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3,000");
-		assertEquals(3000, three.intValue());
+		assertEquals(new Integer(3000), three);
 		ConversionExecutor executor2 = service.getConversionExecutor("usaNumber", Integer.class, String.class);
-		String string = (String) executor2.execute(new Integer(3000));
+		String string = (String) executor2.execute(3000);
 		assertEquals("3,000", string);
 	}
 
@@ -348,7 +348,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Integer.class, List.class);
 		try {
-			executor.execute(new Integer(1));
+			executor.execute(1);
 			fail("Should have failed");
 		} catch (ConversionExecutionException e) {
 
@@ -423,7 +423,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, int.class);
 		Integer three = (Integer) executor.execute("3");
-		assertEquals(3, three.intValue());
+		assertEquals(new Integer(3), three);
 	}
 
 	public void testArrayToArrayConversion() {

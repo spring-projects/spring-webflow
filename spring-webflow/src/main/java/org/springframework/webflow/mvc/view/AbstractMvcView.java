@@ -303,7 +303,7 @@ public abstract class AbstractMvcView implements View {
 		if (transition == null) {
 			return true;
 		}
-		return transition.getAttributes().getBoolean("bind", Boolean.TRUE).booleanValue();
+		return transition.getAttributes().getBoolean("bind", true);
 	}
 
 	/**
@@ -523,12 +523,12 @@ public abstract class AbstractMvcView implements View {
 	protected boolean shouldValidate(Object model, TransitionDefinition transition) {
 		Boolean validateAttribute = getValidateAttribute(transition);
 		if (validateAttribute != null) {
-			return validateAttribute.booleanValue();
+			return validateAttribute;
 		} else {
 			AttributeMap<Object> flowExecutionAttributes = requestContext.getFlowExecutionContext().getAttributes();
 			Boolean validateOnBindingErrors = flowExecutionAttributes.getBoolean("validateOnBindingErrors");
 			if (validateOnBindingErrors != null) {
-				if (!validateOnBindingErrors.booleanValue() && mappingResults.hasErrorResults()) {
+				if (!validateOnBindingErrors && mappingResults.hasErrorResults()) {
 					return false;
 				}
 			}
@@ -580,7 +580,7 @@ public abstract class AbstractMvcView implements View {
 	private Object getEmptyValue(Class<?> fieldType) {
 		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
 			// Special handling of boolean property.
-			return Boolean.FALSE;
+			return false;
 		} else if (fieldType != null && fieldType.isArray()) {
 			// Special handling of array property.
 			return Array.newInstance(fieldType.getComponentType(), 0);

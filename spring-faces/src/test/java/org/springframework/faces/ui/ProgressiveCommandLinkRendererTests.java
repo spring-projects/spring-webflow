@@ -79,7 +79,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		form.setId("myForm");
 		ProgressiveUICommand link = new ProgressiveUICommand();
 		link.setId("foo");
-		link.setAjaxEnabled(Boolean.FALSE);
+		link.setAjaxEnabled(false);
 		form.getChildren().add(link);
 
 		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
@@ -102,7 +102,7 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		form.setId("myForm");
 		ProgressiveUICommand link = new ProgressiveUICommand();
 		link.setId("foo");
-		link.setAjaxEnabled(Boolean.FALSE);
+		link.setAjaxEnabled(false);
 		form.getChildren().add(link);
 		UIParameter param1 = new UIParameter();
 		param1.setName("foo");

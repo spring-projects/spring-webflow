@@ -85,7 +85,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetWithDefaultAndConversion() {
-		Object value = parameterMap.get("bogus", Integer.class, new Integer(1));
+		Object value = parameterMap.get("bogus", Integer.class, 1);
 		assertEquals(new Integer(1), value);
 	}
 
@@ -226,7 +226,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetBooleanWithDefault() {
-		Boolean value = parameterMap.getBoolean("bogus", Boolean.TRUE);
+		Boolean value = parameterMap.getBoolean("bogus", true);
 		assertEquals(Boolean.TRUE, value);
 	}
 

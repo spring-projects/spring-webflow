@@ -112,7 +112,7 @@ public class JsfViewFactoryTests extends TestCase {
 		newRoot.setViewId(VIEW_ID);
 		((MockViewHandler) viewHandler).setCreateView(newRoot);
 		context.inViewState();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { context });
 
@@ -143,7 +143,7 @@ public class JsfViewFactoryTests extends TestCase {
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
 		context.inViewState();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { context });
 
@@ -189,7 +189,7 @@ public class JsfViewFactoryTests extends TestCase {
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
 		context.inViewState();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { context });
 
@@ -224,7 +224,7 @@ public class JsfViewFactoryTests extends TestCase {
 		EasyMock.expect(context.getCurrentState()).andReturn(new NormalViewState());
 
 		context.inViewState();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { context });
 
@@ -276,7 +276,7 @@ public class JsfViewFactoryTests extends TestCase {
 		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
 
 		context.inViewState();
-		EasyMock.expectLastCall().andReturn(Boolean.TRUE);
+		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { context });
 		factory.getView(context);

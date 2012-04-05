@@ -123,7 +123,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	}
 
 	public boolean isEmbeddedMode() {
-		return (Boolean) scope.get(EMBEDDED_MODE_ATTRIBUTE, Boolean.FALSE);
+		return (Boolean) scope.get(EMBEDDED_MODE_ATTRIBUTE, false);
 	}
 
 	public FlowSession getParent() {

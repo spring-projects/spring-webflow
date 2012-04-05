@@ -37,9 +37,9 @@ public class ResultObjectBasedEventFactoryTests extends TestCase {
 	}
 
 	public void testBoolean() {
-		Event event = factory.createResultEvent(this, Boolean.TRUE, new MockRequestContext());
+		Event event = factory.createResultEvent(this, true, new MockRequestContext());
 		assertEquals(factory.getYesEventId(), event.getId());
-		event = factory.createResultEvent(this, Boolean.FALSE, new MockRequestContext());
+		event = factory.createResultEvent(this, false, new MockRequestContext());
 		assertEquals(factory.getNoEventId(), event.getId());
 	}
 

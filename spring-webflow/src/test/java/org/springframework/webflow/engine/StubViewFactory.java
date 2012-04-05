@@ -39,7 +39,7 @@ public class StubViewFactory implements ViewFactory {
 		}
 
 		public void render() {
-			context.getFlowScope().put("renderCalled", Boolean.TRUE);
+			context.getFlowScope().put("renderCalled", true);
 		}
 
 		public boolean userEventQueued() {
@@ -63,7 +63,7 @@ public class StubViewFactory implements ViewFactory {
 		}
 
 		public void saveState() {
-			context.getFlowScope().put("saveStateCalled", Boolean.TRUE);
+			context.getFlowScope().put("saveStateCalled", true);
 		}
 
 	}
