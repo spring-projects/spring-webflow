@@ -17,7 +17,6 @@ package org.springframework.webflow.conversation.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.JdkVersion;
 
 /**
  * Simple utility class for creating conversation lock instances based on the current execution environment.
@@ -63,15 +62,6 @@ class ConversationLockFactory {
 	 * lock is returned.
 	 */
 	public ConversationLock createLock() {
-		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			return new JdkConcurrentConversationLock(timeoutSeconds);
-		} else if (backportConcurrentPresent) {
-			return new JdkBackportConcurrentConversationLock(timeoutSeconds);
-		} else {
-			logger.warn("Unable to enable conversation locking. Switch to Java 5 or above, "
-					+ "or put the 'backport-util-concurrent' package on the classpath "
-					+ "to enable locking in your Java 1.4 environment.");
-			return NoOpConversationLock.INSTANCE;
-		}
+		return new JdkConcurrentConversationLock(timeoutSeconds);
 	}
 }

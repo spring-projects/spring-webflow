@@ -38,7 +38,6 @@ import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.JdkVersion;
 import org.springframework.core.io.Resource;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
@@ -338,9 +337,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		flowContext.getBeanFactory().registerScope("conversation", new ConversationScope());
 		Resource flowResource = flowModelHolder.getFlowModelResource();
 		flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
-		if (JdkVersion.getMajorJavaVersion() >= JdkVersion.JAVA_15) {
-			AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
-		}
+		AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
 		registerFlowBeans(flowContext.getBeanFactory());
 		registerMessageSource(flowContext, flowResource);
