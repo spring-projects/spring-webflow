@@ -81,7 +81,7 @@ public class CompositeFlowExecutionKey extends FlowExecutionKey {
 	}
 
 	public String toString() {
-		return new StringBuffer().append(EXECUTION_ID_PREFIX).append(executionId).append(SNAPSHOT_ID_PREFIX)
+		return new StringBuilder().append(EXECUTION_ID_PREFIX).append(executionId).append(SNAPSHOT_ID_PREFIX)
 				.append(snapshotId).toString();
 	}
 

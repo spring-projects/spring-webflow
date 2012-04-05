@@ -50,7 +50,7 @@ public class ValidateAllRenderer extends BaseSpringJavascriptDecorationRenderer 
 
 		ResourceHelper.beginScriptBlock(context);
 
-		StringBuffer script = new StringBuffer();
+		StringBuilder script = new StringBuilder();
 		script.append("Spring.addDecoration(new Spring.ValidateAllDecoration({" + "event : 'onclick', "
 				+ "elementId : '" + advisedChild.getClientId(context) + "'}));");
 		writer.writeText(script, null);

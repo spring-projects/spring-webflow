@@ -160,7 +160,7 @@ public class ResourceHelper {
 
 	public static void endCombineStyles(FacesContext facesContext) throws IOException {
 		List<String> combinedResources = getCombinedResources(facesContext);
-		StringBuffer combinedPath = new StringBuffer();
+		StringBuilder combinedPath = new StringBuilder();
 		for (int i = 0; i < combinedResources.size(); i++) {
 			String resourcePath = combinedResources.get(i);
 			if (i == 1) {

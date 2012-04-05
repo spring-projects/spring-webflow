@@ -44,7 +44,7 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {
-		StringBuffer url = new StringBuffer();
+		StringBuilder url = new StringBuilder();
 		url.append(request.getRequestURI());
 		url.append('?');
 		appendQueryParameter(url, "_flowId", flowId);
@@ -54,7 +54,7 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
-		StringBuffer url = new StringBuffer();
+		StringBuilder url = new StringBuilder();
 		url.append(request.getRequestURI());
 		url.append('?');
 		appendQueryParameter(url, "_flowId", flowId);
@@ -65,7 +65,7 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 		return url.toString();
 	}
 
-	private <T> void appendQueryParameters(StringBuffer url, Map<String, T> parameters) {
+	private <T> void appendQueryParameters(StringBuilder url, Map<String, T> parameters) {
 		Iterator<Map.Entry<String, T>> entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
 			Map.Entry<String, T> entry = entries.next();
@@ -76,7 +76,7 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 		}
 	}
 
-	private void appendQueryParameter(StringBuffer url, Object key, Object value) {
+	private void appendQueryParameter(StringBuilder url, Object key, Object value) {
 		String encodedKey = encode(key);
 		String encodedValue = encode(value);
 		url.append(encodedKey).append('=').append(encodedValue);

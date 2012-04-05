@@ -52,7 +52,7 @@ public class SecurityRule {
 	 * @return comma separated String
 	 */
 	public static String securityAttributesToCommaDelimitedList(Collection<?> attributes) {
-		StringBuffer attrs = new StringBuffer();
+		StringBuilder attrs = new StringBuilder();
 		Iterator<?> attributeIt = attributes.iterator();
 		while (attributeIt.hasNext()) {
 			if (attrs.length() != 0) {

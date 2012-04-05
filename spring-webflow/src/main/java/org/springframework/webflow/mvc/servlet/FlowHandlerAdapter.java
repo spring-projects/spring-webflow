@@ -432,7 +432,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		StringBuffer url = new StringBuffer(request.getContextPath());
+		StringBuilder url = new StringBuilder(request.getContextPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
@@ -442,7 +442,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		StringBuffer url = new StringBuffer(request.getContextPath());
+		StringBuilder url = new StringBuilder(request.getContextPath());
 		url.append(request.getServletPath());
 		if (!location.startsWith("/")) {
 			url.append('/');

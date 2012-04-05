@@ -69,7 +69,7 @@ public class DojoElementDecorationRenderer extends BaseSpringJavascriptDecoratio
 
 		ResourceHelper.beginScriptBlock(context);
 
-		StringBuffer script = new StringBuffer();
+		StringBuilder script = new StringBuilder();
 		script.append("  dojo.addOnLoad(function(){dojo.query(" + selector + ").forEach(function(element){");
 		script.append("  Spring.addDecoration(new Spring.ElementDecoration({  ");
 		script.append("  elementId : element,  ");

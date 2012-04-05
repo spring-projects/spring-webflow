@@ -51,7 +51,7 @@ public class AjaxEventInterceptorRenderer extends DojoElementDecorationRenderer 
 			processIds = component.getClientId(context);
 		}
 		String childId = getElementId(context, component);
-		StringBuffer script = new StringBuffer();
+		StringBuilder script = new StringBuilder();
 		script.append("dojo.addOnLoad(function(){");
 		script.append("Spring.addDecoration(new Spring.AjaxEventDecoration({");
 		script.append("event:'" + event + "'");

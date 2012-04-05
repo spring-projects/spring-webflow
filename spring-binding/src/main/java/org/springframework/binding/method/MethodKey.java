@@ -199,7 +199,7 @@ public class MethodKey implements Serializable {
 	 * Convenience method that returns the parameter types describing the signature of the method as a string.
 	 */
 	private String parameterTypesString() {
-		StringBuffer parameterTypesString = new StringBuffer();
+		StringBuilder parameterTypesString = new StringBuilder();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			if (parameterTypes[i] == null) {
 				parameterTypesString.append("<any>");

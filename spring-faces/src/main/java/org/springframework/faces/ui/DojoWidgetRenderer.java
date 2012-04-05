@@ -8,7 +8,7 @@ public class DojoWidgetRenderer extends DojoElementDecorationRenderer {
 	protected String getDojoAttributesAsString(FacesContext context, UIComponent component) {
 
 		DojoWidget advisor = (DojoWidget) component;
-		StringBuffer attrs = new StringBuffer();
+		StringBuilder attrs = new StringBuilder();
 
 		for (int i = 0; i < advisor.getDojoAttributes().length; i++) {
 

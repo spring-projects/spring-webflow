@@ -89,7 +89,7 @@ public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 	 * </pre>
 	 */
 	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
-		StringBuffer url = new StringBuffer();
+		StringBuilder url = new StringBuilder();
 		String pathInfo = request.getPathInfo();
 		if (pathInfo != null) {
 			url.append(request.getContextPath());

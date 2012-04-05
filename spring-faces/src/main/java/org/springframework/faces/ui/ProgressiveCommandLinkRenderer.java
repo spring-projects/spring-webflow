@@ -160,7 +160,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		} else {
 			super.encodeEnd(context, component);
 
-			StringBuffer decorationParams = new StringBuffer();
+			StringBuilder decorationParams = new StringBuilder();
 			decorationParams.append("{");
 			decorationParams.append("elementId : '" + component.getClientId(context) + "'");
 
@@ -183,7 +183,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			}
 
 			decorationParams.append("}");
-			StringBuffer advisorScript = new StringBuffer();
+			StringBuilder advisorScript = new StringBuilder();
 			advisorScript.append("Spring.addDecoration(new Spring.CommandLinkDecoration(" + decorationParams.toString()
 					+ "));");
 			ResourceHelper.beginScriptBlock(context);
@@ -220,7 +220,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 			return "";
 		} else {
 			String params = encodeParamsAsArray(context, component);
-			StringBuffer onclick = new StringBuffer();
+			StringBuilder onclick = new StringBuilder();
 			onclick.append("this.submitFormFromLink('" + RendererUtils.getFormId(context, component) + "','"
 					+ component.getClientId(context) + "', " + params + "); return false;");
 			return onclick.toString();
@@ -228,7 +228,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	}
 
 	protected String encodeParamsAsArray(FacesContext context, UIComponent component) {
-		StringBuffer paramArray = new StringBuffer();
+		StringBuilder paramArray = new StringBuilder();
 		paramArray.append("[");
 		for (int i = 0; i < component.getChildCount(); i++) {
 			if (component.getChildren().get(i) instanceof UIParameter) {

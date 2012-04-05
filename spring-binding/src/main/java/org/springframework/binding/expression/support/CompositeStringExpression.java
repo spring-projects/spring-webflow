@@ -41,11 +41,11 @@ public class CompositeStringExpression implements Expression {
 	}
 
 	public Object getValue(Object context) throws EvaluationException {
-		StringBuffer buffer = new StringBuffer(128);
+		StringBuilder value = new StringBuilder(128);
 		for (Expression expression : expressions) {
-			buffer.append(expression.getValue(context));
+			value.append(expression.getValue(context));
 		}
-		return buffer.toString();
+		return value.toString();
 	}
 
 	public void setValue(Object context, Object value) throws EvaluationException {

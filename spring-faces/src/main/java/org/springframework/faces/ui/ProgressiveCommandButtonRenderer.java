@@ -65,7 +65,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
-			StringBuffer onclick = new StringBuffer();
+			StringBuilder onclick = new StringBuilder();
 			if (attributeValue != null) {
 				String originalOnclick = attributeValue.toString().trim();
 				if (!originalOnclick.endsWith(";")) {
@@ -135,7 +135,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 	}
 
 	protected String encodeParamsAsObject(FacesContext context, UIComponent component) {
-		StringBuffer paramObj = new StringBuffer();
+		StringBuilder paramObj = new StringBuilder();
 		for (int i = 0; i < component.getChildCount(); i++) {
 			if (component.getChildren().get(i) instanceof UIParameter) {
 				UIParameter param = (UIParameter) component.getChildren().get(i);

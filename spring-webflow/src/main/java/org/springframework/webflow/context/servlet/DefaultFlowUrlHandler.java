@@ -103,7 +103,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	}
 
 	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request) {
-		StringBuffer url = new StringBuffer();
+		StringBuilder url = new StringBuilder();
 		url.append(request.getRequestURI());
 		url.append('?');
 		appendQueryParameter(url, FLOW_EXECUTION_KEY_PARAMETER, flowExecutionKey, getEncodingScheme(request));
@@ -128,7 +128,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	 * </pre>
 	 */
 	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
-		StringBuffer url = new StringBuffer();
+		StringBuilder url = new StringBuilder();
 		if (request.getPathInfo() != null) {
 			url.append(request.getContextPath());
 			url.append(request.getServletPath());
@@ -168,7 +168,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		}
 	}
 
-	protected <T> void appendQueryParameters(StringBuffer url, Map<String, T> parameters, String encodingScheme) {
+	protected <T> void appendQueryParameters(StringBuilder url, Map<String, T> parameters, String encodingScheme) {
 		Iterator<Map.Entry<String, T>> entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
 			Map.Entry<?, ?> entry = entries.next();
@@ -181,7 +181,7 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 
 	// internal helpers
 
-	private void appendQueryParameter(StringBuffer url, Object key, Object value, String encodingScheme) {
+	private void appendQueryParameter(StringBuilder url, Object key, Object value, String encodingScheme) {
 		String encodedKey = encode(key, encodingScheme);
 		String encodedValue = encode(value, encodingScheme);
 		url.append(encodedKey).append('=').append(encodedValue);
