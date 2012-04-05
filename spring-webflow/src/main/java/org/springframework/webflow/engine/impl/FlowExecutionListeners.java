@@ -56,7 +56,7 @@ class FlowExecutionListeners {
 	 * Create a flow execution listener helper that wraps the specified listener array.
 	 * @param listeners the listener array
 	 */
-	public FlowExecutionListeners(FlowExecutionListener[] listeners) {
+	public FlowExecutionListeners(FlowExecutionListener... listeners) {
 		if (listeners != null) {
 			this.listeners = listeners;
 		} else {

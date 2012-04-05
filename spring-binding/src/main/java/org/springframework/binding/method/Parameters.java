@@ -65,7 +65,7 @@ public class Parameters {
 	 * Create a parameter list from the parameter array.
 	 * @param parameters the parameters
 	 */
-	public Parameters(Parameter[] parameters) {
+	public Parameters(Parameter... parameters) {
 		this.parameters = new ArrayList<Parameter>(parameters.length);
 		addAll(parameters);
 	}
@@ -82,7 +82,7 @@ public class Parameters {
 	 * Add new parameters to this list.
 	 * @param parameters the parameters
 	 */
-	public boolean addAll(Parameter[] parameters) {
+	public boolean addAll(Parameter... parameters) {
 		return this.parameters.addAll(Arrays.asList(parameters));
 	}
 

@@ -62,7 +62,7 @@ public class CompositeAction extends AbstractAction {
 	 * Create a composite action composed of given actions.
 	 * @param actions the actions
 	 */
-	public CompositeAction(Action[] actions) {
+	public CompositeAction(Action... actions) {
 		Assert.notEmpty(actions, "At least one action is required");
 		this.actions = actions;
 	}

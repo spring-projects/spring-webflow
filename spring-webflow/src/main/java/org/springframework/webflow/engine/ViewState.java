@@ -96,7 +96,7 @@ public class ViewState extends TransitionableState {
 	 * Adds a set of view variables.
 	 * @param variables the variables
 	 */
-	public void addVariables(ViewVariable[] variables) {
+	public void addVariables(ViewVariable... variables) {
 		for (ViewVariable variable : variables) {
 			addVariable(variable);
 		}

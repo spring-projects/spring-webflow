@@ -64,7 +64,7 @@ public class FlowExecutionListenerCriteriaFactory {
 	 * Returns a criteria that just matches a flow if it is identified by one of the specified ids.
 	 * @param flowIds the flow ids to match
 	 */
-	public FlowExecutionListenerCriteria flows(String[] flowIds) {
+	public FlowExecutionListenerCriteria flows(String... flowIds) {
 		return new FlowIdFlowExecutionListenerCriteria(flowIds);
 	}
 
@@ -96,7 +96,7 @@ public class FlowExecutionListenerCriteriaFactory {
 		 * Create a new flow id matching flow execution listener criteria implementation.
 		 * @param flowIds the flow ids to match
 		 */
-		public FlowIdFlowExecutionListenerCriteria(String[] flowIds) {
+		public FlowIdFlowExecutionListenerCriteria(String... flowIds) {
 			Assert.notEmpty(flowIds, "The flow id array is required");
 			this.flowIds = flowIds;
 		}

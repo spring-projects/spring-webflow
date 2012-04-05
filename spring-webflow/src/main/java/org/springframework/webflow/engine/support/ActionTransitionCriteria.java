@@ -66,7 +66,7 @@ public class ActionTransitionCriteria implements TransitionCriteria {
 	 * false otherwise).
 	 * @param trueEventIds the true result event IDs
 	 */
-	public void setTrueEventIds(String[] trueEventIds) {
+	public void setTrueEventIds(String... trueEventIds) {
 		this.trueEventIds = trueEventIds;
 	}
 

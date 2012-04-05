@@ -99,7 +99,7 @@ public class FluentParserContext implements ParserContext {
 	 * @param variables the expression variables
 	 * @return this
 	 */
-	public FluentParserContext variables(ExpressionVariable[] variables) {
+	public FluentParserContext variables(ExpressionVariable... variables) {
 		expressionVariables.addAll(Arrays.asList(variables));
 		return this;
 	}

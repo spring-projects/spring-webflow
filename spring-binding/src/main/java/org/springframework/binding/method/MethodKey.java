@@ -58,7 +58,7 @@ public class MethodKey implements Serializable {
 	 * @param methodName the method name
 	 * @param parameterTypes the method's parameter types, or <code>null</code> if the method has no parameters
 	 */
-	public MethodKey(Class<?> declaredType, String methodName, Class<?>[] parameterTypes) {
+	public MethodKey(Class<?> declaredType, String methodName, Class<?>... parameterTypes) {
 		Assert.notNull(declaredType, "The method's declared type is required");
 		Assert.notNull(methodName, "The method name is required");
 		this.declaredType = declaredType;

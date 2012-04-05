@@ -369,7 +369,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * Adds flow variables.
 	 * @param variables the variables
 	 */
-	public void addVariables(FlowVariable[] variables) {
+	public void addVariables(FlowVariable... variables) {
 		if (variables == null) {
 			return;
 		}

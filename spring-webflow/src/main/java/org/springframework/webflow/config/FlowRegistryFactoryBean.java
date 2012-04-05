@@ -85,14 +85,14 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	 * Flow definitions defined in external files that should be registered in the registry produced by this factory
 	 * bean.
 	 */
-	public void setFlowLocations(FlowLocation[] flowLocations) {
+	public void setFlowLocations(FlowLocation... flowLocations) {
 		this.flowLocations = flowLocations;
 	}
 
 	/**
 	 * Resolvable path patterns to flows to register in the registry produced by this factory bean.
 	 */
-	public void setFlowLocationPatterns(String[] flowLocationPatterns) {
+	public void setFlowLocationPatterns(String... flowLocationPatterns) {
 		this.flowLocationPatterns = flowLocationPatterns;
 	}
 
@@ -100,7 +100,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	 * Java {@link FlowBuilder flow builder} classes that should be registered in the registry produced by this factory
 	 * bean.
 	 */
-	public void setFlowBuilders(FlowBuilderInfo[] flowBuilders) {
+	public void setFlowBuilders(FlowBuilderInfo... flowBuilders) {
 		this.flowBuilders = flowBuilders;
 	}
 

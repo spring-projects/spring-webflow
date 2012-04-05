@@ -64,7 +64,7 @@ class DispatchMethodInvoker {
 	 * @param target the target to dispatch to
 	 * @param parameterTypes the parameter types defining the argument signature of the dispatch methods
 	 */
-	public DispatchMethodInvoker(Object target, Class<?>[] parameterTypes) {
+	public DispatchMethodInvoker(Object target, Class<?>... parameterTypes) {
 		Assert.notNull(target, "The target of a dispatch method invocation is required");
 		this.target = target;
 		this.parameterTypes = parameterTypes;
@@ -92,7 +92,7 @@ class DispatchMethodInvoker {
 	 * @throws MethodLookupException when the method cannot be resolved
 	 * @throws Exception when the invoked method throws an exception
 	 */
-	public Object invoke(String methodName, Object[] arguments) throws MethodLookupException, Exception {
+	public Object invoke(String methodName, Object... arguments) throws MethodLookupException, Exception {
 		try {
 			Method dispatchMethod = getDispatchMethod(methodName);
 			return dispatchMethod.invoke(target, arguments);

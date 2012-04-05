@@ -59,7 +59,7 @@ public class ActionList implements Iterable<Action> {
 	 * @param actions the actions to add
 	 * @return true if this list's contents changed as a result of the add operation
 	 */
-	public boolean addAll(Action[] actions) {
+	public boolean addAll(Action... actions) {
 		if (actions == null) {
 			return false;
 		}

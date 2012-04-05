@@ -117,7 +117,7 @@ public class MessageBuilder {
 	 * @param codes the message codes; if null, no changes will be made
 	 * @return this, for fluent API usage
 	 */
-	public MessageBuilder codes(String[] codes) {
+	public MessageBuilder codes(String... codes) {
 		if (codes == null) {
 			return this;
 		}
@@ -142,7 +142,7 @@ public class MessageBuilder {
 	 * @param args the message argument values, if null no changes will be made
 	 * @return this, for fluent API usage
 	 */
-	public MessageBuilder args(Object[] args) {
+	public MessageBuilder args(Object... args) {
 		if (args == null) {
 			return this;
 		}
@@ -169,7 +169,7 @@ public class MessageBuilder {
 	 * @param args the resolvable message arguments
 	 * @return this, for fluent API usage
 	 */
-	public MessageBuilder resolvableArgs(Object[] args) {
+	public MessageBuilder resolvableArgs(Object... args) {
 		if (args == null) {
 			return this;
 		}

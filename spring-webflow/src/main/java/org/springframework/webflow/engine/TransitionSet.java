@@ -55,7 +55,7 @@ public class TransitionSet implements Iterable<Transition> {
 	 * @param transitions the transitions to add
 	 * @return true if this set's contents changed as a result of the add operation
 	 */
-	public boolean addAll(Transition[] transitions) {
+	public boolean addAll(Transition... transitions) {
 		return CollectionUtils.addAllNoDuplicates(this.transitions, transitions);
 	}
 

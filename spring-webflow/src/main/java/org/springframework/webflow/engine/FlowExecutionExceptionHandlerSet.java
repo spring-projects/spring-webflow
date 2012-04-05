@@ -56,7 +56,7 @@ public class FlowExecutionExceptionHandlerSet {
 	 * @param exceptionHandlers the exception handlers to add
 	 * @return true if this set's contents changed as a result of the add operation
 	 */
-	public boolean addAll(FlowExecutionExceptionHandler[] exceptionHandlers) {
+	public boolean addAll(FlowExecutionExceptionHandler... exceptionHandlers) {
 		return CollectionUtils.addAllNoDuplicates(this.exceptionHandlers, exceptionHandlers);
 	}
 

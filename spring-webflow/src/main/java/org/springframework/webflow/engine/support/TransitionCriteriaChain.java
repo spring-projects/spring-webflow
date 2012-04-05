@@ -49,7 +49,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	 * Creates a transition criteria chain with the specified criteria.
 	 * @param criteria the criteria
 	 */
-	public TransitionCriteriaChain(TransitionCriteria[] criteria) {
+	public TransitionCriteriaChain(TransitionCriteria... criteria) {
 		criteriaChain.addAll(Arrays.asList(criteria));
 	}
 
@@ -82,7 +82,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	 * Create a transition criteria chain chaining given list of actions.
 	 * @param actions the actions (and their execution properties) to chain together
 	 */
-	public static TransitionCriteria criteriaChainFor(Action[] actions) {
+	public static TransitionCriteria criteriaChainFor(Action... actions) {
 		if (actions == null || actions.length == 0) {
 			return WildcardTransitionCriteria.INSTANCE;
 		}
