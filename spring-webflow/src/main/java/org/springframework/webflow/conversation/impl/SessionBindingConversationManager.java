@@ -53,9 +53,9 @@ public class SessionBindingConversationManager implements ConversationManager {
 	private int maxConversations = 5;
 
 	/**
-	 * The factory for creating conversation lock objects.
+	 * The lock timeout in seconds.
 	 */
-	private ConversationLockFactory conversationLockFactory = new ConversationLockFactory();
+	private int lockTimeoutSeconds = 30;
 
 	/**
 	 * Returns the key this conversation manager uses to store conversation data in the session.
@@ -94,22 +94,22 @@ public class SessionBindingConversationManager implements ConversationManager {
 	 * default is 30 seconds.
 	 */
 	public int getLockTimeoutSeconds() {
-		return conversationLockFactory.getTimeoutSeconds();
+		return lockTimeoutSeconds;
 	}
 
 	/**
 	 * Sets the time period that can elapse before a timeout occurs on an attempt to acquire a conversation lock. The
 	 * default is 30 seconds.
-	 * @param timeoutSeconds the timeout period in seconds
+	 * @param lockTimeoutSeconds the timeout period in seconds
 	 */
-	public void setLockTimeoutSeconds(int timeoutSeconds) {
-		conversationLockFactory.setTimeoutSeconds(timeoutSeconds);
+	public void setLockTimeoutSeconds(int lockTimeoutSeconds) {
+		this.lockTimeoutSeconds = lockTimeoutSeconds;
 	}
 
 	// implementing conversation manager
 
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {
-		return getConversationContainer().createConversation(conversationParameters, conversationLockFactory);
+		return getConversationContainer().createConversation(conversationParameters, createConversationLock());
 	}
 
 	public Conversation getConversation(ConversationId id) throws ConversationException {
@@ -125,6 +125,10 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	// hooks for subclassing
+
+	protected ConversationLock createConversationLock() {
+		return new JdkConcurrentConversationLock(lockTimeoutSeconds);
+	}
 
 	protected ConversationContainer createConversationContainer() {
 		return new ConversationContainer(maxConversations, sessionKey);
