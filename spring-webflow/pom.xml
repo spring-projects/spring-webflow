@@ -151,8 +151,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.el</groupId>
-			<artifactId>jboss-el</artifactId>
-			<version>2.0.1.GA</version>
+			<artifactId>com.springsource.org.jboss.el</artifactId>
+			<version>2.0.0.GA</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -192,12 +192,24 @@
  			<id>maven2.java.net</id>
  			<url>http://download.java.net/maven/2</url>
 		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
 	</repositories>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
@@ -206,6 +218,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12</version>
 				<configuration>
 					<junitArtifactName>junit:junit</junitArtifactName>
 					<includes>
@@ -215,6 +228,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -249,6 +263,7 @@
 				<directory>src/test/java</directory>
 				<includes>
 					<include>**/*.xml</include>
+					<include>**/*.lmx</include>
 					<include>**/*.sql</include>
 					<include>**/*.properties</include>
 				</includes>

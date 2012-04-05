@@ -90,4 +90,12 @@ public class FlowRegistryBeanDefinitionParserTests extends TestCase {
 		assertNotNull(registry.getParent());
 		assertEquals("parentFlow", registry.getParent().getFlowDefinition("parentFlow").getId());
 	}
+
+	public void testCustomFlowModelBuilderRegistered() {
+		FlowDefinitionRegistry customerModelBuilderRegistry = (FlowDefinitionRegistry) context
+				.getBean("customFlowModelTest");
+		FlowDefinition def = customerModelBuilderRegistry.getFlowDefinition("flow-custom");
+		assertNotNull(def);
+		assertNotNull(def.getState("end"));
+	}
 }
