@@ -109,7 +109,8 @@ public class SessionBindingConversationManager implements ConversationManager {
 	// implementing conversation manager
 
 	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException {
-		return getConversationContainer().createConversation(conversationParameters, createConversationLock());
+		ConversationLock lock = new JdkConcurrentConversationLock(lockTimeoutSeconds);
+		return getConversationContainer().createConversation(conversationParameters, lock);
 	}
 
 	public Conversation getConversation(ConversationId id) throws ConversationException {
@@ -125,10 +126,6 @@ public class SessionBindingConversationManager implements ConversationManager {
 	}
 
 	// hooks for subclassing
-
-	protected ConversationLock createConversationLock() {
-		return new JdkConcurrentConversationLock(lockTimeoutSeconds);
-	}
 
 	protected ConversationContainer createConversationContainer() {
 		return new ConversationContainer(maxConversations, sessionKey);

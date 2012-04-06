@@ -102,30 +102,25 @@ public abstract class AbstractModel implements Model {
 			parent = new LinkedList<T>(parent);
 			Collections.reverse(parent);
 		}
-		for (T element : parent) {
-			if (!mergeElement(child, element)) {
-				addElement(child, element, addAtEnd);
-			}
+		for (T parentModel : parent) {
+			addOrMerge(child, parentModel, addAtEnd);
 		}
 		return child;
 	}
 
-	private <T extends Model> boolean mergeElement(LinkedList<T> child, T element) {
-		for (T childElement : child) {
-			if (childElement.isMergeableWith(element)) {
-				childElement.merge(element);
-				return true;
+	private <T extends Model> void addOrMerge(LinkedList<T> list, T modelToMerge, boolean addAtEnd) {
+		for (T model : list) {
+			if (model.isMergeableWith(modelToMerge)) {
+				model.merge(modelToMerge);
+				return;
 			}
 		}
-		return false;
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T extends Model> void addElement(LinkedList<T> child, T element, boolean addAtEnd) {
+		@SuppressWarnings("unchecked")
+		T copy = (T) modelToMerge.createCopy();
 		if (addAtEnd) {
-			child.addLast((T) element.createCopy());
+			list.addLast(copy);
 		} else {
-			child.addFirst((T) element.createCopy());
+			list.addFirst(copy);
 		}
 	}
 
