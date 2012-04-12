@@ -27,6 +27,7 @@ import junit.framework.TestCase;
  * 
  * @author Erwin Vervaet
  */
+@Deprecated
 public class CompositeIteratorTests extends TestCase {
 
 	public void testNoIterators() {
