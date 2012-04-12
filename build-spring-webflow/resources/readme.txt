@@ -30,7 +30,7 @@ Release distribution contents:
 "dist" contains the Web Flow distribution jar files
 "src" contains the Web Flow distribution source jar files
 "docs" contains the Spring Web Flow reference manual and API Javadocs
-"projects" contains all buildable projects, including sample applications
+"projects" contains all buildable projects
 "projects/build-spring-webflow" is the directory to access to build the Web Flow distribution
 "projects/spring-build" is the master build system used by all Spring projects, including Spring Web Flow
 "projects/spring-binding" contains buildable Spring Data Binding project sources, a utility library used by SWF
@@ -38,7 +38,8 @@ Release distribution contents:
 "projects/spring-js" contains buildable Spring JavaScript project sources
 "projects/spring-js-resources" bundles library containing client-side Ajax and Dojo integration
 "projects/spring-webflow" contains buildable Spring Web Flow project sources
-"projects/spring-webflow-samples" contains buildable Spring Web Flow sample application sources
+
+Current samples can be found at https://github.com/SpringSource/spring-webflow-samples.
 
 See the readme.txt within the above directories for additional information.
 

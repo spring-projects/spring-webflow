@@ -1,7 +1,7 @@
 This is where the master build that creates releases of Spring Web Flow resides.  The build system is based on spring-build, which is linked in using an SVN external to https://src.springframework.org/svn/spring-build.
 
 USERS
-- To build all Spring Web Flow projects, including samples:
+- To build all Spring Web Flow projects:
 
     1. From this directory, run:
        ant
@@ -31,7 +31,6 @@ DEVELOPERS
          spring-webflow/template.mf
          spring-webflow-reference/src/spring-webflow-reference.xml
          spring-webflow-reference/src/overview.xml
-         spring-webflow-samples/*/pom.xml
 		 
   2. From this directory, run:
 	
