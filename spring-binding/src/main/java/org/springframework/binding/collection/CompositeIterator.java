@@ -27,7 +27,9 @@ import org.springframework.util.Assert;
  * iterators which are invoked in sequence untill all iterators are exhausted.
  * 
  * @author Erwin Vervaet
+ * @deprecated in favor of {@link org.springframework.util.CompositeIterator}
  */
+@Deprecated
 public class CompositeIterator<E> implements Iterator<E> {
 
 	private List<Iterator<E>> iterators = new LinkedList<Iterator<E>>();
