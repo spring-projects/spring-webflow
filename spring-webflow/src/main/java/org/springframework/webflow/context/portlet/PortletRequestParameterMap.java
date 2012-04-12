@@ -19,9 +19,9 @@ import java.util.Iterator;
 
 import javax.portlet.PortletRequest;
 
-import org.springframework.binding.collection.CompositeIterator;
 import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.util.Assert;
+import org.springframework.util.CompositeIterator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.portlet.multipart.MultipartActionRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;

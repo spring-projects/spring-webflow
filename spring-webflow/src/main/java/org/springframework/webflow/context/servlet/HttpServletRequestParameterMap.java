@@ -19,9 +19,9 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.binding.collection.CompositeIterator;
 import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.util.Assert;
+import org.springframework.util.CompositeIterator;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
