@@ -27,6 +27,13 @@
 		</webflow:flow-builder>
 	</webflow:flow-registry>
 	
+	<webflow:flow-registry  id="customFlowModelTest">
+		<webflow:flow-location id="flow-custom" path="org/springframework/webflow/config/flow.lmx"/>
+		<webflow:flow-model-builders>
+			<webflow:model-builder file-extension="lmx" class="org.springframework.webflow.config.FooFlowModelBuilder"/>
+		</webflow:flow-model-builders>
+	</webflow:flow-registry>
+	
 	<webflow:flow-registry id="parentRegistry">
 		<webflow:flow-location id="parentFlow" path="org/springframework/webflow/config/flow.xml" />
 	</webflow:flow-registry>

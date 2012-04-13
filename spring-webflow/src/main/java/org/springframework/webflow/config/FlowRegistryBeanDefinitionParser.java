@@ -72,6 +72,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		definitionBuilder.addPropertyValue("flowLocations", parseLocations(element));
 		definitionBuilder.addPropertyValue("flowLocationPatterns", parseLocationPatterns(element));
 		definitionBuilder.addPropertyValue("flowBuilders", parseFlowBuilders(element));
+		definitionBuilder.addPropertyValue("flowModelBuilders", parseFlowModelBuilders(element));
 
 		parserContext.popAndRegisterContainingComponent();
 	}
@@ -133,6 +134,26 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			builders.add(new FlowBuilderInfo(id, className, parseAttributes(builderElement)));
 		}
 		return builders;
+	}
+
+	private List<FlowModelBuilderInfo> parseFlowModelBuilders(Element flowModelBuilderElement) {
+		Element modelBuildersElement = DomUtils
+				.getChildElementByTagName(flowModelBuilderElement, "flow-model-builders");
+		if (modelBuildersElement == null) {
+			return Collections.emptyList();
+		}
+		List<Element> modelBuilderElementsList = DomUtils.getChildElementsByTagName(modelBuildersElement,
+				"model-builder");
+		if (modelBuilderElementsList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<FlowModelBuilderInfo> modelBuilders = new ArrayList<FlowModelBuilderInfo>(modelBuilderElementsList.size());
+		for (Element modelBuilderElement : modelBuilderElementsList) {
+			String fileExtension = modelBuilderElement.getAttribute("file-extension");
+			String className = modelBuilderElement.getAttribute("class");
+			modelBuilders.add(new FlowModelBuilderInfo(fileExtension, className));
+		}
+		return modelBuilders;
 	}
 
 	private void parseFlowBuilderServices(Element element, ParserContext context,

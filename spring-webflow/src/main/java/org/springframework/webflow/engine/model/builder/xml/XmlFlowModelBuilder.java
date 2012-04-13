@@ -16,7 +16,6 @@
 package org.springframework.webflow.engine.model.builder.xml;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.webflow.engine.model.AbstractActionModel;
 import org.springframework.webflow.engine.model.AbstractStateModel;
@@ -50,10 +48,9 @@ import org.springframework.webflow.engine.model.SubflowStateModel;
 import org.springframework.webflow.engine.model.TransitionModel;
 import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
-import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
+import org.springframework.webflow.engine.model.builder.AbstractResourceBackedFlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 import org.springframework.webflow.engine.model.registry.FlowModelLocator;
-import org.springframework.webflow.engine.model.registry.NoSuchFlowModelException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -64,19 +61,19 @@ import org.xml.sax.SAXException;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class XmlFlowModelBuilder implements FlowModelBuilder {
-
-	private Resource resource;
-
-	private FlowModelLocator modelLocator;
+public class XmlFlowModelBuilder extends AbstractResourceBackedFlowModelBuilder {
 
 	private DocumentLoader documentLoader = new DefaultDocumentLoader();
 
 	private Document document;
 
-	private long lastModifiedTimestamp;
-
-	private FlowModel flowModel;
+	/**
+	 * Constructs a new XML flow model builder, use {@link #setFlowResource(Resource)} and/or
+	 * {@link #setFlowModelLocator(FlowModelLocator)} to provide additional resources and locators to this builder.
+	 */
+	public XmlFlowModelBuilder() {
+		super();
+	}
 
 	/**
 	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
@@ -84,7 +81,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	 * @param resource the path to the XML flow definition (required)
 	 */
 	public XmlFlowModelBuilder(Resource resource) {
-		init(resource, null);
+		super();
+		super.setFlowResource(resource);
 	}
 
 	/**
@@ -94,7 +92,9 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	 * @param modelLocator a locator for parent flow models to support flow inheritance
 	 */
 	public XmlFlowModelBuilder(Resource resource, FlowModelLocator modelLocator) {
-		init(resource, modelLocator);
+		super();
+		super.setFlowModelLocator(modelLocator);
+		super.setFlowResource(resource);
 	}
 
 	/**
@@ -107,10 +107,9 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		this.documentLoader = documentLoader;
 	}
 
-	public void init() throws FlowModelBuilderException {
+	public void doInit(Resource resource) throws FlowModelBuilderException {
 		try {
 			document = documentLoader.loadDocument(resource);
-			initLastModifiedTimestamp();
 		} catch (IOException e) {
 			throw new FlowModelBuilderException("Could not access the XML flow definition at " + resource, e);
 		} catch (ParserConfigurationException e) {
@@ -121,47 +120,16 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		}
 	}
 
-	public void build() throws FlowModelBuilderException {
+	public FlowModel parseFlow() throws FlowModelBuilderException {
 		if (getDocumentElement() == null) {
 			throw new FlowModelBuilderException(
 					"The FlowModelBuilder must be initialized first -- called init() before calling build()");
 		}
-		flowModel = parseFlow(getDocumentElement());
-		mergeFlows();
-		mergeStates();
+		return parseFlow(getDocumentElement());
 	}
 
-	public FlowModel getFlowModel() throws FlowModelBuilderException {
-		if (flowModel == null) {
-			throw new FlowModelBuilderException(
-					"The FlowModel must be built first -- called init() and build() before calling getFlowModel()");
-		}
-		return flowModel;
-	}
-
-	public void dispose() throws FlowModelBuilderException {
+	public void doDispose() throws FlowModelBuilderException {
 		document = null;
-		flowModel = null;
-	}
-
-	public Resource getFlowModelResource() {
-		return resource;
-	}
-
-	public boolean hasFlowModelResourceChanged() {
-		if (lastModifiedTimestamp == -1) {
-			return false;
-		}
-		try {
-			long lastModified = resource.lastModified();
-			if (lastModified > lastModifiedTimestamp) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (IOException e) {
-			return false;
-		}
 	}
 
 	/**
@@ -176,20 +144,6 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	 */
 	protected Element getDocumentElement() {
 		return document != null ? document.getDocumentElement() : null;
-	}
-
-	private void init(Resource resource, FlowModelLocator modelLocator) {
-		Assert.notNull(resource, "The location of the XML-based flow definition is required");
-		this.resource = resource;
-		this.modelLocator = modelLocator;
-	}
-
-	private void initLastModifiedTimestamp() {
-		try {
-			lastModifiedTimestamp = resource.lastModified();
-		} catch (IOException e) {
-			lastModifiedTimestamp = -1;
-		}
 	}
 
 	private FlowModel parseFlow(Element element) {
@@ -622,63 +576,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		return state;
 	}
 
-	private void mergeFlows() {
-		if (flowModel.getParent() != null) {
-			List<String> parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
-			for (String parentFlowId : parents) {
-				if (StringUtils.hasText(parentFlowId)) {
-					try {
-						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
-					} catch (NoSuchFlowModelException e) {
-						throw new FlowModelBuilderException("Unable to find flow '" + parentFlowId
-								+ "' to inherit from", e);
-					}
-				}
-			}
-		}
-	}
-
-	private void mergeStates() {
-		if (flowModel.getStates() == null) {
-			return;
-		}
-		for (AbstractStateModel childState : flowModel.getStates()) {
-			String parent = childState.getParent();
-			if (childState.getParent() != null) {
-				String flowId;
-				String stateId;
-				AbstractStateModel parentState = null;
-				int hashIndex = parent.indexOf("#");
-				if (hashIndex == -1) {
-					throw new FlowModelBuilderException("Invalid parent syntax '" + parent
-							+ "', should take form 'flowId#stateId'");
-				}
-				flowId = parent.substring(0, hashIndex).trim();
-				stateId = parent.substring(hashIndex + 1).trim();
-				try {
-					if (StringUtils.hasText(flowId)) {
-						parentState = modelLocator.getFlowModel(flowId).getStateById(stateId);
-					} else {
-						parentState = flowModel.getStateById(stateId);
-					}
-					if (parentState == null) {
-						throw new FlowModelBuilderException("Unable to find state '" + stateId + "' in flow '" + flowId
-								+ "'");
-					}
-					childState.merge(parentState);
-				} catch (NoSuchFlowModelException e) {
-					throw new FlowModelBuilderException("Unable to find flow '" + flowId + "' to inherit from", e);
-				} catch (ClassCastException e) {
-					throw new FlowModelBuilderException("Parent state type '" + parentState.getClass().getName()
-							+ "' cannot be merged with state type '" + childState.getClass().getName() + "'", e);
-
-				}
-			}
-		}
-	}
-
 	public String toString() {
-		return new ToStringCreator(this).append("resource", resource).toString();
+		return new ToStringCreator(this).append("resource", getFlowModelResource()).toString();
 	}
 
 }

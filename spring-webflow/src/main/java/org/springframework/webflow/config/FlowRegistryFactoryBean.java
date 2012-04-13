@@ -17,6 +17,8 @@ package org.springframework.webflow.config;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -42,7 +45,7 @@ import org.springframework.webflow.engine.builder.support.FlowBuilderContextImpl
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
-import org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder;
+import org.springframework.webflow.engine.model.builder.ResourceBackedFlowModelBuilder;
 import org.springframework.webflow.engine.model.registry.FlowModelHolder;
 
 /**
@@ -70,6 +73,8 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	private String basePath;
 
 	private ClassLoader classLoader;
+
+	private Map<String, String> flowModelBuilderMap = new HashMap<String, String>(1);
 
 	/**
 	 * The definition registry produced by this factory bean.
@@ -102,6 +107,15 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	 */
 	public void setFlowBuilders(FlowBuilderInfo... flowBuilders) {
 		this.flowBuilders = flowBuilders;
+	}
+
+	/**
+	 * Java model builder classes that should be registered within this factory bean.
+	 */
+	public void setFlowModelBuilders(FlowModelBuilderInfo[] flowModelBuilders) {
+		for (FlowModelBuilderInfo info : flowModelBuilders) {
+			flowModelBuilderMap.put(info.getExtension(), info.getClassName());
+		}
 	}
 
 	/**
@@ -138,6 +152,10 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		}
 		flowRegistry = new DefaultFlowRegistry();
 		flowRegistry.setParent(parent);
+		if (!flowModelBuilderMap.containsKey("xml")) {
+			/* Default, override-able registration of '.xml' flow model builder */
+			flowModelBuilderMap.put("xml", "org.springframework.webflow.engine.model.builder.xml.XmlFlowModelBuilder");
+		}
 		registerFlowLocations();
 		registerFlowLocationPatterns();
 		registerFlowBuilders();
@@ -240,16 +258,32 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	}
 
 	private FlowModelBuilder createFlowModelBuilder(FlowDefinitionResource resource) {
-		if (isXml(resource.getPath())) {
-			return new XmlFlowModelBuilder(resource.getPath(), flowRegistry.getFlowModelRegistry());
-		} else {
-			throw new IllegalArgumentException(resource
-					+ " is not a supported resource type; supported types are [.xml]");
+		String extension = getExtension(resource.getPath());
+		if (!flowModelBuilderMap.containsKey(extension)) {
+			throw new IllegalArgumentException(resource.getPath().getFilename()
+					+ " is not a supported resource type; supported types are " + flowModelBuilderMap.keySet());
 		}
+		String builderClassName = flowModelBuilderMap.get(extension);
+		Class<?> flowModelBuilderClass = loadClass(builderClassName);
+		ResourceBackedFlowModelBuilder builder;
+		try {
+			builder = (ResourceBackedFlowModelBuilder) flowModelBuilderClass.newInstance();
+		} catch (InstantiationException e) {
+			throw new FlowDefinitionConstructionException(builderClassName, e);
+		} catch (IllegalAccessException e) {
+			throw new FlowDefinitionConstructionException(builderClassName, e);
+		}
+		builder.setFlowModelLocator(flowRegistry.getFlowModelRegistry());
+		builder.setFlowResource(resource.getPath());
+		return builder;
 	}
 
-	private boolean isXml(Resource flowResource) {
-		return flowResource.getFilename().endsWith(".xml");
+	private String getExtension(Resource path) {
+		String ext = StringUtils.getFilenameExtension(path.getFilename());
+		if (ext == null) {
+			throw new IllegalArgumentException("Flow path [" + path + "] requires an extension.");
+		}
+		return ext;
 	}
 
 	private Object getConvertedValue(FlowElementAttribute attribute) {
