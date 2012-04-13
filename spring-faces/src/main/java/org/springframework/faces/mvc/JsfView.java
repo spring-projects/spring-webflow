@@ -88,7 +88,11 @@ public class JsfView extends AbstractUrlBasedView {
 	}
 
 	private void populateRequestMap(FacesContext facesContext, Map<String, Object> model) {
-		facesContext.getExternalContext().getRequestMap().putAll(model);
+		Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
+		for (Map.Entry<String, Object> entry : model.entrySet()) {
+			// JSF does not insist that putAll is implemented, hence we use individual put calls
+			requestMap.put(entry.getKey(), entry.getValue());
+		}
 	}
 
 	private Lifecycle createFacesLifecycle() {
