@@ -192,6 +192,14 @@
  			<id>maven2.java.net</id>
  			<url>http://download.java.net/maven/2</url>
 		</repository>
+	<!-- Where the el-api implementation is located -->
+        <repository>
+            <id>repository.jboss.org</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
 	</repositories>
 	<build>
 		<plugins>
