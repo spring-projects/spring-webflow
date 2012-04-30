@@ -155,6 +155,15 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<repositories>
+        <repository>
+            <id>repository.jboss.org</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 	<build>
 		<plugins>
 			<plugin>
