@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter id="portlet">
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xml:id="portlet">
 	<title>Portlet Integration</title>
 	<sect1 id="portlet-introduction">
 		<title>Introduction</title>
@@ -102,7 +103,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			<title>Handler Mappings</title>
 			<para>
 				Spring Portlet MVC provides a rich set of methods to map portlet requests.
-				Complete documentation  is available in the <ulink url="http://static.springframework.org/spring/docs/2.5.x/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</ulink>.
+				Complete documentation  is available in the <ulink url="http://static.springframework.org/spring/docs/current/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</ulink>.
 			</para>
 			<para>
 				The <code>booking-portlet-mvc</code> sample application uses a <code>PortletModeHandlerMapping</code> to map portlet requests.

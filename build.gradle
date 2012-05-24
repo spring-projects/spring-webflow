@@ -234,6 +234,12 @@ configure(rootProject) {
 
     description = 'Spring Web Flow'
 
+    apply plugin: 'docbook-reference'
+
+    reference {
+        sourceDir = file('src/reference')
+    }
+
     // don't publish the default jar for the root project
     configurations.archives.artifacts.clear()
 
@@ -258,9 +264,103 @@ configure(rootProject) {
         maxMemory = '1024m'
     }
 
+    task docsZip(type: Zip) {
+        group = 'Distribution'
+        classifier = 'docs'
+        description = "Builds -${classifier} archive containing api and reference " +
+            "for deployment at static.springframework.org/spring-webflow/docs."
+
+        from('src/dist') {
+            include 'changelog.txt'
+        }
+
+        from (api) {
+            into 'api'
+        }
+
+        from (reference) {
+            into 'reference'
+        }
+    }
+
+    task schemaZip(type: Zip) {
+        group = 'Distribution'
+        classifier = 'schema'
+        description = "Builds -${classifier} archive containing all " +
+            "XSDs for deployment at static.springframework.org/schema."
+
+        subprojects.each { subproject ->
+            def Properties schemas = new Properties();
+
+            subproject.sourceSets.main.resources.find {
+                it.path.endsWith('META-INF/spring.schemas')
+            }?.withInputStream { schemas.load(it) }
+
+            for (def key : schemas.keySet()) {
+                def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
+                assert shortName != key
+                File xsdFile = subproject.sourceSets.main.allSource.find {
+                    it.path.endsWith(schemas.get(key))
+                }
+                assert xsdFile != null
+                into (shortName) {
+                    from xsdFile.path
+                }
+            }
+        }
+    }
+
+    task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
+        group = 'Distribution'
+        classifier = 'dist'
+        description = "Builds -${classifier} archive, containing all jars and docs, " +
+                      "suitable for community download page."
+
+        def baseDir = "${project.name}-${project.version}";
+
+        from('src/dist') {
+            include 'notice.txt'
+            into "${baseDir}"
+            expand(copyright: new Date().format('yyyy'), version: project.version)
+        }
+
+        from('src/dist') {
+            include 'readme.txt'
+            include 'license.txt'
+            into "${baseDir}"
+        }
+
+        from(zipTree(docsZip.archivePath)) {
+            into "${baseDir}/docs"
+        }
+
+        from(zipTree(schemaZip.archivePath)) {
+            into "${baseDir}/schema"
+        }
+
+        subprojects.each { subproject ->
+            into ("${baseDir}/libs") {
+                from subproject.jar
+                if (subproject.tasks.findByPath('sourcesJar')) {
+                    from subproject.sourcesJar
+                }
+                if (subproject.tasks.findByPath('javadocJar')) {
+                    from subproject.javadocJar
+                }
+            }
+        }
+    }
+
+    artifacts {
+        archives docsZip
+        archives schemaZip
+        archives distZip
+    }
+
     task wrapper(type: Wrapper) {
         description = 'Generates gradlew[.bat] scripts'
         gradleVersion = '1.0-rc-1'
     }
+
 }
 
