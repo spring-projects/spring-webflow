@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd">
 
 	<webflow:flow-registry id="flowRegistry" parent="parentRegistry">
 		<webflow:flow-location id="flow" path="org/springframework/webflow/config/flow.xml">
