@@ -10,10 +10,10 @@ ivy-cache
 build
 
 # Eclipse metadata
-#.classpath
-#.project
-#.settings
-#.springBeans
+.classpath
+.project
+.settings
+.springBeans
 
 # IDEA metadata and output dirs
 *.iml
