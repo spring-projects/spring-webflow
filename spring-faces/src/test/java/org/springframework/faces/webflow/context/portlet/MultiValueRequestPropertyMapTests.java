@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import org.springframework.mock.web.portlet.MockPortletRequest;
 
-public class MultiValueRequestPropertyMapTest extends TestCase {
+public class MultiValueRequestPropertyMapTests extends TestCase {
 
 	private MultiValueRequestPropertyMap requestMap;
 
