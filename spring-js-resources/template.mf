@@ -1,4 +1,0 @@
-Bundle-SymbolicName: org.springframework.js.resources
-Bundle-Name: Spring JS Resources
-Bundle-Vendor: SpringSource
-Bundle-ManifestVersion: 2

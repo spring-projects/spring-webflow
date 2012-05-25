@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.jboss.el.ExpressionFactoryImpl;
+import org.apache.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.context.support.StaticApplicationContext;
