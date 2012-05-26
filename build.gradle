@@ -14,14 +14,14 @@ configure(allprojects) {
 
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+
+    group = 'org.springframework.webflow'
 }
 
 configure(subprojects) { subproject ->
 
     apply plugin: 'java'
     apply from: "${rootProject.projectDir}/publish-maven.gradle"
-
-    group = 'org.springframework.webflow'
 
     sourceCompatibility=1.5
     targetCompatibility=1.5
