@@ -32,14 +32,14 @@ import org.springframework.faces.webflow.JsfUtils;
  */
 public abstract class BaseSpringJavascriptComponentRenderer extends BaseComponentRenderer {
 
-	private String springJsResourceUri = "/spring/Spring.js";
+	private final String springJsResourceUri = "/spring/Spring.js";
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			ResourceHelper.renderScriptLink(context, springJsResourceUri);
+			ResourceHelper.renderScriptLink(context, this.springJsResourceUri);
 		}
 	}
 }

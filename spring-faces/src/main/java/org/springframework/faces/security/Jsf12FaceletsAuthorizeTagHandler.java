@@ -72,8 +72,8 @@ public class Jsf12FaceletsAuthorizeTagHandler extends TagHandler {
 			return;
 		}
 
-		Jsf12FaceletsAuthorizeTag authorizeTag = new Jsf12FaceletsAuthorizeTag(faceletContext, access, url, method,
-				ifAllGranted, ifAnyGranted, ifNotGranted);
+		Jsf12FaceletsAuthorizeTag authorizeTag = new Jsf12FaceletsAuthorizeTag(faceletContext, this.access, this.url, this.method,
+				this.ifAllGranted, this.ifAnyGranted, this.ifNotGranted);
 
 		boolean isAuthorized = authorizeTag.authorize();
 
@@ -82,7 +82,7 @@ public class Jsf12FaceletsAuthorizeTagHandler extends TagHandler {
 		}
 
 		if (this.var != null) {
-			faceletContext.setAttribute(var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
+			faceletContext.setAttribute(this.var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
 		}
 
 	}

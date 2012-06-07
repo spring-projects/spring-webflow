@@ -38,7 +38,7 @@ public class InitParameterMap extends StringKeyedMapAdapter<String> {
 
 	@Override
 	protected String getAttribute(String key) {
-		return portletContext.getInitParameter(key);
+		return this.portletContext.getInitParameter(key);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class InitParameterMap extends StringKeyedMapAdapter<String> {
 
 	@Override
 	protected Iterator<String> getAttributeNames() {
-		return CollectionUtils.toIterator(portletContext.getInitParameterNames());
+		return CollectionUtils.toIterator(this.portletContext.getInitParameterNames());
 	}
 
 }

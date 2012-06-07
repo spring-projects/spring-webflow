@@ -52,36 +52,36 @@ public class SerializableListDataModel<T> extends DataModel<T> implements Serial
 	}
 
 	public int getRowCount() {
-		return data.size();
+		return this.data.size();
 	}
 
 	public T getRowData() {
 		Assert.isTrue(isRowAvailable(), getClass()
 				+ " is in an illegal state - no row is available at the current index.");
-		return data.get(rowIndex);
+		return this.data.get(this.rowIndex);
 	}
 
 	public int getRowIndex() {
-		return rowIndex;
+		return this.rowIndex;
 	}
 
 	public List<T> getWrappedData() {
-		return data;
+		return this.data;
 	}
 
 	public boolean isRowAvailable() {
-		return rowIndex >= 0 && rowIndex < data.size();
+		return this.rowIndex >= 0 && this.rowIndex < this.data.size();
 	}
 
 	public void setRowIndex(int newRowIndex) {
 		if (newRowIndex < -1) {
 			throw new IllegalArgumentException("Illegal row index for " + getClass() + ": " + newRowIndex);
 		}
-		int oldRowIndex = rowIndex;
-		rowIndex = newRowIndex;
-		if (data != null && oldRowIndex != rowIndex) {
+		int oldRowIndex = this.rowIndex;
+		this.rowIndex = newRowIndex;
+		if (this.data != null && oldRowIndex != this.rowIndex) {
 			Object row = isRowAvailable() ? getRowData() : null;
-			DataModelEvent event = new DataModelEvent(this, rowIndex, row);
+			DataModelEvent event = new DataModelEvent(this, this.rowIndex, row);
 			DataModelListener[] listeners = getDataModelListeners();
 			for (DataModelListener listener : listeners) {
 				listener.rowSelected(event);
@@ -101,7 +101,7 @@ public class SerializableListDataModel<T> extends DataModel<T> implements Serial
 	}
 
 	public String toString() {
-		return data.toString();
+		return this.data.toString();
 	}
 
 }

@@ -34,14 +34,14 @@ public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
-	private RenderAttributeCallback idCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback idCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			writer.writeAttribute(attribute, component.getClientId(context), property);
 		}
 	};
 
-	private RenderAttributeCallback disabledCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback disabledCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			if (Boolean.TRUE.equals(attributeValue)) {
@@ -51,12 +51,12 @@ public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 	};
 
 	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
-		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
-			attributeCallbacks.put("id", idCallback);
-			attributeCallbacks.put("name", idCallback);
-			attributeCallbacks.put("disabled", disabledCallback);
+		if (this.attributeCallbacks == null) {
+			this.attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
+			this.attributeCallbacks.put("id", this.idCallback);
+			this.attributeCallbacks.put("name", this.idCallback);
+			this.attributeCallbacks.put("disabled", this.disabledCallback);
 		}
-		return attributeCallbacks;
+		return this.attributeCallbacks;
 	}
 }

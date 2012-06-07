@@ -209,7 +209,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getAccess() {
-		return access;
+		return this.access;
 	}
 
 	public void setAccess(String access) {
@@ -217,7 +217,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
@@ -225,7 +225,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getMethod() {
-		return method;
+		return this.method;
 	}
 
 	public void setMethod(String method) {
@@ -233,7 +233,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getIfAllGranted() {
-		return ifAllGranted;
+		return this.ifAllGranted;
 	}
 
 	public void setIfAllGranted(String ifAllGranted) {
@@ -241,7 +241,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getIfAnyGranted() {
-		return ifAnyGranted;
+		return this.ifAnyGranted;
 	}
 
 	public void setIfAnyGranted(String ifAnyGranted) {
@@ -249,7 +249,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getIfNotGranted() {
-		return ifNotGranted;
+		return this.ifNotGranted;
 	}
 
 	public void setIfNotGranted(String ifNotGranted) {

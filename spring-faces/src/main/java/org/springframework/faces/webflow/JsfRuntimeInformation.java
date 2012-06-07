@@ -52,14 +52,26 @@ public class JsfRuntimeInformation {
 		}
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static boolean isAtLeastJsf20() {
 		return jsfVersion >= JSF_20;
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static boolean isLessThanJsf20() {
 		return jsfVersion < JSF_20;
 	}
@@ -76,12 +88,4 @@ public class JsfRuntimeInformation {
 		return (null != ClassUtils.getMethodIfAvailable(context.getExternalContext().getNativeContext().getClass(),
 				"getPortletContextName"));
 	}
-
-	/**
-	 * Returns true if Web Flow supports partial state saving in the current runtime environment.
-	 */
-	public static boolean isPartialStateSavingSupported() {
-		return (JsfRuntimeInformation.isAtLeastJsf20() && (!JsfRuntimeInformation.isMyFacesPresent()));
-	}
-
 }

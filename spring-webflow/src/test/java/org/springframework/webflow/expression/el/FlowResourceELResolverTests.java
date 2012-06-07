@@ -17,6 +17,11 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase {
 
+	@Override
+	public void tearDown() {
+		RequestContextHolder.setRequestContext(null);
+	}
+
 	public void testGetType_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
 		assertEquals(getBaseVariable() + " should have a type of MessageSource", MessageSource.class, context

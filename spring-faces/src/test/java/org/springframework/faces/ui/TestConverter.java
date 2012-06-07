@@ -10,8 +10,7 @@ public class TestConverter implements Converter {
 	}
 
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		throw new UnsupportedOperationException();
 	}
 
 	public String getAsString(FacesContext context, UIComponent component, Object value) {

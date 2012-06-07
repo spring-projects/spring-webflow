@@ -51,7 +51,7 @@ public class DojoClientDateValidator extends DojoWidget {
 		if (child.getConverter() instanceof DateTimeConverter) {
 			return ((DateTimeConverter) child.getConverter()).getPattern();
 		}
-		return datePattern;
+		return this.datePattern;
 	}
 
 	public void setDatePattern(String datePattern) {

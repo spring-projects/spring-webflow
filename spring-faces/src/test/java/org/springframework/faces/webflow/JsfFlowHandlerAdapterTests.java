@@ -19,22 +19,22 @@ public class JsfFlowHandlerAdapterTests extends TestCase {
 	protected void setUp() throws Exception {
 		StaticWebApplicationContext context = new StaticWebApplicationContext();
 		context.setServletContext(new MockServletContext());
-		handlerAdapter = new JsfFlowHandlerAdapter();
-		handlerAdapter.setApplicationContext(context);
-		handlerAdapter.setFlowExecutor(new StubFlowExecutor());
+		this.handlerAdapter = new JsfFlowHandlerAdapter();
+		this.handlerAdapter.setApplicationContext(context);
+		this.handlerAdapter.setFlowExecutor(new StubFlowExecutor());
 	}
 
 	public void testAjaxHandlerNotProvided() throws Exception {
-		handlerAdapter.afterPropertiesSet();
-		assertNotNull(handlerAdapter.getAjaxHandler());
-		assertTrue(handlerAdapter.getAjaxHandler() instanceof JsfAjaxHandler);
+		this.handlerAdapter.afterPropertiesSet();
+		assertNotNull(this.handlerAdapter.getAjaxHandler());
+		assertTrue(this.handlerAdapter.getAjaxHandler() instanceof JsfAjaxHandler);
 	}
 
 	public void testAjaxHandlerProvided() throws Exception {
 		AjaxHandler myAjaxHandler = new SpringJavascriptAjaxHandler();
-		handlerAdapter.setAjaxHandler(myAjaxHandler);
-		handlerAdapter.afterPropertiesSet();
-		assertTrue(myAjaxHandler == handlerAdapter.getAjaxHandler());
+		this.handlerAdapter.setAjaxHandler(myAjaxHandler);
+		this.handlerAdapter.afterPropertiesSet();
+		assertTrue(myAjaxHandler == this.handlerAdapter.getAjaxHandler());
 	}
 
 	private final class StubFlowExecutor implements FlowExecutor {

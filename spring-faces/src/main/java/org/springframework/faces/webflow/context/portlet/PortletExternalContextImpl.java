@@ -93,10 +93,10 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	public void dispatch(String path) throws IOException {
-		Assert.isTrue(!isActionRequest);
-		PortletRequestDispatcher requestDispatcher = portletContext.getRequestDispatcher(path);
+		Assert.isTrue(!this.isActionRequest);
+		PortletRequestDispatcher requestDispatcher = this.portletContext.getRequestDispatcher(path);
 		try {
-			requestDispatcher.include((RenderRequest) portletRequest, (RenderResponse) portletResponse);
+			requestDispatcher.include((RenderRequest) this.portletRequest, (RenderResponse) this.portletResponse);
 		} catch (PortletException exception) {
 			if (exception.getMessage() != null) {
 				throw new FacesException(exception.getMessage(), exception);
@@ -107,59 +107,59 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	public String encodeActionURL(String url) {
 		Assert.notNull(url);
-		return portletResponse.encodeURL(url);
+		return this.portletResponse.encodeURL(url);
 	}
 
 	public String encodeNamespace(String name) {
-		Assert.isTrue(!isActionRequest);
-		return name + ((RenderResponse) portletResponse).getNamespace();
+		Assert.isTrue(!this.isActionRequest);
+		return name + ((RenderResponse) this.portletResponse).getNamespace();
 	}
 
 	@Override
 	public String encodeResourceURL(String url) {
 		Assert.notNull(url);
-		return portletResponse.encodeURL(url);
+		return this.portletResponse.encodeURL(url);
 	}
 
 	@Override
 	public Map<String, Object> getApplicationMap() {
-		if (applicationMap == null) {
-			applicationMap = new PortletContextMap(portletContext);
+		if (this.applicationMap == null) {
+			this.applicationMap = new PortletContextMap(this.portletContext);
 		}
-		return applicationMap;
+		return this.applicationMap;
 	}
 
 	@Override
 	public String getAuthType() {
-		return portletRequest.getAuthType();
+		return this.portletRequest.getAuthType();
 	}
 
 	@Override
 	public Object getContext() {
-		return portletContext;
+		return this.portletContext;
 	}
 
 	@Override
 	public String getInitParameter(String name) {
-		return portletContext.getInitParameter(name);
+		return this.portletContext.getInitParameter(name);
 	}
 
 	@Override
 	public Map<String, String> getInitParameterMap() {
-		if (initParameterMap == null) {
-			initParameterMap = new InitParameterMap(portletContext);
+		if (this.initParameterMap == null) {
+			this.initParameterMap = new InitParameterMap(this.portletContext);
 		}
-		return initParameterMap;
+		return this.initParameterMap;
 	}
 
 	@Override
 	public String getRemoteUser() {
-		return portletRequest.getRemoteUser();
+		return this.portletRequest.getRemoteUser();
 	}
 
 	@Override
 	public Object getRequest() {
-		return portletRequest;
+		return this.portletRequest;
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public String getRequestContextPath() {
-		return portletRequest.getContextPath();
+		return this.portletRequest.getContextPath();
 	}
 
 	@Override
@@ -179,57 +179,57 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public Map<String, String> getRequestHeaderMap() {
-		if (requestHeaderMap == null) {
-			requestHeaderMap = new SingleValueRequestPropertyMap(portletRequest);
+		if (this.requestHeaderMap == null) {
+			this.requestHeaderMap = new SingleValueRequestPropertyMap(this.portletRequest);
 		}
-		return requestHeaderMap;
+		return this.requestHeaderMap;
 	}
 
 	@Override
 	public Map<String, String[]> getRequestHeaderValuesMap() {
-		if (requestHeaderValuesMap == null) {
-			requestHeaderValuesMap = new MultiValueRequestPropertyMap(portletRequest);
+		if (this.requestHeaderValuesMap == null) {
+			this.requestHeaderValuesMap = new MultiValueRequestPropertyMap(this.portletRequest);
 		}
-		return requestHeaderValuesMap;
+		return this.requestHeaderValuesMap;
 	}
 
 	@Override
 	public Locale getRequestLocale() {
-		return portletRequest.getLocale();
+		return this.portletRequest.getLocale();
 	}
 
 	@Override
 	public Iterator<Locale> getRequestLocales() {
-		return CollectionUtils.toIterator(portletRequest.getLocales());
+		return CollectionUtils.toIterator(this.portletRequest.getLocales());
 	}
 
 	@Override
 	public Map<String, Object> getRequestMap() {
-		if (requestMap == null) {
-			requestMap = new PortletRequestMap(portletRequest);
+		if (this.requestMap == null) {
+			this.requestMap = new PortletRequestMap(this.portletRequest);
 		}
-		return requestMap;
+		return this.requestMap;
 	}
 
 	@Override
 	public Map<String, String> getRequestParameterMap() {
-		if (requestParameterMap == null) {
-			requestParameterMap = new SingleValueRequestParameterMap(portletRequest);
+		if (this.requestParameterMap == null) {
+			this.requestParameterMap = new SingleValueRequestParameterMap(this.portletRequest);
 		}
-		return requestParameterMap;
+		return this.requestParameterMap;
 	}
 
 	@Override
 	public Iterator<String> getRequestParameterNames() {
-		return CollectionUtils.toIterator(portletRequest.getParameterNames());
+		return CollectionUtils.toIterator(this.portletRequest.getParameterNames());
 	}
 
 	@Override
 	public Map<String, String[]> getRequestParameterValuesMap() {
-		if (requestParameterValuesMap == null) {
-			requestParameterValuesMap = new MultiValueRequestParameterMap(portletRequest);
+		if (this.requestParameterValuesMap == null) {
+			this.requestParameterValuesMap = new MultiValueRequestParameterMap(this.portletRequest);
 		}
-		return requestParameterValuesMap;
+		return this.requestParameterValuesMap;
 	}
 
 	@Override
@@ -253,24 +253,24 @@ public class PortletExternalContextImpl extends ExternalContext {
 	@Override
 	public URL getResource(String path) throws MalformedURLException {
 		Assert.notNull(path);
-		return portletContext.getResource(path);
+		return this.portletContext.getResource(path);
 	}
 
 	@Override
 	public InputStream getResourceAsStream(String path) {
 		Assert.notNull(path);
-		return portletContext.getResourceAsStream(path);
+		return this.portletContext.getResourceAsStream(path);
 	}
 
 	@Override
 	public Set<String> getResourcePaths(String path) {
 		Assert.notNull(path);
-		return portletContext.getResourcePaths(path);
+		return this.portletContext.getResourcePaths(path);
 	}
 
 	@Override
 	public Object getResponse() {
-		return portletResponse;
+		return this.portletResponse;
 	}
 
 	@Override
@@ -280,80 +280,80 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public Object getSession(boolean create) {
-		return portletRequest.getPortletSession(create);
+		return this.portletRequest.getPortletSession(create);
 	}
 
 	@Override
 	public Map<String, Object> getSessionMap() {
-		if (sessionMap == null) {
-			sessionMap = new LocalAttributeMap<Object>(new PortletSessionMap(portletRequest));
+		if (this.sessionMap == null) {
+			this.sessionMap = new LocalAttributeMap<Object>(new PortletSessionMap(this.portletRequest));
 		}
-		return sessionMap.asMap();
+		return this.sessionMap.asMap();
 	}
 
 	@Override
 	public Principal getUserPrincipal() {
-		return portletRequest.getUserPrincipal();
+		return this.portletRequest.getUserPrincipal();
 	}
 
 	@Override
 	public boolean isUserInRole(String role) {
 		Assert.notNull(role);
-		return portletRequest.isUserInRole(role);
+		return this.portletRequest.isUserInRole(role);
 	}
 
 	@Override
 	public void log(String message) {
 		Assert.notNull(message);
-		portletContext.log(message);
+		this.portletContext.log(message);
 	}
 
 	@Override
 	public void log(String message, Throwable exception) {
 		Assert.notNull(message);
 		Assert.notNull(exception);
-		portletContext.log(message, exception);
+		this.portletContext.log(message, exception);
 	}
 
 	@Override
 	public void redirect(String url) throws IOException {
-		if (actionRequest instanceof ActionResponse) {
-			((ActionResponse) portletResponse).sendRedirect(url);
+		if (this.actionRequest instanceof ActionResponse) {
+			((ActionResponse) this.portletResponse).sendRedirect(url);
 		} else {
 			throw new IllegalArgumentException("Only ActionResponse supported");
 		}
 	}
 
 	public void release() {
-		portletContext = null;
-		portletRequest = null;
-		portletResponse = null;
-		applicationMap = null;
-		sessionMap = null;
-		requestMap = null;
-		requestParameterMap = null;
-		requestParameterValuesMap = null;
-		requestHeaderMap = null;
-		requestHeaderValuesMap = null;
-		initParameterMap = null;
-		actionRequest = null;
+		this.portletContext = null;
+		this.portletRequest = null;
+		this.portletResponse = null;
+		this.applicationMap = null;
+		this.sessionMap = null;
+		this.requestMap = null;
+		this.requestParameterMap = null;
+		this.requestParameterValuesMap = null;
+		this.requestHeaderMap = null;
+		this.requestHeaderValuesMap = null;
+		this.initParameterMap = null;
+		this.actionRequest = null;
 	}
 
 	@Override
 	public void setRequest(Object request) {
 		this.portletRequest = (PortletRequest) request;
-		this.actionRequest = (portletRequest instanceof ActionRequest) ? (ActionRequest) request : null;
+		this.actionRequest = (this.portletRequest instanceof ActionRequest) ? (ActionRequest) request : null;
 	}
 
 	public void setRequestCharacterEncoding(String encoding) throws java.io.UnsupportedEncodingException {
-		Assert.notNull(actionRequest, "The request be an action request.");
-		actionRequest.setCharacterEncoding(encoding);
+		Assert.notNull(this.actionRequest, "The request be an action request.");
+		this.actionRequest.setCharacterEncoding(encoding);
 	}
 
 	@Override
 	public String getRequestCharacterEncoding() {
-		Assert.notNull(actionRequest, "The request be an action request.");
-		return actionRequest.getCharacterEncoding();
+		Assert.notNull(this.actionRequest, "The request be an action request.");
+		return this.actionRequest.getCharacterEncoding();
 	}
 
 	@Override

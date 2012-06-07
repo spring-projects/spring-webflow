@@ -71,8 +71,8 @@ public class FaceletsAuthorizeTagHandler extends TagHandler {
 			return;
 		}
 
-		FaceletsAuthorizeTag authorizeTag = new FaceletsAuthorizeTag(faceletContext, access, url, method, ifAllGranted,
-				ifAnyGranted, ifNotGranted);
+		FaceletsAuthorizeTag authorizeTag = new FaceletsAuthorizeTag(faceletContext, this.access, this.url, this.method, this.ifAllGranted,
+				this.ifAnyGranted, this.ifNotGranted);
 
 		boolean isAuthorized = authorizeTag.authorize();
 
@@ -81,7 +81,7 @@ public class FaceletsAuthorizeTagHandler extends TagHandler {
 		}
 
 		if (this.var != null) {
-			faceletContext.setAttribute(var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
+			faceletContext.setAttribute(this.var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
 		}
 	}
 

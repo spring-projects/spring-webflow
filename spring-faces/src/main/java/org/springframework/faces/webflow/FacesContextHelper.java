@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.servlet.ServletContext;
@@ -23,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>
  * Provides helper methods for getting a FacesContext that is suitable for use outside of Web Flow. Inside a running
  * Flow session {@link FlowFacesContext} is typically used instead.
  * <p>
@@ -41,16 +39,15 @@ public class FacesContextHelper {
 		if (FacesContext.getCurrentInstance() != null) {
 			facesContext = FacesContext.getCurrentInstance();
 		} else {
-			FacesContextFactory factory = (FacesContextFactory) FactoryFinder
-					.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			FacesContextFactory factory = JsfUtils.findFactory(FacesContextFactory.class);
 			facesContext = factory.getFacesContext(servletContext, request, response, FlowLifecycle.newInstance());
-			release = true;
+			this.release = true;
 		}
 		return facesContext;
 	}
 
 	public void releaseIfNecessary() {
-		if (release) {
+		if (this.release) {
 			FacesContext.getCurrentInstance().release();
 		}
 	}

@@ -89,11 +89,11 @@ public class MockApplication extends Application {
 	}
 
 	public ViewHandler getViewHandler() {
-		return viewHandler;
+		return this.viewHandler;
 	}
 
 	public void setViewHandler(ViewHandler handler) {
-		viewHandler = handler;
+		this.viewHandler = handler;
 	}
 
 	public StateManager getStateManager() {

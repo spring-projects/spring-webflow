@@ -28,7 +28,6 @@ import javax.el.ELContextListener;
 import javax.el.ELResolver;
 import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
-import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
@@ -43,6 +42,7 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -85,9 +85,8 @@ public class PortletFacesContextImpl extends FacesContext {
 
 	public PortletFacesContextImpl(PortletContext portletContext, PortletRequest portletRequest,
 			PortletResponse portletResponse) {
-		application = ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
-				.getApplication();
-		renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+		this.application = JsfUtils.findFactory(ApplicationFactory.class).getApplication();
+		this.renderKitFactory = JsfUtils.findFactory(RenderKitFactory.class);
 		this.externalContext = new PortletExternalContextImpl(portletContext, portletRequest, portletResponse);
 		FacesContext.setCurrentInstance(this);
 	}
@@ -98,51 +97,51 @@ public class PortletFacesContextImpl extends FacesContext {
 
 	public ExternalContext getExternalContext() {
 		assertFacesContextIsNotReleased();
-		return externalContext;
+		return this.externalContext;
 	}
 
 	public FacesMessage.Severity getMaximumSeverity() {
 		assertFacesContextIsNotReleased();
-		return maximumSeverity;
+		return this.maximumSeverity;
 	}
 
 	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages() {
 		assertFacesContextIsNotReleased();
-		return (messages != null) ? messages.iterator() : Collections.EMPTY_LIST.iterator();
+		return (this.messages != null) ? this.messages.iterator() : Collections.EMPTY_LIST.iterator();
 	}
 
 	public Application getApplication() {
 		assertFacesContextIsNotReleased();
-		return application;
+		return this.application;
 	}
 
 	public Iterator<String> getClientIdsWithMessages() {
 		assertFacesContextIsNotReleased();
-		if (messages == null || messages.isEmpty()) {
+		if (this.messages == null || this.messages.isEmpty()) {
 			return new ArrayList<String>().iterator();
 		}
 
-		return new LinkedHashSet<String>(messageClientIds).iterator();
+		return new LinkedHashSet<String>(this.messageClientIds).iterator();
 	}
 
 	@SuppressWarnings("unchecked")
 	public Iterator<FacesMessage> getMessages(String clientId) {
 		assertFacesContextIsNotReleased();
-		if (messages == null) {
+		if (this.messages == null) {
 			return Collections.EMPTY_LIST.iterator();
 		}
 
 		List<FacesMessage> list = new ArrayList<FacesMessage>();
-		for (int i = 0; i < messages.size(); i++) {
-			Object current = messageClientIds.get(i);
+		for (int i = 0; i < this.messages.size(); i++) {
+			Object current = this.messageClientIds.get(i);
 			if (clientId == null) {
 				if (current == null) {
-					list.add(messages.get(i));
+					list.add(this.messages.get(i));
 				}
 			} else {
 				if (clientId.equals(current)) {
-					list.add(messages.get(i));
+					list.add(this.messages.get(i));
 				}
 			}
 		}
@@ -160,22 +159,22 @@ public class PortletFacesContextImpl extends FacesContext {
 			return null;
 		}
 
-		return renderKitFactory.getRenderKit(this, renderKitId);
+		return this.renderKitFactory.getRenderKit(this, renderKitId);
 	}
 
 	public boolean getRenderResponse() {
 		assertFacesContextIsNotReleased();
-		return renderResponse;
+		return this.renderResponse;
 	}
 
 	public boolean getResponseComplete() {
 		assertFacesContextIsNotReleased();
-		return responseComplete;
+		return this.responseComplete;
 	}
 
 	public ResponseStream getResponseStream() {
 		assertFacesContextIsNotReleased();
-		return responseStream;
+		return this.responseStream;
 	}
 
 	public void setResponseStream(ResponseStream responseStream) {
@@ -188,7 +187,7 @@ public class PortletFacesContextImpl extends FacesContext {
 
 	public ResponseWriter getResponseWriter() {
 		assertFacesContextIsNotReleased();
-		return responseWriter;
+		return this.responseWriter;
 	}
 
 	public void setResponseWriter(ResponseWriter responseWriter) {
@@ -201,7 +200,7 @@ public class PortletFacesContextImpl extends FacesContext {
 
 	public UIViewRoot getViewRoot() {
 		assertFacesContextIsNotReleased();
-		return viewRoot;
+		return this.viewRoot;
 	}
 
 	public void setViewRoot(UIViewRoot viewRoot) {
@@ -218,85 +217,85 @@ public class PortletFacesContextImpl extends FacesContext {
 			throw new NullPointerException("message");
 		}
 
-		if (messages == null) {
-			messages = new ArrayList<FacesMessage>();
-			messageClientIds = new ArrayList<String>();
+		if (this.messages == null) {
+			this.messages = new ArrayList<FacesMessage>();
+			this.messageClientIds = new ArrayList<String>();
 		}
-		messages.add(message);
-		messageClientIds.add((clientId != null) ? clientId : null);
+		this.messages.add(message);
+		this.messageClientIds.add((clientId != null) ? clientId : null);
 		FacesMessage.Severity severity = message.getSeverity();
 		if (severity != null) {
-			if (maximumSeverity == null) {
-				maximumSeverity = severity;
-			} else if (severity.compareTo(maximumSeverity) > 0) {
-				maximumSeverity = severity;
+			if (this.maximumSeverity == null) {
+				this.maximumSeverity = severity;
+			} else if (severity.compareTo(this.maximumSeverity) > 0) {
+				this.maximumSeverity = severity;
 			}
 		}
 	}
 
 	public void release() {
 		assertFacesContextIsNotReleased();
-		if (externalContext != null) {
-			Method delegateMethod = ClassUtils.getMethodIfAvailable(externalContext.getClass(), "release");
+		if (this.externalContext != null) {
+			Method delegateMethod = ClassUtils.getMethodIfAvailable(this.externalContext.getClass(), "release");
 			if (delegateMethod != null) {
 				try {
-					delegateMethod.invoke(externalContext);
+					delegateMethod.invoke(this.externalContext);
 				} catch (Exception e) {
-					externalContext.log("Failed to release external context", e);
+					this.externalContext.log("Failed to release external context", e);
 				}
-				externalContext = null;
+				this.externalContext = null;
 			}
 		}
-		messageClientIds = null;
-		messages = null;
-		application = null;
-		responseStream = null;
-		responseWriter = null;
-		viewRoot = null;
+		this.messageClientIds = null;
+		this.messages = null;
+		this.application = null;
+		this.responseStream = null;
+		this.responseWriter = null;
+		this.viewRoot = null;
 
-		released = true;
+		this.released = true;
 		FacesContext.setCurrentInstance(null);
 	}
 
 	public void renderResponse() {
 		assertFacesContextIsNotReleased();
-		renderResponse = true;
+		this.renderResponse = true;
 	}
 
 	public void responseComplete() {
 		assertFacesContextIsNotReleased();
-		responseComplete = true;
+		this.responseComplete = true;
 	}
 
 	public ELContext getELContext() {
-		if (elContext == null) {
+		if (this.elContext == null) {
 			Application application = getApplication();
-			elContext = new PortletELContextImpl(application.getELResolver());
-			elContext.putContext(FacesContext.class, FacesContext.getCurrentInstance());
+			this.elContext = new PortletELContextImpl(application.getELResolver());
+			this.elContext.putContext(FacesContext.class, FacesContext.getCurrentInstance());
 			UIViewRoot root = getViewRoot();
 			if (null != root) {
-				elContext.setLocale(root.getLocale());
+				this.elContext.setLocale(root.getLocale());
 			}
 			ELContextListener[] listeners = application.getELContextListeners();
 			if (listeners.length > 0) {
-				ELContextEvent event = new ELContextEvent(elContext);
+				ELContextEvent event = new ELContextEvent(this.elContext);
 				for (ELContextListener listener : listeners) {
 					listener.contextCreated(event);
 				}
 			}
 		}
-		return elContext;
+		return this.elContext;
 	}
 
 	private void assertFacesContextIsNotReleased() {
-		Assert.isTrue(!released, "FacesContext already released");
+		Assert.isTrue(!this.released, "FacesContext already released");
 	}
 
 	private class PortletELContextImpl extends ELContext {
 
 		private FunctionMapper functionMapper;
 		private VariableMapper variableMapper;
-		private ELResolver resolver;
+		private final ELResolver resolver;
 
 		public PortletELContextImpl(ELResolver resolver) {
 			this.resolver = resolver;
@@ -304,17 +303,17 @@ public class PortletFacesContextImpl extends FacesContext {
 
 		@Override
 		public FunctionMapper getFunctionMapper() {
-			return functionMapper;
+			return this.functionMapper;
 		}
 
 		@Override
 		public VariableMapper getVariableMapper() {
-			return variableMapper;
+			return this.variableMapper;
 		}
 
 		@Override
 		public ELResolver getELResolver() {
-			return resolver;
+			return this.resolver;
 		}
 
 	}

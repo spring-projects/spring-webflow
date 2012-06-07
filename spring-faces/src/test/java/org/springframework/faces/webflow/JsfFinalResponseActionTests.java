@@ -37,11 +37,11 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private JsfViewFactory factory;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
+	private final RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	private ViewHandler viewHandler = new NoRenderViewHandler();
+	private final ViewHandler viewHandler = new NoRenderViewHandler();
 
 	private TestLifecycle lifecycle;
 
@@ -54,29 +54,31 @@ public class JsfFinalResponseActionTests extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMock.tearDown();
+		super.tearDown();
+		this.jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	private void configureJsf() throws Exception {
 
-		jsfMock.setUp();
+		this.jsfMock.setUp();
 
-		trackingListener = new TrackingPhaseListener();
-		jsfMock.lifecycle().addPhaseListener(trackingListener);
-		jsfMock.facesContext().setViewRoot(null);
-		jsfMock.facesContext().getApplication().setViewHandler(viewHandler);
-		lifecycle = new TestLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression("#{'" + VIEW_ID + "'}", new FluentParserContext()
-				.template().evaluate(RequestContext.class).expectResult(String.class)), lifecycle);
-		RequestContextHolder.setRequestContext(context);
+		this.trackingListener = new TrackingPhaseListener();
+		this.jsfMock.lifecycle().addPhaseListener(this.trackingListener);
+		this.jsfMock.facesContext().setViewRoot(null);
+		this.jsfMock.facesContext().getApplication().setViewHandler(this.viewHandler);
+		this.lifecycle = new TestLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression("#{'" + VIEW_ID + "'}", new FluentParserContext()
+				.template().evaluate(RequestContext.class).expectResult(String.class)), this.lifecycle);
+		RequestContextHolder.setRequestContext(this.context);
 		MockExternalContext ext = new MockExternalContext();
 		ext.setNativeContext(new MockServletContext());
 		ext.setNativeRequest(new MockHttpServletRequest());
 		ext.setNativeResponse(new MockHttpServletResponse());
-		EasyMock.expect(context.getExternalContext()).andStubReturn(ext);
+		EasyMock.expect(this.context.getExternalContext()).andStubReturn(ext);
 		LocalAttributeMap<Object> requestMap = new LocalAttributeMap<Object>();
-		EasyMock.expect(context.getFlashScope()).andStubReturn(requestMap);
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(
+		EasyMock.expect(this.context.getFlashScope()).andStubReturn(requestMap);
+		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(
 				new LocalParameterMap(new HashMap<String, Object>()));
 	}
 
@@ -85,18 +87,18 @@ public class JsfFinalResponseActionTests extends TestCase {
 		UIViewRoot newRoot = new UIViewRoot();
 		newRoot.setViewId(VIEW_ID);
 		newRoot.setRenderKitId("HTML_BASIC");
-		((MockViewHandler) viewHandler).setCreateView(newRoot);
-		context.inViewState();
+		((MockViewHandler) this.viewHandler).setCreateView(newRoot);
+		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(false);
 
-		EasyMock.replay(new Object[] { context });
+		EasyMock.replay(new Object[] { this.context });
 
-		View view = factory.getView(context);
+		View view = this.factory.getView(this.context);
 		((JsfView) view).getViewRoot().setTransient(true);
 		view.render();
 
 		assertTrue(newRoot.isTransient());
-		assertTrue(((NoRenderViewHandler) viewHandler).rendered);
+		assertTrue(((NoRenderViewHandler) this.viewHandler).rendered);
 	}
 
 	private class TestLifecycle extends FlowLifecycle {
@@ -108,29 +110,29 @@ public class JsfFinalResponseActionTests extends TestCase {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", executed);
+			assertFalse("Lifecycle executed more than once", this.executed);
 			super.execute(context);
-			executed = true;
+			this.executed = true;
 		}
 
 	}
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private List<String> phaseCallbacks = new ArrayList<String>();
+		private final List<String> phaseCallbacks = new ArrayList<String>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
 			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					phaseCallbacks.contains(phaseCallback));
-			phaseCallbacks.add(phaseCallback);
+					this.phaseCallbacks.contains(phaseCallback));
+			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
 			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					phaseCallbacks.contains(phaseCallback));
-			phaseCallbacks.add(phaseCallback);
+					this.phaseCallbacks.contains(phaseCallback));
+			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public PhaseId getPhaseId() {
@@ -142,7 +144,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 		boolean rendered = false;
 
 		public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
-			rendered = true;
+			this.rendered = true;
 		}
 
 	}
