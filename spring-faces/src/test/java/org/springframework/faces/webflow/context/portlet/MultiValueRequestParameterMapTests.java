@@ -12,14 +12,14 @@ public class MultiValueRequestParameterMapTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		request = new MockPortletRequest();
-		requestMap = new MultiValueRequestParameterMap(request);
+		this.request = new MockPortletRequest();
+		this.requestMap = new MultiValueRequestParameterMap(this.request);
 	}
 
 	public void testMultiValueParameter() throws Exception {
-		request.setParameter("key", "value");
-		request.addParameter("key", "value2");
-		Object actual = requestMap.getAttribute("key");
+		this.request.setParameter("key", "value");
+		this.request.addParameter("key", "value2");
+		Object actual = this.requestMap.getAttribute("key");
 		assertTrue(actual.getClass().isArray());
 		assertEquals(2, ((String[]) actual).length);
 		assertEquals("value", ((String[]) actual)[0]);
@@ -27,8 +27,8 @@ public class MultiValueRequestParameterMapTests extends TestCase {
 	}
 
 	public void testSingleValueParameterAsArray() throws Exception {
-		request.setParameter("key", "value");
-		Object actual = requestMap.getAttribute("key");
+		this.request.setParameter("key", "value");
+		Object actual = this.requestMap.getAttribute("key");
 		assertTrue(actual.getClass().isArray());
 		assertEquals(1, ((String[]) actual).length);
 		assertEquals("value", ((String[]) actual)[0]);

@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.faces.webflow;
 
 import javax.faces.context.FacesContext;
 
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.execution.RequestContext;
@@ -24,6 +26,7 @@ import org.springframework.webflow.execution.RequestContext;
 /**
  * Helper class to provide information about the JSF runtime environment such as JSF version and implementation.
  * 
+ * @author Rossen Stoyanchev
  * @author Phillip Webb
  */
 public class JsfRuntimeInformation {
@@ -39,8 +42,7 @@ public class JsfRuntimeInformation {
 
 	private static final int jsfVersion;
 
-	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet",
-			JsfUtils.class.getClassLoader());
+	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", JsfUtils.class.getClassLoader());
 
 	static {
 		if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
@@ -52,14 +54,26 @@ public class JsfRuntimeInformation {
 		}
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static boolean isAtLeastJsf20() {
 		return jsfVersion >= JSF_20;
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static boolean isLessThanJsf20() {
 		return jsfVersion < JSF_20;
 	}
@@ -68,20 +82,36 @@ public class JsfRuntimeInformation {
 		return myFacesPresent;
 	}
 
+	/**
+	 * Determine if the specified {@link FacesContext} is from a portlet request.
+	 * 
+	 * @param context the faces context
+	 * @return <tt>true</tt> if the request is from a portlet
+	 */
 	public static boolean isPortletRequest(FacesContext context) {
-		return context.getExternalContext().getContext().getClass().getName().indexOf("Portlet") != -1;
-	}
-
-	public static boolean isPortletRequest(RequestContext context) {
-		return (null != ClassUtils.getMethodIfAvailable(context.getExternalContext().getNativeContext().getClass(),
-				"getPortletContextName"));
+		Assert.notNull(context, "Context must not be null");
+		return isPortletContext(context.getExternalContext().getContext());
 	}
 
 	/**
-	 * Returns true if Web Flow supports partial state saving in the current runtime environment.
+	 * Determine if the specified {@link RequestContext} is from a portlet request.
+	 * 
+	 * @param context the request context
+	 * @return <tt>true</tt> if the request is from a portlet
 	 */
-	public static boolean isPartialStateSavingSupported() {
-		return (JsfRuntimeInformation.isAtLeastJsf20() && (!JsfRuntimeInformation.isMyFacesPresent()));
+	public static boolean isPortletRequest(RequestContext context) {
+		Assert.notNull(context, "Context must not be null");
+		return isPortletContext(context.getExternalContext().getNativeContext());
 	}
 
+	/**
+	 * Determine if the specified context object is from portlet.
+	 * 
+	 * @param nativeContext the native context
+	 * @return <tt>true</tt> if the context is from a portlet
+	 */
+	public static boolean isPortletContext(Object nativeContext) {
+		Assert.notNull(nativeContext, "Context must not be null");
+		return ClassUtils.getMethodIfAvailable(nativeContext.getClass(), "getPortletContextName") != null;
+	}
 }

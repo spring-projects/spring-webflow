@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,46 +13,79 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.faces.webflow;
 
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.faces.lifecycle.Lifecycle;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+
+import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
 
 /**
- * <p>
  * Provides helper methods for getting a FacesContext that is suitable for use outside of Web Flow. Inside a running
  * Flow session {@link FlowFacesContext} is typically used instead.
- * <p>
- * 
+ *
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
+ *
  * @since 2.2.0
  */
 public class FacesContextHelper {
 
 	private boolean release = false;
 
-	public FacesContext getFacesContext(ServletContext servletContext, HttpServletRequest request,
-			HttpServletResponse response) {
+	/**
+	 * Returns a faces context that can be used outside of Web Flow. The context must be {@link #releaseIfNecessary()
+	 * released} after use.
+	 *
+	 * @param context the native context
+	 * @param request the native request
+	 * @param response the native response
+	 * @return a {@link FacesContext} instance.
+	 * @see #release
+	 */
+	public FacesContext getFacesContext(Object context, Object request, Object response) {
 		FacesContext facesContext = null;
 		if (FacesContext.getCurrentInstance() != null) {
 			facesContext = FacesContext.getCurrentInstance();
 		} else {
-			FacesContextFactory factory = (FacesContextFactory) FactoryFinder
-					.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			facesContext = factory.getFacesContext(servletContext, request, response, FlowLifecycle.newInstance());
-			release = true;
+			facesContext = newDefaultInstance(context, request, response, FlowLifecycle.newInstance());
+			this.release = true;
 		}
 		return facesContext;
 	}
 
+	/**
+	 * Release any previously {@link #getFacesContext obtained} {@link FacesContext} if necessary.
+	 *
+	 * @see #getFacesContext(Object, Object, Object)
+	 */
 	public void releaseIfNecessary() {
 		if (release) {
 			FacesContext.getCurrentInstance().release();
 		}
+	}
+
+	/**
+	 * Factory method that can be used to create a new default {@link FacesContext} instance for the running
+	 * (Portlet/Servlet) environment.
+	 *
+	 * @param context the native context
+	 * @param request the native request
+	 * @param response the native response
+	 * @param lifecycle the JSF lifecycle
+	 * @return a new {@link FacesContext} instance
+	 */
+	public static FacesContext newDefaultInstance(Object context, Object request, Object response, Lifecycle lifecycle) {
+		if (JsfRuntimeInformation.isPortletContext(context)) {
+			return new PortletFacesContextImpl((PortletContext) context, (PortletRequest) request, (PortletResponse) response);
+		}
+		FacesContextFactory facesContextFactory = JsfUtils.findFactory(FacesContextFactory.class);
+		return facesContextFactory.getFacesContext(context, request, response, lifecycle);
 	}
 
 }

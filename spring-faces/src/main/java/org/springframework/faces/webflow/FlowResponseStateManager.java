@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.faces.application.StateManager.SerializedView;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKitFactory;
@@ -26,90 +25,62 @@ import javax.faces.render.ResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.faces.support.ResponseStateManagerWrapper;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * <p>
  * A custom ResponseStateManager that writes JSF state to a Web Flow managed view-scoped variable. This class is plugged
- * in via {@link FlowRenderKit} in JSF 2 runtime environments only.
- * </p>
- * 
- * <p>
- * In JSF 2 where a partial state saving algorithm is used, Web Flow delegates to the JSF 2 runtime to handle state
- * saving. However, an instance of this class plugged in via {@link FlowRenderKit} will ensure that state is saved in a
- * Web Flow managed view-scoped variable.
- * </p>
+ * in via {@link FlowRenderKit}.
  * 
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
+ * 
  * @since 2.2.0
  */
-public class FlowViewResponseStateManager extends ResponseStateManager {
+public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 
-	private static final Log logger = LogFactory.getLog(FlowViewResponseStateManager.class);
+	private static final Log logger = LogFactory.getLog(FlowResponseStateManager.class);
 
-	private ResponseStateManager delegate;
+	static final String FACES_VIEW_STATE = "facesViewState";
 
-	private char[] stateFieldStart = ("<input type=\"hidden\" name=\"" + ResponseStateManager.VIEW_STATE_PARAM
-			+ "\" id=\"" + ResponseStateManager.VIEW_STATE_PARAM + "\" value=\"").toCharArray();
+	private static final char[] STATE_FIELD_START = ("<input type=\"hidden\" name=\""
+			+ ResponseStateManager.VIEW_STATE_PARAM + "\" id=\"" + ResponseStateManager.VIEW_STATE_PARAM + "\" value=\"")
+			.toCharArray();
 
-	private char[] stateFieldEnd = "\" />".toCharArray();
+	private static final char[] STATE_FIELD_END = "\" />".toCharArray();
 
-	public FlowViewResponseStateManager(ResponseStateManager delegate) {
-		this.delegate = delegate;
+	private final ResponseStateManager wrapped;
+
+	public FlowResponseStateManager(ResponseStateManager wrapped) {
+		this.wrapped = wrapped;
 	}
 
-	/**
-	 * <p>
-	 * Wraps state in an instance of {@link FlowSerializedView} and stores it in view scope.
-	 * </p>
-	 * 
-	 * <p>
-	 * Also complies with the contract for {@link ResponseStateManager#writeState(FacesContext, Object)} by writing the
-	 * "javax.faces.ViewState" and optionally the "javax.faces.RenderKitId" hidden input fields to the response.
-	 * </p>
-	 */
+	public ResponseStateManager getWrapped() {
+		return this.wrapped;
+	}
+
 	@Override
 	public void writeState(FacesContext facesContext, Object state) throws IOException {
 		if (!JsfUtils.isFlowRequest()) {
-			delegate.writeState(facesContext, state);
+			super.writeState(facesContext, state);
 		} else {
-			FlowSerializedView view = null;
-			if (state instanceof FlowSerializedView) {
-				view = (FlowSerializedView) state;
-			} else {
-				Object[] serializedState = (Object[]) state;
-				view = new FlowSerializedView(facesContext.getViewRoot().getViewId(), serializedState[0],
-						serializedState[1]);
-			}
-			RequestContext requestContext = RequestContextHolder.getRequestContext();
-			requestContext.getViewScope().put(FlowViewStateManager.SERIALIZED_VIEW_STATE, view);
-
+			saveState(state);
 			ResponseWriter writer = facesContext.getResponseWriter();
 			writeViewStateField(facesContext, writer);
 			writeRenderKitIdField(facesContext, writer);
 		}
 	}
 
-	/**
-	 * <p>
-	 * Retrieves the state from view scope as an instance of {@link FlowSerializedView} and turns it to an array before
-	 * returning.
-	 * </p>
-	 */
 	@Override
 	public Object getState(FacesContext facesContext, String viewId) {
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.getState(facesContext, viewId);
+			return super.getState(facesContext, viewId);
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(
-				FlowViewStateManager.SERIALIZED_VIEW_STATE);
-		Object[] state = null;
-		if (view == null) {
+		Object state = requestContext.getViewScope().get(FACES_VIEW_STATE);
+		if (state == null) {
 			logger.debug("No matching view in view scope");
-		} else {
-			state = new Object[] { view.getTreeStructure(), view.getComponentState() };
 		}
 		return state;
 	}
@@ -123,34 +94,16 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 	@Override
 	public String getViewState(FacesContext facesContext, Object state) {
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.getViewState(facesContext, state);
+			return super.getViewState(facesContext, state);
 		}
+		saveState(state);
 		return getFlowExecutionKey();
 	}
 
-	// ------------------- Delegation methods ------------------//
-
-	@Override
-	public boolean isPostback(FacesContext context) {
-		return delegate.isPostback(context);
+	private void saveState(Object state) {
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		requestContext.getViewScope().put(FACES_VIEW_STATE, state);
 	}
-
-	@Override
-	public Object getTreeStructureToRestore(FacesContext context, String viewId) {
-		return delegate.getTreeStructureToRestore(context, viewId);
-	}
-
-	@Override
-	public Object getComponentStateToRestore(FacesContext context) {
-		return delegate.getComponentStateToRestore(context);
-	}
-
-	@Override
-	public void writeState(FacesContext context, SerializedView state) throws IOException {
-		delegate.writeState(context, state);
-	}
-
-	// ------------------- Private helper methods ------------------//
 
 	private String getFlowExecutionKey() {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
@@ -165,9 +118,9 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 	 * @throws IOException if an error occurs writing to the client
 	 */
 	private void writeViewStateField(FacesContext context, Writer writer) throws IOException {
-		writer.write(stateFieldStart);
+		writer.write(STATE_FIELD_START);
 		writer.write(getFlowExecutionKey());
-		writer.write(stateFieldEnd);
+		writer.write(STATE_FIELD_END);
 	}
 
 	/**
@@ -188,5 +141,4 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 			writer.endElement("input");
 		}
 	}
-
 }

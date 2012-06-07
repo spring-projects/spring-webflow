@@ -41,26 +41,26 @@ public class ManySelectionTrackingListDataModel<T> extends SerializableListDataM
 	}
 
 	public List<T> getSelections() {
-		return selections;
+		return this.selections;
 	}
 
 	public boolean isCurrentRowSelected() {
-		return selections.contains(getRowData());
+		return this.selections.contains(getRowData());
 	}
 
 	public void selectAll() {
-		selections.clear();
-		selections.addAll(getWrappedData());
+		this.selections.clear();
+		this.selections.addAll(getWrappedData());
 	}
 
 	public void setCurrentRowSelected(boolean rowSelected) {
 		if (!isRowAvailable()) {
 			return;
 		}
-		if (rowSelected && !selections.contains(getRowData())) {
-			selections.add(getRowData());
+		if (rowSelected && !this.selections.contains(getRowData())) {
+			this.selections.add(getRowData());
 		} else if (!rowSelected) {
-			selections.remove(getRowData());
+			this.selections.remove(getRowData());
 		}
 	}
 
@@ -70,8 +70,8 @@ public class ManySelectionTrackingListDataModel<T> extends SerializableListDataM
 
 	public void select(T rowData) {
 		Assert.isTrue((getWrappedData()).contains(rowData), "The object to select is not contained in this DataModel.");
-		if (!selections.contains(rowData)) {
-			selections.add(rowData);
+		if (!this.selections.contains(rowData)) {
+			this.selections.add(rowData);
 		}
 	}
 

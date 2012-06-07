@@ -14,11 +14,11 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 	ProgressiveCommandLinkRenderer renderer = new ProgressiveCommandLinkRenderer();
 
 	public void setUp() throws Exception {
-		jsf.setUp();
+		this.jsf.setUp();
 	}
 
 	public void tearDown() throws Exception {
-		jsf.tearDown();
+		this.jsf.tearDown();
 	}
 
 	public void testRenderOnClick_AjaxEnabled_NoParams() throws Exception {
@@ -31,15 +31,15 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.setId("foo");
 		form.getChildren().add(link);
 
-		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
+		RenderAttributeCallback callback = this.renderer.getAttributeCallbacks(link).get("onclick");
 
-		jsf.facesContext().getResponseWriter().startElement("a", link);
+		this.jsf.facesContext().getResponseWriter().startElement("a", link);
 
-		callback.doRender(jsf.facesContext(), jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
+		callback.doRender(this.jsf.facesContext(), this.jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
 
-		jsf.facesContext().getResponseWriter().endElement("a");
+		this.jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, jsf.contentAsString());
+		assertEquals(expected, this.jsf.contentAsString());
 	}
 
 	public void testRenderOnClick_AjaxEnabled_WithParams() throws Exception {
@@ -61,15 +61,15 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.getChildren().add(param1);
 		link.getChildren().add(param2);
 
-		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
+		RenderAttributeCallback callback = this.renderer.getAttributeCallbacks(link).get("onclick");
 
-		jsf.facesContext().getResponseWriter().startElement("a", link);
+		this.jsf.facesContext().getResponseWriter().startElement("a", link);
 
-		callback.doRender(jsf.facesContext(), jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
+		callback.doRender(this.jsf.facesContext(), this.jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
 
-		jsf.facesContext().getResponseWriter().endElement("a");
+		this.jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, jsf.contentAsString());
+		assertEquals(expected, this.jsf.contentAsString());
 	}
 
 	public void testRenderOnClick_AjaxDisabled_NoParams() throws Exception {
@@ -82,15 +82,15 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.setAjaxEnabled(false);
 		form.getChildren().add(link);
 
-		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
+		RenderAttributeCallback callback = this.renderer.getAttributeCallbacks(link).get("onclick");
 
-		jsf.facesContext().getResponseWriter().startElement("a", link);
+		this.jsf.facesContext().getResponseWriter().startElement("a", link);
 
-		callback.doRender(jsf.facesContext(), jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
+		callback.doRender(this.jsf.facesContext(), this.jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
 
-		jsf.facesContext().getResponseWriter().endElement("a");
+		this.jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, jsf.contentAsString());
+		assertEquals(expected, this.jsf.contentAsString());
 	}
 
 	public void testRenderOnClick_AjaxDisabled_WithParams() throws Exception {
@@ -113,14 +113,14 @@ public class ProgressiveCommandLinkRendererTests extends TestCase {
 		link.getChildren().add(param1);
 		link.getChildren().add(param2);
 
-		RenderAttributeCallback callback = renderer.getAttributeCallbacks(link).get("onclick");
+		RenderAttributeCallback callback = this.renderer.getAttributeCallbacks(link).get("onclick");
 
-		jsf.facesContext().getResponseWriter().startElement("a", link);
+		this.jsf.facesContext().getResponseWriter().startElement("a", link);
 
-		callback.doRender(jsf.facesContext(), jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
+		callback.doRender(this.jsf.facesContext(), this.jsf.facesContext().getResponseWriter(), link, "onclick", null, "onclick");
 
-		jsf.facesContext().getResponseWriter().endElement("a");
+		this.jsf.facesContext().getResponseWriter().endElement("a");
 
-		assertEquals(expected, jsf.contentAsString());
+		assertEquals(expected, this.jsf.contentAsString());
 	}
 }

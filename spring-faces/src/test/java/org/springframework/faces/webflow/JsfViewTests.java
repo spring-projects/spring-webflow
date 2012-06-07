@@ -30,24 +30,24 @@ public class JsfViewTests extends TestCase {
 
 	private static final String VIEW_ID = "testView.xhtml";
 
-	private MockExternalContext extContext = new MockExternalContext();
+	private final MockExternalContext extContext = new MockExternalContext();
 
 	private JsfView view;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private StringWriter output = new StringWriter();
+	private final StringWriter output = new StringWriter();
 
-	private String event = "foo";
+	private final String event = "foo";
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
-	private FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
+	private final RequestContext context = EasyMock.createMock(RequestContext.class);
+	private final FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
 	@SuppressWarnings("unchecked")
-	private MutableAttributeMap<Object> flashScope = EasyMock.createMock(MutableAttributeMap.class);
+	private final MutableAttributeMap<Object> flashScope = EasyMock.createMock(MutableAttributeMap.class);
 	@SuppressWarnings("unchecked")
-	private MutableAttributeMap<Object> flowMap = EasyMock.createMock(MutableAttributeMap.class);
+	private final MutableAttributeMap<Object> flowMap = EasyMock.createMock(MutableAttributeMap.class);
 
-	private FlowExecutionKey key = new FlowExecutionKey() {
+	private final FlowExecutionKey key = new FlowExecutionKey() {
 
 		public String toString() {
 			return "MOCK_KEY";
@@ -64,15 +64,15 @@ public class JsfViewTests extends TestCase {
 
 	protected void setUp() throws Exception {
 
-		jsfMock.setUp();
-		jsfMock.facesContext().getApplication().setViewHandler(new MockViewHandler());
-		jsfMock.facesContext().getApplication().setStateManager(new TestStateManager());
-		jsfMock.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
+		this.jsfMock.setUp();
+		this.jsfMock.facesContext().getApplication().setViewHandler(new MockViewHandler());
+		this.jsfMock.facesContext().getApplication().setStateManager(new TestStateManager());
+		this.jsfMock.facesContext().setResponseWriter(new MockResponseWriter(this.output, null, null));
 
 		UIViewRoot viewToRender = new UIViewRoot();
 		viewToRender.setRenderKitId("HTML_BASIC");
 		viewToRender.setViewId(VIEW_ID);
-		jsfMock.facesContext().setViewRoot(viewToRender);
+		this.jsfMock.facesContext().setViewRoot(viewToRender);
 
 		UIForm form = new HtmlForm();
 		form.setId("myForm");
@@ -83,52 +83,54 @@ public class JsfViewTests extends TestCase {
 		form.getChildren().add(input);
 		viewToRender.getChildren().add(form);
 
-		RequestContextHolder.setRequestContext(context);
-		EasyMock.expect(context.getExternalContext()).andStubReturn(extContext);
-		EasyMock.expect(context.getFlashScope()).andStubReturn(flashScope);
-		EasyMock.expect(context.getFlowScope()).andStubReturn(flowMap);
-		EasyMock.expect(context.getFlowExecutionContext()).andStubReturn(flowExecutionContext);
-		EasyMock.expect(flowExecutionContext.getKey()).andStubReturn(key);
+		RequestContextHolder.setRequestContext(this.context);
+		EasyMock.expect(this.context.getExternalContext()).andStubReturn(this.extContext);
+		EasyMock.expect(this.context.getFlashScope()).andStubReturn(this.flashScope);
+		EasyMock.expect(this.context.getFlowScope()).andStubReturn(this.flowMap);
+		EasyMock.expect(this.context.getFlowExecutionContext()).andStubReturn(this.flowExecutionContext);
+		EasyMock.expect(this.flowExecutionContext.getKey()).andStubReturn(this.key);
 
-		view = new JsfView(viewToRender, jsfMock.lifecycle(), context);
+		this.view = new JsfView(viewToRender, this.jsfMock.lifecycle(), this.context);
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMock.tearDown();
+		super.tearDown();
+		this.jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public final void testSaveState() {
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
-		view.saveState();
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		this.view.saveState();
 	}
 
 	public final void testSaveState_AjaxViewRoot() {
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
-		view.setViewRoot(new AjaxViewRoot(view.getViewRoot()));
-		view.saveState();
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		this.view.setViewRoot(new AjaxViewRoot(this.view.getViewRoot()));
+		this.view.saveState();
 	}
 
 	public final void testRender() throws IOException {
 
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		view.render();
+		this.view.render();
 	}
 
 	public final void testRenderException() throws IOException {
 
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		jsfMock.application().setViewHandler(new ExceptionalViewHandler());
+		this.jsfMock.application().setViewHandler(new ExceptionalViewHandler());
 
 		try {
-			view.render();
+			this.view.render();
 		} catch (Exception ex) {
 		}
 	}
@@ -138,19 +140,19 @@ public class JsfViewTests extends TestCase {
 	 */
 	public final void testProcessUserEvent_Restored_NoEvent() {
 
-		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
+		EasyMock.expect(this.flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				false);
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		Lifecycle lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
+		Lifecycle lifecycle = new NoEventLifecycle(this.jsfMock.lifecycle());
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
+		JsfView restoredView = new JsfView(existingRoot, lifecycle, this.context);
 
 		restoredView.processUserEvent();
 
@@ -164,20 +166,20 @@ public class JsfViewTests extends TestCase {
 	 */
 	public final void testProcessUserEvent_Restored_Ajax_NoEvent() {
 
-		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
+		EasyMock.expect(this.flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				false);
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		Lifecycle lifecycle = new NoEventLifecycle(jsfMock.lifecycle());
+		Lifecycle lifecycle = new NoEventLifecycle(this.jsfMock.lifecycle());
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(existingRoot);
 
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		JsfView restoredView = new JsfView(ajaxRoot, lifecycle, context);
+		JsfView restoredView = new JsfView(ajaxRoot, lifecycle, this.context);
 
 		restoredView.processUserEvent();
 
@@ -190,24 +192,24 @@ public class JsfViewTests extends TestCase {
 	 */
 	public final void testProcessUserEvent_Restored_EventSignaled() {
 
-		EasyMock.expect(flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
+		EasyMock.expect(this.flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
 				false);
-		EasyMock.expect(flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
+		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		Lifecycle lifecycle = new EventSignalingLifecycle(jsfMock.lifecycle());
+		Lifecycle lifecycle = new EventSignalingLifecycle(this.jsfMock.lifecycle());
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		JsfView restoredView = new JsfView(existingRoot, lifecycle, context);
+		JsfView restoredView = new JsfView(existingRoot, lifecycle, this.context);
 
 		restoredView.processUserEvent();
 
 		assertTrue("No event was signaled,", restoredView.hasFlowEvent());
-		assertEquals("Event should be " + event, event, restoredView.getFlowEvent().getId());
+		assertEquals("Event should be " + this.event, this.event, restoredView.getFlowEvent().getId());
 		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
 	}
 
@@ -216,10 +218,10 @@ public class JsfViewTests extends TestCase {
 		MockParameterMap requestParameterMap = new MockParameterMap();
 		requestParameterMap.put("execution", "e1s1");
 
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(requestParameterMap);
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(requestParameterMap);
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		JsfView createdView = new JsfView(new UIViewRoot(), jsfMock.lifecycle(), context);
+		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
 		assertFalse("No user event should be queued", createdView.userEventQueued());
 	}
@@ -230,10 +232,10 @@ public class JsfViewTests extends TestCase {
 		requestParameterMap.put("execution", "e1s1");
 		requestParameterMap.put("javax.faces.ViewState", "e1s1");
 
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(requestParameterMap);
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(requestParameterMap);
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
-		JsfView createdView = new JsfView(new UIViewRoot(), jsfMock.lifecycle(), context);
+		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
 		assertTrue("User event should be queued", createdView.userEventQueued());
 	}
@@ -260,9 +262,9 @@ public class JsfViewTests extends TestCase {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", executed);
+			assertFalse("Lifecycle executed more than once", this.executed);
 			super.execute(context);
-			executed = true;
+			this.executed = true;
 		}
 
 	}
@@ -275,10 +277,10 @@ public class JsfViewTests extends TestCase {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", executed);
+			assertFalse("Lifecycle executed more than once", this.executed);
 			super.execute(context);
-			extContext.getRequestMap().put(JsfView.EVENT_KEY, event);
-			executed = true;
+			JsfViewTests.this.extContext.getRequestMap().put(JsfView.EVENT_KEY, JsfViewTests.this.event);
+			this.executed = true;
 		}
 	}
 }

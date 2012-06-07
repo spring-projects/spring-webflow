@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import com.sun.facelets.tag.TagHandler;
  * <li>ifAllGranted, ifAnyGranted, ifNotGranted</li>
  * </ul>
  * The var attribute can be used to store the result of the authorization decision for later use in the view.
- * 
+ *
  * @author Rossen Stoyanchev
  * @since 2.2.0
  * @see Jsf12FaceletsAuthorizeTag
@@ -72,8 +72,8 @@ public class Jsf12FaceletsAuthorizeTagHandler extends TagHandler {
 			return;
 		}
 
-		Jsf12FaceletsAuthorizeTag authorizeTag = new Jsf12FaceletsAuthorizeTag(faceletContext, access, url, method,
-				ifAllGranted, ifAnyGranted, ifNotGranted);
+		Jsf12FaceletsAuthorizeTag authorizeTag = new Jsf12FaceletsAuthorizeTag(faceletContext, this.access, this.url, this.method,
+				this.ifAllGranted, this.ifAnyGranted, this.ifNotGranted);
 
 		boolean isAuthorized = authorizeTag.authorize();
 
@@ -82,7 +82,7 @@ public class Jsf12FaceletsAuthorizeTagHandler extends TagHandler {
 		}
 
 		if (this.var != null) {
-			faceletContext.setAttribute(var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
+			faceletContext.setAttribute(this.var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
 		}
 
 	}

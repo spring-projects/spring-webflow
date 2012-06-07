@@ -47,7 +47,7 @@ public class MockFacesContext extends FacesContext {
 	private UIViewRoot viewRoot;
 
 	public Application getApplication() {
-		return application;
+		return this.application;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class MockFacesContext extends FacesContext {
 	}
 
 	public ExternalContext getExternalContext() {
-		return externalContext;
+		return this.externalContext;
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class MockFacesContext extends FacesContext {
 	}
 
 	public UIViewRoot getViewRoot() {
-		return viewRoot;
+		return this.viewRoot;
 	}
 
 	public void setViewRoot(UIViewRoot viewRoot) {

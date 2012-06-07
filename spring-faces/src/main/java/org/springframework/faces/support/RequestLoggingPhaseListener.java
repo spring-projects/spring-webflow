@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,13 @@ import org.apache.commons.logging.LogFactory;
  * {@link PhaseListener} that logs the execution of the individual phases of the JSF lifecycle. Useful during JSF
  * application development in order to detect unreported JSF errors that cause the lifecycle to short-circuit. Turn
  * logging level to DEBUG to see its output.
- * 
+ *
  * @author Jeremy Grelle
  */
+@SuppressWarnings("serial")
 public class RequestLoggingPhaseListener implements PhaseListener {
 
-	private Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
+	private static final Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
 
 	public void afterPhase(PhaseEvent event) {
 		// no-op
