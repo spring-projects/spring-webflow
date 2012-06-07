@@ -36,9 +36,9 @@ import org.springframework.webflow.context.portlet.PortletRequestParameterMap;
  */
 public abstract class RequestParameterMap<V> extends StringKeyedMapAdapter<V> {
 
-	private PortletRequest portletRequest;
+	private final PortletRequest portletRequest;
 
-	private Delegate delegate;
+	private final Delegate delegate;
 
 	public RequestParameterMap(PortletRequest portletRequest) {
 		this.portletRequest = portletRequest;
@@ -46,19 +46,19 @@ public abstract class RequestParameterMap<V> extends StringKeyedMapAdapter<V> {
 	}
 
 	protected final PortletRequest getPortletRequest() {
-		return portletRequest;
+		return this.portletRequest;
 	}
 
 	protected void setAttribute(String key, V value) {
-		delegate.setAttribute(key, value);
+		this.delegate.setAttribute(key, value);
 	}
 
 	protected void removeAttribute(String key) {
-		delegate.removeAttribute(key);
+		this.delegate.removeAttribute(key);
 	}
 
 	protected Iterator<String> getAttributeNames() {
-		return delegate.getAttributeNames();
+		return this.delegate.getAttributeNames();
 	}
 
 	private static class Delegate extends PortletRequestParameterMap {

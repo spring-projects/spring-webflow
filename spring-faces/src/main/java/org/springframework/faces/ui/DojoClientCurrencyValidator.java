@@ -42,8 +42,8 @@ public class DojoClientCurrencyValidator extends DojoWidget {
 	private String currency;
 
 	public String getCurrency() {
-		if (currency != null) {
-			return currency;
+		if (this.currency != null) {
+			return this.currency;
 		}
 		ValueBinding exp = getValueBinding("currency");
 		return exp != null ? (String) exp.getValue(getFacesContext()) : null;

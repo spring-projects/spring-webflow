@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,18 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.faces.FacesException;
+import javax.faces.view.facelets.ResourceResolver;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
-
-import com.sun.facelets.impl.DefaultResourceResolver;
-import com.sun.facelets.impl.ResourceResolver;
 
 /**
  * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml". Configure it via a context
@@ -41,14 +43,42 @@ import com.sun.facelets.impl.ResourceResolver;
  * 
  * @see Jsf2FlowResourceResolver
  */
-public class FlowResourceResolver implements ResourceResolver {
+public class FlowResourceResolver extends ResourceResolver {
 
-	ResourceResolver delegateResolver = new DefaultResourceResolver();
+	/**
+	 * All known {@link ResourceResolver} implementations in the priority order
+	 */
+	private static final List<String> RESOLVERS_CLASSES;
+	static {
+		List<String> resolvers = new ArrayList<String>();
+		resolvers.add("com.sun.faces.facelets.impl.DefaultResourceResolver");
+		resolvers.add("org.apache.myfaces.view.facelets.impl.DefaultResourceResolver");
+		RESOLVERS_CLASSES = Collections.unmodifiableList(resolvers);
+	}
+
+	private final ResourceResolver delegateResolver;
+
+	public FlowResourceResolver() {
+		this.delegateResolver = createDelegateResolver();
+	}
+
+	private ResourceResolver createDelegateResolver() {
+		try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			for (String resolverClass : RESOLVERS_CLASSES) {
+				if (ClassUtils.isPresent(resolverClass, classLoader)) {
+					return (ResourceResolver) ClassUtils.forName(resolverClass, classLoader).newInstance();
+				}
+			}
+		} catch (Exception e) {
+		}
+		throw new IllegalStateException("Unable to find Default ResourceResolver");
+	}
 
 	public URL resolveUrl(String path) {
 
 		if (!JsfUtils.isFlowRequest()) {
-			return delegateResolver.resolveUrl(path);
+			return this.delegateResolver.resolveUrl(path);
 		}
 
 		try {
@@ -63,7 +93,7 @@ public class FlowResourceResolver implements ResourceResolver {
 			if (viewResource.exists()) {
 				return viewResource.getURL();
 			} else {
-				return delegateResolver.resolveUrl(path);
+				return this.delegateResolver.resolveUrl(path);
 			}
 		} catch (IOException ex) {
 			throw new FacesException(ex);

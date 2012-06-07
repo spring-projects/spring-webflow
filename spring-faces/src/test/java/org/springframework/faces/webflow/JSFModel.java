@@ -4,7 +4,7 @@ public class JSFModel {
 	String value;
 
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
 	public void setValue(String value) {

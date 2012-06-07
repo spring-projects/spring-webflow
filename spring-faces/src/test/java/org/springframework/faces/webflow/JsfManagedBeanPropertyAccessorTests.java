@@ -30,42 +30,44 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 	private MockRequestContext requestContext;
 
 	protected void setUp() throws Exception {
-		jsfMock.setUp();
-		requestContext = new MockRequestContext();
-		RequestContextHolder.setRequestContext(requestContext);
+		this.jsfMock.setUp();
+		this.requestContext = new MockRequestContext();
+		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMock.tearDown();
+		super.tearDown();
+		this.jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public void testCanRead() throws Exception {
-		jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
-		assertTrue(accessor.canRead(null, null, "myJsfBean"));
+		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
+		assertTrue(this.accessor.canRead(null, null, "myJsfBean"));
 	}
 
 	public void testRead() throws Exception {
 		Object jsfBean = new Object();
-		jsfMock.externalContext().getRequestMap().put("myJsfBean", jsfBean);
-		assertEquals(jsfBean, accessor.read(null, null, "myJsfBean").getValue());
+		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", jsfBean);
+		assertEquals(jsfBean, this.accessor.read(null, null, "myJsfBean").getValue());
 	}
 
 	public void testCanWrite() throws Exception {
-		assertFalse(accessor.canWrite(null, null, "myJsfBean"));
+		assertFalse(this.accessor.canWrite(null, null, "myJsfBean"));
 
-		MutableAttributeMap<Object> map = requestContext.getExternalContext().getRequestMap();
+		MutableAttributeMap<Object> map = this.requestContext.getExternalContext().getRequestMap();
 		map.put("myJsfBean", new Object());
-		assertTrue(accessor.canWrite(null, null, "myJsfBean"));
+		assertTrue(this.accessor.canWrite(null, null, "myJsfBean"));
 		map.clear();
 
-		map = requestContext.getExternalContext().getSessionMap();
+		map = this.requestContext.getExternalContext().getSessionMap();
 		map.put("myJsfBean", new Object());
-		assertTrue(accessor.canWrite(null, null, "myJsfBean"));
+		assertTrue(this.accessor.canWrite(null, null, "myJsfBean"));
 		map.clear();
 
-		map = requestContext.getExternalContext().getApplicationMap();
+		map = this.requestContext.getExternalContext().getApplicationMap();
 		map.put("myJsfBean", new Object());
-		assertTrue(accessor.canWrite(null, null, "myJsfBean"));
+		assertTrue(this.accessor.canWrite(null, null, "myJsfBean"));
 		map.clear();
 	}
 
@@ -73,12 +75,12 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 		Object jsfBean1 = new Object();
 		Object jsfBean2 = new Object();
 
-		MutableAttributeMap<Object> map = requestContext.getExternalContext().getRequestMap();
-		accessor.write(null, null, "myJsfBean", jsfBean1);
+		MutableAttributeMap<Object> map = this.requestContext.getExternalContext().getRequestMap();
+		this.accessor.write(null, null, "myJsfBean", jsfBean1);
 		assertNull("Write occurs only if bean is present in the map", map.get("myJsfBean"));
 
 		map.put("myJsfBean", jsfBean1);
-		accessor.write(null, null, "myJsfBean", jsfBean2);
+		this.accessor.write(null, null, "myJsfBean", jsfBean2);
 		assertEquals(jsfBean2, map.get("myJsfBean"));
 		map.clear();
 	}

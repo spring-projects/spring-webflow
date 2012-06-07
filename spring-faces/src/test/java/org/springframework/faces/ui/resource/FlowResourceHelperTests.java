@@ -15,13 +15,13 @@ public class FlowResourceHelperTests extends TestCase {
 	JSFMockHelper jsf = new JSFMockHelper();
 
 	protected void setUp() throws Exception {
-		jsf.setUp();
+		this.jsf.setUp();
 		// TODO figure out how to set the context path
-		jsf.facesContext().setResponseWriter(new MockResponseWriter(writer, "text/html", "UTF-8"));
+		this.jsf.facesContext().setResponseWriter(new MockResponseWriter(this.writer, "text/html", "UTF-8"));
 	}
 
 	protected void tearDown() throws Exception {
-		jsf.tearDown();
+		this.jsf.tearDown();
 	}
 
 	public final void testRenderScriptLink() throws IOException {
@@ -29,12 +29,12 @@ public class FlowResourceHelperTests extends TestCase {
 		String scriptPath = "/dojo/dojo.js";
 		String expectedUrl = "null/resources/dojo/dojo.js";
 
-		ResourceHelper.renderScriptLink(jsf.facesContext(), scriptPath);
-		ResourceHelper.renderScriptLink(jsf.facesContext(), scriptPath);
+		ResourceHelper.renderScriptLink(this.jsf.facesContext(), scriptPath);
+		ResourceHelper.renderScriptLink(this.jsf.facesContext(), scriptPath);
 
 		String expectedOutput = "<script type=\"text/javascript\" src=\"" + expectedUrl + "\"/>";
 
-		assertEquals(expectedOutput, writer.toString());
+		assertEquals(expectedOutput, this.writer.toString());
 
 	}
 
@@ -43,11 +43,11 @@ public class FlowResourceHelperTests extends TestCase {
 		String scriptPath = "/dijit/themes/dijit.css";
 		String expectedUrl = "null/resources/dijit/themes/dijit.css";
 
-		ResourceHelper.renderStyleLink(jsf.facesContext(), scriptPath);
-		ResourceHelper.renderStyleLink(jsf.facesContext(), scriptPath);
+		ResourceHelper.renderStyleLink(this.jsf.facesContext(), scriptPath);
+		ResourceHelper.renderStyleLink(this.jsf.facesContext(), scriptPath);
 
 		String expectedOutput = "<link type=\"text/css\" rel=\"stylesheet\" href=\"" + expectedUrl + "\"/>";
 
-		assertEquals(expectedOutput, writer.toString());
+		assertEquals(expectedOutput, this.writer.toString());
 	}
 }

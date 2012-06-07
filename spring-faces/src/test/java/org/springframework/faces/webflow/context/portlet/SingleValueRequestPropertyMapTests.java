@@ -12,19 +12,19 @@ public class SingleValueRequestPropertyMapTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		request = new MockPortletRequest();
-		requestMap = new SingleValueRequestPropertyMap(request);
+		this.request = new MockPortletRequest();
+		this.requestMap = new SingleValueRequestPropertyMap(this.request);
 	}
 
 	public void testSingleValueProperty() throws Exception {
-		request.setProperty("key", "value");
-		assertEquals("value", requestMap.getAttribute("key"));
+		this.request.setProperty("key", "value");
+		assertEquals("value", this.requestMap.getAttribute("key"));
 	}
 
 	public void testMultiValuePropertyAsString() throws Exception {
-		request.setProperty("key", "value");
-		request.addProperty("key", "value2");
-		Object actual = requestMap.getAttribute("key");
+		this.request.setProperty("key", "value");
+		this.request.addProperty("key", "value2");
+		Object actual = this.requestMap.getAttribute("key");
 		assertEquals("value", actual);
 	}
 }

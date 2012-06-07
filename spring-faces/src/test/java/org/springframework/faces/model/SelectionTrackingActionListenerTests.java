@@ -26,7 +26,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	/**
 	 * JSF Mock Helper
 	 */
-	private JSFMockHelper jsfMockHelper = new JSFMockHelper();
+	private final JSFMockHelper jsfMockHelper = new JSFMockHelper();
 
 	/**
 	 * The JSF view to simulate
@@ -41,58 +41,58 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	/**
 	 * The delegate action listener that should be called
 	 */
-	private TestDelegateActionListener delegateListener = new TestDelegateActionListener();
+	private final TestDelegateActionListener delegateListener = new TestDelegateActionListener();
 
 	/**
 	 * The class under test
 	 */
-	private ActionListener selectionTrackingListener = new SelectionTrackingActionListener(delegateListener);
+	private final ActionListener selectionTrackingListener = new SelectionTrackingActionListener(this.delegateListener);
 
 	public void setUp() throws Exception {
-		jsfMockHelper.setUp();
-		viewToTest = new UIViewRoot();
+		this.jsfMockHelper.setUp();
+		this.viewToTest = new UIViewRoot();
 		List<Object> rows = new ArrayList<Object>();
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
-		dataModel = new OneSelectionTrackingListDataModel<Object>(rows);
+		this.dataModel = new OneSelectionTrackingListDataModel<Object>(rows);
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMockHelper.tearDown();
+		this.jsfMockHelper.tearDown();
 	}
 
 	public void testProcessActionWithUIData() {
 
 		UIData dataTable = new UIData();
-		dataTable.setValue(dataModel);
+		dataTable.setValue(this.dataModel);
 		UIColumn column = new UIColumn();
 		UICommand commandButton = new UICommand();
 		column.getChildren().add(commandButton);
 		dataTable.getChildren().add(column);
-		viewToTest.getChildren().add(dataTable);
+		this.viewToTest.getChildren().add(dataTable);
 		dataTable.setRowIndex(1);
 
 		ActionEvent event = new ActionEvent(commandButton);
 
-		selectionTrackingListener.processAction(event);
+		this.selectionTrackingListener.processAction(event);
 
-		assertTrue(dataModel.isCurrentRowSelected());
-		assertSame(dataModel.getSelectedRow(), dataModel.getRowData());
-		assertTrue(delegateListener.processedEvent);
+		assertTrue(this.dataModel.isCurrentRowSelected());
+		assertSame(this.dataModel.getSelectedRow(), this.dataModel.getRowData());
+		assertTrue(this.delegateListener.processedEvent);
 
-		dataModel.setRowIndex(2);
-		assertFalse(dataModel.isCurrentRowSelected());
-		assertTrue(dataModel.getSelectedRow() != dataModel.getRowData());
+		this.dataModel.setRowIndex(2);
+		assertFalse(this.dataModel.isCurrentRowSelected());
+		assertTrue(this.dataModel.getSelectedRow() != this.dataModel.getRowData());
 	}
 
 	public void testProcessActionWithUIRepeat() {
 
 		UIRepeat uiRepeat = new UIRepeat();
-		uiRepeat.setValue(dataModel);
+		uiRepeat.setValue(this.dataModel);
 		UICommand commandButton = new UICommand();
 		uiRepeat.getChildren().add(commandButton);
-		viewToTest.getChildren().add(uiRepeat);
+		this.viewToTest.getChildren().add(uiRepeat);
 
 		Method indexMutator = ReflectionUtils.findMethod(UIRepeat.class, "setIndex", new Class[] { FacesContext.class,
 				int.class });
@@ -102,15 +102,15 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 
 		ActionEvent event = new ActionEvent(commandButton);
 
-		selectionTrackingListener.processAction(event);
+		this.selectionTrackingListener.processAction(event);
 
-		assertTrue(dataModel.isCurrentRowSelected());
-		assertSame(dataModel.getSelectedRow(), dataModel.getRowData());
-		assertTrue(delegateListener.processedEvent);
+		assertTrue(this.dataModel.isCurrentRowSelected());
+		assertSame(this.dataModel.getSelectedRow(), this.dataModel.getRowData());
+		assertTrue(this.delegateListener.processedEvent);
 
 		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), 2 });
-		assertFalse(dataModel.isCurrentRowSelected());
-		assertTrue(dataModel.getSelectedRow() != dataModel.getRowData());
+		assertFalse(this.dataModel.isCurrentRowSelected());
+		assertTrue(this.dataModel.getSelectedRow() != this.dataModel.getRowData());
 	}
 
 	private class TestRowData {
@@ -122,7 +122,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		public boolean processedEvent = false;
 
 		public void processAction(ActionEvent event) throws AbortProcessingException {
-			processedEvent = true;
+			this.processedEvent = true;
 		}
 	}
 }

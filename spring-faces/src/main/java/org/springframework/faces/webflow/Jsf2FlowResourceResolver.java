@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,57 +15,18 @@
  */
 package org.springframework.faces.webflow;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.faces.FacesException;
-import javax.faces.view.facelets.ResourceResolver;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
-
-import com.sun.faces.facelets.impl.DefaultResourceResolver;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml". Configure it via a context
- * parameter in web.xml:
- * 
- * <pre>
- * &lt;context-param/&gt; 
- * 	&lt;param-name&gt;facelets.RESOURCE_RESOLVER&lt;/param-name&gt;
- * 	&lt;param-value&gt;org.springframework.faces.webflow.FlowResourceResolver&lt;/param-value&gt; 
- * &lt;/context-param&gt;
- * </pre>
+ * @deprecated Use FlowResourceResolver
  */
-public class Jsf2FlowResourceResolver extends ResourceResolver {
+@Deprecated
+public class Jsf2FlowResourceResolver extends FlowResourceResolver {
 
-	ResourceResolver delegateResolver = new DefaultResourceResolver();
+	Log logger = LogFactory.getLog(FlowExternalContext.class);
 
-	public URL resolveUrl(String path) {
-
-		if (!JsfUtils.isFlowRequest()) {
-			return delegateResolver.resolveUrl(path);
-		}
-
-		try {
-			RequestContext context = RequestContextHolder.getRequestContext();
-			ApplicationContext flowContext = context.getActiveFlow().getApplicationContext();
-			if (flowContext == null) {
-				throw new IllegalStateException("A Flow ApplicationContext is required to resolve Flow View Resources");
-			}
-
-			ApplicationContext appContext = flowContext.getParent();
-			Resource viewResource = appContext.getResource(path);
-			if (viewResource.exists()) {
-				return viewResource.getURL();
-			} else {
-				return delegateResolver.resolveUrl(path);
-			}
-		} catch (IOException ex) {
-			throw new FacesException(ex);
-		}
+	public Jsf2FlowResourceResolver() {
+		this.logger.warn("Jsf2FlowResourceResolver has been deprecated, please update your faces-config.xml to use FlowResourceResolver");
 	}
-
 }

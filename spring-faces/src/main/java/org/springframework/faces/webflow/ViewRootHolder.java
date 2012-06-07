@@ -33,7 +33,7 @@ class ViewRootHolder implements Serializable {
 	}
 
 	public UIViewRoot getViewRoot() {
-		return viewRoot;
+		return this.viewRoot;
 	}
 
 }

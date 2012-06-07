@@ -31,12 +31,12 @@ public class MockBaseFacesContext extends MockFacesContext20 {
 	}
 
 	public Application getApplication() {
-		if (application == null) {
+		if (this.application == null) {
 			ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder
 					.getFactory(FactoryFinder.APPLICATION_FACTORY);
-			application = applicationFactory.getApplication();
+			this.application = applicationFactory.getApplication();
 		}
-		return application;
+		return this.application;
 	}
 
 	public void setApplication(Application application) {

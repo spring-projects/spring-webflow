@@ -46,10 +46,10 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 	}
 
 	private Lifecycle getLifecycle() {
-		if (lifecycle == null) {
-			lifecycle = FlowLifecycle.newInstance();
+		if (this.lifecycle == null) {
+			this.lifecycle = FlowLifecycle.newInstance();
 		}
-		return lifecycle;
+		return this.lifecycle;
 	}
 
 }

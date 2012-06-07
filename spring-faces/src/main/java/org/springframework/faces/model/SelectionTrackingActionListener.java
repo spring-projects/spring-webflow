@@ -44,7 +44,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 
 	private static final Log logger = LogFactory.getLog(FlowActionListener.class);
 
-	private ActionListener delegate;
+	private final ActionListener delegate;
 
 	public SelectionTrackingActionListener(ActionListener delegate) {
 		this.delegate = delegate;
@@ -52,7 +52,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 
 	public void processAction(ActionEvent event) throws AbortProcessingException {
 		trackSelection(event.getComponent());
-		delegate.processAction(event);
+		this.delegate.processAction(event);
 	}
 
 	private void trackSelection(UIComponent component) {

@@ -26,52 +26,52 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 
 	private ClassPathXmlApplicationContext context;
 	private FlowBuilderServices builderServices;
-	private JSFMockHelper jsf = new JSFMockHelper();
+	private final JSFMockHelper jsf = new JSFMockHelper();
 
 	public void setUp() throws Exception {
-		jsf.setUp();
-		context = new ClassPathXmlApplicationContext("org/springframework/faces/config/flow-builder-services.xml");
+		this.jsf.setUp();
+		this.context = new ClassPathXmlApplicationContext("org/springframework/faces/config/flow-builder-services.xml");
 	}
 
 	protected void tearDown() throws Exception {
-		jsf.tearDown();
+		this.jsf.tearDown();
 	}
 
 	public void testConfigureDefaults() {
-		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesDefault");
-		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof SpringELExpressionParser);
-		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
-		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
-		assertFalse(builderServices.getDevelopment());
+		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesDefault");
+		assertNotNull(this.builderServices);
+		assertTrue(this.builderServices.getExpressionParser() instanceof SpringELExpressionParser);
+		assertTrue(this.builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
+		assertTrue(this.builderServices.getConversionService() instanceof FacesConversionService);
+		assertFalse(this.builderServices.getDevelopment());
 	}
 
 	public void testEnableManagedBeans() {
-		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesLegacy");
-		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof FacesSpringELExpressionParser);
-		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
-		assertTrue(builderServices.getConversionService() instanceof FacesConversionService);
-		assertFalse(builderServices.getDevelopment());
+		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesLegacy");
+		assertNotNull(this.builderServices);
+		assertTrue(this.builderServices.getExpressionParser() instanceof FacesSpringELExpressionParser);
+		assertTrue(this.builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
+		assertTrue(this.builderServices.getConversionService() instanceof FacesConversionService);
+		assertFalse(this.builderServices.getDevelopment());
 	}
 
 	public void testFlowBuilderServicesAllCustomized() {
-		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesAllCustom");
-		assertNotNull(builderServices);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
-		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
-		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
-		assertTrue(builderServices.getDevelopment());
+		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesAllCustom");
+		assertNotNull(this.builderServices);
+		assertTrue(this.builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
+		assertTrue(this.builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
+		assertTrue(this.builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(this.builderServices.getDevelopment());
 	}
 
 	public void testFlowBuilderServicesConversionServiceCustomized() {
-		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesConversionServiceCustom");
-		assertNotNull(builderServices);
-		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
-		assertTrue(builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
-		assertTrue(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
-		assertTrue(builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
-		assertFalse(builderServices.getDevelopment());
+		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesConversionServiceCustom");
+		assertNotNull(this.builderServices);
+		assertTrue(this.builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(this.builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
+		assertTrue(((SpringELExpressionParser) this.builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
+		assertTrue(this.builderServices.getViewFactoryCreator() instanceof JsfViewFactoryCreator);
+		assertFalse(this.builderServices.getDevelopment());
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {

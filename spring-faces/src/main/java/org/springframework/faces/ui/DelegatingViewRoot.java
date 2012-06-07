@@ -40,14 +40,14 @@ import javax.faces.event.PhaseListener;
  */
 public abstract class DelegatingViewRoot extends UIViewRoot {
 
-	private UIViewRoot original;
+	private final UIViewRoot original;
 
 	public DelegatingViewRoot(UIViewRoot original) {
 		this.original = original;
 	}
 
 	public UIViewRoot getOriginalViewRoot() {
-		return original;
+		return this.original;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#addPhaseListener(javax.faces.event.PhaseListener)
 	 */
 	public void addPhaseListener(PhaseListener phaseListener) {
-		original.addPhaseListener(phaseListener);
+		this.original.addPhaseListener(phaseListener);
 	}
 
 	/**
@@ -64,14 +64,14 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#broadcast(javax.faces.event.FacesEvent)
 	 */
 	public void broadcast(FacesEvent event) throws AbortProcessingException {
-		original.broadcast(event);
+		this.original.broadcast(event);
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#createUniqueId()
 	 */
 	public String createUniqueId() {
-		return (original != null) ? original.createUniqueId() : null;
+		return (this.original != null) ? this.original.createUniqueId() : null;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#decode(javax.faces.context.FacesContext)
 	 */
 	public void decode(FacesContext context) {
-		original.decode(context);
+		this.original.decode(context);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponent#encodeAll(javax.faces.context.FacesContext)
 	 */
 	public void encodeAll(FacesContext context) throws IOException {
-		original.encodeAll(context);
+		this.original.encodeAll(context);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#encodeBegin(javax.faces.context.FacesContext)
 	 */
 	public void encodeBegin(FacesContext context) throws IOException {
-		original.encodeBegin(context);
+		this.original.encodeBegin(context);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#encodeChildren(javax.faces.context.FacesContext)
 	 */
 	public void encodeChildren(FacesContext context) throws IOException {
-		original.encodeChildren(context);
+		this.original.encodeChildren(context);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#encodeEnd(javax.faces.context.FacesContext)
 	 */
 	public void encodeEnd(FacesContext context) throws IOException {
-		original.encodeEnd(context);
+		this.original.encodeEnd(context);
 	}
 
 	/**
@@ -123,42 +123,42 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#findComponent(java.lang.String)
 	 */
 	public UIComponent findComponent(String expr) {
-		return original.findComponent(expr);
+		return this.original.findComponent(expr);
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#getAfterPhaseListener()
 	 */
 	public MethodExpression getAfterPhaseListener() {
-		return original.getAfterPhaseListener();
+		return this.original.getAfterPhaseListener();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getAttributes()
 	 */
 	public Map<String, Object> getAttributes() {
-		return original.getAttributes();
+		return this.original.getAttributes();
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#getBeforePhaseListener()
 	 */
 	public MethodExpression getBeforePhaseListener() {
-		return original.getBeforePhaseListener();
+		return this.original.getBeforePhaseListener();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getChildCount()
 	 */
 	public int getChildCount() {
-		return original.getChildCount();
+		return this.original.getChildCount();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getChildren()
 	 */
 	public List<UIComponent> getChildren() {
-		return original.getChildren();
+		return this.original.getChildren();
 	}
 
 	/**
@@ -166,7 +166,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#getClientId(javax.faces.context.FacesContext)
 	 */
 	public String getClientId(FacesContext context) {
-		return original.getClientId(context);
+		return this.original.getClientId(context);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponent#getContainerClientId(javax.faces.context.FacesContext)
 	 */
 	public String getContainerClientId(FacesContext ctx) {
-		return original.getContainerClientId(ctx);
+		return this.original.getContainerClientId(ctx);
 	}
 
 	/**
@@ -182,77 +182,77 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#getFacet(java.lang.String)
 	 */
 	public UIComponent getFacet(String name) {
-		return original.getFacet(name);
+		return this.original.getFacet(name);
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getFacetCount()
 	 */
 	public int getFacetCount() {
-		return original.getFacetCount();
+		return this.original.getFacetCount();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getFacets()
 	 */
 	public Map<String, UIComponent> getFacets() {
-		return original.getFacets();
+		return this.original.getFacets();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getFacetsAndChildren()
 	 */
 	public Iterator<UIComponent> getFacetsAndChildren() {
-		return original.getFacetsAndChildren();
+		return this.original.getFacetsAndChildren();
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#getFamily()
 	 */
 	public String getFamily() {
-		return original.getFamily();
+		return this.original.getFamily();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getId()
 	 */
 	public String getId() {
-		return original.getId();
+		return this.original.getId();
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#getLocale()
 	 */
 	public Locale getLocale() {
-		return original.getLocale();
+		return this.original.getLocale();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getParent()
 	 */
 	public UIComponent getParent() {
-		return original.getParent();
+		return this.original.getParent();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getRendererType()
 	 */
 	public String getRendererType() {
-		return original.getRendererType();
+		return this.original.getRendererType();
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#getRenderKitId()
 	 */
 	public String getRenderKitId() {
-		return original.getRenderKitId();
+		return this.original.getRenderKitId();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#getRendersChildren()
 	 */
 	public boolean getRendersChildren() {
-		return original.getRendersChildren();
+		return this.original.getRendersChildren();
 	}
 
 	/**
@@ -261,7 +261,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#getValueBinding(java.lang.String)
 	 */
 	public ValueBinding getValueBinding(String name) {
-		return original.getValueBinding(name);
+		return this.original.getValueBinding(name);
 	}
 
 	/**
@@ -269,14 +269,14 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponent#getValueExpression(java.lang.String)
 	 */
 	public ValueExpression getValueExpression(String name) {
-		return original.getValueExpression(name);
+		return this.original.getValueExpression(name);
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#getViewId()
 	 */
 	public String getViewId() {
-		return original.getViewId();
+		return this.original.getViewId();
 	}
 
 	/**
@@ -289,28 +289,28 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 */
 	public boolean invokeOnComponent(FacesContext context, String clientId, ContextCallback callback)
 			throws FacesException {
-		return original.invokeOnComponent(context, clientId, callback);
+		return this.original.invokeOnComponent(context, clientId, callback);
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#isRendered()
 	 */
 	public boolean isRendered() {
-		return original.isRendered();
+		return this.original.isRendered();
 	}
 
 	/**
 	 * @see javax.faces.component.UIComponentBase#isTransient()
 	 */
 	public boolean isTransient() {
-		return original.isTransient();
+		return this.original.isTransient();
 	}
 
 	/**
 	 * @see javax.faces.component.UIViewRoot#processApplication(javax.faces.context.FacesContext)
 	 */
 	public void processApplication(FacesContext context) {
-		original.processApplication(context);
+		this.original.processApplication(context);
 	}
 
 	/**
@@ -318,7 +318,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#processDecodes(javax.faces.context.FacesContext)
 	 */
 	public void processDecodes(FacesContext context) {
-		original.processDecodes(context);
+		this.original.processDecodes(context);
 	}
 
 	/**
@@ -328,7 +328,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * java.lang.Object)
 	 */
 	public void processRestoreState(FacesContext context, Object state) {
-		original.processRestoreState(context, state);
+		this.original.processRestoreState(context, state);
 	}
 
 	/**
@@ -336,7 +336,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#processSaveState(javax.faces.context.FacesContext)
 	 */
 	public Object processSaveState(FacesContext context) {
-		return original.processSaveState(context);
+		return this.original.processSaveState(context);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#processUpdates(javax.faces.context.FacesContext)
 	 */
 	public void processUpdates(FacesContext context) {
-		original.processUpdates(context);
+		this.original.processUpdates(context);
 	}
 
 	/**
@@ -352,7 +352,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#processValidators(javax.faces.context.FacesContext)
 	 */
 	public void processValidators(FacesContext context) {
-		original.processValidators(context);
+		this.original.processValidators(context);
 	}
 
 	/**
@@ -360,7 +360,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#queueEvent(javax.faces.event.FacesEvent)
 	 */
 	public void queueEvent(FacesEvent event) {
-		original.queueEvent(event);
+		this.original.queueEvent(event);
 	}
 
 	/**
@@ -368,7 +368,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#removePhaseListener(javax.faces.event.PhaseListener)
 	 */
 	public void removePhaseListener(PhaseListener phaseListener) {
-		original.removePhaseListener(phaseListener);
+		this.original.removePhaseListener(phaseListener);
 	}
 
 	/**
@@ -377,7 +377,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#restoreState(javax.faces.context.FacesContext, java.lang.Object)
 	 */
 	public void restoreState(FacesContext facesContext, Object state) {
-		original.restoreState(facesContext, state);
+		this.original.restoreState(facesContext, state);
 	}
 
 	/**
@@ -385,7 +385,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#saveState(javax.faces.context.FacesContext)
 	 */
 	public Object saveState(FacesContext facesContext) {
-		return original.saveState(facesContext);
+		return this.original.saveState(facesContext);
 	}
 
 	/**
@@ -393,7 +393,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#setAfterPhaseListener(javax.el.MethodExpression)
 	 */
 	public void setAfterPhaseListener(MethodExpression afterPhaseListener) {
-		original.setAfterPhaseListener(afterPhaseListener);
+		this.original.setAfterPhaseListener(afterPhaseListener);
 	}
 
 	/**
@@ -401,7 +401,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#setBeforePhaseListener(javax.el.MethodExpression)
 	 */
 	public void setBeforePhaseListener(MethodExpression beforePhaseListener) {
-		original.setBeforePhaseListener(beforePhaseListener);
+		this.original.setBeforePhaseListener(beforePhaseListener);
 	}
 
 	/**
@@ -410,8 +410,8 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 */
 	public void setId(String id) {
 		// Test for null to deal with JSF setId on constructor
-		if (original != null) {
-			original.setId(id);
+		if (this.original != null) {
+			this.original.setId(id);
 		}
 	}
 
@@ -420,7 +420,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#setLocale(java.util.Locale)
 	 */
 	public void setLocale(Locale locale) {
-		original.setLocale(locale);
+		this.original.setLocale(locale);
 	}
 
 	/**
@@ -428,7 +428,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#setParent(javax.faces.component.UIComponent)
 	 */
 	public void setParent(UIComponent parent) {
-		original.setParent(parent);
+		this.original.setParent(parent);
 	}
 
 	/**
@@ -436,7 +436,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#setRendered(boolean)
 	 */
 	public void setRendered(boolean rendered) {
-		original.setRendered(rendered);
+		this.original.setRendered(rendered);
 	}
 
 	/**
@@ -444,8 +444,8 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#setRendererType(java.lang.String)
 	 */
 	public void setRendererType(String rendererType) {
-		if (original != null) {
-			original.setRendererType(rendererType);
+		if (this.original != null) {
+			this.original.setRendererType(rendererType);
 		}
 	}
 
@@ -454,7 +454,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#setRenderKitId(java.lang.String)
 	 */
 	public void setRenderKitId(String renderKitId) {
-		original.setRenderKitId(renderKitId);
+		this.original.setRenderKitId(renderKitId);
 	}
 
 	/**
@@ -462,7 +462,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#setTransient(boolean)
 	 */
 	public void setTransient(boolean transientFlag) {
-		original.setTransient(transientFlag);
+		this.original.setTransient(transientFlag);
 	}
 
 	/**
@@ -472,7 +472,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponentBase#setValueBinding(java.lang.String, javax.faces.el.ValueBinding)
 	 */
 	public void setValueBinding(String name, ValueBinding binding) {
-		original.setValueBinding(name, binding);
+		this.original.setValueBinding(name, binding);
 	}
 
 	/**
@@ -481,7 +481,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIComponent#setValueExpression(java.lang.String, javax.el.ValueExpression)
 	 */
 	public void setValueExpression(String name, ValueExpression expression) {
-		original.setValueExpression(name, expression);
+		this.original.setValueExpression(name, expression);
 	}
 
 	/**
@@ -489,7 +489,7 @@ public abstract class DelegatingViewRoot extends UIViewRoot {
 	 * @see javax.faces.component.UIViewRoot#setViewId(java.lang.String)
 	 */
 	public void setViewId(String viewId) {
-		original.setViewId(viewId);
+		this.original.setViewId(viewId);
 	}
 
 }
