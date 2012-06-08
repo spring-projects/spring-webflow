@@ -33,14 +33,10 @@ import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
 import javax.faces.context.FacesContextWrapper;
 import javax.faces.context.PartialViewContext;
 import javax.faces.context.PartialViewContextFactory;
 import javax.faces.lifecycle.Lifecycle;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageCriteria;
@@ -48,7 +44,6 @@ import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.RequestContext;
@@ -273,12 +268,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 		Object nativeContext = context.getExternalContext().getNativeContext();
 		Object nativeRequest = context.getExternalContext().getNativeRequest();
 		Object nativeResponse = context.getExternalContext().getNativeResponse();
-		if (JsfRuntimeInformation.isPortletRequest(context)) {
-			return new PortletFacesContextImpl((PortletContext) nativeContext, (PortletRequest) nativeRequest,
-					(PortletResponse) nativeResponse);
-		}
-		FacesContextFactory facesContextFactory = JsfUtils.findFactory(FacesContextFactory.class);
-		return facesContextFactory.getFacesContext(nativeContext, nativeRequest, nativeResponse, lifecycle);
+		return FacesContextHelper.newDefaultInstance(nativeContext, nativeRequest, nativeResponse, lifecycle);
 	}
 
 	/**

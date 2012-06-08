@@ -17,55 +17,67 @@ package org.springframework.faces.webflow.context.portlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.Flash;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.ClientDataRequest;
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceResponse;
+import javax.servlet.http.Cookie;
 
+import org.apache.myfaces.shared.context.flash.FlashImpl;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.faces.webflow.JsfRuntimeInformation;
 import org.springframework.util.Assert;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.webflow.context.portlet.PortletContextMap;
 import org.springframework.webflow.context.portlet.PortletRequestMap;
 import org.springframework.webflow.context.portlet.PortletSessionMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 
+import com.sun.faces.context.flash.ELFlash;
+
 /**
  * An implementation of {@link ExternalContext} for use with Portlet requests.
  * 
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
  * @since 2.2.0
  */
 public class PortletExternalContextImpl extends ExternalContext {
 
-	private ActionRequest actionRequest;
-
 	private Map<String, Object> applicationMap;
-
-	private boolean isActionRequest;
 
 	private PortletContext portletContext;
 
-	private PortletRequest portletRequest;
+	private PortletRequest request;
 
-	private PortletResponse portletResponse;
+	private PortletResponse response;
+
+	private boolean isActionRequest;
 
 	private Map<String, String> initParameterMap;
 
@@ -81,22 +93,52 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	private MapAdaptable<String, Object> sessionMap;
 
+	private Flash flash;
+
 	public PortletExternalContextImpl(PortletContext portletContext, PortletRequest portletRequest,
 			PortletResponse portletResponse) {
 		this.portletContext = portletContext;
-		this.portletRequest = portletRequest;
-		this.portletResponse = portletResponse;
+		this.request = portletRequest;
+		this.response = portletResponse;
 		if (portletRequest instanceof ActionRequest) {
-			this.actionRequest = (ActionRequest) portletRequest;
 			this.isActionRequest = true;
 		}
 	}
 
+	public void release() {
+		portletContext = null;
+		request = null;
+		response = null;
+		applicationMap = null;
+		sessionMap = null;
+		requestMap = null;
+		requestParameterMap = null;
+		requestParameterValuesMap = null;
+		requestHeaderMap = null;
+		requestHeaderValuesMap = null;
+		initParameterMap = null;
+	}
+
+	public Flash getFlash() {
+		if(this.flash == null) {
+			this.flash = createFlash();
+		}
+		return this.flash;
+	}
+
+	private Flash createFlash() {
+		if (JsfRuntimeInformation.isMyFacesPresent()) {
+			return new MyFacesFlashFactory().newFlash(this);
+		} else {
+			return new MojarraFlashFactory().newFlash(this);
+		}
+	}
+
 	public void dispatch(String path) throws IOException {
-		Assert.isTrue(!this.isActionRequest);
-		PortletRequestDispatcher requestDispatcher = this.portletContext.getRequestDispatcher(path);
+		Assert.isTrue(!isActionRequest);
+		PortletRequestDispatcher requestDispatcher = portletContext.getRequestDispatcher(path);
 		try {
-			requestDispatcher.include((RenderRequest) this.portletRequest, (RenderResponse) this.portletResponse);
+			requestDispatcher.include((RenderRequest) request, (RenderResponse) response);
 		} catch (PortletException exception) {
 			if (exception.getMessage() != null) {
 				throw new FacesException(exception.getMessage(), exception);
@@ -105,71 +147,172 @@ public class PortletExternalContextImpl extends ExternalContext {
 		}
 	}
 
-	public String encodeActionURL(String url) {
-		Assert.notNull(url);
-		return this.portletResponse.encodeURL(url);
+	@Override
+	public void redirect(String url) throws IOException {
+		Assert.isInstanceOf(ActionResponse.class, response);
+		((ActionResponse) response).sendRedirect(url);
 	}
 
 	public String encodeNamespace(String name) {
-		Assert.isTrue(!this.isActionRequest);
-		return name + ((RenderResponse) this.portletResponse).getNamespace();
+		Assert.isTrue(!isActionRequest);
+		return name + ((RenderResponse) response).getNamespace();
+	}
+
+	public String encodeActionURL(String url) {
+		Assert.notNull(url);
+		return response.encodeURL(url);
 	}
 
 	@Override
 	public String encodeResourceURL(String url) {
 		Assert.notNull(url);
-		return this.portletResponse.encodeURL(url);
+		return response.encodeURL(url);
+	}
+
+	public String encodePartialActionURL(String url) {
+		Assert.notNull(url);
+		return response.encodeURL(url);
+	}
+
+	public String encodeBookmarkableURL(String baseUrl, Map<String, List<String>> parameters) {
+		return encodeUrl(baseUrl, parameters);
+	}
+
+	public String encodeRedirectURL(String baseUrl, Map<String, List<String>> parameters) {
+		return response.encodeURL(encodeUrl(baseUrl, parameters));
+	}
+
+	private String encodeUrl(String baseUrl, Map<String, List<String>> parameters) {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl);
+		for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
+			builder.queryParam(entry.getKey(), entry.getValue().toArray());
+		}
+		return builder.buildAndExpand().toUriString();
+	}
+	
+
+	@Override
+	public Object getContext() {
+		return portletContext;
+	}
+
+	public String getContextName() {
+		return portletContext.getPortletContextName();
+	}
+
+	public String getMimeType(String file) {
+		return portletContext.getMimeType(file);
+	}
+
+	public String getRealPath(String path) {
+		return portletContext.getRealPath(path);
+	}
+
+	@Override
+	public void log(String message) {
+		Assert.notNull(message);
+		portletContext.log(message);
+	}
+
+	@Override
+	public void log(String message, Throwable exception) {
+		Assert.notNull(message);
+		Assert.notNull(exception);
+		portletContext.log(message, exception);
 	}
 
 	@Override
 	public Map<String, Object> getApplicationMap() {
-		if (this.applicationMap == null) {
-			this.applicationMap = new PortletContextMap(this.portletContext);
+		if (applicationMap == null) {
+			applicationMap = new PortletContextMap(portletContext);
 		}
-		return this.applicationMap;
-	}
-
-	@Override
-	public String getAuthType() {
-		return this.portletRequest.getAuthType();
-	}
-
-	@Override
-	public Object getContext() {
-		return this.portletContext;
+		return applicationMap;
 	}
 
 	@Override
 	public String getInitParameter(String name) {
-		return this.portletContext.getInitParameter(name);
+		return portletContext.getInitParameter(name);
 	}
 
 	@Override
 	public Map<String, String> getInitParameterMap() {
-		if (this.initParameterMap == null) {
-			this.initParameterMap = new InitParameterMap(this.portletContext);
+		if (initParameterMap == null) {
+			initParameterMap = new InitParameterMap(portletContext);
 		}
-		return this.initParameterMap;
+		return initParameterMap;
 	}
 
 	@Override
-	public String getRemoteUser() {
-		return this.portletRequest.getRemoteUser();
+	public URL getResource(String path) throws MalformedURLException {
+		Assert.notNull(path);
+		return portletContext.getResource(path);
+	}
+
+	@Override
+	public InputStream getResourceAsStream(String path) {
+		Assert.notNull(path);
+		return portletContext.getResourceAsStream(path);
+	}
+
+	@Override
+	public Set<String> getResourcePaths(String path) {
+		Assert.notNull(path);
+		return portletContext.getResourcePaths(path);
 	}
 
 	@Override
 	public Object getRequest() {
-		return this.portletRequest;
+		return request;
+	}
+
+	@Override
+	public void setRequest(Object request) {
+		this.request = (PortletRequest) request;
 	}
 
 	@Override
 	public String getRequestContentType() {
+		if (request instanceof ClientDataRequest) {
+			ClientDataRequest clientDataRequest = (ClientDataRequest) request;
+			return clientDataRequest.getContentType();
+		}
 		return null;
+	}
+	
+	@Override
+	public String getRequestContextPath() {
+		return request.getContextPath();
+	}
+
+	public String getRequestScheme() {
+		return request.getScheme();
+	}
+
+	public String getRequestServerName() {
+		return request.getServerName();
+	}
+
+	public int getRequestServerPort() {
+		return request.getServerPort();
 	}
 
 	@Override
-	public String getRequestContextPath() {
-		return this.portletRequest.getContextPath();
+	public Locale getRequestLocale() {
+		return request.getLocale();
+	}
+
+	@Override
+	public Iterator<Locale> getRequestLocales() {
+		return CollectionUtils.toIterator(request.getLocales());
+	}
+
+	@Override
+	public String getRequestCharacterEncoding() {
+		return getActionRequest().getCharacterEncoding();
+	}
+
+	public void setRequestCharacterEncoding(String encoding) throws java.io.UnsupportedEncodingException {
+		getActionRequest().setCharacterEncoding(encoding);
 	}
 
 	@Override
@@ -179,57 +322,47 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public Map<String, String> getRequestHeaderMap() {
-		if (this.requestHeaderMap == null) {
-			this.requestHeaderMap = new SingleValueRequestPropertyMap(this.portletRequest);
+		if (requestHeaderMap == null) {
+			requestHeaderMap = new SingleValueRequestPropertyMap(request);
 		}
-		return this.requestHeaderMap;
+		return requestHeaderMap;
 	}
 
 	@Override
 	public Map<String, String[]> getRequestHeaderValuesMap() {
-		if (this.requestHeaderValuesMap == null) {
-			this.requestHeaderValuesMap = new MultiValueRequestPropertyMap(this.portletRequest);
+		if (requestHeaderValuesMap == null) {
+			requestHeaderValuesMap = new MultiValueRequestPropertyMap(request);
 		}
-		return this.requestHeaderValuesMap;
-	}
-
-	@Override
-	public Locale getRequestLocale() {
-		return this.portletRequest.getLocale();
-	}
-
-	@Override
-	public Iterator<Locale> getRequestLocales() {
-		return CollectionUtils.toIterator(this.portletRequest.getLocales());
+		return requestHeaderValuesMap;
 	}
 
 	@Override
 	public Map<String, Object> getRequestMap() {
-		if (this.requestMap == null) {
-			this.requestMap = new PortletRequestMap(this.portletRequest);
+		if (requestMap == null) {
+			requestMap = new PortletRequestMap(request);
 		}
-		return this.requestMap;
+		return requestMap;
 	}
 
 	@Override
 	public Map<String, String> getRequestParameterMap() {
-		if (this.requestParameterMap == null) {
-			this.requestParameterMap = new SingleValueRequestParameterMap(this.portletRequest);
+		if (requestParameterMap == null) {
+			requestParameterMap = new SingleValueRequestParameterMap(request);
 		}
-		return this.requestParameterMap;
+		return requestParameterMap;
 	}
 
 	@Override
 	public Iterator<String> getRequestParameterNames() {
-		return CollectionUtils.toIterator(this.portletRequest.getParameterNames());
+		return CollectionUtils.toIterator(request.getParameterNames());
 	}
 
 	@Override
 	public Map<String, String[]> getRequestParameterValuesMap() {
-		if (this.requestParameterValuesMap == null) {
-			this.requestParameterValuesMap = new MultiValueRequestParameterMap(this.portletRequest);
+		if (requestParameterValuesMap == null) {
+			requestParameterValuesMap = new MultiValueRequestParameterMap(request);
 		}
-		return this.requestParameterValuesMap;
+		return requestParameterValuesMap;
 	}
 
 	@Override
@@ -239,7 +372,6 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public String getRequestServletPath() {
-		//
 		// Return "" instead of null in order to prevent NullPointerException in Apache MyFaces 1.2 when it tries to
 		// determine the servlet mappings in DefaultViewHandlerSupport.calculateFacesServletMapping(..).
 		// Note that the FacesServlet mapping in Web Flow is not relevant so this should be ok.
@@ -250,115 +382,59 @@ public class PortletExternalContextImpl extends ExternalContext {
 		return (JsfRuntimeInformation.isMyFacesPresent()) ? "" : null;
 	}
 
-	@Override
-	public URL getResource(String path) throws MalformedURLException {
-		Assert.notNull(path);
-		return this.portletContext.getResource(path);
+	public int getRequestContentLength() {
+		Assert.isInstanceOf(ClientDataRequest.class, request);
+		return ((ClientDataRequest) request).getContentLength();
+	}
+
+	private ActionRequest getActionRequest() {
+		Assert.isInstanceOf(ActionRequest.class, request);
+		return (ActionRequest) request;
 	}
 
 	@Override
-	public InputStream getResourceAsStream(String path) {
-		Assert.notNull(path);
-		return this.portletContext.getResourceAsStream(path);
+	public String getAuthType() {
+		return request.getAuthType();
 	}
 
 	@Override
-	public Set<String> getResourcePaths(String path) {
-		Assert.notNull(path);
-		return this.portletContext.getResourcePaths(path);
-	}
-
-	@Override
-	public Object getResponse() {
-		return this.portletResponse;
-	}
-
-	@Override
-	public String getResponseContentType() {
-		return null;
-	}
-
-	@Override
-	public Object getSession(boolean create) {
-		return this.portletRequest.getPortletSession(create);
-	}
-
-	@Override
-	public Map<String, Object> getSessionMap() {
-		if (this.sessionMap == null) {
-			this.sessionMap = new LocalAttributeMap<Object>(new PortletSessionMap(this.portletRequest));
-		}
-		return this.sessionMap.asMap();
+	public String getRemoteUser() {
+		return request.getRemoteUser();
 	}
 
 	@Override
 	public Principal getUserPrincipal() {
-		return this.portletRequest.getUserPrincipal();
+		return request.getUserPrincipal();
 	}
 
 	@Override
 	public boolean isUserInRole(String role) {
 		Assert.notNull(role);
-		return this.portletRequest.isUserInRole(role);
+		return request.isUserInRole(role);
+	}
+
+	public boolean isSecure() {
+		return request.isSecure();
 	}
 
 	@Override
-	public void log(String message) {
-		Assert.notNull(message);
-		this.portletContext.log(message);
+	public Object getResponse() {
+		return response;
 	}
 
 	@Override
-	public void log(String message, Throwable exception) {
-		Assert.notNull(message);
-		Assert.notNull(exception);
-		this.portletContext.log(message, exception);
+	public void setResponse(Object response) {
+		this.response = (PortletResponse) response;
 	}
 
 	@Override
-	public void redirect(String url) throws IOException {
-		if (this.actionRequest instanceof ActionResponse) {
-			((ActionResponse) this.portletResponse).sendRedirect(url);
-		} else {
-			throw new IllegalArgumentException("Only ActionResponse supported");
-		}
-	}
-
-	public void release() {
-		this.portletContext = null;
-		this.portletRequest = null;
-		this.portletResponse = null;
-		this.applicationMap = null;
-		this.sessionMap = null;
-		this.requestMap = null;
-		this.requestParameterMap = null;
-		this.requestParameterValuesMap = null;
-		this.requestHeaderMap = null;
-		this.requestHeaderValuesMap = null;
-		this.initParameterMap = null;
-		this.actionRequest = null;
-	}
-
-	@Override
-	public void setRequest(Object request) {
-		this.portletRequest = (PortletRequest) request;
-		this.actionRequest = (this.portletRequest instanceof ActionRequest) ? (ActionRequest) request : null;
-	}
-
-	public void setRequestCharacterEncoding(String encoding) throws java.io.UnsupportedEncodingException {
-		Assert.notNull(this.actionRequest, "The request be an action request.");
-		this.actionRequest.setCharacterEncoding(encoding);
-	}
-
-	@Override
-	public String getRequestCharacterEncoding() {
-		Assert.notNull(this.actionRequest, "The request be an action request.");
-		return this.actionRequest.getCharacterEncoding();
+	public String getResponseContentType() {
+		return getMimeResponse().getContentType();
 	}
 
 	@Override
 	public String getResponseCharacterEncoding() {
-		return null;
+		return getMimeResponse().getCharacterEncoding();
 	}
 
 	@Override
@@ -366,9 +442,153 @@ public class PortletExternalContextImpl extends ExternalContext {
 		// no-op
 	}
 
-	@Override
-	public void setResponse(Object response) {
-		this.portletResponse = (PortletResponse) response;
+	public OutputStream getResponseOutputStream() throws IOException {
+		return getMimeResponse().getPortletOutputStream();
 	}
 
+	public Writer getResponseOutputWriter() throws IOException {
+		return getMimeResponse().getWriter();
+	}
+
+	public void addResponseCookie(String name, String value, Map<String, Object> properties) {
+		Cookie cookie = new Cookie(name, value);
+		setCookieProperties(cookie, properties);
+		response.addProperty(cookie);
+	}
+
+	private void setCookieProperties(Cookie cookie, Map<String, Object> properties) {
+		if (properties != null) {
+			for (Map.Entry<String, Object> entry : properties.entrySet()) {
+				setCookieProperty(cookie, entry.getKey(), entry.getValue());
+			}
+		}
+	}
+
+	private void setCookieProperty(Cookie cookie, String property, Object value) {
+		if ("domain".equalsIgnoreCase(property)) {
+			cookie.setDomain((String) value);
+			return;
+		}
+		if ("maxAge".equalsIgnoreCase(property)) {
+			cookie.setMaxAge((Integer) value);
+			return;
+		}
+		if ("path".equalsIgnoreCase(property)) {
+			cookie.setPath((String) value);
+			return;
+		}
+		if ("secure".equalsIgnoreCase(property)) {
+			cookie.setSecure((Boolean) value);
+			return;
+		}
+		throw new IllegalStateException("Unknown cookie property " + property);
+	}
+
+	public void addResponseHeader(String name, String value) {
+		response.addProperty(name, value);
+	}
+
+	public void responseFlushBuffer() throws IOException {
+		getMimeResponse().flushBuffer();
+	}
+
+	public void responseReset() {
+		MimeResponse mimeResponse = getMimeResponse(false);
+		if (mimeResponse != null) {
+			mimeResponse.reset();
+		}
+	}
+
+	public void responseSendError(int statusCode, String message) throws IOException {
+		throw new IOException(statusCode + ": " + message);
+	}
+
+	public void setResponseBufferSize(int size) {
+		getMimeResponse().setBufferSize(size);
+	}
+
+	public void setResponseContentLength(int length) {
+		if (portletContext instanceof ResourceResponse) {
+			((ResourceResponse) portletContext).setContentLength(length);
+		}
+	}
+
+	public void setResponseContentType(String contentType) {
+		MimeResponse mimeResponse = getMimeResponse(false);
+		if (mimeResponse != null) {
+			mimeResponse.setContentType(contentType);
+		}
+	}
+
+	public void setResponseHeader(String name, String value) {
+		response.setProperty(name, value);
+	}
+
+	public void setResponseStatus(int statusCode) {
+		PortletResponseUtils.setStatusCode(response, statusCode);
+	}
+
+	public boolean isResponseCommitted() {
+		MimeResponse mimeResponse = getMimeResponse(false);
+		return ((mimeResponse != null) ? mimeResponse.isCommitted() : false);
+	}
+
+	public int getResponseBufferSize() {
+		return getMimeResponse().getBufferSize();
+
+	}
+
+	private MimeResponse getMimeResponse() {
+		return getMimeResponse(true);
+	}
+
+	private MimeResponse getMimeResponse(boolean required) {
+		if (response instanceof MimeResponse) {
+			return (MimeResponse) response;
+		}
+		if (!required) {
+			return null;
+		}
+		throw new IllegalStateException("Portlet response is not a MimeResponse");
+	}
+
+	@Override
+	public Object getSession(boolean create) {
+		return request.getPortletSession(create);
+	}
+
+	@Override
+	public Map<String, Object> getSessionMap() {
+		if (sessionMap == null) {
+			sessionMap = new LocalAttributeMap<Object>(new PortletSessionMap(request));
+		}
+		return sessionMap.asMap();
+	}
+
+	public int getSessionMaxInactiveInterval() {
+		return request.getPortletSession().getMaxInactiveInterval();
+	}
+
+	public void invalidateSession() {
+		PortletSession portletSession = request.getPortletSession(false);
+		if (portletSession != null) {
+			portletSession.invalidate();
+		}
+	}
+
+	public void setSessionMaxInactiveInterval(int interval) {
+		request.getPortletSession().setMaxInactiveInterval(interval);
+	}
+	
+	private static class MojarraFlashFactory {
+		public Flash newFlash(ExternalContext context) {
+			return ELFlash.getFlash(context, true);
+		}
+	}
+	
+	private static class MyFacesFlashFactory {
+		public Flash newFlash(ExternalContext context) {
+			return FlashImpl.getCurrentInstance(context);
+		}
+	}
 }
