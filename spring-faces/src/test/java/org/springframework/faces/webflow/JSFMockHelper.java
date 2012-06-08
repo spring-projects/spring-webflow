@@ -39,66 +39,66 @@ import org.apache.myfaces.test.mock.visit.MockVisitContextFactory;
  */
 public class JSFMockHelper {
 
-	private JSFMock mock = new JSFMock();
+	private final JSFMock mock = new JSFMock();
 
 	public Application application() {
-		return mock.application();
+		return this.mock.application();
 	}
 
 	public MockServletConfig config() {
-		return mock.config();
+		return this.mock.config();
 	}
 
 	public String contentAsString() throws IOException {
-		return mock.contentAsString();
+		return this.mock.contentAsString();
 	}
 
 	public MockExternalContext externalContext() {
-		return mock.externalContext();
+		return this.mock.externalContext();
 	}
 
 	public FacesContext facesContext() {
-		return mock.facesContext();
+		return this.mock.facesContext();
 	}
 
 	public FacesContextFactory facesContextFactory() {
-		return mock.facesContextFactory();
+		return this.mock.facesContextFactory();
 	}
 
 	public MockLifecycle lifecycle() {
-		return mock.lifecycle();
+		return this.mock.lifecycle();
 	}
 
 	public MockLifecycleFactory lifecycleFactory() {
-		return mock.lifecycleFactory();
+		return this.mock.lifecycleFactory();
 	}
 
 	public MockRenderKit renderKit() {
-		return mock.renderKit();
+		return this.mock.renderKit();
 	}
 
 	public MockHttpServletRequest request() {
-		return mock.request();
+		return this.mock.request();
 	}
 
 	public MockHttpServletResponse response() {
-		return mock.response();
+		return this.mock.response();
 	}
 
 	public MockServletContext servletContext() {
-		return mock.servletContext();
+		return this.mock.servletContext();
 	}
 
 	public MockHttpSession session() {
-		return mock.session();
+		return this.mock.session();
 	}
 
 	public void setUp() throws Exception {
-		mock.setUp();
+		this.mock.setUp();
 	}
 
 	public void tearDown() throws Exception {
-		mock.tearDown();
+		this.mock.tearDown();
 	}
 
 	private static class JSFMock extends AbstractJsfTestCase {
@@ -120,18 +120,18 @@ public class JSFMockHelper {
 			}
 
 			// Set up a new thread context class loader
-			threadContextClassLoader = Thread.currentThread().getContextClassLoader();
+			this.threadContextClassLoader = Thread.currentThread().getContextClassLoader();
 			Thread.currentThread().setContextClassLoader(
 					new URLClassLoader(new URL[0], this.getClass().getClassLoader()));
 
 			// Set up Servlet API Objects
-			servletContext = new MockServletContext();
-			config = new MockServletConfig(servletContext);
-			session = new MockHttpSession();
-			session.setServletContext(servletContext);
-			request = new MockHttpServletRequest(session);
-			request.setServletContext(servletContext);
-			response = new MockHttpServletResponse();
+			this.servletContext = new MockServletContext();
+			this.config = new MockServletConfig(this.servletContext);
+			this.session = new MockHttpSession();
+			this.session.setServletContext(this.servletContext);
+			this.request = new MockHttpServletRequest(this.session);
+			this.request.setServletContext(this.servletContext);
+			this.response = new MockHttpServletResponse();
 
 			// Set up JSF API Objects
 			FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY, MockApplicationFactory.class.getName());
@@ -141,98 +141,98 @@ public class JSFMockHelper {
 			FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY,
 					MockPartialViewContextFactory.class.getName());
 			FactoryFinder.setFactory(FactoryFinder.VISIT_CONTEXT_FACTORY, MockVisitContextFactory.class.getName());
-			lifecycleFactory = (MockLifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-			lifecycle = (MockLifecycle) lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-			facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			facesContext = facesContextFactory.getFacesContext(servletContext, request, response, lifecycle);
-			externalContext = (MockExternalContext) facesContext.getExternalContext();
-			facesContext.setResponseWriter(new MockResponseWriter(response.getWriter()));
+			this.lifecycleFactory = (MockLifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+			this.lifecycle = (MockLifecycle) this.lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
+			this.facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			this.facesContext = this.facesContextFactory.getFacesContext(this.servletContext, this.request, this.response, this.lifecycle);
+			this.externalContext = (MockExternalContext) this.facesContext.getExternalContext();
+			this.facesContext.setResponseWriter(new MockResponseWriter(this.response.getWriter()));
 
 			UIViewRoot root = new UIViewRoot();
 			root.setViewId("/viewId");
 			root.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
-			facesContext.setViewRoot(root);
+			this.facesContext.setViewRoot(root);
 			ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder
 					.getFactory(FactoryFinder.APPLICATION_FACTORY);
-			application = (org.apache.myfaces.test.mock.MockApplication) applicationFactory.getApplication();
+			this.application = (org.apache.myfaces.test.mock.MockApplication) applicationFactory.getApplication();
 			RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder
 					.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-			renderKit = new MockRenderKit();
-			renderKitFactory.addRenderKit(RenderKitFactory.HTML_BASIC_RENDER_KIT, renderKit);
+			this.renderKit = new MockRenderKit();
+			renderKitFactory.addRenderKit(RenderKitFactory.HTML_BASIC_RENDER_KIT, this.renderKit);
 		}
 
 		public void tearDown() throws Exception {
-			application = null;
-			config = null;
-			externalContext = null;
-			if (facesContext != null) {
-				facesContext.release();
+			this.application = null;
+			this.config = null;
+			this.externalContext = null;
+			if (this.facesContext != null) {
+				this.facesContext.release();
 			}
-			facesContext = null;
-			lifecycle = null;
-			lifecycleFactory = null;
-			renderKit = null;
-			request = null;
-			response = null;
-			servletContext = null;
-			session = null;
+			this.facesContext = null;
+			this.lifecycle = null;
+			this.lifecycleFactory = null;
+			this.renderKit = null;
+			this.request = null;
+			this.response = null;
+			this.servletContext = null;
+			this.session = null;
 			FactoryFinder.releaseFactories();
 
-			Thread.currentThread().setContextClassLoader(threadContextClassLoader);
-			threadContextClassLoader = null;
+			Thread.currentThread().setContextClassLoader(this.threadContextClassLoader);
+			this.threadContextClassLoader = null;
 		}
 
 		public org.apache.myfaces.test.mock.MockApplication application() {
-			return application;
+			return this.application;
 		}
 
 		public MockServletConfig config() {
-			return config;
+			return this.config;
 		}
 
 		public String contentAsString() throws IOException {
-			MockPrintWriter writer = (MockPrintWriter) response.getWriter();
+			MockPrintWriter writer = (MockPrintWriter) this.response.getWriter();
 			return new String(writer.content());
 		}
 
 		public MockExternalContext externalContext() {
-			return externalContext;
+			return this.externalContext;
 		}
 
 		public FacesContext facesContext() {
-			return facesContext;
+			return this.facesContext;
 		}
 
 		public FacesContextFactory facesContextFactory() {
-			return facesContextFactory;
+			return this.facesContextFactory;
 		}
 
 		public MockLifecycle lifecycle() {
-			return lifecycle;
+			return this.lifecycle;
 		}
 
 		public MockLifecycleFactory lifecycleFactory() {
-			return lifecycleFactory;
+			return this.lifecycleFactory;
 		}
 
 		public MockRenderKit renderKit() {
-			return renderKit;
+			return this.renderKit;
 		}
 
 		public MockHttpServletRequest request() {
-			return request;
+			return this.request;
 		}
 
 		public MockHttpServletResponse response() {
-			return response;
+			return this.response;
 		}
 
 		public MockServletContext servletContext() {
-			return servletContext;
+			return this.servletContext;
 		}
 
 		public MockHttpSession session() {
-			return session;
+			return this.session;
 		}
 
 	}

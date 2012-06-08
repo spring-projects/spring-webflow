@@ -37,7 +37,7 @@ public class MockViewHandler extends ViewHandler {
 	}
 
 	public UIViewRoot createView(FacesContext context, String viewId) {
-		return createViewRoot;
+		return this.createViewRoot;
 	}
 
 	public void initView(FacesContext context) throws FacesException {
@@ -77,7 +77,7 @@ public class MockViewHandler extends ViewHandler {
 	}
 
 	public UIViewRoot restoreView(FacesContext context, String viewId) {
-		return restoreViewRoot;
+		return this.restoreViewRoot;
 	}
 
 	public void writeState(FacesContext context) throws IOException {

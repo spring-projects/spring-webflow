@@ -43,17 +43,17 @@ public class OneSelectionTrackingListDataModel<T> extends SerializableListDataMo
 	}
 
 	public List<T> getSelections() {
-		return selections;
+		return this.selections;
 	}
 
 	public boolean isCurrentRowSelected() {
-		return selections.contains(getRowData());
+		return this.selections.contains(getRowData());
 	}
 
 	public void select(T rowData) {
 		Assert.isTrue((getWrappedData()).contains(rowData), "The object to select is not contained in this DataModel.");
-		selections.clear();
-		selections.add(rowData);
+		this.selections.clear();
+		this.selections.add(rowData);
 	}
 
 	public void selectAll() {
@@ -68,10 +68,10 @@ public class OneSelectionTrackingListDataModel<T> extends SerializableListDataMo
 		}
 
 		if (!rowSelected) {
-			selections.remove(getRowData());
-		} else if (rowSelected && !selections.contains(getRowData())) {
-			selections.clear();
-			selections.add(getRowData());
+			this.selections.remove(getRowData());
+		} else if (rowSelected && !this.selections.contains(getRowData())) {
+			this.selections.clear();
+			this.selections.add(getRowData());
 		}
 	}
 
@@ -81,8 +81,8 @@ public class OneSelectionTrackingListDataModel<T> extends SerializableListDataMo
 	}
 
 	public Object getSelectedRow() {
-		if (selections.size() == 1) {
-			return selections.get(0);
+		if (this.selections.size() == 1) {
+			return this.selections.get(0);
 		} else {
 			return null;
 		}

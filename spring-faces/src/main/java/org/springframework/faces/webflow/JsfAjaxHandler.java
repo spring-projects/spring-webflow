@@ -18,7 +18,6 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialResponseWriter;
@@ -89,7 +88,7 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 		ResponseWriter responseWriter = null;
 		Writer out = externalContext.getResponseOutputWriter();
 		if (out != null) {
-			RenderKitFactory factory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+			RenderKitFactory factory = JsfUtils.findFactory(RenderKitFactory.class);
 			RenderKit renderKit = factory.getRenderKit(context, RenderKitFactory.HTML_BASIC_RENDER_KIT);
 			responseWriter = renderKit.createResponseWriter(out, "text/xml", encoding);
 		}

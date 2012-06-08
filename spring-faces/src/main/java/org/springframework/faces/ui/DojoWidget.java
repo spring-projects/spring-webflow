@@ -56,8 +56,8 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	private Boolean uppercase;
 
 	public Boolean getDisabled() {
-		if (disabled != null) {
-			return disabled;
+		if (this.disabled != null) {
+			return this.disabled;
 		}
 		ValueBinding exp = getValueBinding("disabled");
 		return exp != null ? (Boolean) exp.getValue(getFacesContext()) : null;
@@ -68,7 +68,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public Boolean getIntermediateChanges() {
-		return intermediateChanges;
+		return this.intermediateChanges;
 	}
 
 	public void setIntermediateChanges(Boolean intermediateChanges) {
@@ -76,7 +76,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public Integer getTabIndex() {
-		return tabIndex;
+		return this.tabIndex;
 	}
 
 	public void setTabIndex(Integer tabIndex) {
@@ -84,7 +84,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public Boolean getRequired() {
-		return required;
+		return this.required;
 	}
 
 	public void setRequired(Boolean required) {
@@ -92,8 +92,8 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public String getPromptMessage() {
-		if (promptMessage != null) {
-			return promptMessage;
+		if (this.promptMessage != null) {
+			return this.promptMessage;
 		}
 		ValueBinding exp = getValueBinding("promptMessage");
 		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
@@ -104,8 +104,8 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public String getInvalidMessage() {
-		if (invalidMessage != null) {
-			return invalidMessage;
+		if (this.invalidMessage != null) {
+			return this.invalidMessage;
 		}
 		ValueBinding exp = getValueBinding("invalidMessage");
 		return exp != null ? (String) exp.getValue(getFacesContext()) : null;
@@ -116,7 +116,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public String getConstraints() {
-		return constraints;
+		return this.constraints;
 	}
 
 	public void setConstraints(String constraints) {
@@ -124,7 +124,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public String getRegExp() {
-		return regExp;
+		return this.regExp;
 	}
 
 	public void setRegExp(String regExp) {
@@ -132,7 +132,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public String getRegExpGen() {
-		return regExpGen;
+		return this.regExpGen;
 	}
 
 	public void setRegExpGen(String regExpGen) {
@@ -140,7 +140,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public Boolean getLowercase() {
-		return lowercase;
+		return this.lowercase;
 	}
 
 	public void setLowercase(Boolean lowercase) {
@@ -148,7 +148,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public Boolean getUppercase() {
-		return uppercase;
+		return this.uppercase;
 	}
 
 	public void setUppercase(Boolean uppercase) {
@@ -156,7 +156,7 @@ public abstract class DojoWidget extends SpringJavascriptElementDecoration {
 	}
 
 	public Boolean getPropercase() {
-		return propercase;
+		return this.propercase;
 	}
 
 	public void setPropercase(Boolean propercase) {

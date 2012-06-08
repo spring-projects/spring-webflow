@@ -16,6 +16,11 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowPartialViewContextTests extends TestCase {
 
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		RequestContextHolder.setRequestContext(null);
+	}
+
 	public void testReturnFragmentIds() throws Exception {
 		String[] fragmentIds = new String[] { "foo", "bar" };
 

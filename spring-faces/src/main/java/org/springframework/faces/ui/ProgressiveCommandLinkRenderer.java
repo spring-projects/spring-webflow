@@ -69,14 +69,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
-	private RenderAttributeCallback hrefCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback hrefCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			writer.writeAttribute(attribute, "#", property);
 		}
 	};
 
-	private RenderAttributeCallback classCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback classCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			String classToAdd = "progressiveLink";
@@ -89,7 +89,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		}
 	};
 
-	private RenderAttributeCallback noOpCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback noOpCallback = new RenderAttributeCallback() {
 
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
@@ -194,14 +194,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 	}
 
 	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
-		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
-			attributeCallbacks.putAll(super.getAttributeCallbacks(component));
-			attributeCallbacks.put("href", hrefCallback);
-			attributeCallbacks.put("class", classCallback);
-			attributeCallbacks.put("type", noOpCallback);
+		if (this.attributeCallbacks == null) {
+			this.attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
+			this.attributeCallbacks.putAll(super.getAttributeCallbacks(component));
+			this.attributeCallbacks.put("href", this.hrefCallback);
+			this.attributeCallbacks.put("class", this.classCallback);
+			this.attributeCallbacks.put("type", this.noOpCallback);
 		}
-		return attributeCallbacks;
+		return this.attributeCallbacks;
 	}
 
 	protected String getOnClickNoAjax(FacesContext context, UIComponent component) {
@@ -241,81 +241,81 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 
 	private class DoubleQuoteEscapingWriter extends ResponseWriter {
 
-		private ResponseWriter original;
+		private final ResponseWriter original;
 
-		private ResponseWriter clonedWriter;
+		private final ResponseWriter clonedWriter;
 
-		private StringWriter buffer = new StringWriter();
+		private final StringWriter buffer = new StringWriter();
 
 		public DoubleQuoteEscapingWriter(ResponseWriter original) {
 			this.original = original;
-			this.clonedWriter = original.cloneWithWriter(buffer);
+			this.clonedWriter = original.cloneWithWriter(this.buffer);
 		}
 
 		public String escapeResult() {
-			String result = buffer.toString();
+			String result = this.buffer.toString();
 			result = result.replaceAll("\\\"", "\\\\\"");
 			return result;
 		}
 
 		public ResponseWriter cloneWithWriter(Writer arg0) {
-			return clonedWriter.cloneWithWriter(arg0);
+			return this.clonedWriter.cloneWithWriter(arg0);
 		}
 
 		public void endDocument() throws IOException {
-			clonedWriter.endDocument();
+			this.clonedWriter.endDocument();
 		}
 
 		public void endElement(String arg0) throws IOException {
-			clonedWriter.endElement(arg0);
+			this.clonedWriter.endElement(arg0);
 		}
 
 		public void flush() throws IOException {
-			clonedWriter.flush();
+			this.clonedWriter.flush();
 		}
 
 		public String getCharacterEncoding() {
-			return clonedWriter.getCharacterEncoding();
+			return this.clonedWriter.getCharacterEncoding();
 		}
 
 		public String getContentType() {
-			return clonedWriter.getContentType();
+			return this.clonedWriter.getContentType();
 		}
 
 		public void startDocument() throws IOException {
-			clonedWriter.startDocument();
+			this.clonedWriter.startDocument();
 		}
 
 		public void startElement(String arg0, UIComponent arg1) throws IOException {
-			clonedWriter.startElement(arg0, arg1);
+			this.clonedWriter.startElement(arg0, arg1);
 		}
 
 		public void writeAttribute(String arg0, Object arg1, String arg2) throws IOException {
-			clonedWriter.writeAttribute(arg0, arg1, arg2);
+			this.clonedWriter.writeAttribute(arg0, arg1, arg2);
 		}
 
 		public void writeComment(Object arg0) throws IOException {
-			clonedWriter.writeComment(arg0);
+			this.clonedWriter.writeComment(arg0);
 		}
 
 		public void writeText(char[] arg0, int arg1, int arg2) throws IOException {
-			clonedWriter.writeText(arg0, arg1, arg2);
+			this.clonedWriter.writeText(arg0, arg1, arg2);
 		}
 
 		public void writeText(Object arg0, String arg1) throws IOException {
-			clonedWriter.writeText(arg0, arg1);
+			this.clonedWriter.writeText(arg0, arg1);
 		}
 
 		public void writeURIAttribute(String arg0, Object arg1, String arg2) throws IOException {
-			clonedWriter.writeURIAttribute(arg0, arg1, arg2);
+			this.clonedWriter.writeURIAttribute(arg0, arg1, arg2);
 		}
 
 		public void close() throws IOException {
-			clonedWriter.close();
+			this.clonedWriter.close();
 		}
 
 		public void write(char[] cbuf, int off, int len) throws IOException {
-			clonedWriter.write(cbuf, off, len);
+			this.clonedWriter.write(cbuf, off, len);
 		}
 
 	}

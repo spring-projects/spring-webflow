@@ -41,7 +41,7 @@ public class ProgressiveUICommand extends UICommand {
 	private Boolean ajaxEnabled = true;
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -49,8 +49,8 @@ public class ProgressiveUICommand extends UICommand {
 	}
 
 	public Boolean getDisabled() {
-		if (disabled != null) {
-			return disabled;
+		if (this.disabled != null) {
+			return this.disabled;
 		}
 		ValueBinding vb = getValueBinding("disabled");
 		return vb != null ? (Boolean) vb.getValue(getFacesContext()) : false;
@@ -61,7 +61,7 @@ public class ProgressiveUICommand extends UICommand {
 	}
 
 	public Boolean getAjaxEnabled() {
-		return ajaxEnabled;
+		return this.ajaxEnabled;
 	}
 
 	public void setAjaxEnabled(Boolean ajaxEnabled) {
@@ -84,18 +84,18 @@ public class ProgressiveUICommand extends UICommand {
 	public Object saveState(FacesContext context) {
 		Object[] values = new Object[4];
 		values[0] = super.saveState(context);
-		values[1] = type;
-		values[2] = disabled;
-		values[3] = ajaxEnabled;
+		values[1] = this.type;
+		values[2] = this.disabled;
+		values[3] = this.ajaxEnabled;
 		return values;
 	}
 
 	public void restoreState(FacesContext context, Object state) {
 		Object values[] = (Object[]) state;
 		super.restoreState(context, values[0]);
-		type = (String) values[1];
-		disabled = (Boolean) values[2];
-		ajaxEnabled = (Boolean) values[3];
+		this.type = (String) values[1];
+		this.disabled = (Boolean) values[2];
+		this.ajaxEnabled = (Boolean) values[3];
 	}
 
 }

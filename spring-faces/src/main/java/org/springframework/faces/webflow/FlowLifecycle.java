@@ -15,18 +15,15 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
-
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.faces.support.LifecycleWrapper;
 
 /**
  * Custom {@link Lifecycle} for Spring Web Flow that only executes the APPLY_REQUEST_VALUES through INVOKE_APPLICATION
@@ -37,23 +34,27 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  * 
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
-public class FlowLifecycle extends Lifecycle {
+public class FlowLifecycle extends LifecycleWrapper {
 
 	private static final Log logger = LogFactory.getLog(FlowLifecycle.class);
 
-	private final Lifecycle delegate;
+	private final Lifecycle wrapped;
 
 	public static Lifecycle newInstance() {
-		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
-				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		LifecycleFactory lifecycleFactory = JsfUtils.findFactory(LifecycleFactory.class);
 		Lifecycle defaultLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
 		return new FlowLifecycle(defaultLifecycle);
 
 	}
 
-	FlowLifecycle(Lifecycle delegate) {
-		this.delegate = delegate;
+	FlowLifecycle(Lifecycle wrapped) {
+		this.wrapped = wrapped;
+	}
+
+	public Lifecycle getWrapped() {
+		return this.wrapped;
 	}
 
 	/**
@@ -64,41 +65,10 @@ public class FlowLifecycle extends Lifecycle {
 		for (int p = PhaseId.APPLY_REQUEST_VALUES.getOrdinal(); p <= PhaseId.INVOKE_APPLICATION.getOrdinal(); p++) {
 			PhaseId phaseId = PhaseId.VALUES.get(p);
 			if (!skipPhase(context, phaseId)) {
-				if (isAtLeastJsf20()) {
-					context.setCurrentPhaseId(phaseId);
-				}
+				context.setCurrentPhaseId(phaseId);
 				invokePhase(context, phaseId);
 			}
 		}
-	}
-
-	/**
-	 * Delegates to the wrapped {@link Lifecycle}.
-	 * @throws FacesException
-	 */
-	public void render(FacesContext context) throws FacesException {
-		delegate.render(context);
-	}
-
-	/**
-	 * Delegates to the wrapped {@link Lifecycle}.
-	 */
-	public void addPhaseListener(PhaseListener listener) {
-		delegate.addPhaseListener(listener);
-	}
-
-	/**
-	 * Delegates to the wrapped {@link Lifecycle}.
-	 */
-	public PhaseListener[] getPhaseListeners() {
-		return delegate.getPhaseListeners();
-	}
-
-	/**
-	 * Delegates to the wrapped {@link Lifecycle}.
-	 */
-	public void removePhaseListener(PhaseListener listener) {
-		delegate.removePhaseListener(listener);
 	}
 
 	private boolean skipPhase(FacesContext context, PhaseId phaseId) {

@@ -36,7 +36,9 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	private MockFlowBuilderContext serviceLocator = new MockFlowBuilderContext("flowId");
 	private TextToTransitionCriteria converter = new TextToTransitionCriteria(serviceLocator);
 
-	public void setUp() {
+	@Override
+	protected void tearDown() throws Exception {
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public void testAny() throws Exception {

@@ -31,15 +31,15 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RequestLoggingPhaseListener implements PhaseListener {
 
-	private Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
+	private final Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
 
 	public void afterPhase(PhaseEvent event) {
 		// no-op
 	}
 
 	public void beforePhase(PhaseEvent event) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Entering JSF Phase: " + event.getPhaseId());
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Entering JSF Phase: " + event.getPhaseId());
 		}
 	}
 

@@ -66,14 +66,14 @@ public class JsfManagedBeanAwareELExpressionParser extends ELExpressionParser {
 
 	private static class WebFlowELContext extends ELContext {
 
-		private ELResolver resolver;
+		private final ELResolver resolver;
 
 		public WebFlowELContext(ELResolver resolver) {
 			this.resolver = resolver;
 		}
 
 		public ELResolver getELResolver() {
-			return resolver;
+			return this.resolver;
 		}
 
 		public FunctionMapper getFunctionMapper() {
