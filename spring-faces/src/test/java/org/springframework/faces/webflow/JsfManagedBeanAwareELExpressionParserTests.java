@@ -19,19 +19,21 @@ public class JsfManagedBeanAwareELExpressionParserTests extends TestCase {
 	ExpressionParser parser;
 
 	protected void setUp() throws Exception {
-		jsfMock.setUp();
-		RequestContextHolder.setRequestContext(requestContext);
-		parser = new JsfManagedBeanAwareELExpressionParser(new ExpressionFactoryImpl());
+		this.jsfMock.setUp();
+		RequestContextHolder.setRequestContext(this.requestContext);
+		this.parser = new JsfManagedBeanAwareELExpressionParser(new ExpressionFactoryImpl());
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMock.tearDown();
+		super.tearDown();
+		this.jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public void testGetJSFBean() {
-		jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
-		Expression expr = parser.parseExpression("myJsfBean", new FluentParserContext().evaluate(RequestContext.class));
-		Object result = expr.getValue(requestContext);
+		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
+		Expression expr = this.parser.parseExpression("myJsfBean", new FluentParserContext().evaluate(RequestContext.class));
+		Object result = expr.getValue(this.requestContext);
 		assertNotNull("The JSF Bean should not be null.", result);
 	}
 }

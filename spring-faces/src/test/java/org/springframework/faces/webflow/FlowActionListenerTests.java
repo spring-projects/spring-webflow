@@ -27,18 +27,20 @@ public class FlowActionListenerTests extends TestCase {
 	RequestContext context = EasyMock.createMock(RequestContext.class);
 
 	protected void setUp() throws Exception {
-		jsfMock.setUp();
+		this.jsfMock.setUp();
 
-		listener = new FlowActionListener(jsfMock.application().getActionListener());
-		RequestContextHolder.setRequestContext(context);
+		this.listener = new FlowActionListener(this.jsfMock.application().getActionListener());
+		RequestContextHolder.setRequestContext(this.context);
 		LocalAttributeMap<Object> flash = new LocalAttributeMap<Object>();
-		EasyMock.expect(context.getFlashScope()).andStubReturn(flash);
-		EasyMock.expect(context.getCurrentState()).andStubReturn(new MockViewState());
-		EasyMock.replay(new Object[] { context });
+		EasyMock.expect(this.context.getFlashScope()).andStubReturn(flash);
+		EasyMock.expect(this.context.getCurrentState()).andStubReturn(new MockViewState());
+		EasyMock.replay(new Object[] { this.context });
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMock.tearDown();
+		super.tearDown();
+		this.jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public final void testProcessAction() {
@@ -49,12 +51,12 @@ public class FlowActionListenerTests extends TestCase {
 		commandButton.setAction(binding);
 		ActionEvent event = new ActionEvent(commandButton);
 
-		listener.processAction(event);
+		this.listener.processAction(event);
 
 		assertTrue("The event was not signaled",
-				jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
+				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
 		assertEquals("The event should be " + outcome, outcome,
-				jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
+				this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
 	}
 
 	public final void testProcessAction_NullOutcome() {
@@ -65,10 +67,10 @@ public class FlowActionListenerTests extends TestCase {
 		commandButton.setAction(binding);
 		ActionEvent event = new ActionEvent(commandButton);
 
-		listener.processAction(event);
+		this.listener.processAction(event);
 
 		assertFalse("An unexpected event was signaled",
-				jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
+				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
 	}
 
 	private class MethodBindingStub extends MethodBinding {
@@ -95,8 +97,7 @@ public class FlowActionListenerTests extends TestCase {
 			super(new Flow("mockFlow"), "mockView", new ViewFactory() {
 
 				public View getView(RequestContext context) {
-					// TODO Auto-generated method stub
-					throw new UnsupportedOperationException("Auto-generated method stub");
+					throw new UnsupportedOperationException();
 				}
 			});
 		}

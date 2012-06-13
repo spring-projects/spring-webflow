@@ -43,7 +43,7 @@ public abstract class RequestPropertyMap<V> extends StringKeyedMapAdapter<V> {
 	}
 
 	protected final PortletRequest getPortletRequest() {
-		return portletRequest;
+		return this.portletRequest;
 	}
 
 	@Override
@@ -58,6 +58,6 @@ public abstract class RequestPropertyMap<V> extends StringKeyedMapAdapter<V> {
 
 	@Override
 	protected Iterator<String> getAttributeNames() {
-		return CollectionUtils.toIterator(portletRequest.getPropertyNames());
+		return CollectionUtils.toIterator(this.portletRequest.getPropertyNames());
 	}
 }

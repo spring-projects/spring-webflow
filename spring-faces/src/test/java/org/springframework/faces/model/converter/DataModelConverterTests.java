@@ -20,7 +20,7 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToDataModel() throws Exception {
 		List<Object> sourceList = new ArrayList<Object>();
 
-		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
+		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				DataModel.class);
 
 		assertNotNull(resultModel);
@@ -31,7 +31,7 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToListDataModel() throws Exception {
 		List<Object> sourceList = new ArrayList<Object>();
 
-		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
+		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				ListDataModel.class);
 
 		assertNotNull(resultModel);
@@ -42,7 +42,7 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToSerializableListDataModel() throws Exception {
 		List<Object> sourceList = new ArrayList<Object>();
 
-		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
+		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				SerializableListDataModel.class);
 
 		assertNotNull(resultModel);
@@ -54,7 +54,7 @@ public class DataModelConverterTests extends TestCase {
 	public void testConvertListToSerializableListDataModelNullSource() throws Exception {
 		List<Object> sourceList = null;
 
-		DataModel<Object> resultModel = (DataModel<Object>) converter.convertSourceToTargetClass(sourceList,
+		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				SerializableListDataModel.class);
 
 		assertNotNull(resultModel);

@@ -20,8 +20,8 @@ import java.util.Iterator;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
+import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContext;
@@ -35,6 +35,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * initialization will be triggered if the bean has not already been initialized by JSF.
  * 
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
 public class JsfManagedBeanResolver extends ELResolver {
 
@@ -118,14 +119,13 @@ public class JsfManagedBeanResolver extends ELResolver {
 	 * @return The JSF Managed Bean instance if found.
 	 */
 	private Object getFacesBean(Object beanName) {
-		FacesContext facesContext = getFacesContext();
-		Object result = null;
+		FacesContext context = getFacesContext();
 		try {
-			ValueBinding vb = facesContext.getApplication().createValueBinding("#{" + beanName + "}");
-			result = vb.getValue(facesContext);
+			Application application = context.getApplication();
+			String expression = "#{" + beanName + "}";
+			return application.evaluateExpressionGet(context, expression, Object.class);
 		} finally {
-			facesContext.release();
+			context.release();
 		}
-		return result;
 	}
 }

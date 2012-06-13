@@ -224,6 +224,7 @@ project('spring-faces') {
         compile("com.sun.facelets:jsf-facelets:1.1.14", optional)
         compile("com.sun.faces:jsf-api:2.1.7", provided)
         compile("com.sun.faces:jsf-impl:2.1.7", provided)
+        compile("org.apache.myfaces.core:myfaces-impl:2.1.7", provided)
 
         testCompile("log4j:log4j:$log4jVersion") { dep ->
             optional dep

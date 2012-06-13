@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,18 +47,18 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * <p>
  * A base class for an &lt;authorize&gt; tag used to make Spring Security based authorization decisions.
  * </p>
- * 
+ *
  * <p>
  * This class is independent of tag rendering technology (JSP, Facelets). It treats tag attributes as simple strings
  * (with the notable exception of the "access" attribute, which is always expected to contain a Spring EL expression).
  * Therefore subclasses are expected to extract tag attribute values from the specific rendering technology, evaluate
  * them as expressions if necessary, and use the result to set the String-based attributes of this class.
  * </p>
- * 
+ *
  * @author Francois Beausoleil
  * @author Luke Taylor
  * @author Rossen Stoyanchev
- * 
+ *
  * @since 2.2.0
  */
 public abstract class AbstractAuthorizeTag {
@@ -97,9 +97,9 @@ public abstract class AbstractAuthorizeTag {
 	 * <li>ifAllGranted, ifAnyGranted, ifNotGranted</li>
 	 * </ul>
 	 * The above combinations are mutually exclusive and evaluated in the given order.
-	 * 
+	 *
 	 * @return the result of the authorization decision
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public boolean authorize() throws IOException {
@@ -122,7 +122,7 @@ public abstract class AbstractAuthorizeTag {
 	/**
 	 * Make an authorization decision by considering ifAllGranted, ifAnyGranted, and ifNotGranted. All 3 or any
 	 * combination can be provided. All provided attributes must evaluate to true.
-	 * 
+	 *
 	 * @return the result of the authorization decision
 	 */
 	public boolean authorizeUsingGrantedAuthorities() {
@@ -162,9 +162,9 @@ public abstract class AbstractAuthorizeTag {
 	/**
 	 * Make an authorization decision based on a Spring EL expression. See the "Expression-Based Access Control" chapter
 	 * in Spring Security for details on what expressions can be used.
-	 * 
+	 *
 	 * @return the result of the authorization decision
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public boolean authorizeUsingAccessExpression() throws IOException {
@@ -197,9 +197,9 @@ public abstract class AbstractAuthorizeTag {
 	/**
 	 * Make an authorization decision based on the URL and HTTP method attributes. True is returned if the user is
 	 * allowed to access the given URL as defined.
-	 * 
+	 *
 	 * @return the result of the authorization decision
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public boolean authorizeUsingUrlCheck() throws IOException {
@@ -209,7 +209,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getAccess() {
-		return access;
+		return this.access;
 	}
 
 	public void setAccess(String access) {
@@ -217,7 +217,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
@@ -225,7 +225,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getMethod() {
-		return method;
+		return this.method;
 	}
 
 	public void setMethod(String method) {
@@ -233,7 +233,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getIfAllGranted() {
-		return ifAllGranted;
+		return this.ifAllGranted;
 	}
 
 	public void setIfAllGranted(String ifAllGranted) {
@@ -241,7 +241,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getIfAnyGranted() {
-		return ifAnyGranted;
+		return this.ifAnyGranted;
 	}
 
 	public void setIfAnyGranted(String ifAnyGranted) {
@@ -249,7 +249,7 @@ public abstract class AbstractAuthorizeTag {
 	}
 
 	public String getIfNotGranted() {
-		return ifNotGranted;
+		return this.ifNotGranted;
 	}
 
 	public void setIfNotGranted(String ifNotGranted) {

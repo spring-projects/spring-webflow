@@ -60,7 +60,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	protected static final String PROCESS_ALL = "*";
 
-	private List<FacesEvent> events = new ArrayList<FacesEvent>();
+	private final List<FacesEvent> events = new ArrayList<FacesEvent>();
 
 	private String[] processIds;
 
@@ -72,7 +72,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	public AjaxViewRoot(UIViewRoot original) {
 		super(original);
-		renderIdsExpr = FacesContext.getCurrentInstance().getApplication().createValueBinding(RENDER_IDS_EXPRESSION);
+		this.renderIdsExpr = FacesContext.getCurrentInstance().getApplication().createValueBinding(RENDER_IDS_EXPRESSION);
 		if (!StringUtils.hasText(original.getId())) {
 			original.setId(createUniqueId());
 		}
@@ -87,7 +87,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	public void queueEvent(FacesEvent event) {
 		Assert.notNull(event, "Cannot queue a null event.");
-		events.add(event);
+		this.events.add(event);
 	}
 
 	public void encodeAll(FacesContext context) throws IOException {
@@ -162,30 +162,30 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 	// subclassing hooks
 
 	protected String[] getProcessIds() {
-		if (processIds == null) {
+		if (this.processIds == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
 			String processIdsParam = context.getExternalContext().getRequestParameterMap().get(PROCESS_IDS_PARAM);
 			if (StringUtils.hasText(processIdsParam) && processIdsParam.indexOf(PROCESS_ALL) != -1) {
-				processIds = new String[] { getOriginalViewRoot().getClientId(context) };
+				this.processIds = new String[] { getOriginalViewRoot().getClientId(context) };
 			} else {
-				processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");
-				processIds = removeNestedChildren(context, processIds);
+				this.processIds = StringUtils.delimitedListToStringArray(processIdsParam, ",", " ");
+				this.processIds = removeNestedChildren(context, this.processIds);
 			}
 		}
-		return processIds;
+		return this.processIds;
 	}
 
 	protected String[] getRenderIds() {
-		if (renderIds == null) {
+		if (this.renderIds == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
-			renderIds = (String[]) renderIdsExpr.getValue(context);
-			if (renderIds == null || renderIds.length == 0) {
-				renderIds = getProcessIds();
+			this.renderIds = (String[]) this.renderIdsExpr.getValue(context);
+			if (this.renderIds == null || this.renderIds.length == 0) {
+				this.renderIds = getProcessIds();
 			} else {
-				renderIds = removeNestedChildren(context, renderIds);
+				this.renderIds = removeNestedChildren(context, this.renderIds);
 			}
 		}
-		return renderIds;
+		return this.renderIds;
 	}
 
 	// internal helpers
@@ -260,12 +260,12 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	private void broadCastEvents(FacesContext context, PhaseId phaseId) {
 		List<FacesEvent> processedEvents = new ArrayList<FacesEvent>();
-		if (events.size() == 0) {
+		if (this.events.size() == 0) {
 			return;
 		}
 		boolean abort = false;
 		int phaseIdOrdinal = phaseId.getOrdinal();
-		for (FacesEvent event : events) {
+		for (FacesEvent event : this.events) {
 			int ordinal = event.getPhaseId().getOrdinal();
 			if (ordinal == PhaseId.ANY_PHASE.getOrdinal() || ordinal == phaseIdOrdinal) {
 				UIComponent source = event.getComponent();
@@ -279,9 +279,9 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 			}
 		}
 		if (abort) {
-			events.clear();
+			this.events.clear();
 		} else {
-			events.removeAll(processedEvents);
+			this.events.removeAll(processedEvents);
 		}
 	}
 

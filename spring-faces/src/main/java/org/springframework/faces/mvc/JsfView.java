@@ -15,12 +15,10 @@
  */
 package org.springframework.faces.mvc;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 import java.util.Map;
 
-import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -48,7 +46,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
-		facesLifecycle = createFacesLifecycle();
+		this.facesLifecycle = createFacesLifecycle();
 	}
 
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
@@ -59,11 +57,11 @@ public class JsfView extends AbstractUrlBasedView {
 
 		populateRequestMap(facesContext, model);
 
-		JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, facesLifecycle, facesContext);
+		JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, this.facesLifecycle, facesContext);
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
-		if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
+		if (!isPortletRequest(facesContext)) {
 			viewHandler.initView(facesContext);
 		}
 
@@ -74,15 +72,15 @@ public class JsfView extends AbstractUrlBasedView {
 
 		facesContext.setViewRoot(viewRoot);
 
-		JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, facesLifecycle, facesContext);
+		JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, this.facesLifecycle, facesContext);
 
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();
 		try {
-			logger.debug("Asking faces lifecycle to render");
-			facesLifecycle.render(facesContext);
+			this.logger.debug("Asking faces lifecycle to render");
+			this.facesLifecycle.render(facesContext);
 		} finally {
-			logger.debug("View rendering complete");
+			this.logger.debug("View rendering complete");
 			facesContextHelper.releaseIfNecessary();
 		}
 	}
@@ -96,8 +94,7 @@ public class JsfView extends AbstractUrlBasedView {
 	}
 
 	private Lifecycle createFacesLifecycle() {
-		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
-				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		LifecycleFactory lifecycleFactory = JsfUtils.findFactory(LifecycleFactory.class);
 		return lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
 	}
 

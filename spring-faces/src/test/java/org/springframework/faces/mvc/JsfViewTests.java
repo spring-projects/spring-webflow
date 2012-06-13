@@ -21,30 +21,30 @@ public class JsfViewTests extends TestCase {
 
 	UrlBasedViewResolver resolver;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
 	public void setUp() throws Exception {
-		jsfMock.setUp();
-		jsfMock.facesContext().getApplication().setViewHandler(new ResourceCheckingViewHandler());
+		this.jsfMock.setUp();
+		this.jsfMock.facesContext().getApplication().setViewHandler(new ResourceCheckingViewHandler());
 
-		resolver = new UrlBasedViewResolver();
-		resolver.setPrefix("/WEB-INF/views/");
-		resolver.setSuffix(".xhtml");
-		resolver.setViewClass(JsfView.class);
-		resolver.setApplicationContext(new StaticWebApplicationContext());
+		this.resolver = new UrlBasedViewResolver();
+		this.resolver.setPrefix("/WEB-INF/views/");
+		this.resolver.setSuffix(".xhtml");
+		this.resolver.setViewClass(JsfView.class);
+		this.resolver.setApplicationContext(new StaticWebApplicationContext());
 	}
 
 	public void tearDown() throws Exception {
-		jsfMock.tearDown();
+		this.jsfMock.tearDown();
 	}
 
 	public void testViewResolution() throws Exception {
-		View view = resolver.resolveViewName("intro", new Locale("EN"));
+		View view = this.resolver.resolveViewName("intro", new Locale("EN"));
 		assertTrue(view instanceof JsfView);
 	}
 
 	public void testViewRender() throws Exception {
-		JsfView view = (JsfView) resolver.resolveViewName("intro", new Locale("EN"));
+		JsfView view = (JsfView) this.resolver.resolveViewName("intro", new Locale("EN"));
 		view.setApplicationContext(new StaticWebApplicationContext());
 		view.setServletContext(new MockServletContext());
 		view.render(new HashMap<String, Object>(), new MockHttpServletRequest(), new MockHttpServletResponse());
