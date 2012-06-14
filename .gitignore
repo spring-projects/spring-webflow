@@ -21,3 +21,4 @@ build
 *.iws
 out
 
+gradle-app.setting
