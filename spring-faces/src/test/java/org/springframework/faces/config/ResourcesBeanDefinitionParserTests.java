@@ -24,16 +24,21 @@ public class ResourcesBeanDefinitionParserTests extends TestCase {
 		Map<String, ?> map = this.context.getBeansOfType(HttpRequestHandlerAdapter.class);
 		assertEquals(1, map.values().size());
 
-		Object resourceHandler = this.context.getBean(ResourcesBeanDefinitionParser.RESOURCE_HANDLER_BEAN_NAME);
+		Object resourceHandler = this.context.getBean(ResourcesBeanDefinitionParser.SERVLET_RESOURCE_HANDLER_BEAN_NAME);
 		assertNotNull(resourceHandler);
 		assertTrue(resourceHandler instanceof JsfResourceRequestHandler);
 
 		map = this.context.getBeansOfType(SimpleUrlHandlerMapping.class);
 		assertEquals(1, map.values().size());
 		SimpleUrlHandlerMapping handlerMapping = (SimpleUrlHandlerMapping) map.values().iterator().next();
-		assertEquals(ResourcesBeanDefinitionParser.RESOURCE_HANDLER_BEAN_NAME,
+		assertEquals(ResourcesBeanDefinitionParser.SERVLET_RESOURCE_HANDLER_BEAN_NAME,
 				handlerMapping.getUrlMap().get("/javax.faces.resource/**"));
 		assertEquals(0, handlerMapping.getOrder());
 	}
-
+	
+	public void testConfigurePortlet() {
+		Object resourceHandler = this.context.getBean(ResourcesBeanDefinitionParser.PORTLET_RESOURCE_HANDLER_BEAN_NAME);
+		assertNotNull(resourceHandler);
+		assertTrue(resourceHandler instanceof org.springframework.faces.webflow.context.portlet.JsfResourceRequestHandler);
+	}
 }

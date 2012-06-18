@@ -42,7 +42,13 @@ public class JsfRuntimeInformation {
 
 	private static final int jsfVersion;
 
-	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", JsfUtils.class.getClassLoader());
+	private static final ClassLoader CLASS_LOADER = JsfUtils.class.getClassLoader();
+
+	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASS_LOADER);
+
+	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASS_LOADER);
+	
+	private static boolean springPortletPresent = ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASS_LOADER);
 
 	static {
 		if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
@@ -80,6 +86,15 @@ public class JsfRuntimeInformation {
 
 	public static boolean isMyFacesPresent() {
 		return myFacesPresent;
+	}
+
+	/**
+	 * Determines if the container has support for portlets and if Spring MVC portlet support is available
+	 * 
+	 * @return <tt>true</tt> if a portlet environment is detected
+	 */
+	public static boolean isSpringPortletPresent() {
+		return portletPresent && springPortletPresent;
 	}
 
 	/**
