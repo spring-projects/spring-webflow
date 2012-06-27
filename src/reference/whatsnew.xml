@@ -4,6 +4,26 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xml:id="whatsnew">
 	<title>What's New</title>
+	<sect1 id="whatsnew-swf-240">
+		<title>Spring Web Flow 2.4</title>
+		<sect2 id="whatsnew-swf-jsf20">
+			<title>Minimum JSF 2.0 Requirement</title>
+			<para>
+				Java ServerFaces version 1.2 and earlier are no longer supported by Spring Web Flow, if you have not done so already you will need to upgrade to JSF 2.0 or above.  
+				In addition the Spring Faces components that were previously provided with JSF 1.2 for progressive AJAX enhancements have been removed in this release.
+				See <xref linkend="spring-faces-upgrade-from-swf23"/>.
+			</para>
+		</sect2>
+		<sect2 id="whatsnew-swf-jsf20-portlet">
+			<title>Portlet API 2.0 and JSF 2.0 support</title>
+			<para>
+				The internal Portlet integration introduced in Spring Web Flow 2.2 has been upgraded for JSF 2.0 compatibility.
+				Some of the more advanced JSF 2.0 features, such as partial state saving, are not supported in a Portlet environment, however, existing application can now upgrade to the minimum required JSF version.
+				Upgraded projects will need to ensure that the <code>&lt;faces:resources&gt;</code> elements is
+				included as part of their Spring configuration. See <xref linked="portlet-jsf"/>.
+			</para>
+		</sect2>
+	</sect1>
 	<sect1 id="whatsnew-swf-230">
 		<title>Spring Web Flow 2.3</title>
 		<sect2 id="whatsnew-swf-embedded-flow">
@@ -52,7 +72,7 @@
 		    	This is useful after form validation failure.
 		    	Hitting Refresh or Back won't result in browser warnings.
 				Hence this behavior is usually desirable.
-				However a new flow execution attribute makes it possible to disable it and that may also be necessary in some cases specific to JSF 2 applications.
+				However a new flow execution attribute makes it possible to disable it and that may also be necessary in some cases specific to JSF applications.
 				See <xref linkend="spring-faces-redirect-in-same-state"/>.
 			</para>
 		</sect2>
@@ -189,7 +209,7 @@ mvn package
 			</sect3>
 		</sect2>
 		<sect2 id="whatsnew-jsf-portlet">
-			<title>JFS Portlet Support</title>
+			<title>JSF Portlet Support</title>
 			<sect3>
 				<title>Portlet API 2.0 and JSF 1.2 support</title>
 				<para>

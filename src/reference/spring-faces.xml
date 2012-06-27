@@ -11,29 +11,16 @@
     <para>Spring Web Flow provides a JSF integration that simplifies using JSF
     with Spring. It lets you use the JSF UI Component Model with Spring MVC
     and Spring Web Flow controllers. Along with the JSF integration Spring Web
-    Flow provides a small Facelets component library (called Spring Faces) for
-    use in JSF 1.2 environments and a Spring Security tag library for use in
-    both JSF 1.2 and JSF 2.0 environments (see <xref
-    linkend="spring-faces-security-taglib" /> for more details).</para>
+    Flow provides a Spring Security tag library for use in JSF environments 
+    (see <xref linkend="spring-faces-security-taglib" /> for more details).
+    </para>
 
-    <para>Starting with version 2.2 the JSF integration in Web Flow supports
-    JSF 2.0 including Sun Mojarra and Apache MyFaces runtime environments.
-    Please, note however that JSF 2 partial state saving is not yet supported
-    with Apache MyFaces and needs to be disabled with the
-    <code>javax.faces.PARTIAL_STATE_SAVING</code> context parameter in
-    <code>web.xml</code>.</para>
-
-    <para>Also note that the Spring Faces component library, which provides
-    Ajax and client-side validation capabilities is for JSF 1.2 environments
-    only and will not be upgraded to JSF 2.0. Applications are encouraged to
-    use 3rd party JSF 2 component libraries such as PrimeFaces and RichFaces.
-    The <code>swf-booking-faces</code> sample in the Spring Web Flow
-    distribution for example is built with JSF 2 and PrimeFaces
-    components.</para>
+    <para>Starting with Spring Web Flow version 2.4, JSF integration requires
+    JSF v2.0 or above.  Both Sun Mojarra and Apache MyFaces runtime environments 
+    are supported.</para>
 
     <para>Spring Web Flow also supports using JSF in a portlet environment.
-    Spring Web Flow's portlet integration supports Portlets API 2.0 and JSF
-    1.2 only. Currently JSF 2 is not supported in combination with portlets.
+    Spring Web Flow's portlet integration supports Portlets API 2.0.
     See <xref linkend="portlet" /> for more on Spring Web Flow's portlet
     integration.</para>
   </sect1>
@@ -75,16 +62,7 @@
         <listitem>
           <para>Model-level validation</para>
         </listitem>
-
-        <listitem>
-          <para>Progressivy-enhancement sytle client-side validation</para>
-        </listitem>
-
-        <listitem>
-          <para>Progressive-enhancement style Ajax requests with partial page
-          updates</para>
-        </listitem>
-      </orderedlist> Using these features significantly reduce the amount of
+    </orderedlist> Using these features significantly reduce the amount of
     configuration required in faces-config.xml. They provide a cleaner
     separation between the view and controller layers along with better
     modularization of application functionals. These features are detailed in
@@ -92,6 +70,62 @@
     definition language of Spring Web Flow. Therefore it is assumed that you
     have an understanding of the foundations presented in <xref
     linkend="defining-flows" />.</para>
+  </sect1>
+
+  <sect1 id="spring-faces-upgrade-from-swf23">
+    <title>Upgrading from Spring Web Flow 2.3</title>
+
+    <para>If you are upgrading from Spring Web Flow 2.3 or earlier you may need to 
+    update several aspects of your project.  JSF 2.0 is now a minimum requirement
+    and as result some components from previous releases are no longer included.</para>
+
+    <sect2 id="spring-faces-upgrade-from-swf23-components">
+      <title>Spring Faces Components</title>
+      <para>Previous releases of Spring Web Flow shipped with a component library 
+      which provided Ajax and client-side validation capabilities for JSF 1.2 
+      environments.  Applications using these components will need to switch to a
+      3rd party JSF component library such as PrimeFaces or RichFaces.
+      Components that have been removed include <code>&lt;sf:clientTextValidator&gt;</code>, 
+      <code>&lt;sf:clientNumberValidator&gt;</code>, <code>&lt;sf:clientDateValidator&gt;</code>,
+      <code>&lt;sf:validateAllOnClick&gt;</code>, <code>&lt;sf:resource&gt;</code> and 
+      <code>&lt;sf:resourceGroup&gt;</code>.
+      The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution 
+      shows an example built with PrimeFaces components.</para>
+    </sect2>
+
+    <sect2 id="spring-faces-upgrade-from-swf23-faces-config">
+      <title>Configuring faces-config.xml</title>
+      <para>If your application defines a <code>faces-config.xml</code> file you should
+      ensure that the correct schema version is specified.  In addition you should remove 
+      any <code>FaceletViewHandler</code> references as Facelets are now the default rendering 
+      technology for JSF 2.0</para>
+
+    <programlisting language="xml">
+&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+        version="2.0"&gt;
+
+&lt;/faces-config&gt;
+        </programlisting>
+    </sect2>
+
+    <sect2 id="spring-faces-upgrade-from-swf23-thirdpartylibraries">
+      <title>Third-party Libraries</title>
+      <para>Previous releases of Spring Web Flow would often require additional configuration in order
+      for 3rd party component libraries to work correctly.  JSF 2.0 introduced standard resource
+      loading mechanisms that removes the need for such custom configuration.  As long as you
+      have a <code>&lt;faces:resources&gt;</code> element in your Spring configuration, libraries 
+      such as RichFaces or Apache Trinidad you should work.</para>
+    </sect2>
+
+    <sect2 id="spring-faces-upgrade-from-swf23-security-taglib">
+      <title>Spring Security Facelets Tag Library</title>
+      <para>If you have a previously configured <code>/WEB-INF/springsecurity.taglib.xml</code> file
+      you may need to update the contents.  See <xref linkend="spring-faces-security-taglib"/> for 
+      details.</para>
+    </sect2>
   </sect1>
 
   <sect1 id="spring-faces-config-web.xml">
@@ -153,86 +187,12 @@
 &lt;/context-param&gt;
         </programlisting>
 
-    <sect2>
-      <title>Configuring web.xml in JSF 1.2</title>
-
-      <para>When using the JSF 1.2 Spring Faces component library, you also
-      need to configure a servlet for serving CSS and JavaScript resources.
-      This servlet must be mapped to /resources/* in order for the URL's
-      rendered by the components to function correctly.</para>
-
-      <programlisting language="xml">
-&lt;!-- Serves static resource content from .jar files such as spring-faces.jar --&gt;
-&lt;servlet&gt;
-    &lt;servlet-name&gt;Resource Servlet&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;org.springframework.js.resource.ResourceServlet&lt;/servlet-class&gt;
-    &lt;load-on-startup&gt;0&lt;/load-on-startup&gt;
-&lt;/servlet&gt;
-        
-&lt;!-- Map all /resources requests to the Resource Servlet for handling --&gt;
-&lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;Resource Servlet&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/resources/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-        </programlisting>
-
-      <para>For optimal page-loading performance use the Spring Faces
-      components <code>includeStyles</code> and <code>includeScripts</code>.
-      These components will eagerly load the necessary CSS stylesheets and
-      JavaScript files at the position they are placed in your JSF view
-      template. In accordance with the recommendations of the Yahoo
-      Performance Guildlines, these two tags should be placed in the
-      <code>head</code> section of any page that uses the Spring Faces
-      components. For example:</para>
-
-      <programlisting language="xml"> 
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
-&lt;f:view xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-	  xmlns:c="http://java.sun.com/jstl/core"
-	  xmlns:sf="http://www.springframework.org/tags/faces"
-	  contentType="text/html" encoding="UTF-8"&gt;
-&lt;html&gt;
-&lt;head&gt;
-	&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
-	&lt;title&gt;Hotel Booking Sample Application&lt;/title&gt;
-	
-	&lt;sf:includeStyles /&gt;
-	&lt;sf:includeScripts /&gt;
-	
-	&lt;ui:insert name="headIncludes"/&gt;
-&lt;/head&gt;
-...
-&lt;/html&gt;
-&lt;/f:view&gt;
-		</programlisting>
-
-      <para>This shows the opening of a typical Facelets XHTML layout template
-      that uses these components to force the loading of the needed CSS and
-      JavaScript resources at the ideal position.</para>
-
-      <para>The <code>includeStyles</code> component includes the necessary
-      resources for the Dojo widget theme. By default, it includes the
-      resources for the "tundra" theme. An alternate theme may be selected by
-      setting the optional "theme" and "themePath" attributes on the
-      <code>includeStyles</code> component. For example:</para>
-
-      <programlisting language="xml"> 
-&lt;sf:includeStyles themePath="/styles/" theme="foobar"/&gt;
-
-		</programlisting>
-
-      <para>will try to load a CSS stylesheet at "/styles/foobar/foobar.css"
-      using the Spring JavaScript ResourceServlet.</para>
-    </sect2>
   </sect1>
 
   <sect1 id="spring-faces-webflow-config">
     <title>Configuring Web Flow for use with JSF</title>
 
-    <para>This section explains how to configure Web Flow with JSF. The next
-    section provides more details specific to using Web Flow with JSF 2. The
+    <para>This section explains how to configure Web Flow with JSF.  The
     following is sample configuration for Web Flow and JSF:</para>
 
     <programlisting language="xml">
@@ -277,14 +237,7 @@
     <code>flow-builder-services</code> element from the <code>faces</code>
     custom namespace to configure rendering for a JSF environment.</para>
 
-    <para>See the swf-booking-faces reference application in the distribution
-    for a complete working example.</para>
-  </sect1>
-
-  <sect1 id="spring-faces-webflow-config-jsf2">
-    <title>Configuring Spring MVC for JSF 2</title>
-
-    <para>In a JSF 2 environment you'll also need this Spring MVC related
+    <para>In a JSF environment you'll also need this Spring MVC related
     configuration:</para>
 
     <programlisting language="xml">
@@ -307,46 +260,12 @@
 &lt;/beans&gt;
         </programlisting>
 
-    <para>The <code>resources</code> custom namespace element delegates JSF 2
-    resource requests to the JSF 2 resource API. The
+    <para>The <code>resources</code> custom namespace element delegates JSF
+    resource requests to the JSF resource API. The
     <code>JsfFlowHandlerAdapter</code> is a replacement for the
     <code>FlowHandlerAdapter</code> normally used with Web Flow. This adapter
     initializes itself with a <code>JsfAjaxHandler</code> instead of the
-    <code>SpringJavaSciprtAjaxHandler</code> previously used with Spring Faces
-    components.</para>
-  </sect1>
-
-  <sect1 id="spring-faces-config">
-    <title>Configuring faces-config.xml</title>
-
-    <para>In JSF 1.2 you need to provide the below configuration in
-    <code>faces-config.xml</code> in order to use Facelets. If you are using
-    JSP and not using the Spring Faces components, you do not need to add
-    anything to your <code>faces-config.xml</code></para>
-
-    <programlisting language="xml">
-&lt;faces-config&gt;
-    &lt;application&gt;
-        &lt;!-- Enables Facelets --&gt;
-        &lt;view-handler&gt;com.sun.facelets.FaceletViewHandler&lt;/view-handler&gt;  
-    &lt;/application&gt;
-&lt;/faces-config&gt;
-        </programlisting>
-
-    <para>In JSF 2.0 your faces-config.xml should use the faces-config schema
-    version 2.0. Also you should remove the FaceletViewHandler shown above (if
-    it is present) as Facelets are now the default rendering technology in JSF
-    2.</para>
-
-    <programlisting language="xml">
-&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
-        version="2.0"&gt;
-
-&lt;/faces-config&gt;
-        </programlisting>
+    <code>SpringJavaSciprtAjaxHandler</code>.</para>
   </sect1>
 
   <sect1 id="spring-faces-managed-beans">
@@ -363,15 +282,15 @@
 
     <para>In doing pure JSF development, you will quickly find that request
     scope is not long-lived enough for storing conversational model objects
-    that drive complex event-driven views. In JSF 1.2 the only available
-    option is to begin putting things into session scope, with the extra
+    that drive complex event-driven views. In JSF the usual option is to begin 
+    putting things into session scope, with the extra
     burden of needing to clean the objects up before progressing to another
     view or functional area of the application. What is really needed is a
-    managed scope that is somewhere between request and session scope. JSF 2
+    managed scope that is somewhere between request and session scope. JSF
     provides flash and view scopes that can be accessed programmatically via
     UIViewRoot.getViewMap(). Spring Web Flow provides access to flash, view,
     flow, and conversation scopes. These scopes are seamlessly integrated
-    through JSF variable resolvers and work the same in JSF 1.2 and in JSF 2.0
+    through JSF variable resolvers and work the same in all JSF 
     applications.</para>
 
     <sect2 id="spring-faces-flow-variables">
@@ -675,9 +594,9 @@
     </sect2>
 
     <sect2 id="spring-faces-ajax-events-jsf2">
-      <title>Handling Ajax Events In JSF 2.0</title>
+      <title>Handling Ajax Events In JSF</title>
 
-      <para>JSF 2 provides built-in support for sending Ajax requests and
+      <para>JSF provides built-in support for sending Ajax requests and
       performing partial processing and rendering on the server-side. You can
       specify a list of id's for partial rendering through the &lt;f:ajax&gt;
       facelets tag.</para>
@@ -698,85 +617,6 @@
     &lt;/transition&gt;
 &lt;/view-state&gt;
       </programlisting>
-    </sect2>
-
-    <sect2 id="spring-faces-ajax-events-jsf12">
-      <title>Handling Ajax Events In JSF 1.2</title>
-
-      <para>For JSF 1.2 the Spring Faces <code>UICommand</code> components
-      have the ability to do Ajax-based partial view updates. These components
-      degrade gracefully so that the flow will still be fully functional by
-      falling back to full page refreshes if a user with a less capable
-      browser views the page.</para>
-
-      <para>Revisiting the earlier example with the paged table, you can
-      change the "More Results" link to use an Ajax request by replacing the
-      standard <code>commandButton</code> with the Spring Faces component
-      version (note that the Spring Faces command components use Ajax by
-      default, but they can alternately be forced to use a normal form submit
-      by setting ajaxEnabled="false" on the component):</para>
-
-      <programlisting language="xml">            
-&lt;sf:commandLink id="nextPageLink" value="More Results" action="next" /&gt;
-            </programlisting>
-
-      <para>This event is handled just as in the non-Ajax case with the
-      <code>transition</code> element, but now you will add a special
-      <code>render</code> action that specifies which portions of the
-      component tree need to be re-rendered:</para>
-
-      <programlisting language="xml">
-&lt;view-state id="reviewHotels"&gt;
-    &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-                  result="viewScope.hotels" result-type="dataModel" /&gt;
-    &lt;/on-render&gt;
-    &lt;transition on="next"&gt;
-        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-        &lt;render fragments="hotels:searchResultsFragment" /&gt;
-    &lt;/transition&gt;
-&lt;/view-state&gt;
-            </programlisting>
-
-      <para>The <code>fragments="hotels:searchResultsFragment"</code> is an
-      instruction that will be interpreted at render time, such that only the
-      component with the JSF clientId "hotels:searchResultsFragment" will be
-      rendered and returned to the client. This fragment will then be
-      automatically replaced in the page. The <code>fragments</code> attribute
-      can be a comma-delimited list of ids, with each id representing the root
-      node of a subtree (meaning the root node and all of its children) to be
-      rendered. If the "next" event is fired in a non-Ajax request (i.e., if
-      JavaScript is disabled on the client), the <code>render</code> action
-      will be ignored and the full page will be rendered as normal.</para>
-
-      <para>In addition to the Spring Faces <code>commandLink</code>
-      component, there is a corresponding <code>commandButton</code> component
-      with the same functionality. There is also a special
-      <code>ajaxEvent</code> component that will raise a JSF action even in
-      response to any client-side DOM event. See the Spring Faces tag library
-      docs for full details.</para>
-
-      <para>An additional built-in feature when using the Spring Faces
-      Ajax-enabled components is the ability to have the response rendered
-      inside a rich modal popup widget by setting <code>popup="true"</code> on
-      a <code>view-state</code> .</para>
-
-      <programlisting language="xml">
-&lt;view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"&gt;
-    &lt;on-entry&gt;
-        &lt;render fragments="hotelSearchFragment" /&gt;
-    &lt;/on-entry&gt;
-    &lt;transition on="search" to="reviewHotels"&gt;
-        &lt;evaluate expression="searchCriteria.resetPage()"/&gt;
-    &lt;/transition&gt;
-&lt;/view-state&gt;
-            </programlisting>
-
-      <para>If the "changeSearchCriteria" <code>view-state</code> is reached
-      as the result of an Ajax-request, the result will be rendered into a
-      rich popup. If JavaScript is unavailable, the request will be processed
-      with a full browser refresh, and the "changeSearchCriteria" view will be
-      rendered as normal.</para>
     </sect2>
   </sect1>
 
@@ -838,12 +678,12 @@ mvn package
     	They would if the Web Flow didn't do a redirect.  
 	</para>
 	<para>
-		This can lead to a problem specific to JSF 2 environments where a specific Sun Mojarra listener component caches the FacesContext assuming the same instance is available throughout the JSF lifecycle.
+		This can lead to a problem specific to JSF environments where a specific Sun Mojarra listener component caches the FacesContext assuming the same instance is available throughout the JSF lifecycle.
 		In Web Flow however the render phase is temporarily put on hold and a client-side redirect executed. 
 	</para>
 	<para>
-		The default behavior of Web Flow is desirable and it is unlikely JSF 2 applications will experience the issue.
-		This is because Ajax is often enabled the default in JSF 2 component libraries and Web Flow does not redirect during Ajax requests.  
+		The default behavior of Web Flow is desirable and it is unlikely JSF applications will experience the issue.
+		This is because Ajax is often enabled the default in JSF component libraries and Web Flow does not redirect during Ajax requests.  
 		However if you experience this issue you can disable client-side redirects within the same view as follows:
 	    <programlisting language="xml">
 &lt;webflow:flow-executor id="flowExecutor"&gt;
@@ -861,7 +701,7 @@ mvn package
     <para>To use the library you'll need to create a <code>.taglib.xml</code>
     file and register it in <code>web.xml</code>.</para>
 
-    <para>For JSF 2 create the file
+    <para>Create the file
     <code>/WEB-INF/springsecurity.taglib.xml</code> with the following
     content:</para>
 
@@ -894,43 +734,6 @@ mvn package
 	&lt;function&gt;
 		&lt;function-name&gt;isAllowed&lt;/function-name&gt;
 		&lt;function-class&gt;org.springframework.faces.security.FaceletsAuthorizeTagUtils&lt;/function-class&gt;
-		&lt;function-signature&gt;boolean isAllowed(java.lang.String, java.lang.String)&lt;/function-signature&gt;
-	&lt;/function&gt;
-&lt;/facelet-taglib&gt;
-</programlisting>
-
-    <para>For JSF 1.2 also create the file
-    <code>/WEB-INF/springsecurity.taglib.xml</code> but with the following
-    content instead:</para>
-
-    <programlisting language="xml">
-&lt;?xml version="1.0"?&gt;
-&lt;!DOCTYPE facelet-taglib PUBLIC 
-	"-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN" "http://java.sun.com/dtd/facelet-taglib_1_0.dtd"&gt;
-&lt;facelet-taglib&gt;
-	&lt;namespace&gt;http://www.springframework.org/security/tags&lt;/namespace&gt;
-	&lt;tag&gt;
-		&lt;tag-name&gt;authorize&lt;/tag-name&gt;
-		&lt;handler-class&gt;org.springframework.faces.security.Jsf12FaceletsAuthorizeTagHandler&lt;/handler-class&gt;
-	&lt;/tag&gt;
-	&lt;function&gt;
-		&lt;function-name&gt;areAllGranted&lt;/function-name&gt;
-		&lt;function-class&gt;org.springframework.faces.security.Jsf12FaceletsAuthorizeTagUtils&lt;/function-class&gt;
-		&lt;function-signature&gt;boolean areAllGranted(java.lang.String)&lt;/function-signature&gt;
-	&lt;/function&gt;
-	&lt;function&gt;
-		&lt;function-name&gt;areAnyGranted&lt;/function-name&gt;
-		&lt;function-class&gt;org.springframework.faces.security.Jsf12FaceletsAuthorizeTagUtils&lt;/function-class&gt;
-		&lt;function-signature&gt;boolean areAnyGranted(java.lang.String)&lt;/function-signature&gt;
-	&lt;/function&gt;
-	&lt;function&gt;
-		&lt;function-name&gt;areNotGranted&lt;/function-name&gt;
-		&lt;function-class&gt;org.springframework.faces.security.Jsf12FaceletsAuthorizeTagUtils&lt;/function-class&gt;
-		&lt;function-signature&gt;boolean areNotGranted(java.lang.String)&lt;/function-signature&gt;
-	&lt;/function&gt;
-	&lt;function&gt;
-		&lt;function-name&gt;isAllowed&lt;/function-name&gt;
-		&lt;function-class&gt;org.springframework.faces.security.Jsf12FaceletsAuthorizeTagUtils&lt;/function-class&gt;
 		&lt;function-signature&gt;boolean isAllowed(java.lang.String, java.lang.String)&lt;/function-signature&gt;
 	&lt;/function&gt;
 &lt;/facelet-taglib&gt;
@@ -993,93 +796,6 @@ mvn package
 </programlisting>
   </sect1>
 
-  <sect1 id="spring-faces-ui-controls">
-    <title>Enhancing The User Experience With Rich Web Forms in JSF 1.2</title>
-
-    <para>JSF and Web Flow combine to provide an extensive server-side
-    validation model for your web application, but excessive roundtrips to the
-    server to execute this validation and return error messages can be a
-    tedious experience for your users. The Spring Faces component library
-    provides a number of client-side rich validation controls that can enhance
-    the user experience by applying simple validations that give immediate
-    feedback. Some simple examples are illustrated below. See the Spring Faces
-    taglib docs for a complete tag reference.</para>
-
-    <sect2 id="spring-faces-text-validation">
-      <title>Validating a Text Field</title>
-
-      <para>Simple client-side text validation can be applied with the
-      <code>clientTextValidator</code> component:</para>
-
-      <programlisting language="xml"> 
-&lt;sf:clientTextValidator required="true"&gt;
-    &lt;h:inputText id="creditCardName" value="#{booking.creditCardName}" required="true"/&gt;
-&lt;/sf:clientTextValidator&gt;
-            </programlisting>
-
-      <para>This will apply client-side required validation to the child
-      <code>inputText</code> component, giving the user a clear indicator if
-      the field is left blank.</para>
-    </sect2>
-
-    <sect2 id="spring-faces-number-validation">
-      <title>Validating a Numeric Field</title>
-
-      <para>Simple client-side numeric validation can be applied with the
-      <code>clientNumberValidator</code> component:</para>
-
-      <programlisting language="xml"> 
-&lt;sf:clientTextValidator required="true" regExp="[0-9]{16}" 
-                        invalidMessage="A 16-digit credit card number is required."&gt;
-    &lt;h:inputText id="creditCard" value="#{booking.creditCard}" required="true"/&gt;
-&lt;/sf:clientTextValidator&gt;
-            </programlisting>
-
-      <para>This will apply client-side validation to the child
-      <code>inputText</code> component, giving the user a clear indicator if
-      the field is left blank, is not numeric, or does not match the given
-      regular expression.</para>
-    </sect2>
-
-    <sect2 id="spring-faces-date-validation">
-      <title>Validating a Date Field</title>
-
-      <para>Simple client-side date validation with a rich calendar popup can
-      be applied with the <code>clientDateValidator</code> component:</para>
-
-      <programlisting language="xml"> 
-&lt;sf:clientDateValidator required="true" &gt;
-    &lt;h:inputText id="checkinDate" value="#{booking.checkinDate}" required="true"&gt;
-        &lt;f:convertDateTime pattern="yyyy-MM-dd" timeZone="EST"/&gt;
-    &lt;/h:inputText&gt;
-&lt;/sf:clientDateValidator&gt;
-            </programlisting>
-
-      <para>This will apply client-side validation to the child
-      <code>inputText</code> component, giving the user a clear indicator if
-      the field is left blank or is not a valid date.</para>
-    </sect2>
-
-    <sect2 id="spring-faces-validate-all">
-      <title>Preventing an Invalid Form Submission</title>
-
-      <para>The <code>validateAllOnClick</code> component can be used to
-      intercept the "onclick" event of a child component and suppress the
-      event if all client-side validations do not pass.</para>
-
-      <programlisting language="xml"> 
-&lt;sf:validateAllOnClick&gt;
-    &lt;sf:commandButton id="proceed" action="proceed" processIds="*" value="Proceed"/&gt;&amp;#160;
-&lt;/sf:validateAllOnClick&gt;
-            </programlisting>
-
-      <para>This will prevent the form from being submitted when the user
-      clicks the "proceed" button if the form is invalid. When the validations
-      are executed, the user is given clear and immediate indicators of the
-      problems that need to be corrected.</para>
-    </sect2>
-  </sect1>
-
   <sect1 id="spring-faces-component-libraries">
     <title>Third-Party Component Library Integration</title>
 
@@ -1091,158 +807,6 @@ mvn package
     Flow requests are not routed through the standard FacesServlet. Typically,
     anything that is traditionally mapped to the FacesServlet should be mapped
     to the Spring DispatcherServlet instead. (You can also map to both if for
-    example you are migrating a legacy JSF application page-by-page.) In some
-    cases, a deeper level of integration can be achieved by configuring
-    special flow services that are "aware" of a particular component library,
-    and these will be noted in the examples to follow.</para>
-
-    <sect2 id="spring-faces-with-richfaces">
-      <title>Rich Faces Integration (JSF 1.2)</title>
-
-      <para>To use the Rich Faces component library with Spring Web Flow, the
-      following filter configuration is needed in web.xml (in addition to the
-      other typical configuration already shown):</para>
-
-      <programlisting language="xml"> 
-&lt;filter&gt; 
-    &lt;display-name&gt;RichFaces Filter&lt;/display-name&gt; 
-    &lt;filter-name&gt;richfaces&lt;/filter-name&gt; 
-    &lt;filter-class&gt;org.ajax4jsf.Filter&lt;/filter-class&gt; 
-&lt;/filter&gt; 
-
-&lt;filter-mapping&gt; 
-    &lt;filter-name&gt;richfaces&lt;/filter-name&gt; 
-    &lt;servlet-name&gt;Spring Web MVC Dispatcher Servlet&lt;/servlet-name&gt;
-    &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
-    &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;
-    &lt;dispatcher&gt;INCLUDE&lt;/dispatcher&gt;
-&lt;/filter-mapping&gt;
-            </programlisting>
-
-      <para>For deeper integration (including the ability to have a view with
-      combined use of the Spring Faces Ajax components and Rich Faces Ajax
-      components), configure the RichFacesAjaxHandler on your
-      FlowController:</para>
-
-      <programlisting language="xml"> 
-&lt;bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController"&gt;
-    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
-    &lt;property name="ajaxHandler"&gt;
-        &lt;bean class="org.springframework.faces.richfaces.RichFacesAjaxHandler"/&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;
-            </programlisting>
-
-      <para>RichFaces Ajax components can be used in conjunction with the
-      <code>render</code> tag to render partial fragments on an Ajax request.
-      Instead of embedding the ids of the components to be re-rendered
-      directly in the view template (as you traditionally do with Rich Faces),
-      you can bind the <code>reRender</code> attribute of a RichFaces Ajax
-      component to a special <code>flowRenderFragments</code> EL variable. For
-      example, in your view template you can have a fragment that you would
-      potentially like to re-render in response to a particular event:</para>
-
-      <programlisting language="xml">
-&lt;h:form id="hotels"&gt;
-    &lt;a4j:outputPanel id="searchResultsFragment"&gt;
-        &lt;h:outputText id="noHotelsText" value="No Hotels Found" rendered="#{hotels.rowCount == 0}"/&gt;
-        &lt;h:dataTable id="hotels" styleClass="summary" value="#{hotels}" var="hotel" rendered="#{hotels.rowCount &gt; 0}"&gt;
-            &lt;h:column&gt;
-                &lt;f:facet name="header"&gt;Name&lt;/f:facet&gt;
-                #{hotel.name}
-            &lt;/h:column&gt;
-            &lt;h:column&gt;
-                &lt;f:facet name="header"&gt;Address&lt;/f:facet&gt;
-                #{hotel.address}
-            &lt;/h:column&gt;
-        &lt;/h:dataTable&gt;
-    &lt;/a4j:outputPanel&gt;
-&lt;/h:form&gt;
-            </programlisting>
-
-      <para>then a RichFaces Ajax <code>commandLink</code> to fire the
-      event:</para>
-
-      <programlisting language="xml">
-&lt;a4j:commandLink id="nextPageLink" value="More Results" action="next" reRender="#{flowRenderFragments}" /&gt;
-            </programlisting>
-
-      <para>and then in your flow definition a <code>transition</code> to
-      handle the event:</para>
-
-      <programlisting language="xml">
-&lt;transition on="next"&gt;
-    &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-    &lt;render fragments="hotels:searchResultsFragment" /&gt;
-&lt;/transition&gt;
-            </programlisting>
-    </sect2>
-
-    <sect2 id="spring-faces-with-trinidad">
-      <title>Apache MyFaces Trinidad Integration (JSF 1.2)</title>
-
-      <para>The Apache MyFaces Trinidad library has been tested with the
-      Spring Web Flow's JSF integration and proven to fit in nicely. Deeper
-      integration to allow the Trinidad components and Spring Faces components
-      to play well together has not yet been attempted, but Trinidad provides
-      a pretty thorough solution on its own when used in conjunction with the
-      Spring Web Flow JSF integration.</para>
-
-      <para>NOTE: An <code>AjaxHandler</code> implementation for Trinidad is
-      not currently provided out-of-the-box. In order to fully integrate with
-      Trinidad's PPR functionality, a custom implementation should be
-      provided. An community-provided partial example can be found here:
-      <ulink
-      url="http://jira.springsource.org/browse/SWF-1160">SWF-1160</ulink></para>
-
-      <para>Typical configuration when using Trinidad with Web Flow is as
-      follows in web.xml (in addition what has already been shown):</para>
-
-      <programlisting language="xml">
-&lt;context-param&gt;
-    &lt;param-name&gt;javax.faces.STATE_SAVING_METHOD&lt;/param-name&gt;
-    &lt;param-value&gt;server&lt;/param-value&gt;
-&lt;/context-param&gt;
-
-&lt;context-param&gt;
-    &lt;param-name&gt;
-        org.apache.myfaces.trinidad.CHANGE_PERSISTENCE
-    &lt;/param-name&gt;
-    &lt;param-value&gt;session&lt;/param-value&gt;
-&lt;/context-param&gt;
-
-&lt;context-param&gt;
-    &lt;param-name&gt;
-        org.apache.myfaces.trinidad.ENABLE_QUIRKS_MODE
-    &lt;/param-name&gt;
-    &lt;param-value&gt;false&lt;/param-value&gt;
-&lt;/context-param&gt;
-
-&lt;filter&gt;
-    &lt;filter-name&gt;Trinidad Filter&lt;/filter-name&gt;
-    &lt;filter-class&gt;
-        org.apache.myfaces.trinidad.webapp.TrinidadFilter
-    &lt;/filter-class&gt;
-&lt;/filter&gt;
-
-&lt;filter-mapping&gt;
-    &lt;filter-name&gt;Trinidad Filter&lt;/filter-name&gt;
-    &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
-&lt;/filter-mapping&gt;
-
-&lt;servlet&gt;
-    &lt;servlet-name&gt;Trinidad Resource Servlet&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;
-        org.apache.myfaces.trinidad.webapp.ResourceServlet
-    &lt;/servlet-class&gt;
-&lt;/servlet&gt;
-
-&lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;resources&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/adf/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-
-            </programlisting>
-    </sect2>
+    example you are migrating a legacy JSF application page-by-page.).</para>
   </sect1>
 </chapter>

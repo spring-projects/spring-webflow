@@ -217,9 +217,10 @@ externalContext.requestMap.portletMode
 			</para>
 			<para>
 				Review the <code>swf-booking-portlet-faces</code> sample in the Web Flow distribution
-				for a working JSF Portlets example with complete configuration details. The main thing
-				you'll need to notice in addition to what has already been described in this
-				chapter is the <code>faces-config.xml</code> configuration:
+				for a working JSF Portlets example with complete configuration details.  The main
+				things to ensure are that the <code>&lt;faces:resources&gt;</code> elements is
+				included as part of your Spring configuration and that your 
+				<code>faces-config.xml</code> configuration includes a <code>PortletViewHandler</code>:
 			</para>
 
 <programlisting language="java"><![CDATA[<?xml version="1.0"?>
@@ -230,12 +231,23 @@ externalContext.requestMap.portletMode
 <faces-config>
     <application>
         <view-handler>
-            org.springframework.faces.webflow.application.portlet.PortletFaceletViewHandler
+            org.springframework.faces.webflow.context.portlet.PortletViewHandler
         </view-handler>  
     </application>
 </faces-config>
 ]]></programlisting>
-
+			<para>
+				The JSF Portlet support provided with Spring Web Flow requires JSF v2.0 or above.  If
+				you are upgrading from a previous release you should ensure that your <code>faces-config.xml</code> 
+				references <code>org.springframework.faces.webflow.context.portlet.PortletViewHandler</code> instead
+				of <code>org.springframework.faces.webflow.application.portlet.PortletFaceletViewHandler</code>.  You
+				should also ensure that you have added <code>&lt;faces:resources&gt;</code> to you Spring configuration.
+			</para>
+			<para>
+				Although JSF v2.0 is a minimum requirement, this has been primarily driven to provide better support in
+				a Servlet environment.  Many of the more advanced JSF 2.0 features (for example 'Partial State Saving') 
+				are not supported by Spring Web Flow in a Portlet environment.
+			</para>
 		</sect2>
 	</sect1>
 	<sect1 id="portlet-issues">
