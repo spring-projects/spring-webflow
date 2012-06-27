@@ -30,7 +30,6 @@ import javax.faces.render.RenderKitWrapper;
 import javax.faces.render.ResponseStateManager;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.util.ClassUtils;
 
 public class FlowRenderKit extends RenderKitWrapper {

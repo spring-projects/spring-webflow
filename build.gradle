@@ -207,7 +207,6 @@ project('spring-faces') {
 
     dependencies {
         compile project(":spring-binding")
-        compile project(":spring-js")
         compile project(":spring-webflow")
 
         compile "commons-logging:commons-logging:1.1.1"

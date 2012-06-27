@@ -17,7 +17,6 @@ import junit.framework.TestCase;
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.apache.myfaces.test.mock.MockStateManager;
 import org.easymock.EasyMock;
-import org.springframework.faces.ui.AjaxViewRoot;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
@@ -104,12 +103,6 @@ public class JsfViewTests extends TestCase {
 		this.view.saveState();
 	}
 
-	public final void testSaveState_AjaxViewRoot() {
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
-		this.view.setViewRoot(new AjaxViewRoot(this.view.getViewRoot()));
-		this.view.saveState();
-	}
-
 	public final void testRender() throws IOException {
 
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
@@ -153,33 +146,6 @@ public class JsfViewTests extends TestCase {
 		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, this.context);
-
-		restoredView.processUserEvent();
-
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
-	}
-
-	/**
-	 * Ajax Request - View already exists in view scope and must be restored and the lifecycle executed, no event
-	 * signaled
-	 */
-	public final void testProcessUserEvent_Restored_Ajax_NoEvent() {
-
-		EasyMock.expect(this.flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
-				false);
-		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
-				.andStubReturn(null);
-
-		Lifecycle lifecycle = new NoEventLifecycle(this.jsfMock.lifecycle());
-
-		UIViewRoot existingRoot = new UIViewRoot();
-		existingRoot.setViewId(VIEW_ID);
-		AjaxViewRoot ajaxRoot = new AjaxViewRoot(existingRoot);
-
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
-
-		JsfView restoredView = new JsfView(ajaxRoot, lifecycle, this.context);
 
 		restoredView.processUserEvent();
 

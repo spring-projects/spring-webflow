@@ -25,8 +25,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * A concrete implementation of {@link AbstractAuthorizeTag} for use with standard Facelets rendering technology (JSF 2
- * or higher).
+ * A concrete implementation of {@link AbstractAuthorizeTag} for use with standard Facelets rendering technology.
  * 
  * @author Rossen Stoyanchev
  * @since 2.2.0
