@@ -31,17 +31,11 @@ import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
-import org.springframework.faces.ui.AjaxViewRoot;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
-import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
@@ -57,8 +51,6 @@ import org.springframework.webflow.execution.ViewFactory;
 public class JsfViewFactory implements ViewFactory {
 
 	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
-
-	private static SpringJavascriptAjaxHandler springJsAjaxHandler = new SpringJavascriptAjaxHandler();
 
 	private final Expression viewIdExpression;
 
@@ -96,7 +88,7 @@ public class JsfViewFactory implements ViewFactory {
 		if (notifyPhaseListeners) {
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, this.lifecycle, facesContext);
 		}
-		return createJsfView(viewRoot, this.lifecycle, context);
+		return new JsfView(viewRoot, this.lifecycle, context);
 	}
 
 	private UIViewRoot getViewRoot(RequestContext context, FacesContext facesContext) {
@@ -159,23 +151,6 @@ public class JsfViewFactory implements ViewFactory {
 		UIViewRoot viewRoot = viewHandler.createView(facesContext, viewName);
 		viewRoot.setTransient(true);
 		return viewRoot;
-	}
-
-	private JsfView createJsfView(UIViewRoot root, Lifecycle lifecycle, RequestContext context) {
-		if (isSpringJavascriptAjaxRequest(context.getExternalContext())) {
-			root = new AjaxViewRoot(root);
-		}
-		return new JsfView(root, lifecycle, context);
-	}
-
-	private boolean isSpringJavascriptAjaxRequest(ExternalContext context) {
-		// consider factoring out into external context
-		if (context.getNativeContext() instanceof ServletContext) {
-			return springJsAjaxHandler.isAjaxRequest((HttpServletRequest) context.getNativeRequest(),
-					(HttpServletResponse) context.getNativeResponse());
-		} else {
-			return false;
-		}
 	}
 
 	/**

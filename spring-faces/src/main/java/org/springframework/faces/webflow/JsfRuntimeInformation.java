@@ -31,10 +31,20 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class JsfRuntimeInformation {
 
-	/** JSF Version 1.1 */
+	/**
+	 * JSF Version 1.1
+	 * 
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static final int JSF_11 = 0;
 
-	/** JSF Version 1.2 */
+	/**
+	 * JSF Version 1.2
+	 * 
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
+	@Deprecated
 	public static final int JSF_12 = 1;
 
 	/** JSF Version 2.0 */

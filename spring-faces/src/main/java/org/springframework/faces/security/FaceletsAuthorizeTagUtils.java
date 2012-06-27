@@ -19,7 +19,7 @@ import java.io.IOException;
 
 /**
  * This class provides static methods that are registered as EL functions and available for use in Unified EL
- * expressions in standard Facelets views (JSF 2 or higher).
+ * expressions in standard Facelets views.
  * 
  * @author Rossen Stoyanchev
  * @since 2.2.0
