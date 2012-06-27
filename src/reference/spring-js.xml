@@ -12,7 +12,6 @@
         </para>
         <para>
             Use of the Spring JS API is demonstrated in the the Spring MVC + Web Flow version of the Spring Travel reference application.
-            In addition, the JSF components provided as part of the Spring Faces library build on Spring.js.
         </para>
     </sect1>
     <sect1 id="spring-js-resource-servlet">
