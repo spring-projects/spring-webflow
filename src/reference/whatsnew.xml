@@ -20,7 +20,7 @@
 				The internal Portlet integration introduced in Spring Web Flow 2.2 has been upgraded for JSF 2.0 compatibility.
 				Some of the more advanced JSF 2.0 features, such as partial state saving, are not supported in a Portlet environment, however, existing application can now upgrade to the minimum required JSF version.
 				Upgraded projects will need to ensure that the <code>&lt;faces:resources&gt;</code> elements is
-				included as part of their Spring configuration. See <xref linked="portlet-jsf"/>.
+				included as part of their Spring configuration. See <xref linkend="portlet-jsf"/>.
 			</para>
 		</sect2>
 	</sect1>
