@@ -16,6 +16,7 @@
 package org.springframework.webflow.mvc.servlet;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +28,14 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.support.WebContentGenerator;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
@@ -47,6 +53,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * specific flow definitions.
  * 
  * @author Keith Donald
+ * @author Phillip Webb
  */
 public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAdapter, InitializingBean {
 
@@ -76,6 +83,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private AjaxHandler ajaxHandler;
 
 	private boolean redirectHttp10Compatible = true;
+
+	private boolean saveOutputToFlashScopeOnRedirect;
 
 	/**
 	 * Creates a new flow handler adapter.
@@ -155,6 +164,27 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 */
 	public void setRedirectHttp10Compatible(boolean redirectHttp10Compatible) {
 		this.redirectHttp10Compatible = redirectHttp10Compatible;
+	}
+
+	/**
+	 * Whether servlet relative redirects should pass {@link FlowExecutionOutcome#getOutput() flow output} to the Spring
+	 * MVC {@link FlashMap flash scope}.
+	 * @return true if so, false otherwise
+	 */
+	public boolean getSaveOutputToFlashScopeOnRedirect() {
+		return saveOutputToFlashScopeOnRedirect;
+	}
+
+	/**
+	 * Set whether servlet relative redirects sent by this handler adapter should pass
+	 * {@link FlowExecutionOutcome#getOutput() flow output} to the Spring MVC {@link FlashMap flash scope}.
+	 * <p>
+	 * By default, to remain compatible with previous releases, flow output is not mapped to flash scope.
+	 * @param saveOutputToFlashScopeOnRedirect
+	 * @see #getFlashOutput(HttpServletRequest, HttpServletResponse, FlowExecutionResult)
+	 */
+	public void setSaveOutputToFlashScopeOnRedirect(boolean saveOutputToFlashScopeOnRedirect) {
+		this.saveOutputToFlashScopeOnRedirect = saveOutputToFlashScopeOnRedirect;
 	}
 
 	public void afterPropertiesSet() throws Exception {
@@ -323,6 +353,26 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		}
 	}
 
+	/**
+	 * Returns any output that should be saved to MVC {@link FlashMap flash} before internal redirects. By default this
+	 * method will copy {@link FlowExecutionOutcome#getOutput() flow output} if
+	 * {@link #setSaveOutputToFlashScopeOnRedirect(boolean) saveOutputToFlashScopeOnRedirect} is <tt>true</tt>.
+	 * <p>
+	 * Subclasses can change the contents of the returned map as necessary.
+	 * @param request the servlet request
+	 * @param response the servlet response
+	 * @param result the flow execution result
+	 * @return a map containing the elements that should be saved to MVC flash
+	 */
+	protected Map<String, Object> getFlashOutput(HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) {
+		HashMap<String, Object> flashOutput = new HashMap<String, Object>();
+		if (saveOutputToFlashScopeOnRedirect) {
+			flashOutput.putAll(result.getOutcome().getOutput().asMap());
+		}
+		return flashOutput;
+	}
+
 	// internal helpers
 
 	private void handleFlowExecutionResult(FlowExecutionResult result, ServletExternalContext context,
@@ -339,11 +389,11 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			if (context.getFlowDefinitionRedirectRequested()) {
 				sendFlowDefinitionRedirect(result, context, request, response);
 			} else if (context.getExternalRedirectRequested()) {
-				sendExternalRedirect(context.getExternalRedirectUrl(), request, response);
+				sendExternalRedirect(context.getExternalRedirectUrl(), request, response, result);
 			} else {
 				String location = handler.handleExecutionOutcome(result.getOutcome(), request, response);
 				if (location != null) {
-					sendExternalRedirect(location, request, response);
+					sendExternalRedirect(location, request, response, result);
 				} else {
 					defaultHandleExecutionOutcome(result.getFlowId(), result.getOutcome(), context, request, response);
 				}
@@ -382,15 +432,20 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void sendExternalRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+		sendExternalRedirect(location, request, response, null);
+	}
+
+	private void sendExternalRedirect(String location, HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Sending external redirect to '" + location + "'");
 		}
 		if (location.startsWith(SERVLET_RELATIVE_LOCATION_PREFIX)) {
 			sendServletRelativeRedirect(location.substring(SERVLET_RELATIVE_LOCATION_PREFIX.length()), request,
-					response);
+					response, result);
 		} else if (location.startsWith(CONTEXT_RELATIVE_LOCATION_PREFIX)) {
 			sendContextRelativeRedirect(location.substring(CONTEXT_RELATIVE_LOCATION_PREFIX.length()), request,
-					response);
+					response, result);
 		} else if (location.startsWith(SERVER_RELATIVE_LOCATION_PREFIX)) {
 			String url = location.substring(SERVER_RELATIVE_LOCATION_PREFIX.length());
 			if (!url.startsWith("/")) {
@@ -401,9 +456,9 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			sendRedirect(location, request, response);
 		} else {
 			if (isRedirectServletRelative(request)) {
-				sendServletRelativeRedirect(location, request, response);
+				sendServletRelativeRedirect(location, request, response, result);
 			} else {
-				sendContextRelativeRedirect(location, request, response);
+				sendContextRelativeRedirect(location, request, response, result);
 			}
 		}
 	}
@@ -421,25 +476,45 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		return (request.getPathInfo() != null);
 	}
 
-	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) throws IOException {
 		StringBuilder url = new StringBuilder(request.getContextPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
 		url.append(location);
-		sendRedirect(url.toString(), request, response);
+		sendRedirect(url.toString(), request, response, result);
 	}
 
-	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) throws IOException {
 		StringBuilder url = new StringBuilder(request.getContextPath());
 		url.append(request.getServletPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
 		url.append(location);
-		sendRedirect(url.toString(), request, response);
+		sendRedirect(url.toString(), request, response, result);
+	}
+
+	private void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) throws IOException {
+		Map<String, Object> flashOutput = getFlashOutput(request, response, result);
+		saveFlashOutput(url.toString(), request, response, flashOutput);
+		sendRedirect(url, request, response);
+	}
+
+	private void saveFlashOutput(String location, HttpServletRequest request, HttpServletResponse response,
+			Map<String, Object> output) {
+		FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
+		if (flashMapManager != null && output != null && !output.isEmpty()) {
+			UriComponents uriComponents = UriComponentsBuilder.fromUriString(location).build();
+			FlashMap flashMap = new FlashMap();
+			flashMap.setTargetRequestPath(uriComponents.getPath());
+			flashMap.addTargetRequestParams(uriComponents.getQueryParams());
+			flashMap.putAll(output);
+			flashMapManager.saveOutputFlashMap(flashMap, request, response);
+		}
 	}
 
 	private void handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
