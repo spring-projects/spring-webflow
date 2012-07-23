@@ -469,6 +469,31 @@ mvn package
 # import into Eclipse</programlisting>
 		</para>
 	</sect2>
-
   </sect1>
+
+  <sect1 id="spring-mvc-flash-output">
+    <title>Saving Flow Output to MVC Flash Scope</title>
+      <para>Flow output can be automatically saved to MVC flash scope when an <code>end-state</code> 
+      performs an internal redirect. This is particularly useful when displaying a summary 
+      screen at the end of a flow. For backwards compatibility this feature is disabled by 
+      default, to enable set <code>saveOutputToFlashScopeOnRedirect</code> on your 
+      <code>FlowHandlerAdapter</code> to <code>true</code>.</para>
+
+      <programlisting language="xml">
+&lt;!-- Enables FlowHandler URL mapping --&gt;
+&lt;bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter"&gt;
+    &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+    &lt;property name="saveOutputToFlashScopeOnRedirect" value="true" /&gt;
+&lt;/bean&gt;
+      </programlisting>
+
+      <para>The following example will add <code>confirmationNumber</code> to the MVC flash scope
+      before redirecting to the <code>summary</code> screen.</para>
+
+      <programlisting language="xml">
+&lt;end-state id="finish" view="externalRedirect:summary"&gt;
+    &lt;output name="confirmationNumber" value="booking.confirmationNumber" /&gt;
+&lt;/end-state&gt;
+      </programlisting>
+    </sect1>
 </chapter>

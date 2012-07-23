@@ -13,6 +13,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.core.FlowException;
@@ -34,6 +37,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private LocalAttributeMap<Object> flowInput = new LocalAttributeMap<Object>();
 	private boolean handleException;
 	private boolean handleExecutionOutcome;
+	private MockFlashMapManager flashMapManager = new MockFlashMapManager();
 
 	protected void setUp() throws Exception {
 		flowExecutor = EasyMock.createMock(FlowExecutor.class);
@@ -80,14 +84,11 @@ public class FlowHandlerAdapterTests extends TestCase {
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 		context = new ServletExternalContext(servletContext, request, response, flowHandlerAdapter.getFlowUrlHandler());
+		request.setAttribute(DispatcherServlet.FLASH_MAP_MANAGER_ATTRIBUTE, flashMapManager);
 	}
 
 	public void testLaunchFlowRequest() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/whatever");
-		request.setRequestURI("/springtravel/app/whatever");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/whatever", "GET");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
@@ -97,11 +98,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowRequestEndsAfterProcessing() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/whatever");
-		request.setRequestURI("/springtravel/app/whatever");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/whatever", "GET");
 		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
 		flowExecutor.launchExecution("foo", flowInput, context);
@@ -117,11 +114,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowRequestEndsAfterProcessingAjaxRequest() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/whatever");
-		request.setRequestURI("/springtravel/app/whatever");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/whatever", "GET");
 		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
 		context.setAjaxRequest(true);
@@ -139,11 +132,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testResumeFlowRequest() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("POST");
+		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
 		flowExecutor.resumeExecution("12345", context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
@@ -154,11 +143,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testResumeFlowRequestEndsAfterProcessing() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("POST");
+		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
 		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
@@ -176,11 +161,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testResumeFlowRequestEndsAfterProcessingFlowCommittedResponse() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("POST");
+		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
 		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
@@ -199,11 +180,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExecutionRedirect() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestFlowExecutionRedirect();
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -216,11 +193,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithDefinitionRedirect() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
 		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
@@ -241,11 +214,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalHttpRedirect() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("http://www.paypal.com");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -258,11 +227,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalHttpsRedirect() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("https://www.paypal.com");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -275,11 +240,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalRedirectServletRelative() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("servletRelative:bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -292,11 +253,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalRedirectServletRelativeWithSlash() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("servletRelative:/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -309,11 +266,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalRedirectContextRelative() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("contextRelative:bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -326,11 +279,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalRedirectContextRelativeWithSlash() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("contextRelative:/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -343,11 +292,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalRedirectServerRelative() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("serverRelative:bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -360,11 +305,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithExternalRedirectServerRelativeWithSlash() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("serverRelative:/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -378,11 +319,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testLaunchFlowWithExternalRedirectNotHttp10Compatible() throws Exception {
 		flowHandlerAdapter.setRedirectHttp10Compatible(false);
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("serverRelative:/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -396,14 +333,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testSwf1385DefaultServletExternalRedirect() throws Exception {
-		// The default case in accordance with the servlet spec:
-		// "A string containing only the ’/’ character indicates the "default" servlet of the application.
-		// In this case the servlet path is the request URI minus the context path and the path info is null."
-		request.setContextPath("/springtravel");
-		request.setServletPath("/foo");
-		request.setPathInfo(null);
-		request.setRequestURI("/springtravel/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/foo", null, "GET");
 		context.requestExternalRedirect("/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -419,11 +349,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		// Deviation from the default case:
 		// In some containers the default behavior can be switched so that the contents of the URI after
 		// the context path is in the path info while the servlet path is empty.
-		request.setContextPath("/springtravel");
-		request.setServletPath("");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "", "/foo", "GET");
 		context.requestExternalRedirect("/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -436,10 +362,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testSwf1385DefaultServletExternalRedirectServletRelative() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/foo");
-		request.setRequestURI("/springtravel/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/foo", null, "GET");
 		context.requestExternalRedirect("/bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -452,10 +375,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testExternalRedirectServletRelativeWithDefaultServletMapping() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/foo");
-		request.setRequestURI("/springtravel/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/foo", null, "GET");
 		context.requestExternalRedirect("servletRelative:bar");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -468,11 +388,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testDefaultHandleFlowException() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		Map<String, String> parameters = new HashMap<String, String>();
 		request.setParameters(parameters);
 		flowExecutor.launchExecution("foo", flowInput, context);
@@ -490,11 +406,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testDefaultHandleNoSuchFlowExecutionException() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		request.addParameter("execution", "12345");
 		flowExecutor.resumeExecution("12345", context);
 		FlowException flowException = new NoSuchFlowExecutionException(new MockFlowExecutionKey("12345"), null);
@@ -506,11 +418,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testDefaultHandleNoSuchFlowExecutionExceptionAjaxRequest() throws Exception {
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		request.addParameter("execution", "12345");
 		flowExecutor.resumeExecution("12345", context);
 		FlowException flowException = new NoSuchFlowExecutionException(new MockFlowExecutionKey("12345"), null);
@@ -524,12 +432,37 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testHandleFlowOutcomeCustomFlowHandler() throws Exception {
+		doHandleFlowServletRedirectOutcome();
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testHandleFlowExceptionCustomFlowHandler() throws Exception {
+		handleException = true;
+		final FlowException flowException = new FlowException("Error") {
+		};
+		setupRequest("/springtravel", "/app", "/foo", "GET");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		EasyMock.expectLastCall().andThrow(flowException);
+		EasyMock.replay(new Object[] { flowExecutor });
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(new Object[] { flowExecutor });
+	}
+
+	public void testHandleFlowServletRedirectOutcomeWithoutFlash() throws Exception {
+		doHandleFlowServletRedirectOutcome();
+		assertNull(flashMapManager.getFlashMap());
+	}
+
+	public void testHandleFlowServletRedirectOutcomeWithFlash() throws Exception {
+		flowHandlerAdapter.setSaveOutputToFlashScopeOnRedirect(true);
+		doHandleFlowServletRedirectOutcome();
+		assertEquals("baz", flashMapManager.getFlashMap().get("bar"));
+		assertEquals("/springtravel/app/home", flashMapManager.getFlashMap().getTargetRequestPath());
+	}
+
+	private void doHandleFlowServletRedirectOutcome() throws Exception {
 		handleExecutionOutcome = true;
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
+		setupRequest("/springtravel", "/app", "/foo", "GET");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
 		output.put("bar", "baz");
@@ -541,19 +474,28 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
-	public void testHandleFlowExceptionCustomFlowHandler() throws Exception {
-		handleException = true;
-		final FlowException flowException = new FlowException("Error") {
-		};
-		request.setContextPath("/springtravel");
-		request.setServletPath("/app");
-		request.setPathInfo("/foo");
-		request.setRequestURI("/springtravel/app/foo");
-		request.setMethod("GET");
-		flowExecutor.launchExecution("foo", flowInput, context);
-		EasyMock.expectLastCall().andThrow(flowException);
-		EasyMock.replay(new Object[] { flowExecutor });
-		flowHandlerAdapter.handle(request, response, flowHandler);
-		EasyMock.verify(new Object[] { flowExecutor });
+	private void setupRequest(String contextPath, String servletPath, String pathInfo, String method) {
+		request.setContextPath(contextPath);
+		request.setServletPath(servletPath);
+		request.setPathInfo(pathInfo);
+		request.setRequestURI(contextPath + servletPath + (pathInfo == null ? "" : pathInfo));
+		request.setMethod(method);
+	}
+
+	private static class MockFlashMapManager implements FlashMapManager {
+
+		private FlashMap flashMap;
+
+		public FlashMap retrieveAndUpdate(HttpServletRequest request, HttpServletResponse response) {
+			throw new UnsupportedOperationException();
+		}
+
+		public void saveOutputFlashMap(FlashMap flashMap, HttpServletRequest request, HttpServletResponse response) {
+			this.flashMap = flashMap;
+		}
+
+		public FlashMap getFlashMap() {
+			return flashMap;
+		}
 	}
 }
