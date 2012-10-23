@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema
+	xmlns="http://www.springframework.org/schema/faces"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	targetNamespace="http://www.springframework.org/schema/faces"
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="2.4">
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
+	
+	<xsd:element name="flow-builder-services">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Registers custom implementations of services needed to build flow definitions in a JSF environment.
+With this tag, you may configure a custom ConversionService, FormatterFactory, ExpressionParser, and ViewFactoryCreator implementation.
+This tag is only needed when you wish to plugin custom implementations.
+]]>	
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:attribute name="conversion-service">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The custom ConversionService implementation to use to convert from one type to another.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="expression-parser">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The custom ExpressionParser implementation to use to compile expression strings into Expressions.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="view-factory-creator">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The custom ViewFactoryCreator implementation to use produce ViewFactories capable of rendering Views.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="enable-managed-beans" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+When this attribute is set to true, a special EL expression parser will be enabled that allows access to JSF-managed beans
+from EL expressions in flow definitions. 
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="development" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+Puts all flows in development mode.
+When set to true, changes to a flow definition will be auto-detected and will result in a flow refresh.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="resources">
+		<xsd:annotation>
+			<xsd:documentation
+				source="java:org.springframework.faces.webflow.JsfResourceRequestHandler"><![CDATA[
+	Configures a handler that uses the JSF ResourceHandler API introduced in JSF 2 to serve web application and 
+	classpath resources such as images, CSS and JavaScript files from well-known locations. 
+			]]></xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="order" type="xsd:int">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+	Specifies the order of the HandlerMapping for the resource handler. The default order is 0.
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>
