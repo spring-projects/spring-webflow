@@ -44,10 +44,10 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * <p>
  * Source code adapted from {@link JsfManagedBeanResolver}.
  * </p>
- * 
+ *
  * @author Jeremy Grelle
  * @author Rossen Stoyanchev
- * 
+ *
  * @since 2.1
  */
 public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
@@ -77,8 +77,8 @@ public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
 
 	/**
 	 * Locates a JSF managed bean through a temporary FacesContext. This method is only meant to be called from the Flow
-	 * Execution. It assumes the FacesContext will not be available and creates a temporary one on the fly.
-	 * 
+	 * Execution. If a FacesContext is not available, a temporary will be created on the fly.
+	 *
 	 * @param name The name of the bean to resolve.
 	 * @return The JSF Managed Bean instance if found.
 	 */
@@ -86,14 +86,21 @@ public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		Assert.notNull(requestContext, "RequestContext cannot be null. "
 				+ "This PropertyAccessor is only intended to be invoked from an active Flow Execution.");
-		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, FlowLifecycle.newInstance());
+		boolean releaseFacesContext = false;
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext == null) {
+			releaseFacesContext = true;
+			facesContext = FlowFacesContext.newInstance(requestContext, FlowLifecycle.newInstance());
+		}
 		try {
 			ExpressionFactory factory = facesContext.getApplication().getExpressionFactory();
 			ELContext elContext = facesContext.getELContext();
 			ValueExpression expression = factory.createValueExpression(elContext, "#{" + name + "}", Object.class);
 			return expression.getValue(facesContext.getELContext());
 		} finally {
-			facesContext.release();
+			if (releaseFacesContext) {
+				facesContext.release();
+			}
 		}
 	}
 
