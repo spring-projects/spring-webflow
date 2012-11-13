@@ -40,7 +40,7 @@ public class ScopeSearchingPropertyAccessor implements PropertyAccessor {
 
 	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
 		MutableAttributeMap<Object> scope = findScopeForAttribute((RequestContext) target, name);
-		return (scope != null) ? new TypedValue(scope.get(name)) : null;
+		return new TypedValue(scope == null ? null : scope.get(name));
 	}
 
 	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
