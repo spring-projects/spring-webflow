@@ -107,7 +107,7 @@ public class ConversationContainer implements Serializable {
 		return conversation;
 	}
 
-	private ConversationId nextId() {
+	protected ConversationId nextId() {
 		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
 	}
 
