@@ -64,41 +64,41 @@ class ContainedConversation implements Conversation, Serializable {
 
 	public void lock() {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Locking conversation " + id);
+			logger.debug("Locking conversation " + this.id);
 		}
-		lock.lock();
+		this.lock.lock();
 	}
 
 	public Object getAttribute(Object name) {
-		return attributes.get(name);
+		return this.attributes.get(name);
 	}
 
 	public void putAttribute(Object name, Object value) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Putting conversation attribute '" + name + "' with value " + value);
 		}
-		attributes.put(name, value);
+		this.attributes.put(name, value);
 	}
 
 	public void removeAttribute(Object name) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Removing conversation attribute '" + name + "'");
 		}
-		attributes.remove(name);
+		this.attributes.remove(name);
 	}
 
 	public void end() {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Ending conversation " + id);
+			logger.debug("Ending conversation " + this.id);
 		}
-		container.removeConversation(getId());
+		this.container.removeConversation(getId());
 	}
 
 	public void unlock() {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Unlocking conversation " + id);
+			logger.debug("Unlocking conversation " + this.id);
 		}
-		lock.unlock();
+		this.lock.unlock();
 		// re-bind the conversation container in the session
 		// this is required to make session replication work correctly in
 		// a clustered environment
@@ -106,7 +106,7 @@ class ContainedConversation implements Conversation, Serializable {
 		// manipulating the contents of the conversation
 		SharedAttributeMap<Object> sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
-			sessionMap.put(container.getSessionKey(), container);
+			sessionMap.put(this.container.getSessionKey(), this.container);
 		}
 	}
 
@@ -120,11 +120,11 @@ class ContainedConversation implements Conversation, Serializable {
 		if (!(obj instanceof ContainedConversation)) {
 			return false;
 		}
-		return id.equals(((ContainedConversation) obj).id);
+		return this.id.equals(((ContainedConversation) obj).id);
 	}
 
 	public int hashCode() {
-		return id.hashCode();
+		return this.id.hashCode();
 	}
 
 }

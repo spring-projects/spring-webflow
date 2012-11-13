@@ -39,9 +39,9 @@ class JdkConcurrentConversationLock implements ConversationLock {
 
 	public void lock() throws ConversationLockException {
 		try {
-			boolean acquired = lock.tryLock(timeoutSeconds, TimeUnit.SECONDS);
+			boolean acquired = this.lock.tryLock(this.timeoutSeconds, TimeUnit.SECONDS);
 			if (!acquired) {
-				throw new LockTimeoutException(timeoutSeconds);
+				throw new LockTimeoutException(this.timeoutSeconds);
 			}
 		} catch (InterruptedException e) {
 			throw new LockInterruptedException(e);
@@ -49,6 +49,6 @@ class JdkConcurrentConversationLock implements ConversationLock {
 	}
 
 	public void unlock() {
-		lock.unlock();
+		this.lock.unlock();
 	}
 }
