@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 	version="2.0">
-  
+
 	<application>
 		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
 		<action-listener>org.springframework.faces.model.SelectionTrackingActionListener</action-listener>
@@ -13,12 +13,13 @@
 
 	<factory>
 		<application-factory>org.springframework.faces.webflow.FlowApplicationFactory</application-factory>
+		<faces-context-factory>org.springframework.faces.webflow.context.portlet.PortletFacesContextFactory</faces-context-factory>
 	</factory>
 
 	<lifecycle>
 		<phase-listener>org.springframework.faces.support.RequestLoggingPhaseListener</phase-listener>
 	</lifecycle>
-  	
+
 	<render-kit>
 		<render-kit-id>HTML_BASIC</render-kit-id>
 		<render-kit-class>org.springframework.faces.webflow.FlowRenderKit</render-kit-class>
