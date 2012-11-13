@@ -35,7 +35,7 @@ import org.springframework.webflow.conversation.NoSuchConversationException;
  * 
  * @author Erwin Vervaet
  */
-class ConversationContainer implements Serializable {
+public class ConversationContainer implements Serializable {
 
 	private static final Log logger = LogFactory.getLog(ConversationContainer.class);
 
@@ -91,7 +91,7 @@ class ConversationContainer implements Serializable {
 	 * @return the created conversation
 	 */
 	public synchronized Conversation createConversation(ConversationParameters parameters, ConversationLock lock) {
-		ContainedConversation conversation = new ContainedConversation(this, nextId(), lock);
+		ContainedConversation conversation = createContainedConversation(nextId(), lock);
 		conversation.putAttribute("name", parameters.getName());
 		conversation.putAttribute("caption", parameters.getCaption());
 		conversation.putAttribute("description", parameters.getDescription());
@@ -126,6 +126,10 @@ class ConversationContainer implements Serializable {
 		throw new NoSuchConversationException(id);
 	}
 
+	protected final List<ContainedConversation> getConversations() {
+		return conversations;
+	}
+
 	/**
 	 * Remove identified conversation from this container.
 	 */
@@ -144,5 +148,11 @@ class ConversationContainer implements Serializable {
 	 */
 	private boolean maxExceeded() {
 		return maxConversations > 0 && conversations.size() > maxConversations;
+	}
+
+	// Hook methods
+
+	protected ContainedConversation createContainedConversation(ConversationId id, ConversationLock lock) {
+		return new ContainedConversation(this, id, lock);
 	}
 }

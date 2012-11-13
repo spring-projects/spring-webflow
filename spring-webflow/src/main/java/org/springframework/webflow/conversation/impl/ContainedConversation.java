@@ -33,7 +33,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * 
  * @author Erwin Vervaet
  */
-class ContainedConversation implements Conversation, Serializable {
+public class ContainedConversation implements Conversation, Serializable {
 
 	private static final Log logger = LogFactory.getLog(SessionBindingConversationManager.class);
 
@@ -58,8 +58,16 @@ class ContainedConversation implements Conversation, Serializable {
 		this.attributes = new HashMap<Object, Object>();
 	}
 
+	protected void setContainer(ConversationContainer container) {
+		this.container = container;
+	}
+
 	public ConversationId getId() {
-		return id;
+		return this.id;
+	}
+
+	protected void setId(ConversationId id) {
+		this.id = id;
 	}
 
 	public void lock() {

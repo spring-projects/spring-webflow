@@ -131,13 +131,11 @@ public class SessionBindingConversationManager implements ConversationManager {
 		return new ConversationContainer(maxConversations, sessionKey);
 	}
 
-	// internal helpers
-
 	/**
 	 * Obtain the conversation container from the session. Create a new empty container and add it to the session if no
 	 * existing container can be found.
 	 */
-	private ConversationContainer getConversationContainer() {
+	protected final ConversationContainer getConversationContainer() {
 		SharedAttributeMap<Object> sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
 			ConversationContainer container = (ConversationContainer) sessionMap.get(sessionKey);
