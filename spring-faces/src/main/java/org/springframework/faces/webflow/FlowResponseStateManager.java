@@ -32,10 +32,10 @@ import org.springframework.webflow.execution.RequestContextHolder;
 /**
  * A custom ResponseStateManager that writes JSF state to a Web Flow managed view-scoped variable. This class is plugged
  * in via {@link FlowRenderKit}.
- * 
+ *
  * @author Rossen Stoyanchev
  * @author Phillip Webb
- * 
+ *
  * @since 2.2.0
  */
 public class FlowResponseStateManager extends ResponseStateManagerWrapper {
@@ -56,6 +56,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 		this.wrapped = wrapped;
 	}
 
+	@Override
 	public ResponseStateManager getWrapped() {
 		return this.wrapped;
 	}
@@ -112,7 +113,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 
 	/**
 	 * See comments on {@link ResponseStateManager#VIEW_STATE_PARAM}.
-	 * 
+	 *
 	 * @param context the <code>FacesContext</code> for the current request
 	 * @param writer the <code>ResponseWriter</code> to write to
 	 * @throws IOException if an error occurs writing to the client
@@ -126,7 +127,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 	/**
 	 * See comments on <code>ResponseStateManager.RENDER_KIT_ID_PARAM</code> in
 	 * {@link ResponseStateManager#writeState(FacesContext, Object)}.
-	 * 
+	 *
 	 * @param context the <code>FacesContext</code> for the current request
 	 * @param writer the <code>ResponseWriter</code> to write to
 	 * @throws IOException if an error occurs writing to the client
