@@ -17,6 +17,7 @@ package org.springframework.faces.webflow;
 
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 
 import javax.el.ValueExpression;
@@ -25,6 +26,7 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitHint;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ExceptionQueuedEvent;
@@ -44,11 +46,13 @@ import org.springframework.webflow.execution.ViewFactory;
  * JSF-specific {@link ViewFactory} implementation.
  * <p>
  * This factory is responsible for performing the duties of the RESTORE_VIEW phase of the JSF lifecycle.
- * 
+ *
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
 public class JsfViewFactory implements ViewFactory {
+
+    private static String SKIP_ITERATION_HINT = "javax.faces.visit.SKIP_ITERATION";
 
 	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
 
@@ -155,7 +159,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	/**
 	 * Walk the component tree to perform any required per-component operations.
-	 * 
+	 *
 	 * @param context
 	 * @param component
 	 */
@@ -177,11 +181,15 @@ public class JsfViewFactory implements ViewFactory {
 
 	private void publishPostRestoreStateEvent(FacesContext facesContext) {
 		try {
-			facesContext.getViewRoot().visitTree(VisitContext.createVisitContext(facesContext),
+            facesContext.getAttributes().put(SKIP_ITERATION_HINT, true);
+			VisitContext visitContext = VisitContext.createVisitContext(facesContext, null, EnumSet.of(VisitHint.SKIP_ITERATION));
+			facesContext.getViewRoot().visitTree(visitContext,
 					new PostRestoreStateEventVisitCallback());
 		} catch (AbortProcessingException e) {
 			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
 					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
+		} finally {
+            facesContext.getAttributes().remove(SKIP_ITERATION_HINT);
 		}
 	}
 
