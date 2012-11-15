@@ -15,6 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.Behavior;
 import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitHint;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ExceptionQueuedEvent;
@@ -41,6 +43,8 @@ import javax.faces.event.SystemEventListener;
  * @author Rossen Stoyanchev
  */
 public class Jsf2FlowApplication extends FlowApplication {
+
+	private static String SKIP_ITERATION_HINT = "javax.faces.visit.SKIP_ITERATION";
 
 	public Jsf2FlowApplication(Application delegate) {
 		super(delegate);
@@ -126,11 +130,15 @@ public class Jsf2FlowApplication extends FlowApplication {
 	static void publishPostRestoreStateEvent() {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
 		try {
-			facesContext.getViewRoot().visitTree(VisitContext.createVisitContext(facesContext),
+			facesContext.getAttributes().put(SKIP_ITERATION_HINT, true);
+			VisitContext visitContext = VisitContext.createVisitContext(facesContext, null, EnumSet.of(VisitHint.SKIP_ITERATION));
+			facesContext.getViewRoot().visitTree(visitContext,
 					new PostRestoreStateEventVisitCallback());
 		} catch (AbortProcessingException e) {
 			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
 					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
+		} finally {
+			facesContext.getAttributes().remove(SKIP_ITERATION_HINT);
 		}
 	}
 }
