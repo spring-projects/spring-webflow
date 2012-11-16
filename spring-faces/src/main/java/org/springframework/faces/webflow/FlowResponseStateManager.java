@@ -142,4 +142,13 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 			writer.endElement("input");
 		}
 	}
+
+	/**
+	 * Determine if the request context has existing state.
+	 * @param context the request context
+	 * @return {@code true} if the context has state
+	 */
+	static boolean hasState(RequestContext context) {
+		return (context != null) && (context.getViewScope().contains(FACES_VIEW_STATE));
+	}
 }
