@@ -42,6 +42,7 @@ import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
@@ -52,14 +53,17 @@ import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.execution.Event;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
+import org.springframework.webflow.validation.BeanValidationHintResolver;
 import org.springframework.webflow.validation.ValidationHelper;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
- * 
+ *
  * @author Keith Donald
  */
 public abstract class AbstractMvcView implements View {
@@ -94,6 +98,8 @@ public abstract class AbstractMvcView implements View {
 
 	private boolean userEventProcessed;
 
+	private ValidationHintResolver validationHintResolver = new BeanValidationHintResolver();
+
 	/**
 	 * Creates a new MVC view.
 	 * @param view the Spring MVC view to render
@@ -122,6 +128,12 @@ public abstract class AbstractMvcView implements View {
 
 	public void setValidator(Validator validator) {
 		this.validator = validator;
+	}
+
+	public void setValidationHintResolver(ValidationHintResolver validationHintResolver) {
+		if (validationHintResolver != null) {
+			this.validationHintResolver = validationHintResolver;
+		}
 	}
 
 	/**
@@ -356,7 +368,7 @@ public abstract class AbstractMvcView implements View {
 	 * considered. In the absence of binding configuration all request parameters will be used to update matching fields
 	 * on the model.
 	 * </p>
-	 * 
+	 *
 	 * @param model the model to be updated
 	 * @return an instance of MappingResults with information about the results of the binding.
 	 */
@@ -380,7 +392,7 @@ public abstract class AbstractMvcView implements View {
 	 * parameter. If there is no matching incoming request parameter, a special mapping is created that will set the
 	 * target field on the model to an empty value (typically null).
 	 * </p>
-	 * 
+	 *
 	 * @param mapper the mapper to which mappings will be added
 	 * @param parameterNames the request parameters
 	 * @param model the model
@@ -410,7 +422,7 @@ public abstract class AbstractMvcView implements View {
 	 * converters are supported for backwards compatibility only and will not result in use of the Spring 3 type
 	 * conversion system at runtime.
 	 * </p>
-	 * 
+	 *
 	 * @param mapper the mapper to add the mapping to
 	 * @param binding the binding element
 	 * @param model the model
@@ -437,7 +449,7 @@ public abstract class AbstractMvcView implements View {
 	/**
 	 * Add a {@link DefaultMapping} instance for all incoming request parameters except those having a special field
 	 * marker prefix. This method is used when binding configuration was not specified on the view.
-	 * 
+	 *
 	 * @param mapper the mapper to add mappings to
 	 * @param parameterNames the request parameter names
 	 * @param model the model
@@ -458,7 +470,7 @@ public abstract class AbstractMvcView implements View {
 	/**
 	 * Adds a special {@link DefaultMapping} that results in setting the target field on the model to an empty value
 	 * (typically null).
-	 * 
+	 *
 	 * @param mapper the mapper to add the mapping to
 	 * @param field the field for which a mapping is to be added
 	 * @param model the model
@@ -480,7 +492,7 @@ public abstract class AbstractMvcView implements View {
 
 	/**
 	 * Adds a {@link DefaultMapping} between the given request parameter name and a matching model field.
-	 * 
+	 *
 	 * @param mapper the mapper to add the mapping to
 	 * @param parameter the request parameter name
 	 * @param model the model
@@ -574,6 +586,33 @@ public abstract class AbstractMvcView implements View {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
+	private Object[] getValidationHints(Object model) {
+		Expression expr = (Expression) requestContext.getCurrentState().getAttributes().get("validationHints");
+		String flowId = requestContext.getActiveFlow().getId();
+		String stateId = requestContext.getCurrentState().getId();
+		if (expr != null) {
+			try {
+				Object hintsValue = expr.getValue(requestContext);
+				if (hintsValue instanceof String) {
+					String[] hints = StringUtils.commaDelimitedListToStringArray((String) hintsValue);
+					return validationHintResolver.resolveValidationHints(model, flowId, stateId, hints);
+				}
+				else if (hintsValue instanceof Object[]) {
+					return (Object[]) hintsValue;
+				}
+				else {
+					throw new FlowExecutionException(flowId, stateId,
+							"Failed to resolve validation hints [" + hintsValue + "]");
+				}
+			}
+			catch (EvaluationException e) {
+				throw new FlowExecutionException(flowId, stateId,
+						"Failed to resolve validation hints expression [" + expr + "]", e);
+			}
+		}
+		return null;
+	}
+
 	private Object getEmptyValue(Class<?> fieldType) {
 		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
 			// Special handling of boolean property.
@@ -625,7 +664,8 @@ public abstract class AbstractMvcView implements View {
 		}
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, getModelExpression()
 				.getExpressionString(), expressionParser, messageCodesResolver, mappingResults);
-		helper.setValidator(validator);
+		helper.setValidator(this.validator);
+		helper.setValidationHints(getValidationHints(model));
 		helper.validate();
 	}
 

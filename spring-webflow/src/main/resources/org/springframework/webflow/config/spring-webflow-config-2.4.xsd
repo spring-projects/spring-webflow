@@ -12,7 +12,7 @@
 		<xsd:documentation>
 			<![CDATA[
 Spring Web Flow Configuration Schema
-Authors: Keith Donald, Jeremy Grelle, Scott Andrews
+Authors: Keith Donald, Jeremy Grelle, Scott Andrews, Rossen Stoyanchev
 <br>
 A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 ]]>
@@ -232,6 +232,16 @@ The custom ViewFactoryCreator implementation to use produce ViewFactories capabl
 The bean name of the Validator that is to be used for validating a model declared on a view state.
 This attribute is not required, and only needs to be specified explicitly if a custom Validator needs to be configured.
 If not specified, JSR-303 validation will be installed if a JSR-303 provider is present on the classpath.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="validationHintResolver">
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.webflow.validation.ValidationHintResolver">
+								<![CDATA[
+The bean name of a ValidationHintResolver used to resolve String-based validation hints.
+This attribute is not required. The default implementation used is BeanValidationHintResolver.
 ]]>
 							</xsd:documentation>
 						</xsd:annotation>

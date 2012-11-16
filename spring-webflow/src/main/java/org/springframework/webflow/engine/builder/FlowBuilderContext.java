@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * Provides services needed to a direct a flow builder through building a flow definition.
@@ -76,6 +77,11 @@ public interface FlowBuilderContext {
 	 * @return the validator
 	 */
 	public Validator getValidator();
+
+	/**
+	 * Return the {@link ValidationHintResolver}.
+	 */
+	public ValidationHintResolver getValidationHintResolver();
 
 	/**
 	 * Returns the application context hosting the flow system.

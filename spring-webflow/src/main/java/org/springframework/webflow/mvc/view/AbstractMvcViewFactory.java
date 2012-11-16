@@ -25,10 +25,11 @@ import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * Base class for mvc view factories.
- * 
+ *
  * @author Keith Donald
  */
 public abstract class AbstractMvcViewFactory implements ViewFactory {
@@ -42,6 +43,8 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 	private ConversionService conversionService;
 
 	private Validator validator;
+
+	private ValidationHintResolver validationHintResolver;
 
 	private BinderConfiguration binderConfiguration;
 
@@ -82,6 +85,11 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		this.validator = validator;
 	}
 
+	public void setValidationHintResolver(ValidationHintResolver validationHintResolver) {
+		this.validationHintResolver = validationHintResolver;
+	}
+
+
 	public View getView(RequestContext context) {
 		String viewId = (String) this.viewId.getValue(context);
 		org.springframework.web.servlet.View view = viewResolver.resolveView(viewId, context);
@@ -91,6 +99,7 @@ public abstract class AbstractMvcViewFactory implements ViewFactory {
 		mvcView.setBinderConfiguration(binderConfiguration);
 		mvcView.setMessageCodesResolver(messageCodesResolver);
 		mvcView.setValidator(validator);
+		mvcView.setValidationHintResolver(validationHintResolver);
 		if (StringUtils.hasText(eventIdParameterName)) {
 			mvcView.setEventIdParameterName(eventIdParameterName);
 		}

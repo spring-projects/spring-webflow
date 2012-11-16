@@ -29,6 +29,13 @@
 				Flow output can now be saved to Spring MVC Flash Scope for any <code>end-state</code> that issues an internal redirect.  To enable this feature set <code>FlowHandlerAdapter.saveOutputToFlashScopeOnRedirect</code>.  See <xref linkend="spring-mvc-flash-output"/>.
 			</para>
 		</sect2>
+		<sect2 id="whatsnew-partial-validation">
+			<title>Partial JSR-303 Bean Validation</title>
+			<para>
+				Partial validation with JSR-303 Bean Validation groups is now supported through the validation-hints
+				view-state attribute. See <xref linkend="view-validation-jsr303-partial" />.
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 id="whatsnew-swf-230">
 		<title>Spring Web Flow 2.3</title>

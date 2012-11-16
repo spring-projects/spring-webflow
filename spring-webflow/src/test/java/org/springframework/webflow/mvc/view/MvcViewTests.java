@@ -30,6 +30,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.webflow.action.ViewFactoryActionAdapter;
@@ -628,6 +630,66 @@ public class MvcViewTests extends TestCase {
 		assertFalse(bindBean.validationMethodInvoked);
 	}
 
+	public void testResumeEventStringValidationHint() throws Exception {
+		StubSmartValidator validator = new StubSmartValidator();
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		TestModel testModel = new TestModel();
+		StaticExpression validationHintsExpression = new StaticExpression("State1,AllStates");
+		context.getCurrentState().getAttributes().put("validationHints", validationHintsExpression);
+		StaticExpression modelExpression = new StaticExpression(testModel);
+		modelExpression.setExpressionString("testModel");
+		context.getCurrentState().getAttributes().put("model", modelExpression);
+		context.getFlowScope().put("testModel", testModel);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setValidator(validator);
+		view.setExpressionParser(createExpressionParser());
+
+		view.processUserEvent();
+
+		assertFalse(view.userEventQueued());
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
+		assertEquals(TestModel.State1.class, validator.hints[0]);
+		assertEquals(TestModel.AllStates.class, validator.hints[1]);
+		assertTrue(validator.invoked);
+	}
+
+	public void testResumeEventObjectArrayValidationHint() throws Exception {
+		StubSmartValidator validator = new StubSmartValidator();
+		MockRequestContext context = new MockRequestContext();
+		context.putRequestParameter("_eventId", "submit");
+		TestModel testModel = new TestModel();
+		Object[] validationHints = new Object[] { TestModel.State1.class };
+		StaticExpression validationHintsExpression = new StaticExpression(validationHints);
+		context.getCurrentState().getAttributes().put("validationHints", validationHintsExpression);
+		StaticExpression modelExpression = new StaticExpression(testModel);
+		modelExpression.setExpressionString("testModel");
+		context.getCurrentState().getAttributes().put("model", modelExpression);
+		context.getFlowScope().put("testModel", testModel);
+		context.getMockExternalContext().setNativeContext(new MockServletContext());
+		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
+		context.getMockExternalContext().setNativeResponse(new MockHttpServletResponse());
+		context.getMockFlowExecutionContext().setKey(new MockFlowExecutionKey("c1v1"));
+		org.springframework.web.servlet.View mvcView = new MockView();
+		AbstractMvcView view = new MockMvcView(mvcView, context);
+		view.setValidator(validator);
+		view.setExpressionParser(createExpressionParser());
+
+		view.processUserEvent();
+
+		assertFalse(view.userEventQueued());
+		assertTrue(view.hasFlowEvent());
+		assertEquals("submit", view.getFlowEvent().getId());
+		assertEquals(validationHints, validator.hints);
+		assertTrue(validator.invoked);
+	}
+
 	private SpringELExpressionParser createExpressionParser() {
 		StringToDate c = new StringToDate();
 		c.setPattern("yyyy-MM-dd");
@@ -803,6 +865,33 @@ public class MvcViewTests extends TestCase {
 
 		public void setName(String name) {
 			this.name = name;
+		}
+	}
+
+	public static class StubSmartValidator implements SmartValidator {
+		private boolean invoked;
+		private Object[] hints;
+
+		public void validate(Object object, Errors errors) {
+			invoked = true;
+		}
+
+		public void validate(Object object, Errors errors, Object... hints) {
+			invoked = true;
+			this.hints = hints;
+		}
+
+		public boolean supports(Class<?> clazz) {
+			return true;
+		}
+	}
+
+	private static class TestModel {
+
+		public static class State1 {
+		}
+
+		public static class AllStates {
 		}
 	}
 

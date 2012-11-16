@@ -29,17 +29,19 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * A view factory creator that returns view factories that produce Mock View implementations that can be used to assert
  * that the correct view id was selected as part of a flow execution test.
- * 
+ *
  * @author Keith Donald
  */
 class MockViewFactoryCreator implements ViewFactoryCreator {
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration,
+			Validator validator, ValidationHintResolver resolver) {
 		return new MockViewFactory(viewId);
 	}
 
@@ -72,7 +74,7 @@ class MockViewFactoryCreator implements ViewFactoryCreator {
 	 * A Mock view implementation that simply holds a reference to a identifier for a view that should be rendered.
 	 * Useful to assert that the right view was selected as part of a flow execution test, without actually exercising
 	 * any real rendering logic.
-	 * 
+	 *
 	 * @author Keith Donald
 	 */
 	static class MockView implements View {

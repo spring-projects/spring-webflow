@@ -7,6 +7,7 @@ Changes in version 2.4.0.RELEASE
 Move samples to a separate repository https://github.com/SpringSource/spring-webflow-samples
 Upgrade spring-faces to JSF 2 as a minimum requirement
 Upgrade portlet/JSF support to function in JSF 2 environment
+Add partial validation support for JSR-303 bean validation
 
 Changes in version 2.3.1.RELEASE (Mar 27, 2012)
 -----------------------------------------------

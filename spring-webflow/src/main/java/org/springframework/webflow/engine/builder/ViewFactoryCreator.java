@@ -21,6 +21,7 @@ import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * A factory for ViewFactory objects. This is an SPI interface and conceals specific types of view factories from the
@@ -36,10 +37,12 @@ public interface ViewFactoryCreator {
 	 * @param conversionService an optional conversion service to use to format text values
 	 * @param binderConfiguration information on how the rendered view binds to a model that provides its data
 	 * @param validator a global validator to invoke
+	 * @param validationHintResolver a custom ValidationHintResolver to use
 	 * @return the view factory
 	 */
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator);
+			ConversionService conversionService, BinderConfiguration binderConfiguration,
+			Validator validator, ValidationHintResolver validationHintResolver);
 
 	/**
 	 * Get the default id of the view to render in the provided view state by convention.

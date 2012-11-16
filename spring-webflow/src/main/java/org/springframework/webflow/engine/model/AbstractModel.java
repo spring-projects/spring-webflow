@@ -18,9 +18,11 @@ package org.springframework.webflow.engine.model;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Contains basic merge functions that can be utilized by other models.
- * 
+ *
  * @author Scott Andrews
  */
 public abstract class AbstractModel implements Model {

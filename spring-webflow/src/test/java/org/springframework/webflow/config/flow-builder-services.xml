@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd">
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd">
 	
 	<webflow:flow-builder-services id="flowBuilderServicesDefault"/>
 	
@@ -15,6 +15,7 @@
 		view-factory-creator="customViewFactoryCreator"
 		conversion-service="customConversionService" 
 		validator="customValidator"
+		validationHintResolver="customValidationHintResolver"
 		development="true" />
 
 	<webflow:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
@@ -31,5 +32,7 @@
 	<bean id="customConversionService" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestConversionService"/>
 	
 	<bean id="customValidator" class="org.springframework.webflow.config.EmptySpringValidator" />
+
+	<bean id="customValidationHintResolver" class="org.springframework.webflow.config.MyBeanValidationHintResolver" />
 	
 </beans>

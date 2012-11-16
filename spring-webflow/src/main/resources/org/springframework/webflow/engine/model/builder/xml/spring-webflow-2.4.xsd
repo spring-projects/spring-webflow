@@ -9,7 +9,7 @@
 		<xsd:documentation>
 			<![CDATA[
 Spring Web Flow Schema
-Authors: Keith Donald, Erwin Vervaet, Scott Andrews
+Authors: Keith Donald, Erwin Vervaet, Scott Andrews, Rossen Stoyanchev
 <br>
 This schema defines Spring Web Flow's XML-based flow definition language.
 <br>
@@ -523,6 +523,21 @@ Displays the view in a popup dialog.  Default is false.
 									<xsd:documentation>
 										<![CDATA[
 The model object this view is bound to.  Typically used as the source of form field values or other data input controls.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
+							<xsd:attribute name="validation-hints" type="expression">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+A comma-separated list of validation hints such as validation groups against a JSR-303 provider.
+Each hint is used to find an inner Class either in the Class of the model or its parent classes.
+For example, given org.example.MyModel with inner type MyGroup, the hint "MyGroup" can be used.
+The hint "default" is reserved as the default validation group, i.e. "javax.validation.groups.Default".
+A hint can also be a fully qualified class name.
+The validation hints string is evaluated as an expression before hints are resolved.
+The result of the expression can be a String or an Object[] with Class instances.
 ]]>
 									</xsd:documentation>
 								</xsd:annotation>

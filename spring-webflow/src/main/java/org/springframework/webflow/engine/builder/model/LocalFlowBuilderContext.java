@@ -25,6 +25,7 @@ import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * A builder context that delegates to a flow-local bean factory for builder services. Such builder services override
@@ -99,6 +100,14 @@ class LocalFlowBuilderContext implements FlowBuilderContext {
 			return localFlowContext.getBean("validator", Validator.class);
 		} else {
 			return parent.getValidator();
+		}
+	}
+
+	public ValidationHintResolver getValidationHintResolver() {
+		if (localFlowContext.containsLocalBean("validationHintResolver")) {
+			return localFlowContext.getBean("validationHintResolver", ValidationHintResolver.class);
+		} else {
+			return parent.getValidationHintResolver();
 		}
 	}
 

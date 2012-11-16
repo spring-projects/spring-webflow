@@ -114,7 +114,7 @@ import org.springframework.webflow.security.SecurityRule;
 
 /**
  * Builds a runtime {@link Flow} definition object from a {@link FlowModel}.
- * 
+ *
  * @author Keith Donald
  */
 public class FlowModelFlowBuilder extends AbstractFlowBuilder {
@@ -535,6 +535,11 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 					getLocalContext().getExpressionParser().parseExpression(state.getModel(),
 							new FluentParserContext().evaluate(RequestContext.class)));
 		}
+		if (state.getValidationHints() != null) {
+			attributes.put("validationHints",
+					getLocalContext().getExpressionParser().parseExpression(state.getValidationHints(),
+							new FluentParserContext().evaluate(RequestContext.class)));
+		}
 		parseAndPutSecured(state.getSecured(), attributes);
 		getLocalContext().getFlowArtifactFactory().createViewState(state.getId(), flow,
 				parseViewVariables(state.getVars()), parseActions(state.getOnEntryActions()), viewFactory, redirect,
@@ -622,7 +627,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		BinderConfiguration binderConfiguration = createBinderConfiguration(binderModel);
 		return getLocalContext().getViewFactoryCreator().createViewFactory(viewId,
 				getLocalContext().getExpressionParser(), getLocalContext().getConversionService(), binderConfiguration,
-				getLocalContext().getValidator());
+				getLocalContext().getValidator(), getLocalContext().getValidationHintResolver());
 	}
 
 	private BinderConfiguration createBinderConfiguration(BinderModel binderModel) {

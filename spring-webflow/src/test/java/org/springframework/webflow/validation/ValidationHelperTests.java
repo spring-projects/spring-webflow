@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.springframework.binding.validation.ValidationContext;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
+import org.springframework.validation.SmartValidator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.ViewState;
@@ -39,10 +39,14 @@ public class ValidationHelperTests extends TestCase {
 
 	private String modelName;
 
+	private DefaultMessageCodesResolver codesResolver;
+
+
 	protected void setUp() throws Exception {
 		requestContext = new MockRequestControlContext();
 		eventId = "userEvent";
 		modelName = "model";
+		codesResolver = new DefaultMessageCodesResolver();
 	}
 
 	public void testValidateWithMessageContext() {
@@ -58,7 +62,7 @@ public class ValidationHelperTests extends TestCase {
 	public void testValidateWithValidationContext() {
 		Object model = new StubModelValidationContext();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		helper.validate();
 		MessageContext messages = requestContext.getMessageContext();
 		assertEquals(1, messages.getAllMessages().length);
@@ -70,7 +74,7 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.registerSingleton("modelValidator", StubModelMessageContext.class);
 		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		ValidationHelper helper = new ValidationHelper(new Object(), requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		helper.validate();
 		MessageContext messages = requestContext.getMessageContext();
 		assertEquals(1, messages.getAllMessages().length);
@@ -82,7 +86,7 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.registerSingleton("modelValidator", StubModelValidationContext.class);
 		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		ValidationHelper helper = new ValidationHelper(new Object(), requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		helper.validate();
 		MessageContext messages = requestContext.getMessageContext();
 		assertEquals(1, messages.getAllMessages().length);
@@ -94,7 +98,7 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.registerSingleton("modelValidator", StubModelErrors.class);
 		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		ValidationHelper helper = new ValidationHelper(new Object(), requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		helper.validate();
 		MessageContext messages = requestContext.getMessageContext();
 		assertEquals(1, messages.getAllMessages().length);
@@ -106,7 +110,7 @@ public class ValidationHelperTests extends TestCase {
 		applicationContext.registerSingleton("modelValidator", StubModelErrorsOverridden.class);
 		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		ValidationHelper helper = new ValidationHelper(new Object(), requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		helper.validate();
 		MessageContext messages = requestContext.getMessageContext();
 		assertEquals(1, messages.getAllMessages().length);
@@ -116,7 +120,7 @@ public class ValidationHelperTests extends TestCase {
 	public void testStateAndFallbackModelValidationMethodInvoked() {
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -127,7 +131,7 @@ public class ValidationHelperTests extends TestCase {
 	public void testFallbackModelValidationMethodInvoked() {
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -138,7 +142,7 @@ public class ValidationHelperTests extends TestCase {
 	public void testStateAndFallbackErrorsModelValidationMethodInvoked() {
 		ErrorsModel model = new ErrorsModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -149,7 +153,7 @@ public class ValidationHelperTests extends TestCase {
 	public void testFallbackModelErrorsValidationMethodInvoked() {
 		ErrorsModel model = new ErrorsModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -165,7 +169,7 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -181,7 +185,7 @@ public class ValidationHelperTests extends TestCase {
 
 		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -197,7 +201,7 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -213,7 +217,7 @@ public class ValidationHelperTests extends TestCase {
 
 		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -229,7 +233,7 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -245,7 +249,7 @@ public class ValidationHelperTests extends TestCase {
 
 		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -261,7 +265,7 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -277,7 +281,7 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -293,7 +297,7 @@ public class ValidationHelperTests extends TestCase {
 
 		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state1", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -309,7 +313,7 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
@@ -325,13 +329,31 @@ public class ValidationHelperTests extends TestCase {
 
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
-				new DefaultMessageCodesResolver(), null);
+				this.codesResolver, null);
 		ViewState state1 = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		requestContext.setCurrentState(state1);
 		helper.validate();
 		assertFalse(validator.state1Invoked);
 		assertTrue(validator.fallbackInvoked);
 	}
+
+	public void testSmartValidatorWithStateIdHint() {
+		LegacyModelValidator validator = new LegacyModelValidator();
+		ExtendedModel model = new ExtendedModel();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null, codesResolver, null);
+		helper.setValidator(validator);
+		helper.setValidationHints(new Object[] { Model.State1.class });
+
+		ViewState state = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
+		requestContext.setCurrentState(state);
+
+		helper.validate();
+
+		assertTrue(validator.fallbackInvoked);
+		assertTrue(validator.hints.length > 0);
+		assertEquals(Model.State1.class, validator.hints[0]);
+	}
+
 
 	public static class Model {
 		private boolean state1Invoked;
@@ -344,6 +366,8 @@ public class ValidationHelperTests extends TestCase {
 		public void validate(ValidationContext context) {
 			fallbackInvoked = true;
 		}
+
+		private static class State1 {}
 	}
 
 	public static class ExtendedModel extends Model {
@@ -362,9 +386,10 @@ public class ValidationHelperTests extends TestCase {
 		}
 	}
 
-	public static class LegacyModelValidator implements Validator {
+	public static class LegacyModelValidator implements SmartValidator {
 		private boolean state1Invoked;
 		private boolean fallbackInvoked;
+		private Object[] hints;
 
 		public void validateState1(Model model, Errors errors) {
 			state1Invoked = true;
@@ -372,6 +397,11 @@ public class ValidationHelperTests extends TestCase {
 
 		public void validate(Object object, Errors errors) {
 			fallbackInvoked = true;
+		}
+
+		public void validate(Object object, Errors errors, Object... hints) {
+			fallbackInvoked = true;
+			this.hints = hints;
 		}
 
 		public boolean supports(Class<?> clazz) {

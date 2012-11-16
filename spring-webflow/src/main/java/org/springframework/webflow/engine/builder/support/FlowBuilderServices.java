@@ -28,17 +28,18 @@ import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * A simple holder for configuring the services used by flow builders. These services are exposed to a builder in a
  * {@link FlowBuilderContext}.
- * 
+ *
  * Note this class does not attempt to default any service implementations other than the {@link FlowArtifactFactory},
  * which is more like builder helper objects than a service. It is expected clients inject non-null references to
  * concrete service implementations appropriate for their environment.
- * 
+ *
  * @see FlowBuilderContextImpl
- * 
+ *
  * @author Keith Donald
  */
 public class FlowBuilderServices implements ApplicationContextAware, InitializingBean {
@@ -71,6 +72,11 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 	 * installed by default if a JSR-303 provider is present on the classpath.
 	 */
 	private Validator validator;
+
+	/**
+	 * A ValidationHintResolver for resolving string based validation hints.
+	 */
+	private ValidationHintResolver validationHintResolver;
 
 	/**
 	 * The Spring application context that provides access to the services of the application.
@@ -120,6 +126,14 @@ public class FlowBuilderServices implements ApplicationContextAware, Initializin
 
 	public void setValidator(Validator validator) {
 		this.validator = validator;
+	}
+
+	public ValidationHintResolver getValidationHintResolver() {
+		return validationHintResolver;
+	}
+
+	public void setValidationHintResolver(ValidationHintResolver validationHintResolver) {
+		this.validationHintResolver = validationHintResolver;
 	}
 
 	public boolean getDevelopment() {

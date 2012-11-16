@@ -21,6 +21,7 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
@@ -77,7 +78,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
 		public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-				ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
+				ConversionService conversionService, BinderConfiguration binderConfiguration,
+				Validator validator, ValidationHintResolver validationHintResolver) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

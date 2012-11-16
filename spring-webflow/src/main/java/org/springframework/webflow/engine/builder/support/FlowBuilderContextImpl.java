@@ -31,6 +31,7 @@ import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.builder.FlowArtifactFactory;
 import org.springframework.webflow.engine.builder.FlowBuilderContext;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * Generic implementation of a flow builder context, suitable for use by most flow assembly systems.
@@ -107,6 +108,10 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	public Validator getValidator() {
 		return flowBuilderServices.getValidator();
+	}
+
+	public ValidationHintResolver getValidationHintResolver() {
+		return flowBuilderServices.getValidationHintResolver();
 	}
 
 	/**

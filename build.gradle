@@ -190,6 +190,7 @@ project('spring-webflow') {
         compile("org.springframework:spring-webmvc-portlet:$springVersion", optional)
         compile("org.springframework.security:spring-security-core:$springSecurityVersion", optional)
 
+        testCompile "javax.validation:validation-api:1.0.0.GA"
         testCompile "org.apache.openjpa:openjpa:1.1.0"
         testCompile "org.apache.openjpa:openjpa-lib:1.1.0"
         testCompile "org.apache.openjpa:openjpa-persistence:1.1.0"

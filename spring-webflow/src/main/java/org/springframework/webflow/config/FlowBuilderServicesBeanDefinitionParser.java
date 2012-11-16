@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 
 /**
  * {@link BeanDefinitionParser} for the <code>&lt;flow-builder-services&gt;</code> tag.
- * 
+ *
  * @author Jeremy Grelle
  */
 class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
@@ -53,6 +53,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
 	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
 	private static final String VALIDATOR_PROPERTY = "validator";
+	private static final String VALIDATION_HINT_RESOLVER_PROPERTY = "validationHintResolver";
 
 	protected String getBeanClassName(Element element) {
 		return FLOW_BUILDER_SERVICES_CLASS_NAME;
@@ -68,6 +69,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		parseExpressionParser(element, parserContext, builder);
 		parseViewFactoryCreator(element, parserContext, builder);
 		parseValidator(element, parserContext, builder);
+		parseValidationHintResolver(element, parserContext, builder);
 		parseDevelopment(element, builder);
 
 		parserContext.popAndRegisterContainingComponent();
@@ -112,6 +114,13 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 		String validator = element.getAttribute(VALIDATOR_ATTR);
 		if (StringUtils.hasText(validator)) {
 			definitionBuilder.addPropertyReference(VALIDATOR_PROPERTY, validator);
+		}
+	}
+
+	private void parseValidationHintResolver(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
+		String resolver = element.getAttribute(VALIDATION_HINT_RESOLVER_PROPERTY);
+		if (StringUtils.hasText(resolver)) {
+			definitionBuilder.addPropertyReference(VALIDATION_HINT_RESOLVER_PROPERTY, resolver);
 		}
 	}
 

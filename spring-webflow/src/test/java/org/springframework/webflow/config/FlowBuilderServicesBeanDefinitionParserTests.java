@@ -20,6 +20,7 @@ import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 
@@ -47,6 +48,7 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(builderServices.getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getValidator() instanceof EmptySpringValidator);
+		assertTrue(builderServices.getValidationHintResolver() instanceof MyBeanValidationHintResolver);
 		assertTrue(builderServices.getDevelopment());
 	}
 
@@ -58,13 +60,15 @@ public class FlowBuilderServicesBeanDefinitionParserTests extends TestCase {
 		assertTrue(((SpringELExpressionParser) builderServices.getExpressionParser()).getConversionService() instanceof TestConversionService);
 		assertTrue(builderServices.getViewFactoryCreator() instanceof MvcViewFactoryCreator);
 		assertNull(builderServices.getValidator());
+		assertNull(builderServices.getValidationHintResolver());
 		assertFalse(builderServices.getDevelopment());
 	}
 
 	public static class TestViewFactoryCreator implements ViewFactoryCreator {
 
 		public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-				ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
+				ConversionService conversionService, BinderConfiguration binderConfiguration,
+				Validator validator, ValidationHintResolver validationHintResolver) {
 			throw new UnsupportedOperationException("Auto-generated method stub");
 		}
 

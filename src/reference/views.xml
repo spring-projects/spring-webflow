@@ -479,7 +479,45 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 				In other words Web Flow will apply all available validation 
 				mechanisms.
 			</para>
-			
+
+			<sect3 id="view-validation-jsr303-partial">
+				<title>Partial Validation</title>
+				<para>
+					JSR-303 Bean Validation supports partial validation via groups. For example:
+
+<programlisting language="java">
+@NotNull
+@Size(min = 2, max = 30, groups = State1.class)
+private String name;
+</programlisting>
+					You can specify validation hints in a view state:
+<programlisting language="xml"><![CDATA[
+<view-state id="state1" model="myModel" validation-hints="group1,group2">
+]]>
+</programlisting>
+					Each hint can be an inner Class either in the model type or its parent types.
+					For example, given <classname>org.example.MyModel</classname> with inner type
+					<classname>Group1</classname> and <classname>Group2</classname> you can
+					specify the hints "group1", "group2" or both "group1,group2".
+					A hint can also be a fully qualified class name.
+					The hint "default" indicates the default validation group, i.e.
+					<classname>javax.validation.groups.Default</classname>.
+					Also, the <emphasis>validation-hints</emphasis> property can be an expression that
+					resolves to a String or an <classname>Object[]</classname>
+					containing <classname>Class</classname> based hints.
+				</para>
+				<para>
+					Note that a custom <classname>ValidationHintResolver</classname> can be plugged if
+					necessary through the validationHintResolver property of the
+					flow-builder-services element:
+			<programlisting language="xml">
+&lt;webflow:flow-registry flow-builder-services="flowBuilderServices" /&gt;
+
+&lt;webflow:flow-builder-services id="flowBuilderServices" validator=".." validationHintResolver=".." /&gt;
+</programlisting>
+				</para>
+			</sect3>
+
 		</sect2>
 		<sect2 id="view-validation-programmatic">
 			<title>Programmatic validation</title>

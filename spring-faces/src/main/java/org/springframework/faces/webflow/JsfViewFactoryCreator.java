@@ -24,6 +24,7 @@ import org.springframework.validation.Validator;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * A {@link ViewFactoryCreator} implementation for creating instances of a JSF-specific {@link ViewFactory}.
@@ -37,7 +38,8 @@ public class JsfViewFactoryCreator implements ViewFactoryCreator {
 	private Lifecycle lifecycle;
 
 	public ViewFactory createViewFactory(Expression viewIdExpression, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration,
+			Validator validator, ValidationHintResolver resolver) {
 		return new JsfViewFactory(viewIdExpression, getLifecycle());
 	}
 

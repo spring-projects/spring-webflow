@@ -37,6 +37,7 @@ import org.springframework.webflow.mvc.portlet.PortletMvcViewFactory;
 import org.springframework.webflow.mvc.servlet.ServletMvcViewFactory;
 import org.springframework.webflow.mvc.view.AbstractMvcViewFactory;
 import org.springframework.webflow.mvc.view.FlowViewResolver;
+import org.springframework.webflow.validation.ValidationHintResolver;
 import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
@@ -49,12 +50,12 @@ import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
  * By default, this implementation creates view factories that resolve their views by loading flow-relative resources,
  * such as .jsp templates located in a flow working directory. This class also supports rendering views resolved by
  * pre-existing Spring MVC {@link ViewResolver view resolvers}.
- * 
+ *
  * @see ServletMvcViewFactory
  * @see PortletMvcViewFactory
  * @see FlowResourceFlowViewResolver
  * @see DelegatingFlowViewResolver
- * 
+ *
  * @author Keith Donald
  * @author Scott Andrews
  */
@@ -170,7 +171,8 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
-			ConversionService conversionService, BinderConfiguration binderConfiguration, Validator validator) {
+			ConversionService conversionService, BinderConfiguration binderConfiguration,
+			Validator validator, ValidationHintResolver validationHintResolver) {
 		if (useSpringBeanBinding) {
 			expressionParser = new BeanWrapperExpressionParser(conversionService);
 		}
@@ -183,6 +185,7 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			viewFactory.setFieldMarkerPrefix(fieldMarkerPrefix);
 		}
 		viewFactory.setValidator(validator);
+		viewFactory.setValidationHintResolver(validationHintResolver);
 		return viewFactory;
 	}
 
