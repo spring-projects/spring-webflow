@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  * EntityResolver implementation for the Spring Web Flow XML Schema. This will load the XSD from the classpath.
  * <p>
  * The xmlns of the XSD expected to be resolved:
- * 
+ *
  * <pre>
  *     &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
  *     &lt;flow xmlns=&quot;http://www.springframework.org/schema/webflow&quot;
@@ -35,13 +35,13 @@ import org.xml.sax.SAXException;
  *           xsi:schemaLocation=&quot;http://www.springframework.org/schema/webflow
  *                               http://www.springframework.org/schema/webflow/spring-webflow.xsd&quot;&gt;
  * </pre>
- * 
+ *
  * @author Erwin Vervaet
  * @author Ben Hale
  */
 class WebFlowEntityResolver implements EntityResolver {
 
-	private static final String[] WEBFLOW_VERSIONS = new String[] { "spring-webflow-2.0" };
+	private static final String[] WEBFLOW_VERSIONS = new String[] { "spring-webflow-2.4", "spring-webflow-2.0" };
 
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 		if (systemId != null && systemId.indexOf("spring-webflow.xsd") > -1) {

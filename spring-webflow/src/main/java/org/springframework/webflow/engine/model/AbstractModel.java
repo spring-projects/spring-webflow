@@ -18,9 +18,11 @@ package org.springframework.webflow.engine.model;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Contains basic merge functions that can be utilized by other models.
- * 
+ *
  * @author Scott Andrews
  */
 public abstract class AbstractModel implements Model {
@@ -106,6 +108,26 @@ public abstract class AbstractModel implements Model {
 			addOrMerge(child, parentModel, addAtEnd);
 		}
 		return child;
+	}
+
+	/**
+	 * Merge validation hints by taking the union of both with the child validation hints listed first.
+	 * @param child child validation hints
+	 * @param parent parent validation hints
+	 * @return the merged hints or {@code null}
+	 */
+	protected String mergeValidationHints(String child, String parent) {
+		StringBuilder sb = new StringBuilder();
+		if (StringUtils.hasText(child)) {
+			sb.append(child);
+		}
+		if (StringUtils.hasText(parent)) {
+			if (sb.length() > 0) {
+				sb.append(",");
+			}
+			sb.append(parent);
+		}
+		return (sb.length() > 0) ? sb.toString() : null;
 	}
 
 	private <T extends Model> void addOrMerge(LinkedList<T> list, T modelToMerge, boolean addAtEnd) {

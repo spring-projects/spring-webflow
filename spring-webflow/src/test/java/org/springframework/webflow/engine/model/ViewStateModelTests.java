@@ -59,6 +59,7 @@ public class ViewStateModelTests extends TestCase {
 		parent.setRedirect("true");
 		parent.setPopup("true");
 		parent.setModel("fooModel");
+		parent.setValidationHints("foo");
 		parent.setView("fooView");
 
 		LinkedList<TransitionModel> transitions = new LinkedList<TransitionModel>();
@@ -89,6 +90,7 @@ public class ViewStateModelTests extends TestCase {
 		assertEquals("true", child.getRedirect());
 		assertEquals("true", child.getPopup());
 		assertEquals("fooModel", child.getModel());
+		assertEquals("foo", child.getValidationHints());
 		assertEquals("fooView", child.getView());
 		assertEquals("bar", child.getAttributes().get(0).getValue());
 		assertEquals("foo", child.getBinder().getBindings().get(0).getProperty());

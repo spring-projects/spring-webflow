@@ -114,7 +114,7 @@ import org.springframework.webflow.security.SecurityRule;
 
 /**
  * Builds a runtime {@link Flow} definition object from a {@link FlowModel}.
- * 
+ *
  * @author Keith Donald
  */
 public class FlowModelFlowBuilder extends AbstractFlowBuilder {
@@ -533,6 +533,11 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 			attributes.put(
 					"model",
 					getLocalContext().getExpressionParser().parseExpression(state.getModel(),
+							new FluentParserContext().evaluate(RequestContext.class)));
+		}
+		if (state.getValidationHints() != null) {
+			attributes.put("validationHints",
+					getLocalContext().getExpressionParser().parseExpression(state.getValidationHints(),
 							new FluentParserContext().evaluate(RequestContext.class)));
 		}
 		parseAndPutSecured(state.getSecured(), attributes);

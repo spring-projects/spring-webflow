@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 the original author or authors.
+ * Copyright 2008-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,13 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.MessageCodesResolver;
+import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
  * A helper class the encapsulates conventions to invoke validation logic.
- * 
+ *
  * @author Scott Andrews
  * @author Canny Duck
  * @author Jeremy Grelle
@@ -65,6 +66,11 @@ public class ValidationHelper {
 
 	private Validator validator;
 
+	private String[] validationHints;
+
+	private ValidationHintResolver validationHintResolver = new DefaultValidationHintResolver();
+
+
 	/**
 	 * Create a throwaway validation helper object. Validation is invoked by the {@link #validate()} method.
 	 * <p>
@@ -74,7 +80,7 @@ public class ValidationHelper {
 	 * <p>
 	 * For example: <code>model.validateEnterBookingDetails(VaticationContext)</code> or
 	 * <code>context.getBean("modelValidator").validateEnterBookingDetails(model, VaticationContext)</code>
-	 * 
+	 *
 	 * @param model the object to validate
 	 * @param requestContext the context for the request
 	 * @param eventId the event triggering validation
@@ -103,16 +109,32 @@ public class ValidationHelper {
 	}
 
 	/**
+	 * Provide validation hints such as validation groups against a JSR-303 provider.
+	 */
+	public void setValidationHints(String[] validationHints) {
+		this.validationHints = validationHints;
+	}
+
+	/**
+	 * Configure a {@link ValidationHintResolver} to use to resolve String based validation
+	 * hints into Object hints such as validation groups against a JSR-303 provider.
+	 * <p>If not set, a {@link DefaultValidationHintResolver} is created.
+	 */
+	public void setValidationHintResolver(ValidationHintResolver validationHintResolver) {
+		this.validationHintResolver = validationHintResolver;
+	}
+
+	/**
 	 * Invoke the validators available by convention.
 	 */
 	public void validate() {
 		if (this.validator != null) {
-			invokeValidatorDefaultValidateMethod(model, this.validator);
+			invokeValidatorDefaultValidateMethod(this.validator);
 		}
 		invokeModelValidationMethod(model);
 		Object modelValidator = getModelValidator();
 		if (modelValidator != null) {
-			invokeModelValidator(model, modelValidator);
+			invokeModelValidator(modelValidator);
 		}
 	}
 
@@ -191,12 +213,12 @@ public class ValidationHelper {
 		return null;
 	}
 
-	private void invokeModelValidator(Object model, Object validator) {
-		invokeValidatorValidateMethodForCurrentState(model, validator);
-		invokeValidatorDefaultValidateMethod(model, validator);
+	private void invokeModelValidator(Object validator) {
+		invokeValidatorValidateMethodForCurrentState(validator);
+		invokeValidatorDefaultValidateMethod(validator);
 	}
 
-	private boolean invokeValidatorValidateMethodForCurrentState(Object model, Object validator) {
+	private boolean invokeValidatorValidateMethodForCurrentState(Object validator) {
 		String methodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
 		// preferred
 		Method validateMethod = findValidationMethod(model, validator, methodName, ValidationContext.class);
@@ -233,7 +255,7 @@ public class ValidationHelper {
 		return false;
 	}
 
-	private boolean invokeValidatorDefaultValidateMethod(Object model, Object validator) {
+	private boolean invokeValidatorDefaultValidateMethod(Object validator) {
 		if (validator instanceof Validator) {
 			// Spring Framework Validator type
 			Validator springValidator = (Validator) validator;
@@ -243,7 +265,16 @@ public class ValidationHelper {
 			if (springValidator.supports(model.getClass())) {
 				MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 						model, expressionParser, messageCodesResolver, mappingResults);
-				springValidator.validate(model, errors);
+
+				if (springValidator instanceof SmartValidator) {
+					String flowId = requestContext.getActiveFlow().getId();
+					String stateId = requestContext.getCurrentState().getId();
+					Object[] hints = validationHintResolver.resolveValidationHints(model, flowId , stateId, validationHints);
+					((SmartValidator) springValidator).validate(model, errors, hints);
+				}
+				else {
+					springValidator.validate(model, errors);
+				}
 			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Spring Validator '" + ClassUtils.getShortName(validator.getClass())
@@ -295,4 +326,5 @@ public class ValidationHelper {
 		}
 		return null;
 	}
+
 }
