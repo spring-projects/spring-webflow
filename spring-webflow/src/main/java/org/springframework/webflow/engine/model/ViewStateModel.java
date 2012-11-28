@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Model support for view states.
- * 
+ *
  * @author Scott Andrews
  */
 public class ViewStateModel extends AbstractTransitionableStateModel {
@@ -34,6 +34,8 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 	private String popup;
 
 	private String model;
+
+	private String validationHints;
 
 	private LinkedList<VarModel> vars;
 
@@ -70,6 +72,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		setRedirect(merge(getRedirect(), state.getRedirect()));
 		setPopup(merge(getPopup(), state.getPopup()));
 		setModel(merge(getModel(), state.getModel()));
+		setValidationHints(mergeValidationHints(getValidationHints(), state.getValidationHints()));
 		setVars(merge(getVars(), state.getVars(), false));
 		setBinder((BinderModel) merge(getBinder(), state.getBinder()));
 		setOnRenderActions(merge(getOnRenderActions(), state.getOnRenderActions(), false));
@@ -82,6 +85,7 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 		copy.setRedirect(redirect);
 		copy.setPopup(popup);
 		copy.setModel(model);
+		copy.setValidationHints(validationHints);
 		copy.setVars(copyList(vars));
 		copy.setBinder((BinderModel) copy(binder));
 		copy.setOnRenderActions(copyList(onRenderActions));
@@ -157,6 +161,19 @@ public class ViewStateModel extends AbstractTransitionableStateModel {
 			this.model = model;
 		} else {
 			this.model = null;
+		}
+	}
+
+	public String getValidationHints() {
+		return validationHints;
+	}
+
+	public void setValidationHints(String validationHints) {
+		if (StringUtils.hasText(validationHints)) {
+			this.validationHints = validationHints;
+		}
+		else {
+			this.validationHints = null;
 		}
 	}
 

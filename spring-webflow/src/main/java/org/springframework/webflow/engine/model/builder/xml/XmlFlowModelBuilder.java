@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Builds a flow model from a XML-based flow definition resource.
- * 
+ *
  * @author Keith Donald
  * @author Scott Andrews
  */
@@ -570,6 +570,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		state.setRedirect(element.getAttribute("redirect"));
 		state.setPopup(element.getAttribute("popup"));
 		state.setModel(element.getAttribute("model"));
+		state.setValidationHints(element.getAttribute("validation-hints"));
 		state.setVars(parseVars(element));
 		state.setBinder(parseBinder(element));
 		state.setOnRenderActions(parseOnRenderActions(element));

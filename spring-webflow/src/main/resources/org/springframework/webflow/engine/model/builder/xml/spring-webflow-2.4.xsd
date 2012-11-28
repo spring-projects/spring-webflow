@@ -527,6 +527,19 @@ The model object this view is bound to.  Typically used as the source of form fi
 									</xsd:documentation>
 								</xsd:annotation>
 							</xsd:attribute>
+							<xsd:attribute name="validation-hints" type="expression">
+								<xsd:annotation>
+									<xsd:documentation>
+										<![CDATA[
+A comma-separated list of validation hints such as validation groups against a JSR-303 provider.
+Each hint is used to find an inner Class either in the Class of the model or in one of its super classes.
+For example if org.example.MyModel contains an inner type State1, then State1 can be used as a hint.
+Hints can be also be fully qualified class names.
+The entire string with validatin hints is first evaluated as an expression.
+]]>
+									</xsd:documentation>
+								</xsd:annotation>
+							</xsd:attribute>
 						</xsd:complexType>
 					</xsd:element>
 					<xsd:element name="decision-state">
