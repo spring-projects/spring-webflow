@@ -10,3 +10,6 @@ ivy-cache
 integration-repo
 target
 spring-build/lib/docbook
+.gradle
+build
+
