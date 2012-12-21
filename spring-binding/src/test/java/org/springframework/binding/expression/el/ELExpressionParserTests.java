@@ -84,8 +84,8 @@ public class ELExpressionParserTests extends TestCase {
 	public void testParseBeanEvalExpressionInvalidELVariable() {
 		try {
 			String expressionString = "bogus";
-			Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-					.evaluate(TestBean.class));
+			Expression exp = parser.parseExpression(expressionString,
+					new FluentParserContext().evaluate(TestBean.class));
 			exp.getValue(new TestBean());
 			fail("Should have failed");
 		} catch (EvaluationException e) {
@@ -108,8 +108,8 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testParseTemplateExpressionWithVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
-				new ExpressionVariable("max", "maximum")));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().template().variable(new ExpressionVariable("max", "maximum")));
 		TestBean target = new TestBean();
 		assertEquals("foo2", exp.getValue(target));
 	}
@@ -123,9 +123,11 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testTemplateNestedVariables() {
 		String expressionString = "#{value}#{max}";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template().variable(
-				new ExpressionVariable("max", "#{maximum}#{var}", new FluentParserContext().template().variable(
-						new ExpressionVariable("var", "'bar'")))));
+		Expression exp = parser.parseExpression(
+				expressionString,
+				new FluentParserContext().template().variable(
+						new ExpressionVariable("max", "#{maximum}#{var}", new FluentParserContext().template()
+								.variable(new ExpressionVariable("var", "'bar'")))));
 		TestBean target = new TestBean();
 		assertEquals("foo2bar", exp.getValue(target));
 	}
@@ -159,8 +161,8 @@ public class ELExpressionParserTests extends TestCase {
 
 	public void testGetValueCoersionError() {
 		String expressionString = "maximum";
-		Expression exp = parser.parseExpression(expressionString, new FluentParserContext()
-				.expectResult(TestBean.class));
+		Expression exp = parser.parseExpression(expressionString,
+				new FluentParserContext().expectResult(TestBean.class));
 		TestBean context = new TestBean();
 		try {
 			exp.getValue(context);

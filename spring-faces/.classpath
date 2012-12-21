@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
-	<classpathentry kind="src" path="src/main/resources"/>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry kind="src" path="src/test/resources"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/spring-binding"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/spring-js"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/spring-webflow"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="IVY_CACHE/com.sun.faces/jsf-impl/2.1.7/jsf-impl-2.1.7.jar" sourcepath="/IVY_CACHE/com.sun.faces/jsf-impl/2.1.7/jsf-impl-2.1.7-sources.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/com.sun.faces/jsf-api/2.1.7/jsf-api-2.1.7.jar" sourcepath="/IVY_CACHE/com.sun.faces/jsf-api/2.1.7/jsf-api-2.1.7-sources.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-1.0.0.jar" sourcepath="IVY_CACHE/javax.el/com.springsource.javax.el/1.0.0/com.springsource.javax.el-sources-1.0.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.servlet/com.springsource.javax.servlet/2.4.0/com.springsource.javax.servlet-2.4.0.jar" sourcepath="/IVY_CACHE/javax.servlet/com.springsource.javax.servlet/2.4.0/com.springsource.javax.servlet-sources-2.4.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/javax.portlet/com.springsource.javax.portlet/2.0.0/com.springsource.javax.portlet-2.0.0.jar" sourcepath="IVY_CACHE/javax.portlet/com.springsource.javax.portlet/2.0.0/com.springsource.javax.portlet-sources-2.0.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-1.1.1.jar" sourcepath="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1/com.springsource.org.apache.commons.logging-sources-1.1.1.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.beanutils/1.7.0/com.springsource.org.apache.commons.beanutils-1.7.0.jar" sourcepath="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.beanutils/1.7.0/com.springsource.org.apache.commons.beanutils-sources-1.7.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.collections/3.2.0/com.springsource.org.apache.commons.collections-3.2.0.jar" sourcepath="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.collections/3.2.0/com.springsource.org.apache.commons.collections-sources-3.2.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.digester/1.8.0/com.springsource.org.apache.commons.digester-1.8.0.jar" sourcepath="IVY_CACHE/org.apache.commons/com.springsource.org.apache.commons.digester/1.8.0/com.springsource.org.apache.commons.digester-sources-1.8.0.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.log4j/com.springsource.org.apache.log4j/1.2.15/com.springsource.org.apache.log4j-1.2.15.jar" sourcepath="IVY_CACHE/org.apache.log4j/com.springsource.org.apache.log4j/1.2.15/com.springsource.org.apache.log4j-sources-1.2.15.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.apache.myfaces.test/myfaces-test20/1.0.0-beta/myfaces-test20-1.0.0-beta.jar" sourcepath="/IVY_CACHE/org.apache.myfaces.test/myfaces-test20/1.0.0-beta/myfaces-test20-1.0.0-beta-sources.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.easymock/com.springsource.org.easymock/2.5.2/com.springsource.org.easymock-2.5.2.jar" sourcepath="IVY_CACHE/org.easymock/com.springsource.org.easymock/2.5.2/com.springsource.org.easymock-sources-2.5.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.jboss.el/com.springsource.org.jboss.el/2.0.0.GA/com.springsource.org.jboss.el-2.0.0.GA.jar" sourcepath="IVY_CACHE/org.jboss.el/com.springsource.org.jboss.el/2.0.0.GA/com.springsource.org.jboss.el-sources-2.0.0.GA.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.junit/com.springsource.junit/3.8.2/com.springsource.junit-3.8.2.jar" sourcepath="IVY_CACHE/org.junit/com.springsource.junit/3.8.2/com.springsource.junit-sources-3.8.2.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.richfaces/com.springsource.org.richfaces/3.1.4.GA/com.springsource.org.richfaces-3.1.4.GA.jar" sourcepath="/IVY_CACHE/org.richfaces/com.springsource.org.richfaces/3.1.4.GA/com.springsource.org.richfaces-sources-3.1.4.GA.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.beans/3.2.0.RELEASE/org.springframework.beans-3.2.0.RELEASE.jar" sourcepath="IVY_CACHE/org.springframework/org.springframework.beans/3.2.0.RELEASE/org.springframework.beans-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.context/3.2.0.RELEASE/org.springframework.context-3.2.0.RELEASE.jar" sourcepath="IVY_CACHE/org.springframework/org.springframework.context/3.2.0.RELEASE/org.springframework.context-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.core/3.2.0.RELEASE/org.springframework.core-3.2.0.RELEASE.jar" sourcepath="IVY_CACHE/org.springframework/org.springframework.core/3.2.0.RELEASE/org.springframework.core-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.expression/3.2.0.RELEASE/org.springframework.expression-3.2.0.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework/org.springframework.expression/3.2.0.RELEASE/org.springframework.expression-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.test/3.2.0.RELEASE/org.springframework.test-3.2.0.RELEASE.jar" sourcepath="IVY_CACHE/org.springframework/org.springframework.test/3.2.0.RELEASE/org.springframework.test-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.web/3.2.0.RELEASE/org.springframework.web-3.2.0.RELEASE.jar" sourcepath="IVY_CACHE/org.springframework/org.springframework.web/3.2.0.RELEASE/org.springframework.web-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.web.servlet/3.2.0.RELEASE/org.springframework.web.servlet-3.2.0.RELEASE.jar" sourcepath="IVY_CACHE/org.springframework/org.springframework.web.servlet/3.2.0.RELEASE/org.springframework.web.servlet-sources-3.2.0.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security.core/3.0.2.RELEASE/org.springframework.security.core-3.0.2.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework.security/org.springframework.security.core/3.0.2.RELEASE/org.springframework.security.core-sources-3.0.2.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security.web/3.0.2.RELEASE/org.springframework.security.web-3.0.2.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework.security/org.springframework.security.web/3.0.2.RELEASE/org.springframework.security.web-sources-3.0.2.RELEASE.jar"/>
-	<classpathentry kind="var" path="IVY_CACHE/com.sun.facelets/com.springsource.com.sun.facelets/1.1.14/com.springsource.com.sun.facelets-1.1.14.jar" sourcepath="/IVY_CACHE/com.sun.facelets/com.springsource.com.sun.facelets/1.1.14/com.springsource.com.sun.facelets-sources-1.1.14.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes"/>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="src" path="src/main/resources" including="META-INF/spring.*" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="var" path="M2_REPO/javax/el/el-api/1.0/el-api-1.0.jar" sourcepath="M2_REPO/javax/el/el-api/1.0/el-api-1.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/2.0/portlet-api-2.0.jar" sourcepath="M2_REPO/javax/portlet/portlet-api/2.0/portlet-api-2.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/rossen/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.2.0.RELEASE/spring-beans-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-beans/3.2.0.RELEASE/spring-beans-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.2.0.RELEASE/spring-core-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.2.0.RELEASE/spring-core-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.2.0.RELEASE/spring-context-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-context/3.2.0.RELEASE/spring-context-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.2.0.RELEASE/spring-aop-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-aop/3.2.0.RELEASE/spring-aop-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/3.2.0.RELEASE/spring-expression-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-expression/3.2.0.RELEASE/spring-expression-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/3.2.0.RELEASE/spring-web-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-web/3.2.0.RELEASE/spring-web-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc/3.2.0.RELEASE/spring-webmvc-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-webmvc/3.2.0.RELEASE/spring-webmvc-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc-portlet/3.2.0.RELEASE/spring-webmvc-portlet-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-webmvc-portlet/3.2.0.RELEASE/spring-webmvc-portlet-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="src" path="/spring-binding"/>
+  <classpathentry kind="src" path="/spring-js"/>
+  <classpathentry kind="src" path="/spring-js-resources"/>
+  <classpathentry kind="src" path="/spring-webflow"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/security/spring-security-core/3.1.3.RELEASE/spring-security-core-3.1.3.RELEASE.jar" sourcepath="M2_REPO/org/springframework/security/spring-security-core/3.1.3.RELEASE/spring-security-core-3.1.3.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/security/spring-security-web/3.1.3.RELEASE/spring-security-web-3.1.3.RELEASE.jar" sourcepath="M2_REPO/org/springframework/security/spring-security-web/3.1.3.RELEASE/spring-security-web-3.1.3.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-jdbc/3.0.7.RELEASE/spring-jdbc-3.0.7.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-jdbc/3.0.7.RELEASE/spring-jdbc-3.0.7.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/3.0.7.RELEASE/spring-tx-3.0.7.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-tx/3.0.7.RELEASE/spring-tx-3.0.7.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/richfaces/framework/richfaces-api/3.1.4.GA/richfaces-api-3.1.4.GA.jar" sourcepath="M2_REPO/org/richfaces/framework/richfaces-api/3.1.4.GA/richfaces-api-3.1.4.GA-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/3.2/commons-collections-3.2.jar" sourcepath="M2_REPO/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar" sourcepath="M2_REPO/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/faces/jsf-api/2.1.7/jsf-api-2.1.7.jar" sourcepath="M2_REPO/com/sun/faces/jsf-api/2.1.7/jsf-api-2.1.7-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/faces/jsf-impl/2.1.7/jsf-impl-2.1.7.jar" sourcepath="M2_REPO/com/sun/faces/jsf-impl/2.1.7/jsf-impl-2.1.7-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/facelets/jsf-facelets/1.1.14/jsf-facelets-1.1.14.jar" sourcepath="M2_REPO/com/sun/facelets/jsf-facelets/1.1.14/jsf-facelets-1.1.14-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/easymock/easymock/2.5.2/easymock-2.5.2.jar" sourcepath="M2_REPO/org/easymock/easymock/2.5.2/easymock-2.5.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar" sourcepath="M2_REPO/junit/junit/3.8.2/junit-3.8.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/3.2.0.RELEASE/spring-test-3.2.0.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-test/3.2.0.RELEASE/spring-test-3.2.0.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jboss/el/jboss-el/2.0.1.GA/jboss-el-2.0.1.GA.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/myfaces/test/myfaces-test20/1.0.0-beta/myfaces-test20-1.0.0-beta.jar" sourcepath="M2_REPO/org/apache/myfaces/test/myfaces-test20/1.0.0-beta/myfaces-test20-1.0.0-beta-sources.jar"/>
 </classpath>

@@ -1,7 +1,9 @@
 package org.springframework.webflow.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -9,7 +11,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -117,7 +119,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_A");
 		rule.setAttributes(attributes);
@@ -127,7 +129,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_A");
 		attributes.add("ROLE_B");
 		rule.setAttributes(attributes);
@@ -137,7 +139,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAllAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_3");
 		rule.setAttributes(attributes);
@@ -147,7 +149,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAllDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection attributes = new HashSet();
+		Collection<String> attributes = new HashSet<String>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_A");
 		rule.setAttributes(attributes);
@@ -155,8 +157,10 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	}
 
 	private Authentication getAuthentication() {
-		GrantedAuthority[] authorities = { new GrantedAuthorityImpl("ROLE_1"), new GrantedAuthorityImpl("ROLE_2"),
-				new GrantedAuthorityImpl("ROLE_3") };
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_1"));
+		authorities.add(new SimpleGrantedAuthority("ROLE_2"));
+		authorities.add(new SimpleGrantedAuthority("ROLE_3"));
 		return new UsernamePasswordAuthenticationToken("test", "", authorities);
 	}
 }
