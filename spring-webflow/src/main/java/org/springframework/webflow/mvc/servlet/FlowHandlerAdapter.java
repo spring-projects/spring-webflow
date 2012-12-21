@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
@@ -82,6 +83,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private AjaxHandler ajaxHandler;
 
 	private boolean redirectHttp10Compatible = true;
+
+	private HttpStatus statusCode;
 
 	private boolean saveOutputToFlashScopeOnRedirect;
 
@@ -163,6 +166,15 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 */
 	public void setRedirectHttp10Compatible(boolean redirectHttp10Compatible) {
 		this.redirectHttp10Compatible = redirectHttp10Compatible;
+	}
+
+	/**
+	 * Set the status code for this view.
+	 * <p>Default is to send 302/303, depending on the value of the
+	 * {@link #setRedirectHttp10Compatible(boolean) http10Compatible} flag.
+	 */
+	public void setStatusCode(HttpStatus statusCode) {
+		this.statusCode = statusCode;
 	}
 
 	/**
@@ -346,12 +358,20 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (ajaxHandler.isAjaxRequest(request, response)) {
 			ajaxHandler.sendAjaxRedirect(url, request, response, false);
 		} else {
+			String encodedRedirectURL = response.encodeRedirectURL(url);
 			if (redirectHttp10Compatible) {
-				// Always send status code 302.
-				response.sendRedirect(response.encodeRedirectURL(url));
-			} else {
-				// Correct HTTP status code is 303, in particular for POST requests.
-				response.setStatus(303);
+				if (statusCode != null) {
+					response.setStatus(statusCode.value());
+					response.setHeader("Location", encodedRedirectURL);
+				}
+				else {
+					// Send status code 302 by default.
+					response.sendRedirect(encodedRedirectURL);
+				}
+			}
+			else {
+				int code = (statusCode != null) ? statusCode.value() : 303;
+				response.setStatus(code);
 				response.setHeader("Location", response.encodeRedirectURL(url));
 			}
 		}
