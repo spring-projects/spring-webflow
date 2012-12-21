@@ -1,12 +1,12 @@
 /*
  * Copyright 2004-2008 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 package org.springframework.binding.expression.beanwrapper;
 
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
@@ -27,12 +28,16 @@ import org.springframework.binding.expression.support.AbstractExpressionParser;
 
 /**
  * An expression parser that parses BeanWrapper property expressions.
- * 
+ *
  * @author Keith Donald
  */
 public class BeanWrapperExpressionParser extends AbstractExpressionParser {
 
 	private ConversionService conversionService;
+
+	private boolean autoGrowNestedPaths = false;
+
+	private int autoGrowCollectionLimit = Integer.MAX_VALUE;
 
 	/**
 	 * Creates a new expression parser that uses a {@link DefaultConversionService} to perform type conversion.
@@ -69,7 +74,29 @@ public class BeanWrapperExpressionParser extends AbstractExpressionParser {
 		this.conversionService = conversionService;
 	}
 
+	/**
+	 * Set whether this BeanWrapper should attempt to "auto-grow" a nested path that contains a null value.
+	 * <p>If "true", a null path location will be populated with a default object value and traversed
+	 * instead of resulting in a {@link NullValueInNestedPathException}. Turning this flag on also
+	 * enables auto-growth of collection elements when accessing an out-of-bounds index.
+	 * <p>Default is "false" on a plain BeanWrapper.
+	 */
+	public void setAutoGrowNestedPaths(boolean autoGrowNestedPaths) {
+		this.autoGrowNestedPaths = autoGrowNestedPaths;
+	}
+
+	/**
+	 * Specify a limit for array and collection auto-growing.
+	 * <p>Default is unlimited on a plain BeanWrapper.
+	 */
+	public void setAutoGrowCollectionLimit(int autoGrowCollectionLimit) {
+		this.autoGrowCollectionLimit = autoGrowCollectionLimit;
+	}
+
 	protected Expression doParseExpression(String expressionString, ParserContext context) throws ParserException {
-		return new BeanWrapperExpression(expressionString, conversionService);
+		BeanWrapperExpression expression = new BeanWrapperExpression(expressionString, conversionService);
+		expression.setAutoGrowNestedPaths(autoGrowNestedPaths);
+		expression.setAutoGrowCollectionLimit(autoGrowCollectionLimit);
+		return expression;
 	}
 }
