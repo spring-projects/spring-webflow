@@ -134,7 +134,7 @@ public abstract class AbstractAuthorizeTag {
 			return false;
 		}
 
-		final Collection<GrantedAuthority> granted = getPrincipalAuthorities();
+		final Collection<? extends GrantedAuthority> granted = getPrincipalAuthorities();
 
 		if (hasTextAllGranted) {
 			if (!granted.containsAll(parseAuthoritiesString(getIfAllGranted()))) {
@@ -143,7 +143,7 @@ public abstract class AbstractAuthorizeTag {
 		}
 
 		if (hasTextAnyGranted) {
-			Set<GrantedAuthority> grantedCopy = retainAll(granted, parseAuthoritiesString(getIfAnyGranted()));
+			Set<? extends GrantedAuthority> grantedCopy = retainAll(granted, parseAuthoritiesString(getIfAnyGranted()));
 			if (grantedCopy.isEmpty()) {
 				return false;
 			}
@@ -258,7 +258,7 @@ public abstract class AbstractAuthorizeTag {
 
 	/*------------- Private helper methods  -----------------*/
 
-	private Collection<GrantedAuthority> getPrincipalAuthorities() {
+	private Collection<? extends GrantedAuthority> getPrincipalAuthorities() {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		if (null == currentUser) {
 			return Collections.emptyList();
@@ -272,7 +272,7 @@ public abstract class AbstractAuthorizeTag {
 		return requiredAuthorities;
 	}
 
-	private Set<GrantedAuthority> retainAll(final Collection<GrantedAuthority> granted,
+	private Set<GrantedAuthority> retainAll(final Collection<? extends GrantedAuthority> granted,
 			final Set<GrantedAuthority> required) {
 		Set<String> grantedRoles = authoritiesToRoles(granted);
 		Set<String> requiredRoles = authoritiesToRoles(required);
@@ -281,7 +281,7 @@ public abstract class AbstractAuthorizeTag {
 		return rolesToAuthorities(grantedRoles, granted);
 	}
 
-	private Set<String> authoritiesToRoles(Collection<GrantedAuthority> c) {
+	private Set<String> authoritiesToRoles(Collection<? extends GrantedAuthority> c) {
 		Set<String> target = new HashSet<String>();
 		for (GrantedAuthority authority : c) {
 			if (null == authority.getAuthority()) {
@@ -294,7 +294,7 @@ public abstract class AbstractAuthorizeTag {
 		return target;
 	}
 
-	private Set<GrantedAuthority> rolesToAuthorities(Set<String> grantedRoles, Collection<GrantedAuthority> granted) {
+	private Set<GrantedAuthority> rolesToAuthorities(Set<String> grantedRoles, Collection<? extends GrantedAuthority> granted) {
 		Set<GrantedAuthority> target = new HashSet<GrantedAuthority>();
 		for (String role : grantedRoles) {
 			for (GrantedAuthority authority : granted) {
