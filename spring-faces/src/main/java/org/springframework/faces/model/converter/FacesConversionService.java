@@ -12,10 +12,19 @@ e.org/licenses/LICENSE-2.0
  */
 package org.springframework.faces.model.converter;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.faces.model.DataModel;
 
+import org.springframework.binding.convert.ConversionExecutor;
+import org.springframework.binding.convert.ConversionExecutorNotFoundException;
 import org.springframework.binding.convert.service.DefaultConversionService;
+import org.springframework.binding.convert.service.SpringBindingConverterAdapter;
+import org.springframework.binding.convert.service.StaticConversionExecutor;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 
 /**
@@ -31,6 +40,22 @@ import org.springframework.faces.model.OneSelectionTrackingListDataModel;
  */
 public class FacesConversionService extends DefaultConversionService {
 
+	/**
+	 * Detects if the version of Spring has issue SPR-10116
+	 */
+	private static final boolean SPR_10116;
+	static {
+		org.springframework.core.convert.support.DefaultConversionService conversionService = new org.springframework.core.convert.support.DefaultConversionService();
+		conversionService.addConverter(new SpringBindingConverterAdapter(new DataModelConverter()));
+		boolean failedConversion = false;
+		try {
+			conversionService.convert(Arrays.asList(""), DataModel.class);
+		} catch (ConversionFailedException e) {
+			failedConversion = true;
+		}
+		SPR_10116 = failedConversion;
+	}
+
 	public FacesConversionService() {
 		addFacesConverters();
 	}
@@ -42,5 +67,15 @@ public class FacesConversionService extends DefaultConversionService {
 	protected void addFacesConverters() {
 		addConverter(new DataModelConverter());
 		addAlias("dataModel", DataModel.class);
+	}
+
+	public ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
+			throws ConversionExecutorNotFoundException {
+		ConversionExecutor executor = super.getConversionExecutor(sourceClass, targetClass);
+		if(SPR_10116 && List.class.isAssignableFrom(sourceClass) && (DataModel.class.isAssignableFrom(targetClass))) {
+			// Temporary work around for SPR-10116. This will be removed when Spring 3.2.1 is released
+			return new StaticConversionExecutor(List.class, DataModel.class, new DataModelConverter());
+		}
+		return executor;
 	}
 }
