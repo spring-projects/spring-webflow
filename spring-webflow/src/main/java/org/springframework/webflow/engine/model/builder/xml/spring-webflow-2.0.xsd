@@ -470,10 +470,10 @@ The name of the view to render.  Is typically a flow-relative path to a view tem
 </pre>
 Can also be an evaluatable expression:
 <pre>
-	${flowScope.myViewExpression}
+	#{flowScope.myViewExpression}
 </pre>
 The externalRedirect: prefix may be used to redirect to an external location, typically to interface with an external system or controller.
-External redirect query parameters may be specified using ${expressions} that evaluate against the request context.
+External redirect query parameters may be specified using #{expressions} that evaluate against the request context.
 The supported formats for an encoded externalRedirect expression are:
 <pre>
 	externalRedirect:<servlet relative path>
@@ -484,15 +484,15 @@ The supported formats for an encoded externalRedirect expression are:
 For example:
 <pre>
 	externalRedirect:/hotels/index
-	externalRedirect:http://someOtherSystem?orderId=${order.id}&callbackUrl=${flowExecutionUrl}
+	externalRedirect:http://someOtherSystem?orderId=#{order.id}&callbackUrl=#{flowExecutionUrl}
 </pre>
 The flowRedirect: prefix may be used to redirect to another flow:
 <pre>
-	flowRedirect:myOtherFlow?someData=${flowScope.data}
+	flowRedirect:myOtherFlow?someData=#{flowScope.data}
 </pre>
 For exotic usages, you may plug in a custom ViewFactory bean you define:
 <pre>
-	${myCustomViewFactory}
+	#{myCustomViewFactory}
 </pre>
 When this attribute is not specified, the view to render will be determined by convention.
 The default convention is to treat the id of this view state as the view identifier.
@@ -914,10 +914,10 @@ When specified, the value can be a flow-relative path to a view template:
 </pre>
 It can also be an evaluatable expression:
 <pre>
-	${flowScope.myViewExpression}
+	#{flowScope.myViewExpression}
 </pre>
 The externalRedirect: prefix may be used to request a redirect to an external location, typically to interface with an external system or controller.
-External redirect query parameters may be specified using ${expressions} that evaluate against the request context.
+External redirect query parameters may be specified using #{expressions} that evaluate against the request context.
 The supported formats for an encoded externalRedirect expression are:
 <pre>
 	externalRedirect:<servlet relative path>
@@ -928,15 +928,15 @@ The supported formats for an encoded externalRedirect expression are:
 For example:
 <pre>
 	externalRedirect:/hotels/index
-	externalRedirect:http://someOtherSystem?orderId=${order.id}
+	externalRedirect:http://someOtherSystem?orderId=#{order.id}
 </pre>
 The flowRedirect: prefix may be used to redirect to another flow:
 <pre>
-	flowRedirect:myOtherFlow?someData=${flowScope.data}
+	flowRedirect:myOtherFlow?someData=#{flowScope.data}
 </pre>
 For exotic usages, you may plug in a custom ViewFactory bean you define:
 <pre>
-	${myCustomViewFactory}
+	#{myCustomViewFactory}
 </pre>
 <br>
 When this attribute is not specified, no final response will be issued.
@@ -1415,7 +1415,7 @@ The most basic value is a static event id:
 <br>
 Sophisticated transitional expressions are also supported when enclosed in a delimited expression:
 <pre>
-	&lt;transition on="${currentEvent.id == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
+	&lt;transition on="#{currentEvent.id == 'submit' &;amp;&amp flowScope.attribute == 'foo'}" to="state"/&gt;
 </pre>
 ]]>
 				</xsd:documentation>
@@ -1441,7 +1441,7 @@ Superclasses of the configured exception class match by default.  Use this attri
 					<![CDATA[
 The target state to transition to.
 <br>
-The value of this attribute may be a static state identifier (e.g. to="displayForm") or a dynamic expression (e.g. to="${flowScope.previousViewState}").
+The value of this attribute may be a static state identifier (e.g. to="displayForm") or a dynamic expression (e.g. to="#{flowScope.previousViewState}").
 If no value is specified, this transition acts as a simple event handler and will not change the state of the flow.
 ]]>
 				</xsd:documentation>
