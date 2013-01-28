@@ -132,7 +132,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			<programlisting language="xml"><![CDATA[
 <bean id="flowHandlerAdapter" 
       class="org.springframework.webflow.mvc.portlet.FlowHandlerAdapter">
-    <constructor-arg ref="flowExecutor" />
+    <property name="flowExecutor" ref="flowExecutor" />
 </bean>
 			]]></programlisting>
 		</sect2>
