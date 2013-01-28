@@ -186,7 +186,6 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * not mapped to flash scope.
 	 *
 	 * @param saveOutputToFlashScopeOnRedirect
-	 * @see #getFlashOutput(HttpServletRequest, HttpServletResponse, FlowExecutionResult)
 	 */
 	public void setSaveOutputToFlashScopeOnRedirect(boolean saveOutputToFlashScopeOnRedirect) {
 		this.saveOutputToFlashScopeOnRedirect = saveOutputToFlashScopeOnRedirect;

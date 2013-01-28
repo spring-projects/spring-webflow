@@ -17,9 +17,9 @@
 /**
  * The implementation of the web flow execution engine.
  *
- * <p>The engine implementation itself is located within the {@link org.springframework.webflow.engine.impl impl}
+ * <p>The engine implementation itself is located within the {@code org.springframework.webflow.engine.impl}
  * package. Builders for assembling flow definitions executable by this engine are located within the
- * {@link org.springframework.webflow.engine.builder builder} package.
+ * {@code org.springframework.webflow.engine.builder} package.
  */
 package org.springframework.webflow.engine;
 

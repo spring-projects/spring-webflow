@@ -31,16 +31,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
-
 /**
  * Converts Web Flow 1 flow definitions to the version 2 syntax. To use, invoke as a Java application, passing the
  * file-system path to the flow definition you wish to convert as a program argument. The converted flow definition is
  * printed to standard out.
- * 
+ *
  * This class requires a XSLT transformer to run. Saxon is recommended to preserve flow definition formatting and line
  * breaks.
- * 
+ *
  * @author Scott Andrews
  */
 public class WebFlowUpgrader {
@@ -84,8 +82,10 @@ public class WebFlowUpgrader {
 			TransformerFactory factory = TransformerFactory.newInstance();
 			Source source = new StreamSource(xslResource.getInputStream());
 			transformer = factory.newTransformer(source);
-			transformer.setOutputProperty(OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "4");
+			// com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory.S_KEY_INDENT_AMOUNT
+			transformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "4");
 		}
 		return transformer;
 	}
+
 }

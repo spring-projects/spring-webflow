@@ -103,7 +103,7 @@ public class BeanValidationHintResolver implements ValidationHintResolver {
 	 * @param flowId the current flow id
 	 * @param stateId the current state id
 	 * @param hint the hint
-	 * @return
+	 * @return the resolved hint
 	 *
 	 * @throws FlowExecutionException
 	 */
