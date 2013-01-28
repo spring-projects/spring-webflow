@@ -285,6 +285,13 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	/**
+	 * @return the configured ConversionService
+	 */
+	protected ConversionService getConversionService() {
+		return conversionService;
+	}
+
+	/**
 	 * Template method subclasses should override to execute the view rendering logic.
 	 * @param model the view model data
 	 * @throws Exception an exception occurred rendering the view
