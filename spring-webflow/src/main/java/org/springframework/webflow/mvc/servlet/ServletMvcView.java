@@ -20,13 +20,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.convert.ConversionService;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.mvc.view.AbstractMvcView;
 
 /**
  * The Spring Web Servlet MVC view implementation.
- * 
+ *
  * @author Keith Donald
  */
 public class ServletMvcView extends AbstractMvcView {
@@ -47,6 +48,10 @@ public class ServletMvcView extends AbstractMvcView {
 		HttpServletResponse response = (HttpServletResponse) externalContext.getNativeResponse();
 		request.setAttribute(org.springframework.web.servlet.support.RequestContext.WEB_APPLICATION_CONTEXT_ATTRIBUTE,
 				context.getActiveFlow().getApplicationContext());
+		// spring:eval tag
+		if (getConversionService() != null) {
+			request.setAttribute(ConversionService.class.getName(), getConversionService().getDelegateConversionService());
+		}
 		getView().render(model, request, response);
 	}
 
