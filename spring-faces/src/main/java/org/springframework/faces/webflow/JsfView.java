@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.springframework.webflow.execution.View;
 
 /**
  * JSF-specific {@link View} implementation.
- * 
+ *
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
@@ -47,7 +47,7 @@ public class JsfView implements View {
 	private final RequestContext requestContext;
 
 	private String viewId;
-	
+
 	/**
 	 * Creates a new JSF view.
 	 * @param viewRoot the view root
@@ -97,7 +97,12 @@ public class JsfView implements View {
 	}
 
 	public boolean userEventQueued() {
-		return this.requestContext.getRequestParameters().contains("javax.faces.ViewState");
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		if (facesContext != null) {
+			// Use ExternalContext for multipart request parsing by component libraries
+			return facesContext.getExternalContext().getRequestParameterMap().containsKey("javax.faces.ViewState");
+		}
+		return false;
 	}
 
 	/**
