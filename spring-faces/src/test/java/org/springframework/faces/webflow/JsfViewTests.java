@@ -225,12 +225,10 @@ public class JsfViewTests extends TestCase {
 
 	public final void testUserEventQueued_FormSubmitted() {
 
-		MockParameterMap requestParameterMap = new MockParameterMap();
-		requestParameterMap.put("execution", "e1s1");
-		requestParameterMap.put("javax.faces.ViewState", "e1s1");
+		this.jsfMock.externalContext().addRequestParameterMap("execution", "e1s1");
+		this.jsfMock.externalContext().addRequestParameterMap("javax.faces.ViewState", "e1s1");
 
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(requestParameterMap);
-		EasyMock.replay(new Object[] { context, flowExecutionContext, flowMap, flashScope });
+		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
 
 		JsfView createdView = new JsfView(new UIViewRoot(), jsfMock.lifecycle(), context);
 

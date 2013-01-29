@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,11 +101,15 @@ public class JsfView implements View {
 	}
 
 	public boolean userEventQueued() {
-		if (isAtLeastJsf12()) {
-			return requestContext.getRequestParameters().contains("javax.faces.ViewState");
-		} else {
-			return requestContext.getRequestParameters().size() > 1;
+		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		if (facesContext != null) {
+			if (isAtLeastJsf12()) {
+				return facesContext.getExternalContext().getRequestParameterMap().containsKey("javax.faces.ViewState");
+			} else {
+				return facesContext.getExternalContext().getRequestParameterMap().size() > 1;
+			}
 		}
+		return false;
 	}
 
 	/**
