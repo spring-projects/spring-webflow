@@ -85,11 +85,6 @@ public class JsfView implements View {
 		try {
 			logger.debug("Asking faces lifecycle to render");
 			this.facesLifecycle.render(facesContext);
-
-			// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState().
-			if (this.requestContext.getExternalContext().isAjaxRequest()) {
-				saveState();
-			}
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();
@@ -111,7 +106,10 @@ public class JsfView implements View {
 	 */
 	public void processUserEvent() {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
-		facesContext.setViewRoot(this.viewRoot);
+
+		// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). SWF-1577
+		saveState();
+
 		// Must respect these flags in case user set them during RESTORE_VIEW phase
 		if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
 			this.facesLifecycle.execute(facesContext);
