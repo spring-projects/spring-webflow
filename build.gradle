@@ -3,7 +3,7 @@ buildscript {
 		maven { url "http://repo.springsource.org/plugins-release" }
 	}
 	dependencies {
-		classpath "org.springframework.build.gradle:docbook-reference-plugin:0.1.3"
+		classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.4")
 	}
 }
 
@@ -229,6 +229,7 @@ configure(rootProject) {
 
 	reference {
 		sourceDir = file("src/reference")
+		pdfFilename = "spring-webflow-reference.pdf"
 	}
 
 	// don"t publish the default jar for the root project
