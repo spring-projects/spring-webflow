@@ -415,10 +415,12 @@ public class PrintBoardingPassAction extends AbstractAction {
 				HTML form is configured with <code>enctype="multipart/form-data"</code>, you can easily handle the file upload in a
 				transition action.
 			</para>
-			<para>
-				Note that the File Upload example below below is not relevant when using Web Flow with JSF.
-				Check the documentation of your JSF component library to see what file upload components it provides.
-			</para>
+			<note>
+				<para>
+					The file upload example below below is not relevant when using Web Flow with JSF. See
+					<xref linkend="spring-faces-file-upload"/> for details of how to upload files using JSF.
+				</para>
+			</note>
 			<para>
 				Given a form such as:
 			</para>

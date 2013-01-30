@@ -699,6 +699,67 @@ mvn package
 		</para>
 	</sect1>
 
+	<sect1 xml:id="spring-faces-file-upload">
+		<title>Handling File Uploads with JSF</title>
+
+		<para>Most JSF component providers include some form of 'file upload' component. Generally when working
+		with these components JSF must take complete control of parsing multi-part requests and Spring MVC's
+		<code>MultipartResolver</code> cannot be used.</para>
+
+		<para>Spring Web Flow has been tested with file upload components from PrimeFaces and RichFaces. Check the
+		documentation of your JSF component library for other providers to see how to configure file upload.</para>
+
+		<sect2>
+			<title>File Uploads with PrimeFaces</title>
+			<para>PrimeFaces provides a <code>&lt;p:fileUpload&gt;</code> component for uploading files. In order
+			to use the component you need to configure the <code>org.primefaces.webapp.filter.FileUploadFilter</code>
+			servlet filter. The filter needs to be configured against Spring MVC's
+			<code>DispatcherServlet</code> in your <code>web.xml</code>:</para>
+			<programlisting language="xml"><![CDATA[<filter>
+	<filter-name>PrimeFaces FileUpload Filter</filter-name>
+	<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>PrimeFaces FileUpload Filter</filter-name>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+</filter-mapping>]]>
+			</programlisting>
+			<para>For more details refer to the
+			<link xl:href="http://primefaces.org/documentation.html">PrimeFaces documentation</link>.</para>
+		</sect2>
+
+		<sect2>
+			<title>File Uploads with RichFaces</title>
+			<para>RichFaces provides a <code>&lt;rich:fileUpload&gt;</code> component for uploading files. No
+			special configuration is required to use the component, however, you will need to perform
+			some additional steps in your <code>fileUploadListener</code>.</para>
+			<para>Here is some typical XHTML markup. In this example the <code>fileUploadBean</code> refers
+			to Spring singleton bean.</para>
+			<programlisting language="xml"><![CDATA[<rich:fileUpload id="upload"
+	fileUploadListener="#{fileUploadBean.listener}"
+	acceptedTypes="jpg, gif, png, bmp">
+</rich:fileUpload>]]></programlisting>
+			<para>Within your <code>fileUploadBean</code> you need to tell Web Flow that the response has been
+			handled and that it should not attempt any redirects. The <interfacename>org.springframework.webflow.context.ExternalContext</interfacename>
+			interface provides a <code>recordResponseComplete()</code> for just such purposes.</para>
+			<para>In addition, it is imperative that some partial response data is returned to the client. If your
+			<code>&lt;rich:fileUpload&gt;</code> component does not specify a <code>render</code> attribute you
+			may need to call <code>processPartial(PhaseId.RENDER_RESPONSE)</code> on the JSF
+			<code>PartialViewContext</code>.</para>
+			<programlisting language="java">public class FileUploadBean {
+
+	public void listener(FileUploadEvent event) throws Exception{
+		FacesContext.getCurrentInstance().getPartialViewContext().processPartial(PhaseId.RENDER_RESPONSE);
+		ExternalContextHolder.getExternalContext().recordResponseComplete();
+		UploadedFile file = event.getUploadedFile();
+		// Do something with the file
+	}
+}</programlisting>
+			<para>For more details refer to the
+			<link xl:href="http://www.jboss.org/richfaces/docs">RichFaces documentation</link>.</para>
+		</sect2>
+	</sect1>
+
 	<sect1 xml:id="spring-faces-security-taglib">
 		<title>Using the Spring Security Facelets Tag Library</title>
 
