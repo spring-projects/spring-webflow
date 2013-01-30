@@ -3,6 +3,7 @@ buildscript {
 		maven { url "http://repo.springsource.org/plugins-release" }
 	}
 	dependencies {
+		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.3")
 		classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.4")
 	}
 }
@@ -15,6 +16,7 @@ configure(allprojects) {
 
 configure(subprojects) { subproject ->
 	apply plugin: "java"
+	apply plugin: "propdeps"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
 	sourceCompatibility=1.5
@@ -86,15 +88,14 @@ project("spring-binding") {
 	description = "Spring Binding"
 
 	dependencies {
-		compile("javax.el:el-api:2.2", provided)
+		provided("javax.el:el-api:2.2")
 		compile("commons-logging:commons-logging:1.1.1")
 		compile("opensymphony:ognl:2.6.11")
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-context:$springVersion")
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-expression:$springVersion")
-		testCompile("log4j:log4j:$log4jVersion") { dep ->
-			optional dep
+		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
 			exclude group: "javax.jms", module: "jms"
 			exclude group: "com.sun.jdmk", module: "jmxtools"
@@ -120,19 +121,18 @@ project("spring-js") {
 	dependencies {
 		compile(project(":spring-js-resources"))
 		compile("commons-logging:commons-logging:1.1.1")
-		compile("javax.servlet:servlet-api:2.5", provided)
-		compile("org.apache.tiles:tiles-api:2.1.2", optional)
-		compile("org.apache.tiles:tiles-core:2.1.2", optional)
-		compile("org.apache.tiles:tiles-jsp:2.1.2", optional)
-		compile("org.apache.tiles:tiles-servlet:2.1.2", optional)
+		provided("javax.servlet:servlet-api:2.5")
+		optional("org.apache.tiles:tiles-api:2.1.2")
+		optional("org.apache.tiles:tiles-core:2.1.2")
+		optional("org.apache.tiles:tiles-jsp:2.1.2")
+		optional("org.apache.tiles:tiles-servlet:2.1.2")
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-context:$springVersion")
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
-		testCompile("javax.servlet:jstl:1.2", provided)
-		testCompile("log4j:log4j:$log4jVersion") { dep ->
-			optional dep
+		testCompile("javax.servlet:jstl:1.2")
+		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
 			exclude group: "javax.jms", module: "jms"
 			exclude group: "com.sun.jdmk", module: "jmxtools"
@@ -149,28 +149,27 @@ project("spring-webflow") {
 		compile(project(":spring-binding"))
 		compile(project(":spring-js"))
 		compile("commons-logging:commons-logging:1.1.1")
-		compile("javax.el:el-api:2.2", provided)
-		compile("javax.persistence:persistence-api:1.0.2", provided)
-		compile("javax.servlet:servlet-api:2.5", provided)
-		compile("javax.portlet:portlet-api:2.0", provided)
-		compile("javax.transaction:transaction-api:1.1-rev-1", provided)
-		compile("junit:junit:3.8.2", provided)
+		provided("javax.el:el-api:2.2")
+		provided("javax.persistence:persistence-api:1.0.2")
+		provided("javax.servlet:servlet-api:2.5")
+		provided("javax.portlet:portlet-api:2.0")
+		provided("javax.transaction:transaction-api:1.1-rev-1")
+		provided("junit:junit:3.8.2")
 		compile("opensymphony:ognl:2.6.11")
-		compile("org.hibernate:hibernate:3.2.7.ga") { dep ->
-			optional dep
+		optional("org.hibernate:hibernate:3.2.7.ga") {
 			exclude group: "org.slf4j", module: "slf4j-api"
 		}
-		compile("org.slf4j:slf4j-api:$slf4jVersion", optional)
+		optional("org.slf4j:slf4j-api:$slf4jVersion")
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-context:$springVersion")
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-expression:$springVersion")
-		compile("org.springframework:spring-orm:$springVersion", optional)
-		compile("org.springframework:spring-tx:$springVersion", optional)
+		optional("org.springframework:spring-orm:$springVersion")
+		optional("org.springframework:spring-tx:$springVersion")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
-		compile("org.springframework:spring-webmvc-portlet:$springVersion", optional)
-		compile("org.springframework.security:spring-security-core:$springSecurityVersion", optional)
+		optional("org.springframework:spring-webmvc-portlet:$springVersion")
+		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		testCompile("javax.validation:validation-api:1.0.0.GA")
 		testCompile("org.apache.openjpa:openjpa:1.1.0")
 		testCompile("org.apache.openjpa:openjpa-lib:1.1.0")
@@ -191,22 +190,23 @@ project("spring-faces") {
 		compile(project(":spring-binding"))
 		compile(project(":spring-webflow"))
 		compile("commons-logging:commons-logging:1.1.1")
-		compile("javax.servlet:servlet-api:2.5", provided)
-		compile("javax.portlet:portlet-api:2.0", provided)
+		provided("javax.servlet:servlet-api:2.5")
+		provided("javax.portlet:portlet-api:2.0")
+		provided("javax.el:el-api:2.2")
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-context:$springVersion")
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-expression:$springVersion")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
-		compile("org.springframework.security:spring-security-core:$springSecurityVersion", optional)
-		compile("org.springframework.security:spring-security-web:$springSecurityVersion", optional)
-		compile("com.sun.facelets:jsf-facelets:1.1.14", optional)
-		compile("com.sun.faces:jsf-api:2.1.7", provided)
-		compile("com.sun.faces:jsf-impl:2.1.7", provided)
-		compile("org.apache.myfaces.core:myfaces-impl:2.1.7", provided)
-		testCompile("log4j:log4j:$log4jVersion") { dep ->
-			optional dep
+		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
+		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
+		optional("org.springframework:spring-webmvc-portlet:$springVersion")
+		optional("com.sun.facelets:jsf-facelets:1.1.14")
+		provided("com.sun.faces:jsf-api:2.1.7")
+		provided("com.sun.faces:jsf-impl:2.1.7")
+		provided("org.apache.myfaces.core:myfaces-impl:2.1.7")
+		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
 			exclude group: "javax.jms", module: "jms"
 			exclude group: "com.sun.jdmk", module: "jmxtools"
