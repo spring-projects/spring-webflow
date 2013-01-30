@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="system-setup">
+<chapter xml:id="system-setup"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>System Setup</title>
-	<sect1 id="system-setup-introduction">
+	<sect1 xml:id="system-setup-introduction">
 		<title>Introduction</title>
 		<para>
 			This chapter shows you how to setup the Web Flow system for use in any web environment.
 		</para>
 	</sect1>
-	<sect1 id="system-config-schema">
+	<sect1 xml:id="system-config-schema">
 		<title>webflow-config.xsd</title>
 		<para>
 			Web Flow provides a Spring schema that allows you to configure the system.
@@ -24,19 +28,19 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd">		
+           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd">
 
     <!-- Setup Web Flow here -->
-	
+
 </beans>]]>
 		</programlisting>
 	</sect1>
-	<sect1 id="system-config-basic">
+	<sect1 xml:id="system-config-basic">
 		<title>Basic system configuration</title>
 		<para>
 			The next section shows the minimal configuration required to set up the Web Flow system in your application.
 		</para>
-		<sect2 id="basic-setup-flow-registry">
+		<sect2 xml:id="basic-setup-flow-registry">
 			<title>FlowRegistry</title>
 			<para>
 				Register your flows in a <code>FlowRegistry</code>:
@@ -47,7 +51,7 @@
 </webflow:flow-registry>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="basic-setup-flow-executor">
+		<sect2 xml:id="basic-setup-flow-executor">
 			<title>FlowExecutor</title>
 			<para>
 				Deploy a FlowExecutor, the central service for executing flows:
@@ -60,12 +64,12 @@
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="flow-registry">
+	<sect1 xml:id="flow-registry">
 		<title>flow-registry options</title>
 		<para>
 			This section explores flow-registry configuration options.
 		</para>
-		<sect2 id="flow-registry-location">
+		<sect2 xml:id="flow-registry-location">
 			<title>Specifying flow locations</title>
 			<para>
 				Use the <code>location</code> element to specify paths to flow definitions to register.
@@ -74,8 +78,8 @@
 			<programlisting language="xml"><![CDATA[
 <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" />]]>
 			</programlisting>
-		</sect2>		
-		<sect2 id="flow-registry-location-id">
+		</sect2>
+		<sect2 xml:id="flow-registry-location-id">
 			<title>Assigning custom flow identifiers</title>
 			<para>
 				Specify an id to assign a custom registry identifier to a flow:
@@ -84,7 +88,7 @@
 <webflow:flow-location path="/WEB-INF/flows/booking/booking.xml" id="bookHotel" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="flow-registry-location-attributes">
+		<sect2 xml:id="flow-registry-location-attributes">
 			<title>Assigning flow meta-attributes</title>
 			<para>
 				Use the <code>flow-definition-attributes</code> element to assign custom meta-attributes to a registered flow:
@@ -97,7 +101,7 @@
 </webflow:flow-location>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="flow-registry-patterns">
+		<sect2 xml:id="flow-registry-patterns">
 			<title>Registering flows using a location pattern</title>
 			<para>
 				Use the <code>flow-location-patterns</code> element to register flows that match a specific resource location pattern:
@@ -106,7 +110,7 @@
 <webflow:flow-location-pattern value="/WEB-INF/flows/**/*-flow.xml" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="flow-registry-base-path">
+		<sect2 xml:id="flow-registry-base-path">
 			<title>Flow location base path</title>
 			<para>
 				Use the <code>base-path</code> attribute to define a base location for all flows in the application.
@@ -150,7 +154,7 @@
 				you'd end up with flow ids of <code>user/login</code>, <code>user/registration</code>, <code>hotels/booking</code>, and <code>flights/booking</code>, respectively.
 			</para>
 		</sect2>
-		<sect2 id="flow-registry-parent">
+		<sect2 xml:id="flow-registry-parent">
 			<title>Configuring FlowRegistry hierarchies</title>
 			<para>
 				Use the <code>parent</code> attribute to link two flow registries together in a hierarchy.
@@ -167,8 +171,8 @@
     <!-- Global flows shared by several applications -->
 </webflow:flow-registry>]]>
 			</programlisting>
-		</sect2>				
-		<sect2 id="flow-registry-builder-services">
+		</sect2>
+		<sect2 xml:id="flow-registry-builder-services">
 			<title>Configuring custom FlowBuilder services</title>
 			<para>
 				Use the <code>flow-builder-services</code> attribute to customize the services and settings used to build flows in a flow-registry.
@@ -196,7 +200,7 @@
 <bean id="expressionParser" class="..." />
 <bean id="viewFactoryCreator" class="..." />]]>
 			</programlisting>
-			<sect3 id="builder-service-conversion">
+			<sect3 xml:id="builder-service-conversion">
 				<title>conversion-service</title>
 				<para>
 					Use the <code>conversion-service</code> attribute to customize the <code>ConversionService</code> used by the Web Flow system.
@@ -206,14 +210,14 @@
 					Please read <xref linkend="view-type-conversion"/> for important information on how to provide custom type conversion logic.
 				</para>
 			</sect3>
-			<sect3 id="builder-service-expression-parser">
+			<sect3 xml:id="builder-service-expression-parser">
 				<title>expression-parser</title>
 				<para>
 					Use the <code>expression-parser</code> attribute to customize the <code>ExpressionParser</code> used by the Web Flow system.
-					The default ExpressionParser uses the Unified EL if available on the classpath, otherwise OGNL is used.			
+					The default ExpressionParser uses the Unified EL if available on the classpath, otherwise OGNL is used.
 				</para>
 			</sect3>
-			<sect3 id="builder-service-view-factory-creator">
+			<sect3 xml:id="builder-service-view-factory-creator">
 				<title>view-factory-creator</title>
 				<para>
 					Use the <code>view-factory-creator</code> attribute to customize the <code>ViewFactoryCreator</code> used by the Web Flow system.
@@ -224,7 +228,7 @@
 					These settings are global configuration attributes that can be applied during the flow construction process.
 				</para>
 			</sect3>
-			<sect3 id="builder-development">
+			<sect3 xml:id="builder-development">
 				<title>development</title>
 				<para>
 					Set this to <code>true</code> to switch on flow <emphasis>development mode</emphasis>.
@@ -233,12 +237,12 @@
 			</sect3>
 		</sect2>
 	</sect1>
-	<sect1 id="flow-executor">
+	<sect1 xml:id="flow-executor">
 		<title>flow-executor options</title>
 		<para>
 			This section explores flow-executor configuration options.
-		</para>		
-		<sect2 id="flow-executor-execution-listeners">
+		</para>
+		<sect2 xml:id="flow-executor-execution-listeners">
 			<title>Attaching flow execution listeners</title>
 			<para>
 				Use the <code>flow-execution-listeners</code> element to register listeners that observe the lifecycle of flow executions:
@@ -256,7 +260,7 @@
 <webflow:listener ref="securityListener" criteria="securedFlow1,securedFlow2"/>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="tuning-flow-execution-repository">
+		<sect2 xml:id="tuning-flow-execution-repository">
 			<title>Tuning FlowExecution persistence</title>
 			<para>
 				Use the <code>flow-execution-repository</code> element to tune flow execution persistence settings:
@@ -266,23 +270,23 @@
     <webflow:flow-execution-repository max-executions="5" max-execution-snapshots="30" />
 </webflow:flow-executor>]]>
 			</programlisting>
-			<sect3 id="repository-max-executions">
+			<sect3 xml:id="repository-max-executions">
 				<title>max-executions</title>
 				<para>
 					Tune the <code>max-executions</code> attribute to place a cap on the number of flow executions that can be created per user session.
 					When the maximum number of executions is exceeded, the oldest execution is removed.
 					<note>
 						<para>
-							The <code>max-executions</code> attribute is per user session, i.e. it works across instances of any flow definition. 
+							The <code>max-executions</code> attribute is per user session, i.e. it works across instances of any flow definition.
 						</para>
 					</note>
 				</para>
 			</sect3>
-			<sect3 id="repository-max-snapshots">
+			<sect3 xml:id="repository-max-snapshots">
 				<title>max-execution-snapshots</title>
 				<para>
 					Tune the <code>max-execution-snapshots</code> attribute to place a cap on the number of history snapshots that can be taken per flow execution.
-					To disable snapshotting, set this value to 0.  To enable an unlimited number of snapshots, set this value to -1. 
+					To disable snapshotting, set this value to 0.  To enable an unlimited number of snapshots, set this value to -1.
 					<note>
 						<para>
 							History snapshots enable browser back button support.

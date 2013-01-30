@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="flow-managed-persistence">
+<chapter xml:id="flow-managed-persistence"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Flow Managed Persistence</title>
-	<sect1 id="flow-managed-persistence-introduction">
+	<sect1 xml:id="flow-managed-persistence-introduction">
 		<title>Introduction</title>
 		<para>
 			Most applications access data in some way.
@@ -19,7 +23,7 @@
 			This chapter will focus on the flow-managed persistence, exploring how and when to use this feature.
 		</para>
 	</sect1>
-	<sect1 id="flowScopedPersistenceContext">
+	<sect1 xml:id="flowScopedPersistenceContext">
 		<title>FlowScoped PersistenceContext</title>
 		<para>
 			This pattern creates a <code>PersistenceContext</code> in <code>flowScope</code> on flow startup,
@@ -41,12 +45,12 @@
                           http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
     <persistence-context />
-    
+
 </flow>
 ]]></programlisting>
 		<para>
 			Then configure the correct <code>FlowExecutionListener</code> to apply this pattern to your flow.
-			If using Hibernate, register the <code>HibernateFlowExecutionListener</code>.  If using JPA, register the <code>JpaFlowExecutionListener</code>.		
+			If using Hibernate, register the <code>HibernateFlowExecutionListener</code>.  If using JPA, register the <code>JpaFlowExecutionListener</code>.
 		</para>
 <programlisting language="xml"><![CDATA[
 <webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
@@ -54,8 +58,8 @@
         <webflow:listener ref="jpaFlowExecutionListener" />
     </webflow:flow-execution-listeners>
 </webflow:flow-executor>
-	
-<bean id="jpaFlowExecutionListener" 
+
+<bean id="jpaFlowExecutionListener"
       class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
     <constructor-arg ref="entityManagerFactory" />
     <constructor-arg ref="transactionManager" />
@@ -67,7 +71,7 @@
 		<para>
 <programlisting language="xml"><![CDATA[
 <end-state id="bookingConfirmed" commit="true" />
-]]></programlisting>		
+]]></programlisting>
 		</para>
 		<para>
 			That is it.  When your flow starts, the listener will handle allocating a new <code>EntityManager</code> in <code>flowScope</code>.
@@ -76,13 +80,13 @@
 			Such data access operations should always execute non transactionally or in read-only transactions to maintain isolation of intermediate edits.
 		</para>
 	</sect1>
-	<sect1 id="flow-managed-persistence-propagation">
+	<sect1 xml:id="flow-managed-persistence-propagation">
 		<title>Flow Managed Persistence And Sub-Flows</title>
 		<para>
 			A flow managed <code>PersistenceContext</code> is automatically extended
 			(propagated) to subflows assuming the subflow also has the <code>&lt;perstistence-context/&gt;</code>
-			variable. When a subflow re-uses the <code>PersistenceContext</code> started by its parent it ignores 
-			commit flags when an end state is reached thereby deferring the final decision (to commit or not) to 
+			variable. When a subflow re-uses the <code>PersistenceContext</code> started by its parent it ignores
+			commit flags when an end state is reached thereby deferring the final decision (to commit or not) to
 			its parent.
 		</para>
 	</sect1>

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="introduction">
+<chapter xml:id="introduction"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Introduction</title>
-	<sect1 id="manual-overview">
+	<sect1 xml:id="manual-overview">
 		<title>What this guide covers</title>
 		<para>
 			This guide covers all aspects of Spring Web Flow.
@@ -12,7 +16,7 @@
 			It also covers extending the framework and the overall architectural model.
 		</para>
 	</sect1>
-	<sect1 id="system-requirements">
+	<sect1 xml:id="system-requirements">
 		<title>What Web Flow requires to run</title>
 		<para>
 			Java 1.5 or higher
@@ -21,34 +25,34 @@
 			Spring 3.1 or higher
 		</para>
 	</sect1>
-	<sect1 id="support">
+	<sect1 xml:id="support">
 		<title>Where to get support</title>
 		<para>
 			Professional from-the-source support on Spring Web Flow is available from
-			<ulink url="http://www.springsource.com">SpringSource</ulink>, the company behind Spring, and
-			<ulink url="http://www.ervacon.com">Ervacon</ulink>, operated by Web Flow project co-founder Erwin Vervaet
+			<link xl:href="http://www.springsource.com">SpringSource</link>, the company behind Spring, and
+			<link xl:href="http://www.ervacon.com">Ervacon</link>, operated by Web Flow project co-founder Erwin Vervaet
 		</para>
 	</sect1>
-	<sect1 id="development">
+	<sect1 xml:id="development">
 		<title>Where to follow development</title>
 		<para>
-			You can help make Web Flow best serve the needs of the Spring community by interacting with developers 
-			at the <ulink url="http://forum.springframework.org">Spring Community Forums</ulink>.
+			You can help make Web Flow best serve the needs of the Spring community by interacting with developers
+			at the <link xl:href="http://forum.springframework.org">Spring Community Forums</link>.
 		</para>
 		<para>
-			Report bugs and influence the Web Flow project roadmap using the <ulink url="http://jira.springframework.org">Spring Issue Tracker</ulink>.
+			Report bugs and influence the Web Flow project roadmap using the <link xl:href="http://jira.springframework.org">Spring Issue Tracker</link>.
 		</para>
 		<para>
-			Subscribe to the <ulink url="http://www.springframework.org">Spring Community Portal</ulink> for the latest Spring news and announcements.
+			Subscribe to the <link xl:href="http://www.springframework.org">Spring Community Portal</link> for the latest Spring news and announcements.
 		</para>
 		<para>
-			Visit the <ulink url="http://www.springframework.org/webflow">Web Flow Project Home</ulink> for more resources on the project.
+			Visit the <link xl:href="http://www.springframework.org/webflow">Web Flow Project Home</link> for more resources on the project.
 		</para>
 	</sect1>
-	<sect1 id="jars-mvn-central">
+	<sect1 xml:id="jars-mvn-central">
 		<title>How to access Web Flow artifacts from Maven Central</title>
 		<para>
-			Each jar in the Web Flow distribution is available in the <ulink url="http://search.maven.org">Maven Central Repository</ulink>.
+			Each jar in the Web Flow distribution is available in the <link xl:href="http://search.maven.org">Maven Central Repository</link>.
 			This allows you to easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
 		</para>
 		<para>
@@ -70,11 +74,11 @@
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-faces</artifactId>
     <version>x.y.z.RELEASE</version>
-</dependency> 
+</dependency>
 ]]>
 		</programlisting>
 	</sect1>
-	<sect1 id="jars-ivy">
+	<sect1 xml:id="jars-ivy">
 		<title>How to access Web Flow artifacts with Ivy</title>
 		<para>
 			To access Spring Web Flow jars with Ivy, add the following repositories to your Ivy config:
@@ -133,7 +137,7 @@
 			<para>
 				For milestones and snapshots you'll need to use the SpringSource repository.
 				Add the following repository to your Maven pom.xml:
-			</para>			
+			</para>
 			<programlisting language="xml"><![CDATA[
 <repository>
     <id>springsource-repository</id>
@@ -142,20 +146,20 @@
 </repository>]]>
 			</programlisting>
 			<para>
-				Then declare the following dependencies:			
+				Then declare the following dependencies:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-binding</artifactId>
     <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency> 
+</dependency>
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-js</artifactId>
     <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency> 
+</dependency>
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>

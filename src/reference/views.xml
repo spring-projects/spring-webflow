@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="views">
+<chapter xml:id="views"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Rendering views</title>
-	<sect1 id="views-introduction">
+	<sect1 xml:id="views-introduction">
 		<title>Introduction</title>
 		<para>
 			This chapter shows you how to use the <code>view-state</code> element to render views within a flow.
 		</para>
 	</sect1>
-	<sect1 id="view-convention">
+	<sect1 xml:id="view-convention">
 		<title>Defining view states</title>
 		<para>
 			Use the <code>view-state</code> element to define a step of the flow that renders a view and waits for a user event to resume:
@@ -38,14 +42,14 @@
 			<caption>
 				<para>Flow Packaging</para>
 			</caption>
-		</mediaobject>				
+		</mediaobject>
 	</sect1>
-	<sect1 id="view-explicit">
+	<sect1 xml:id="view-explicit">
 		<title>Specifying view identifiers</title>
 		<para>
 			Use the <code>view</code> attribute to specify the id of the view to render explicitly.
 		</para>
-		<sect2 id="view-explicit-flowrelative">
+		<sect2 xml:id="view-explicit-flowrelative">
 			<title>Flow relative view ids</title>
 			<para>
 				The view id may be a relative path to view resource in the flow's working directory:
@@ -54,7 +58,7 @@
 <view-state id="enterBookingDetails" view="bookingDetails.xhtml">]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="view-explicit-absolute">
+		<sect2 xml:id="view-explicit-absolute">
 			<title>Absolute view ids</title>
 			<para>
 				The view id may be a absolute path to a view resource in the webapp root directory:
@@ -63,7 +67,7 @@
 <view-state id="enterBookingDetails" view="/WEB-INF/hotels/booking/bookingDetails.xhtml">]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="view-explicit-logical">
+		<sect2 xml:id="view-explicit-logical">
 			<title>Logical view ids</title>
 			<para>
 				With some view frameworks, such as Spring MVC's view framework, the view id may also be a logical identifier resolved by the framework:
@@ -76,7 +80,7 @@
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="view-scope">
+	<sect1 xml:id="view-scope">
 		<title>View scope</title>
 		<para>
 			A view-state allocates a new <code>viewScope</code> when it enters.
@@ -84,7 +88,7 @@
 			This scope is useful for manipulating objects over a series of requests from the same view, often Ajax requests.
 			A view-state destroys its viewScope when it exits.
 		</para>
-		<sect2 id="view-scope-var">
+		<sect2 xml:id="view-scope-var">
 			<title>Allocating view variables</title>
 			<para>
 				Use the <code>var</code> tag to declare a view variable.
@@ -93,8 +97,8 @@
 			<programlisting language="xml"><![CDATA[
 <var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" />]]>
 			</programlisting>
-		</sect2>		
-		<sect2 id="view-scope-actions">
+		</sect2>
+		<sect2 xml:id="view-scope-actions">
 			<title>Assigning a viewScope variable</title>
 			<para>
 				Use the <code>on-render</code> tag to assign a variable from an action result before the view renders:
@@ -105,11 +109,11 @@
 </on-render>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="view-scope-ajax">
+		<sect2 xml:id="view-scope-ajax">
 			<title>Manipulating objects in view scope</title>
 			<para>
 				Objects in view scope are often manipulated over a series of requests from the same view.
-				The following example pages through a search results list. 
+				The following example pages through a search results list.
 				The list is updated in view scope before each render.
 				Asynchronous event handlers modify the current data page, then request re-rendering of the search results fragment.
 			</para>
@@ -121,17 +125,17 @@
     </on-render>
     <transition on="next">
         <evaluate expression="searchCriteria.nextPage()" />
-        <render fragments="searchResultsFragment" />            
+        <render fragments="searchResultsFragment" />
     </transition>
     <transition on="previous">
         <evaluate expression="searchCriteria.previousPage()" />
-        <render fragments="searchResultsFragment" />          
+        <render fragments="searchResultsFragment" />
     </transition>
 </view-state>]]>
-			</programlisting>			
+			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="view-on-render">
+	<sect1 xml:id="view-on-render">
 		<title>Executing render actions</title>
 		<para>
 			Use the <code>on-render</code> element to execute one or more actions before view rendering.
@@ -143,7 +147,7 @@
 </on-render>]]>
 	    </programlisting>
 	</sect1>
-	<sect1 id="view-model">
+	<sect1 xml:id="view-model">
 		<title>Binding to a model</title>
 		<para>
 			Use the <code>model</code> attribute to declare a model object the view binds to.
@@ -156,7 +160,7 @@
 		<programlisting language="xml"><![CDATA[
 <view-state id="enterBookingDetails" model="booking">]]>
 	    </programlisting>
-	    <para>		
+	    <para>
 			The model may be an object in any accessible scope, such as <code>flowScope</code> or <code>viewScope</code>.
 			Specifying a <code>model</code> triggers the following behavior when a view event occurs:
 		</para>
@@ -169,40 +173,40 @@
 			If model binding fails, the view is re-rendered to allow the user to revise their edits.
 		</para>
 	</sect1>
-	<sect1 id="view-type-conversion">
+	<sect1 xml:id="view-type-conversion">
 		<title>Performing type conversion</title>
 		<para>
 			When request parameters are used to populate the model (commonly referred to as data binding), type conversion is required to parse String-based request parameter values before setting target model properties.
 			Default type conversion is available for many common Java types such as numbers, primitives, enums, and Dates.
 			Users also have the ability to register their own type conversion logic for user-defined types, and to override the default Converters.
 		</para>
-		<sect2 id="converter-options">
+		<sect2 xml:id="converter-options">
 			<title>Type Conversion Options</title>
 			<para>
-				Starting with version 2.1 Spring Web Flow uses the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">type conversion</ulink> and <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#format">formatting</ulink> system introduced in Spring 3 for nearly all type conversion needs.
-				Previously Web Flow applications used a type conversion mechanism that was different from the one in Spring MVC, which relied on the <code>java.beans.PropertyEditor</code> abstraction.    
+				Starting with version 2.1 Spring Web Flow uses the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">type conversion</link> and <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#format">formatting</link> system introduced in Spring 3 for nearly all type conversion needs.
+				Previously Web Flow applications used a type conversion mechanism that was different from the one in Spring MVC, which relied on the <code>java.beans.PropertyEditor</code> abstraction.
 				Spring 3 offers a modern type conversion alternative to PropertyEditors that was actually influenced by Web Flow's own type conversion system.
 				Hence Web Flow users should find it natural to work with the new Spring 3 type conversion.
-				Another obvious and very important benefit of this change is that a single type conversion mechanism can now be used across Spring MVC And Spring Web Flow.  
+				Another obvious and very important benefit of this change is that a single type conversion mechanism can now be used across Spring MVC And Spring Web Flow.
 			</para>
 		</sect2>
-		<sect2 id="converter-upgrade-to-spring-3">
+		<sect2 xml:id="converter-upgrade-to-spring-3">
 			<title>Upgrading to Spring 3 Type Conversion And Formatting</title>
 			<para>
 				What does this practically mean for existing applications?
 				Existing applications are likely registering their own converters of type <code>org.springframework.binding.convert.converters.Converter</code> through a sub-class of <code>DefaultConversionService</code> available in Spring Binding.
 				Those converters can continue to be registered as before.
-				They will be adapted as Spring 3 <code>GenericConverter</code> types and registered with a Spring 3 <code>org.springframework.core.convert.ConversionService</code> instance.  
+				They will be adapted as Spring 3 <code>GenericConverter</code> types and registered with a Spring 3 <code>org.springframework.core.convert.ConversionService</code> instance.
 				In other words existing converters will be invoked through Spring's type conversion service.
 			</para>
 			<para>
 				The only exception to this rule are named converters, which can be referenced from a <code>binding</code> element in a <code>view-state</code>:
 				<programlisting language="java"><![CDATA[
-public class ApplicationConversionService extends DefaultConversionService {	
+public class ApplicationConversionService extends DefaultConversionService {
     public ApplicationConversionService() {
         addDefaultConverters();
         addDefaultAliases();
-        addConverter("customConverter", new CustomConverter());		
+        addConverter("customConverter", new CustomConverter());
     }
 }]]>
 				</programlisting>
@@ -217,7 +221,7 @@ public class ApplicationConversionService extends DefaultConversionService {
 				Therefore such converters will not be adapted and will continue to work as before, i.e. will not involve the Spring 3 type conversion.
 				However, this mechanism is deprecated and applications are encouraged to favor Spring 3 type conversion and formatting features.
 			</para>
-			<para>					
+			<para>
 				Also note that the existing Spring Binding <code>DefaultConversionService</code> no longer registers any default converters.
 				Instead Web Flow now relies on the default type converters and formatters in Spring 3.
 			</para>
@@ -226,7 +230,7 @@ public class ApplicationConversionService extends DefaultConversionService {
 				Although existing applications will work without any changes, we encourage moving towards unifying the type conversion needs of Spring MVC and Spring Web Flow parts of applications.
 			</para>
 		</sect2>
-		<sect2 id="converter-configuration">
+		<sect2 xml:id="converter-configuration">
 			<title>Configuring Type Conversion and Formatting</title>
 			<para>
 				In Spring MVC an instance of a <code>FormattingConversionService</code> is created automatically through the custom MVC namespace:
@@ -236,9 +240,9 @@ public class ApplicationConversionService extends DefaultConversionService {
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
     xsi:schemaLocation="
-        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<mvc:annotation-driven/>
@@ -272,8 +276,8 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
     protected void installFormatters(FormatterRegistry registry) {
         // ...
     }
-	
-}				
+
+}
 ]]>
 				</programlisting>
 				Configure it for use in Spring MVC:
@@ -283,14 +287,14 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
     xsi:schemaLocation="
-        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <mvc:annotation-driven conversion-service="applicationConversionService" />
-	
-    <!-- 
+
+    <!--
     	Alternatively if you prefer annotations for DI:
     	  1. Add @Component to the factory bean.
     	  2. Add a component-scan element (from the context custom namespace) here.
@@ -298,15 +302,15 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
       -->
 
     <bean id="applicationConversionService" class="somepackage.ApplicationConversionServiceFactoryBean">
-	
+
 ]]>
 				</programlisting>
 				Connection the Web Flow <code>DefaultConversionService</code> to the same "applicationConversionService" bean used in Spring MVC:
 				<programlisting language="xml"><![CDATA[
     <webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" ... />
-    	
+
     <webflow:flow-builder-services id="flowBuilderServices" conversion-service="defaultConversionService" ... />
-    	
+
     <bean id="defaultConversionService" class="org.springframework.binding.convert.service.DefaultConversionService">
     	<constructor-arg ref="applicationConversionSevice"/>
     </bean>]]>
@@ -316,20 +320,20 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 				Register existing Spring Binding <code>Converter</code> types through the "defaultConversionService".
 			</para>
 		</sect2>
-		<sect2 id="converter-working-with">
+		<sect2 xml:id="converter-working-with">
 			<title>Working With Spring 3 Type Conversion And Formatting</title>
 			<para>
 				An important concept to understand is the difference between type converters and formatters.
 			</para>
-			<para>	
+			<para>
 				Type converters in Spring 3, provided in <code>org.springframework.core</code>, are for general-purpose type conversion between any two object types.
 				In addition to the most simple <code>Converter</code> type, two other interfaces are <code>ConverterFactory</code> and <code>GenericConverter</code>.
 			</para>
-			<para>	
+			<para>
 				Formatters in Spring 3, provided in <code>org.springframework.context</code>, have the more specialized purpose of representing Objects as Strings.
 				The <code>Formatter</code> interface extends the <code>Printer</code> and <code>Parser</code> interfaces for converting an Object to a String and turning a String into an Object.
 			</para>
-			<para>	
+			<para>
 				Web developers will find the <code>Formatter</code> interface most relevant because it fits the needs of web applications for type conversion.
 				<note>
 					<para>
@@ -339,30 +343,30 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 				</note>
 			</para>
 		</sect2>
-		<sect2 id="converter-formatting-annotations">
+		<sect2 xml:id="converter-formatting-annotations">
 			<title>Formatting Annotations</title>
 			<para>
 				One of the best features of the new type conversion is the ability to use annotations for a better control over formatting in a concise manner.
 				Annotations can be placed on model attributes and on arguments of @Controller methods that are mapped to requests.
 				Out of the box Spring provides two annotations <code>NumberFormat</code> and <code>DateTimeFormat</code> but you can create your own and have them registered along with the associated formatting logic.
-				You can see examples of the <code>DateTimeFormat</code> annotation in the <ulink url="https://src.springframework.org/svn/spring-samples/travel">Spring Travel</ulink> and in the <ulink url="https://src.springframework.org/svn/spring-samples/petcare">Petcare</ulink> along with other samples in the <ulink url="https://src.springframework.org/svn/spring-samples">Spring Samples</ulink> repository.
+				You can see examples of the <code>DateTimeFormat</code> annotation in the <link xl:href="https://src.springframework.org/svn/spring-samples/travel">Spring Travel</link> and in the <link xl:href="https://src.springframework.org/svn/spring-samples/petcare">Petcare</link> along with other samples in the <link xl:href="https://src.springframework.org/svn/spring-samples">Spring Samples</link> repository.
 			</para>
 		</sect2>
-		<sect2 id="converter-dates">
+		<sect2 xml:id="converter-dates">
 			<title>Working With Dates</title>
 			<para>
-				The <code>DateTimeFormat</code> annotation implies use of <ulink url="http://joda-time.sourceforge.net/">Joda Time</ulink>.
+				The <code>DateTimeFormat</code> annotation implies use of <link xl:href="http://joda-time.sourceforge.net/">Joda Time</link>.
 				If that is present on the classpath the use of this annotation is enabled automatically.
 				By default neither Spring MVC nor Web Flow register any other date formatters or converters.
 				Therefore it is important for applications to register a custom formatter to specify the default way for printing and parsing dates.
 				The <code>DateTimeFormat</code> annotation on the other hand provides more fine-grained control where it is necessary to deviate from the default.
 			</para>
-			<para>	
-				For more information on working with Spring 3 type conversion and formatting please refer to the relevant sections of the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/index.html">Spring documentation</ulink>.
+			<para>
+				For more information on working with Spring 3 type conversion and formatting please refer to the relevant sections of the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/index.html">Spring documentation</link>.
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="view-bind">
+	<sect1 xml:id="view-bind">
 		<title>Suppressing binding</title>
 		<para>
 			Use the <code>bind</code> attribute to suppress model binding and validation for particular view events.
@@ -374,8 +378,8 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
     <transition on="cancel" to="bookingCancelled" bind="false" />
 </view-state>]]>
 		</programlisting>
-	</sect1>	
-	<sect1 id="view-binder">
+	</sect1>
+	<sect1 xml:id="view-binder">
 		<title>Specifying bindings explicitly</title>
 		<para>
 			Use the <code>binder</code> element to configure the exact set of model bindings usable by the view.
@@ -400,13 +404,13 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 		</para>
 		<para>
 			Each binding may also apply a converter to format the model property value for display in a custom manner.
-			If no converter is specified, the default converter for the model property's type will be used.		
+			If no converter is specified, the default converter for the model property's type will be used.
 		</para>
 		<programlisting language="xml"><![CDATA[
 <view-state id="enterBookingDetails" model="booking">
     <binder>
         <binding property="checkinDate" converter="shortDate" />
-        <binding property="checkoutDate" converter="shortDate" />    
+        <binding property="checkoutDate" converter="shortDate" />
         <binding property="creditCard" />
         <binding property="creditCardName" />
         <binding property="creditCardExpiryMonth" />
@@ -418,7 +422,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 ]]>
 		</programlisting>
 		<para>
-			In the example above, the <code>shortDate</code> converter is bound to the 
+			In the example above, the <code>shortDate</code> converter is bound to the
 			<code>checkinDate</code> and <code>checkoutDate</code> properties.
 			Custom converters may be registered with the application's ConversionService.
 		</para>
@@ -445,19 +449,19 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 			If one or more blank input values are bound, validation errors will be generated and the view will re-render with those errors.
 		</para>
 	</sect1>
-	<sect1 id="view-validate">
+	<sect1 xml:id="view-validate">
 		<title>Validating a model</title>
 		<para>
 			Model validation is driven by constraints specified against a model object.
-			Web Flow supports enforcing such constraints programatically as well as 
+			Web Flow supports enforcing such constraints programatically as well as
 			declaratively with JSR-303 Bean Validation annotations.
 		</para>
-		<sect2 id="view-validation-jsr303">
+		<sect2 xml:id="view-validation-jsr303">
 			<title>JSR-303 Bean Validation</title>
 			<para>
-				Web Flow provides built-in support for the JSR-303 Bean Validation API 
-				building on equivalent support available in Spring MVC. 
-				To enable JSR-303 validation configure the flow-builder-services with 
+				Web Flow provides built-in support for the JSR-303 Bean Validation API
+				building on equivalent support available in Spring MVC.
+				To enable JSR-303 validation configure the flow-builder-services with
 				Spring MVC's <code>LocalValidatorFactoryBean</code>:
 			</para>
 			<programlisting language="xml">
@@ -470,17 +474,17 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 
 			<para>
 				With the above in place, the configured validator will be applied to
-				all model attributes after data binding. 
+				all model attributes after data binding.
 			</para>
-			
+
 			<para>
-				Note that JSR-303 bean validation and validation by convention 
+				Note that JSR-303 bean validation and validation by convention
 				(explained in the next section) are not mutually exclusive.
-				In other words Web Flow will apply all available validation 
+				In other words Web Flow will apply all available validation
 				mechanisms.
 			</para>
 
-			<sect3 id="view-validation-jsr303-partial">
+			<sect3 xml:id="view-validation-jsr303-partial">
 				<title>Partial Validation</title>
 				<para>
 					JSR-303 Bean Validation supports partial validation via groups. For example:
@@ -519,7 +523,7 @@ private String name;
 			</sect3>
 
 		</sect2>
-		<sect2 id="view-validation-programmatic">
+		<sect2 xml:id="view-validation-programmatic">
 			<title>Programmatic validation</title>
 			<para>
 				There are two ways to perform model validation programatically.
@@ -527,7 +531,7 @@ private String name;
 				The second is to implement an external <code>Validator</code>.
 				Both ways provide you with a <code>ValidationContext</code> to record error messages and access information about the current user.
 			</para>
-			<sect3 id="view-validation-programmatic-validate-method">
+			<sect3 xml:id="view-validation-programmatic-validate-method">
 				<title>Implementing a model validate method</title>
 				<para>
 					Defining validation logic in your model object is the simplest way to validate its state.
@@ -540,7 +544,7 @@ public class Booking {
     private Date checkinDate;
     private Date checkoutDate;
     ...
-        
+
     public void validateEnterBookingDetails(ValidationContext context) {
         MessageContext messages = context.getMessageContext();
         if (checkinDate.before(today())) {
@@ -566,11 +570,11 @@ public class Booking {
 					</programlisting>
 				</para>
 				<para>
-					Any number of validation methods are defined.  Generally, a flow edits a model over a series of views.  In that case, a validate method would be defined 
+					Any number of validation methods are defined.  Generally, a flow edits a model over a series of views.  In that case, a validate method would be defined
 					for each view-state where validation needs to run.
 				</para>
 			</sect3>
-			<sect3 id="view-validation-programmatic-validator">
+			<sect3 xml:id="view-validation-programmatic-validator">
 				<title>Implementing a Validator</title>
 				<para>
 					The second way is to define a separate object, called a <emphasis>Validator</emphasis>, which validates your model object.
@@ -607,7 +611,7 @@ public class BookingValidator {
 					Then, anytime the <code>booking</code> model needs to be validated, this <code>bookingValidator</code> instance would be invoked for you.
 				</para>
 			</sect3>
-			<sect3 id="default-validate-method">
+			<sect3 xml:id="default-validate-method">
 				<title>Default validate method</title>
 				<para>
 					A <emphasis>Validator</emphasis> class can also define a method called <code>validate</code> not associated (by convention) with any specific view-state.
@@ -617,7 +621,7 @@ public class BookingValidator {
 public class BookingValidator {
     public void validate(Booking booking, ValidationContext context) {
         //...
-    }	
+    }
 }]]>
 				</programlisting>
 				<para>
@@ -636,12 +640,12 @@ public class BookingValidator {
 }]]>
 				</programlisting>
 				<para>
-					In above code sample the method <code>validateEnterBookingDetails</code> will be called first. 
+					In above code sample the method <code>validateEnterBookingDetails</code> will be called first.
 					The default <code>validate</code> method will be called next.
 				</para>
 			</sect3>
 		</sect2>
-		<sect2 id="view-validation-context">
+		<sect2 xml:id="view-validation-context">
 			<title>ValidationContext</title>
 			<para>
 				A ValidationContext allows you to obtain a <code>MessageContext</code> to record messages during validation.
@@ -649,9 +653,9 @@ public class BookingValidator {
 				This information can be used to customize validation logic based on what button or link was activated in the UI, or who is authenticated.
 				See the API Javadocs for <code>ValidationContext</code> for more information.
 			</para>
-		</sect2>		
+		</sect2>
 	</sect1>
-	<sect1 id="view-validation-suppression">
+	<sect1 xml:id="view-validation-suppression">
 		<title>Suppressing validation</title>
 		<para>
 			Use the <code>validate</code> attribute to suppress model validation for particular view events:
@@ -666,7 +670,7 @@ public class BookingValidator {
 			In this example, data binding will still occur on <code>back</code> but validation will be suppressed.
 		</para>
 	</sect1>
-	<sect1 id="view-transitions">
+	<sect1 xml:id="view-transitions">
 		<title>Executing view transitions</title>
 		<para>
 			Define one or more <code>transition</code> elements to handle user events that may occur on the view.
@@ -677,7 +681,7 @@ public class BookingValidator {
 		<para>
 			Implementing view transitions is illustrated in the following sections.
 		</para>
-		<sect2 id="transition-actions">
+		<sect2 xml:id="transition-actions">
 			<title>Transition actions</title>
 			<para>
 				A view-state transition can execute one or more actions before executing.
@@ -712,10 +716,10 @@ public class BookingAction {
 				<para>
 					When there is more than one action defined on a transition, if one returns an error result the remaining actions in the set will <emphasis>not</emphasis> be executed.
 					If you need to ensure one transition action's result cannot impact the execution of another, define a single transition action that invokes a method that encapsulates all the action logic.
-				</para> 
+				</para>
 			</note>
 		</sect2>
-		<sect2 id="event-handlers-global">
+		<sect2 xml:id="event-handlers-global">
 			<title>Global transitions</title>
 			<para>
 				Use the flow's <code>global-transitions</code> element to create transitions that apply across all views.
@@ -727,8 +731,8 @@ public class BookingAction {
     <transition on="logout" to="logout" />
 </global-transitions>]]>
 			</programlisting>
-		</sect2>	
-		<sect2 id="simple-event-handlers">
+		</sect2>
+		<sect2 xml:id="simple-event-handlers">
 			<title>Event handlers</title>
 			<para>
 				From a view-state, transitions without targets can also be defined.  Such transitions are called "event handlers":
@@ -743,7 +747,7 @@ public class BookingAction {
 				They simply execute their actions and re-render the current view or one or more fragments of the current view.
 			</para>
 		</sect2>
-		<sect2 id="event-handlers-render">
+		<sect2 xml:id="event-handlers-render">
 			<title>Rendering fragments</title>
 			<para>
 				Use the <code>render</code> element within a transition to request partial re-rendering of the current view after handling the event:
@@ -751,7 +755,7 @@ public class BookingAction {
 			<programlisting language="xml"><![CDATA[
 <transition on="next">
     <evaluate expression="searchCriteria.nextPage()" />
-    <render fragments="searchResultsFragment" />            
+    <render fragments="searchResultsFragment" />
 </transition>]]>
 			</programlisting>
 			<para>
@@ -763,7 +767,7 @@ public class BookingAction {
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="view-messages">
+	<sect1 xml:id="view-messages">
 		<title>Working with messages</title>
 		<para>
 			Spring Web Flow's <code>MessageContext</code> is an API for recording messages during the course of flow executions.
@@ -772,7 +776,7 @@ public class BookingAction {
 			Three distinct message severities are provided: <code>info</code>, <code>warning</code>, and <code>error</code>.
 			In addition, a convenient <code>MessageBuilder</code> exists for fluently constructing messages.
 		</para>
-		<sect2 id="plain-text-message">
+		<sect2 xml:id="plain-text-message">
 			<title>Adding plain text messages</title>
 			<programlisting language="java"><![CDATA[
 MessageContext context = ...
@@ -785,18 +789,18 @@ context.addMessage(builder.info()
     .defaultText("We have processed your reservation - thank you and enjoy your stay").build());]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="plain-text-message-intl">
+		<sect2 xml:id="plain-text-message-intl">
 			<title>Adding internationalized messages</title>
 			<programlisting language="java"><![CDATA[
 MessageContext context = ...
 MessageBuilder builder = new MessageBuilder();
 context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture").build());
 context.addMessage(builder.warn().source("smoking").code("notHealthy")
-    .resolvableArg("smoking").build());			
+    .resolvableArg("smoking").build());
 context.addMessage(builder.info().code("reservationConfirmation").build());]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="message-bundles">
+		<sect2 xml:id="message-bundles">
 			<title>Using message bundles</title>
 			<para>
 				Internationalized messages are defined in message bundles accessed by a Spring <code>MessageSource</code>.
@@ -816,7 +820,7 @@ reservationConfirmation=We have processed your reservation - thank you and enjoy
 <h:outputText value="#{resourceBundle.reservationConfirmation}" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="message-generation">
+		<sect2 xml:id="message-generation">
 			<title>Understanding system generated messages</title>
 			<para>
 				There are several places where Web Flow itself will generate messages to display to the user.
@@ -851,7 +855,7 @@ typeMismatch=The {0} field is of the wrong type.
 			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="view-popup">
+	<sect1 xml:id="view-popup">
 		<title>Displaying popups</title>
 		<para>
 			Use the <code>popup</code> attribute to render a view in a modal popup dialog:
@@ -864,13 +868,13 @@ typeMismatch=The {0} field is of the wrong type.
 			Web Flow will send a response to the client requesting a redirect to the view from a popup, and the client will honor the request.
 		</para>
 	</sect1>
-	<sect1 id="view-backtracking">
+	<sect1 xml:id="view-backtracking">
 		<title>View backtracking</title>
 		<para>
 			By default, when you exit a view state and transition to a new view state, you can go back to the previous state using the browser back button.
 			These view state history policies are configurable on a per-transition basis by using the <code>history</code> attribute.
 		</para>
-		<sect2 id="history-discard">
+		<sect2 xml:id="history-discard">
 			<title>Discarding history</title>
 			<para>
 				Set the history attribute to <code>discard</code> to prevent backtracking to a view:
@@ -879,7 +883,7 @@ typeMismatch=The {0} field is of the wrong type.
 <transition on="cancel" to="bookingCancelled" history="discard">]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="history-invalidate">
+		<sect2 xml:id="history-invalidate">
 			<title>Invalidating history</title>
 			<para>
 				Set the history attribute to <code>invalidate</code> to prevent backtracking to a view as well all previously displayed views:
@@ -888,5 +892,5 @@ typeMismatch=The {0} field is of the wrong type.
 <transition on="confirm" to="bookingConfirmed" history="invalidate">]]>
 			</programlisting>
 		</sect2>
-	</sect1>	
+	</sect1>
 </chapter>

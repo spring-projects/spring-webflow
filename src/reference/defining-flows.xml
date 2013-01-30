@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="defining-flows">
+<chapter xml:id="defining-flows"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Defining Flows</title>
-	<sect1 id="defining-flows-introduction">
+	<sect1 xml:id="defining-flows-introduction">
 		<title>Introduction</title>
 		<para>
 			This chapter begins the Users Section.
@@ -12,11 +16,11 @@
 			By the end of this chapter you should have a good understanding of language constructs, and be capable of authoring a flow definition.
 		</para>
 	</sect1>
-	<sect1 id="flow-overview">
+	<sect1 xml:id="flow-overview">
 		<title>What is a flow?</title>
 		<para>
 			A flow encapsulates a reusable sequence of steps that can execute in different contexts.
-			Below is a <ulink url="http://www.jjg.net/ia/visvocab/">Garrett Information Architecture</ulink> diagram illustrating a reference to a flow that encapsulates the steps of a hotel booking process:
+			Below is a <link xl:href="http://www.jjg.net/ia/visvocab/">Garrett Information Architecture</link> diagram illustrating a reference to a flow that encapsulates the steps of a hotel booking process:
 		</para>
 		<mediaobject>
 			<imageobject role="fo">
@@ -30,7 +34,7 @@
 			</caption>
 		</mediaobject>
 	</sect1>
-	<sect1 id="flow-makeup">
+	<sect1 xml:id="flow-makeup">
 		<title>What is the makeup of a typical flow?</title>
 		<para>
 			In Spring Web Flow, a flow consists of a series of steps called "states".
@@ -51,18 +55,18 @@
 			<caption>
 				<para>Flow diagram</para>
 			</caption>
-		</mediaobject>		
+		</mediaobject>
 	</sect1>
-	<sect1 id="flow-authoring">
+	<sect1 xml:id="flow-authoring">
 		<title>How are flows authored?</title>
 		<para>
 			Flows are authored by web application developers using a simple XML-based flow definition language.
 			The next steps of this guide will walk you through the elements of this language.
 		</para>
 	</sect1>
-	<sect1 id="essential-flow-elements">
+	<sect1 xml:id="essential-flow-elements">
 		<title>Essential language elements</title>
-		<sect2 id="flow-element">
+		<sect2 xml:id="flow-element">
 			<title>flow</title>
 			<para>
 				Every flow begins with the following root element:
@@ -81,7 +85,7 @@
 				The first state defined becomes the flow's starting point.
 			</para>
 		</sect2>
-		<sect2 id="view-state-element">
+		<sect2 xml:id="view-state-element">
 			<title>view-state</title>
 			<para>
 				Use the <code>view-state</code> element to define a step of the flow that renders a view:
@@ -91,11 +95,11 @@
 			</programlisting>
 			<para>
 				By convention, a view-state maps its id to a view template in the directory where the flow is located.
-				For example, the state above might render <filename>/WEB-INF/hotels/booking/enterBookingDetails.xhtml</filename> 
+				For example, the state above might render <filename>/WEB-INF/hotels/booking/enterBookingDetails.xhtml</filename>
 				if the flow itself was located in the <filename>/WEB-INF/hotels/booking</filename> directory.
 			</para>
 		</sect2>
-		<sect2 id="transition-element">
+		<sect2 xml:id="transition-element">
 			<title>transition</title>
 			<para>
 				Use the <code>transition</code> element to handle events that occur within a state:
@@ -109,7 +113,7 @@
 				These transitions drive view navigations.
 			</para>
 		</sect2>
-		<sect2 id="end-state-element">
+		<sect2 xml:id="end-state-element">
 			<title>end-state</title>
 			<para>
 				Use the <code>end-state</code> element to define a flow outcome:
@@ -121,9 +125,9 @@
 				When a flow transitions to a end-state it terminates and the outcome is returned.
 			</para>
 		</sect2>
-		<sect2 id="checkpoint-essential-language-elements">
+		<sect2 xml:id="checkpoint-essential-language-elements">
 			<title>Checkpoint: Essential language elements</title>
-			<para>		
+			<para>
 				With the three elements <code>view-state</code>, <code>transition</code>, and <code>end-state</code>, you can quickly express your view navigation logic.
 				Teams often do this before adding flow behaviors so they can focus on developing the user interface of the application with end users first.
 				Below is a sample flow that implements its view navigation logic using these elements:
@@ -137,22 +141,22 @@
     <view-state id="enterBookingDetails">
         <transition on="submit" to="reviewBooking" />
     </view-state>
-	
+
     <view-state id="reviewBooking">
         <transition on="confirm" to="bookingConfirmed" />
         <transition on="revise" to="enterBookingDetails" />
         <transition on="cancel" to="bookingCancelled" />
     </view-state>
-	
+
     <end-state id="bookingConfirmed" />
 
     <end-state id="bookingCancelled" />
-		
-</flow>]]>	
+
+</flow>]]>
 			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="flow-actions">
+	<sect1 xml:id="flow-actions">
 		<title>Actions</title>
 		<para>
 			Most flows need to express more than just view navigation logic.
@@ -167,13 +171,13 @@
 				<listitem><para>On transition execution</para></listitem>
 				<listitem><para>On state exit</para></listitem>
 				<listitem><para>On flow end</para></listitem>
-			</itemizedlist>	
+			</itemizedlist>
 		</para>
 		<para>
 			Actions are defined using a concise expression language.  Spring Web Flow uses the Unified EL by default.
 			The next few sections will cover the essential language elements for defining actions.
 		</para>
-		<sect2 id="evaluate-element">
+		<sect2 xml:id="evaluate-element">
 			<title>evaluate</title>
 			<para>
 				The action element you will use most often is the <code>evaluate</code> element.
@@ -182,9 +186,9 @@
 				For example:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="entityManager.persist(booking)" />]]>		
+<evaluate expression="entityManager.persist(booking)" />]]>
 			</programlisting>
-			<sect3 id="evaluate-element-result">
+			<sect3 xml:id="evaluate-element-result">
 				<title>Assigning an evaluate result</title>
 				<para>
 					If the expression returns a value, that value can be saved in the flow's data model called <code>flowScope</code>:
@@ -193,7 +197,7 @@
 <evaluate expression="bookingService.findHotels(searchCriteria)" result="flowScope.hotels" />]]>
 				</programlisting>
 			</sect3>
-			<sect3 id="evaluate-element-result-type">
+			<sect3 xml:id="evaluate-element-result-type">
 				<title>Converting an evaluate result</title>
 				<para>
 					If the expression returns a value that may need to be converted, specify the desired type using the <code>result-type</code> attribute:
@@ -204,9 +208,9 @@
 				</programlisting>
 			</sect3>
 		</sect2>
-		<sect2 id="checkpoint-actions">
+		<sect2 xml:id="checkpoint-actions">
 			<title>Checkpoint: flow actions</title>
-			<para>		
+			<para>
 				Now review the sample booking flow with actions added:
 			</para>
 			<programlisting language="xml"><![CDATA[
@@ -218,25 +222,25 @@
     <input name="hotelId" />
 
     <on-start>
-        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
                   result="flowScope.booking" />
     </on-start>
 
     <view-state id="enterBookingDetails">
         <transition on="submit" to="reviewBooking" />
     </view-state>
-	
+
     <view-state id="reviewBooking">
         <transition on="confirm" to="bookingConfirmed" />
         <transition on="revise" to="enterBookingDetails" />
         <transition on="cancel" to="bookingCancelled" />
     </view-state>
-	
+
     <end-state id="bookingConfirmed" />
 
     <end-state id="bookingCancelled" />
-		
-</flow>]]>	
+
+</flow>]]>
 			</programlisting>
 			<para>
 				This flow now creates a Booking object in flow scope when it starts.
@@ -244,7 +248,7 @@
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="flow-inputoutput">
+	<sect1 xml:id="flow-inputoutput">
 		<title>Input/Output Mapping</title>
 		<para>
 			Each flow has a well-defined input/output contract.
@@ -259,11 +263,11 @@ FlowOutcome flowId(Map<String, Object> inputAttributes);]]>
 		</para>
 		<programlisting language="java"><![CDATA[
 public interface FlowOutcome {
-   public String getName();		        
+   public String getName();
    public Map<String, Object> getOutputAttributes();
 }]]>
 		</programlisting>
-		<sect2 id="input-element">
+		<sect2 xml:id="input-element">
 			<title>input</title>
 			<para>
 				Use the <code>input</code> element to declare a flow input attribute:
@@ -275,7 +279,7 @@ public interface FlowOutcome {
 				Input values are saved in flow scope under the name of the attribute.
 				For example, the input above would be saved under the name <code>hotelId</code>.
 			</para>
-			<sect3 id="input-element-type">
+			<sect3 xml:id="input-element-type">
 				<title>Declaring an input type</title>
 				<para>
 					Use the <code>type</code> attribute to declare the input attribute's type:
@@ -287,7 +291,7 @@ public interface FlowOutcome {
 					If an input value does not match the declared type, a type conversion will be attempted.
 				</para>
 			</sect3>
-			<sect3 id="input-element-value">
+			<sect3 xml:id="input-element-value">
 				<title>Assigning an input value</title>
 				<para>
 					Use the <code>value</code> attribute to specify an expression to assign the input value to:
@@ -299,7 +303,7 @@ public interface FlowOutcome {
 					If the expression's value type can be determined, that metadata will be used for type coersion if no <code>type</code> attribute is specified.
 				</para>
 			</sect3>
-			<sect3 id="input-element-required">
+			<sect3 xml:id="input-element-required">
 				<title>Marking an input as required</title>
 				<para>
 					Use the <code>required</code> attribute to enforce the input is not null or empty:
@@ -309,7 +313,7 @@ public interface FlowOutcome {
 				</programlisting>
 			</sect3>
 		</sect2>
-		<sect2 id="output-element">
+		<sect2 xml:id="output-element">
 			<title>output</title>
 			<para>
 				Use the <code>output</code> element to declare a flow output attribute.
@@ -317,26 +321,26 @@ public interface FlowOutcome {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <end-state id="bookingConfirmed">
-    <output name="bookingId" />  
+    <output name="bookingId" />
 </end-state>]]>
 			</programlisting>
 			<para>
 				Output values are obtained from flow scope under the name of the attribute.
 				For example, the output above would be assigned the value of the <code>bookingId</code> variable.
 			</para>
-			<sect3 id="output-element-value">
+			<sect3 xml:id="output-element-value">
 				<title>Specifying the source of an output value</title>
 				<para>
 					Use the <code>value</code> attribute to denote a specific output value expression:
 				</para>
 				<programlisting language="xml"><![CDATA[
-<output name="confirmationNumber" value="booking.confirmationNumber" />]]>  
+<output name="confirmationNumber" value="booking.confirmationNumber" />]]>
 				</programlisting>
 			</sect3>
 		</sect2>
-		<sect2 id="checkpoint-input-output">
+		<sect2 xml:id="checkpoint-input-output">
 			<title>Checkpoint: input/output mapping</title>
-			<para>		
+			<para>
 				Now review the sample booking flow with input/output mapping:
 			</para>
 			<programlisting language="xml"><![CDATA[
@@ -348,42 +352,42 @@ public interface FlowOutcome {
     <input name="hotelId" />
 
     <on-start>
-        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
                   result="flowScope.booking" />
     </on-start>
 
     <view-state id="enterBookingDetails">
         <transition on="submit" to="reviewBooking" />
     </view-state>
-	
+
     <view-state id="reviewBooking">
         <transition on="confirm" to="bookingConfirmed" />
         <transition on="revise" to="enterBookingDetails" />
         <transition on="cancel" to="bookingCancelled" />
     </view-state>
-	
+
     <end-state id="bookingConfirmed" >
         <output name="bookingId" value="booking.id"/>
     </end-state>
 
     <end-state id="bookingCancelled" />
-		
-</flow>]]>	
-			</programlisting>	
+
+</flow>]]>
+			</programlisting>
 			<para>
 				The flow now accepts a <code>hotelId</code> input attribute and returns a <code>bookingId</code> output attribute
 				when a new booking is confirmed.
-			</para>	
+			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="flow-variables">
+	<sect1 xml:id="flow-variables">
 		<title>Variables</title>
 		<para>
 			A flow may declare one or more instance variables.
 			These variables are allocated when the flow starts.
 			Any <code>@Autowired</code> transient references the variable holds are also rewired when the flow resumes.
 		</para>
-		<sect2 id="var-element">
+		<sect2 xml:id="var-element">
 			<title>var</title>
 			<para>
 				Use the <code>var</code> element to declare a flow variable:
@@ -396,12 +400,12 @@ public interface FlowOutcome {
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="calling-subflows">
+	<sect1 xml:id="calling-subflows">
 		<title>Calling subflows</title>
 		<para>
 			A flow may call another flow as a subflow.  The flow will wait until the subflow returns, then respond to the subflow outcome.
 		</para>
-		<sect2 id="subflow-state-element">
+		<sect2 xml:id="subflow-state-element">
 			<title>subflow-state</title>
 			<para>
 				Use the <code>subflow-state</code> element to call another flow as a subflow:
@@ -409,7 +413,7 @@ public interface FlowOutcome {
 			<programlisting language="xml"><![CDATA[
 <subflow-state id="addGuest" subflow="createGuest">
     <transition on="guestCreated" to="reviewBooking">
-        <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
+        <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />
     </transition>
     <transition on="creationCancelled" to="reviewBooking" />
 </subflow-state>]]>
@@ -418,7 +422,7 @@ public interface FlowOutcome {
 				The above example calls the <code>createGuest</code> flow, then waits for it to return.
 				When the flow returns with a <code>guestCreated</code> outcome, the new guest is added to the booking's guest list.
 			</para>
-			<sect3 id="subflow-state-element-input">
+			<sect3 xml:id="subflow-state-element-input">
 				<title>Passing a subflow input</title>
 				<para>
 					Use the <code>input</code> element to pass input to the subflow:
@@ -430,24 +434,24 @@ public interface FlowOutcome {
 </subflow-state>]]>
 				</programlisting>
 			</sect3>
-			<sect3 id="subflow-state-element-output">
+			<sect3 xml:id="subflow-state-element-output">
 				<title>Mapping subflow output</title>
 				<para>
 					Simply refer to a subflow output attribute by its name within a outcome transition:
 				</para>
 				<programlisting language="xml"><![CDATA[
 <transition on="guestCreated" to="reviewBooking">
-    <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
+    <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />
 </transition>]]>
 				</programlisting>
 				<para>
 					In the above example, <code>guest</code> is the name of an output attribute returned by the <code>guestCreated</code> outcome.
 				</para>
-			</sect3>			
+			</sect3>
 		</sect2>
-		<sect2 id="checkpoint-subflow">
+		<sect2 xml:id="checkpoint-subflow">
 			<title>Checkpoint: calling subflows</title>
-			<para>		
+			<para>
 				Now review the sample booking flow calling a subflow:
 			</para>
 			<programlisting language="xml"><![CDATA[
@@ -459,7 +463,7 @@ public interface FlowOutcome {
     <input name="hotelId" />
 
     <on-start>
-        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
                   result="flowScope.booking" />
     </on-start>
 
@@ -476,22 +480,22 @@ public interface FlowOutcome {
 
     <subflow-state id="addGuest" subflow="createGuest">
         <transition on="guestCreated" to="reviewBooking">
-            <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />  
+            <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />
         </transition>
         <transition on="creationCancelled" to="reviewBooking" />
     </subflow-state>
-		
+
     <end-state id="bookingConfirmed" >
         <output name="bookingId" value="booking.id" />
     </end-state>
 
     <end-state id="bookingCancelled" />
-		
-</flow>]]>		
+
+</flow>]]>
 			</programlisting>
 			<para>
 				The flow now calls a <code>createGuest</code> subflow to add a new guest to the guest list.
-			</para>				
-		</sect2>		
+			</para>
+		</sect2>
 	</sect1>
 </chapter>

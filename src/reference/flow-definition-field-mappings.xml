@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<appendix xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="field-mappings">
+<appendix xml:id="field-mappings"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Flow Definition Language 1.0 to 2.0 Mappings</title>
 	<para>
 		The flow definition language has changed since the 1.0 release.
 		This is a listing of the language elements in the 1.0 release, and how they map to elements in the 2.0 release.
 		While most of the changes are semantic, there are a few structural changes.
-		Please see the upgrade guide for more details about changes between Web Flow 1.0 and 2.0. 
+		Please see the upgrade guide for more details about changes between Web Flow 1.0 and 2.0.
 	</para>
-	<table id="field-mappings-table">
+	<table xml:id="field-mappings-table">
 		<title>Mappings</title>
 		<tgroup cols="5">
 			<colspec colname="1.0-element" colwidth="*"/>
@@ -69,8 +73,6 @@
 						*
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>action-state</emphasis>
@@ -95,8 +97,6 @@
 						parent
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>argument</emphasis>
@@ -118,8 +118,6 @@
 						parameter-type
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>attribute</emphasis>
@@ -152,8 +150,6 @@
 						value
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>attribute-mapper</emphasis>
@@ -176,8 +172,6 @@
 						now subflow-attribute-mapper attribute on subflow-state
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>bean-action</emphasis>
@@ -213,8 +207,6 @@
 						*
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>decision-state</emphasis>
@@ -239,8 +231,6 @@
 						parent
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>end-actions</emphasis>
@@ -249,8 +239,6 @@
 						<emphasis>on-end</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>end-state</emphasis>
@@ -291,8 +279,6 @@
 						commit
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>entry-actions</emphasis>
@@ -301,8 +287,6 @@
 						<emphasis>on-entry</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>evaluate-action</emphasis>
@@ -346,8 +330,6 @@
 						result-type
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>evaluation-result</emphasis>
@@ -356,7 +338,7 @@
 						<emphasis>*</emphasis>
 					</entry>
 					<entry colname="comments">
-						use &lt;evaluate result="..." /&gt; 
+						use &lt;evaluate result="..." /&gt;
 					</entry>
 				</row>
 				<row>
@@ -375,8 +357,6 @@
 						*
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>exception-handler</emphasis>
@@ -393,8 +373,6 @@
 						bean
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>exit-actions</emphasis>
@@ -403,8 +381,6 @@
 						<emphasis>on-exit</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>flow</emphasis>
@@ -437,8 +413,6 @@
 						abstract
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>global-transitions</emphasis>
@@ -447,8 +421,6 @@
 						<emphasis>global-transitions</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>if</emphasis>
@@ -481,8 +453,6 @@
 						else
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>import</emphasis>
@@ -499,8 +469,6 @@
 						resource
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>inline-flow</emphasis>
@@ -520,8 +488,6 @@
 						*
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>input-attribute</emphasis>
@@ -573,8 +539,6 @@
 						value
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>input-mapper</emphasis>
@@ -586,8 +550,6 @@
 						inputs can be in flows and subflows directly
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>mapping</emphasis>
@@ -656,8 +618,6 @@
 						required
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>method-argument</emphasis>
@@ -669,8 +629,6 @@
 						use &lt;evaluate expression="func(arg1, arg2, ...)"/&gt;
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>method-result</emphasis>
@@ -698,8 +656,6 @@
 						*
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>output-attribute</emphasis>
@@ -751,8 +707,6 @@
 						value
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>output-mapper</emphasis>
@@ -764,8 +718,6 @@
 						output can be in flows and subflows directly
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>render-actions</emphasis>
@@ -774,8 +726,6 @@
 						<emphasis>on-render</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>set</emphasis>
@@ -830,8 +780,6 @@
 						type
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>start-actions</emphasis>
@@ -840,8 +788,6 @@
 						<emphasis>on-start</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>start-state</emphasis>
@@ -861,8 +807,6 @@
 						*
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>subflow-state</emphasis>
@@ -903,8 +847,6 @@
 						subflow-attribute-mapper
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>transition</emphasis>
@@ -961,8 +903,6 @@
 						history
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>value</emphasis>
@@ -971,8 +911,6 @@
 						<emphasis>value</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>var</emphasis>
@@ -1019,8 +957,6 @@
 						all Spring beans can be resolved with EL
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>view-state</emphasis>
@@ -1085,8 +1021,6 @@
 						history
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>*</emphasis>
@@ -1095,8 +1029,6 @@
 						<emphasis>persistence-context</emphasis>
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>*</emphasis>
@@ -1113,8 +1045,6 @@
 						fragments
 					</entry>
 				</row>
-			</tbody>
-			<tbody>
 				<row>
 					<entry spanname="1.0-element">
 						<emphasis>*</emphasis>

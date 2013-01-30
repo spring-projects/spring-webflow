@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="flow-inheritance">
+<chapter xml:id="flow-inheritance"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Flow Inheritance</title>
-	<sect1 id="flow-inheritance-introduction">
+	<sect1 xml:id="flow-inheritance-introduction">
 		<title>Introduction</title>
 		<para>
 			Flow inheritance allows one flow to inherit the configuration of another flow.
@@ -15,7 +19,7 @@
 			In order for a parent flow to be found, it must be added to the <code>flow-registry</code> just like any other flow.
 		</para>
 	</sect1>
-	<sect1 id="flow-inheritance-java-comparison">
+	<sect1 xml:id="flow-inheritance-java-comparison">
 		<title>Is flow inheritance like Java inheritance?</title>
 		<para>
 			Flow inheritance is similar to Java inheritance in that elements defined in a parent are exposed via the child, however, there are key differences.
@@ -30,9 +34,9 @@
 			Java inheritance is limited to a single class.
 		</para>
 	</sect1>
-	<sect1 id="flow-inheritance-levels">
+	<sect1 xml:id="flow-inheritance-levels">
 		<title>Types of Flow Inheritance</title>
-		<sect2 id="flow-inheritance-level-flow">
+		<sect2 xml:id="flow-inheritance-level-flow">
 			<title>Flow level inheritance</title>
 			<para>
 				Flow level inheritance is defined by the <code>parent</code> attribute on the <code>flow</code> element.
@@ -44,7 +48,7 @@
 <flow parent="common-transitions, common-states">]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="flow-inheritance-level-state">
+		<sect2 xml:id="flow-inheritance-level-state">
 			<title>State level inheritance</title>
 			<para>
 				State level inheritance is similar to flow level inheritance, except only one state inherits from the parent, instead of the entire flow.
@@ -52,7 +56,7 @@
 			<para>
 				Unlike flow inheritance, only a single parent is allowed.
 				Additionally, the identifier of the flow state to inherit from must also be defined.
-				The identifiers for the flow and the state within that flow are separated by a #. 
+				The identifiers for the flow and the state within that flow are separated by a #.
 			</para>
 			<para>
 				The parent and child states must be of the same type.
@@ -63,7 +67,7 @@
 			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="flow-inheritance-abstract">
+	<sect1 xml:id="flow-inheritance-abstract">
 		<title>Abstract flows</title>
 		<para>
 			Often parent flows are not designed to be executed directly.
@@ -74,7 +78,7 @@
 <flow abstract="true">]]>
 		</programlisting>
 	</sect1>
-	<sect1 id="flow-inheritance-algorithm">
+	<sect1 xml:id="flow-inheritance-algorithm">
 		<title>Inheritance Algorithm</title>
 		<para>
 			When a child flow inherits from it's parent, essentially what happens is that the parent and child are merged together to create a new flow.
@@ -93,12 +97,12 @@
 				Once merged, all relative paths in the parent flow will become relative to the child flow.
 			</para>
 		</note>
-		<sect2 id="flow-inheritance-algorithm-mergeable">
+		<sect2 xml:id="flow-inheritance-algorithm-mergeable">
 			<title>Mergeable Elements</title>
 			<para>
 				If the elements are of the same type and their keyed attribute are identical, the content of the parent element will be merged with the child element.
 				The merge algorithm will continue to merge each sub-element of the merging parent and child.
-				Otherwise the parent element is added as a new element to the child. 
+				Otherwise the parent element is added as a new element to the child.
 			</para>
 			<para>
 				In most cases, elements from a parent flow that are added will be added after elements in the child flow.
@@ -162,7 +166,7 @@
 				</itemizedlist>
 			</para>
 		</sect2>
-		<sect2 id="flow-inheritance-nonmergeable">
+		<sect2 xml:id="flow-inheritance-nonmergeable">
 			<title>Non-mergeable Elements</title>
 			<para>
 				Non-mergeable elements are:

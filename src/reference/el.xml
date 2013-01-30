@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="el">
+<chapter xml:id="el"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Expression Language (EL)</title>
-	<sect1 id="el-introduction">
+	<sect1 xml:id="el-introduction">
 		<title>Introduction</title>
 		<para>
 			Web Flow uses EL to access its data model and to invoke actions.
@@ -23,12 +27,12 @@
  			EL is also used to bind form parameters to model objects and reversely to render formatted form fields from the properties of a model object.
  			That however does not apply when using Web Flow with JSF in which case the standard JSF component lifecyle applies.
  		</para>
-		<sect2 id="el-types">
+		<sect2 xml:id="el-types">
 			<title>Expression types</title>
 			<para>
 				An important concept to understand is there are two types of expressions in Web Flow: standard expressions and template expressions.
 			</para>
-			<sect3 id="el-types-eval">
+			<sect3 xml:id="el-types-eval">
 				<title>Standard Expressions</title>
 				<para>
 					The first and most common type of expression is the <emphasis>standard expression</emphasis>.
@@ -43,10 +47,10 @@
 					If you attempt to enclose this expression in a special delimiter like <code>#{}</code> you will get an <code>IllegalArgumentException</code>.
 					In this context the delimiter is seen as redundant.
 					The only acceptable value for the <code>expression</code> attribute is an single expression string.
-				</para>	
+				</para>
 			</sect3>
-			<sect3 id="el-types-template">
-				<title>Template expressions</title>			
+			<sect3 xml:id="el-types-template">
+				<title>Template expressions</title>
 				<para>
 					The second type of expression is a <emphasis>template expression</emphasis>.
 					A template expression allows mixing of literal text with one or more standard expressions.
@@ -70,25 +74,25 @@
 			</sect3>
 		</sect2>
 	</sect1>
-	<sect1 id="el-language-choices">
+	<sect1 xml:id="el-language-choices">
 		<title>EL Implementations</title>
-		<sect2 id="el-spring-el">
+		<sect2 xml:id="el-spring-el">
 			<title>Spring EL</title>
 			<para>
-				Starting with version 2.1 Web Flow uses the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html">Spring Expression Language</ulink> (Spring EL).
+				Starting with version 2.1 Web Flow uses the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html">Spring Expression Language</link> (Spring EL).
 				Spring EL was created to provide is a single, well-supported expression language for use across all the products in the Spring portfolio.
 				It is distributed as a separate jar <code>org.springframework.expression</code> in the Spring Framework.
 				Existing applications will need to remove dependencies on <code>org.jboss.el</code> or <code>org.ognl</code> and use <code>org.springframework.expression</code> instead.
 				See the section below on EL Portability for other notes on upgrading.
 			</para>
 		</sect2>
-		<sect2 id="el-unified-el">
+		<sect2 xml:id="el-unified-el">
 			<title>Unified EL</title>
 			<para>
-				In Web Flow 2.0 <ulink url="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</ulink> was the default expression language with <code>jboss-el</code> as the implementation.
-				Use of Unified EL also implies a dependency on <code>el-api</code> although that is typically <emphasis>provided</emphasis> by your web container. 
+				In Web Flow 2.0 <link xl:href="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</link> was the default expression language with <code>jboss-el</code> as the implementation.
+				Use of Unified EL also implies a dependency on <code>el-api</code> although that is typically <emphasis>provided</emphasis> by your web container.
 				Tomcat 6 includes it, for example.
-				Spring EL is the default and recommended expression language to use. 
+				Spring EL is the default and recommended expression language to use.
 				However it is possible to replace it with Unified EL if you wish to do so.
 				You need the following Spring configuration to plug in the <code>WebFlowELExpressionParser</code> to the <code>flow-builder-services</code>:
 				<programlisting language="xml"><![CDATA[
@@ -115,13 +119,13 @@
                 </programlisting>
 			</para>
 		</sect2>
-		<sect2 id="el-ognl">
+		<sect2 xml:id="el-ognl">
 			<title>OGNL</title>
 			<para>
-				<ulink url="http://www.ognl.org">OGNL</ulink> is the third supported expression language.
+				<link xl:href="http://www.ognl.org">OGNL</link> is the third supported expression language.
 				OGNL is the EL most familiar to Web Flow version 1.0 users.
-				Please refer to the <ulink url="http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html">OGNL language guide</ulink> for specifics on its EL syntax.
-				If you wish to use OGNL this is the Spring configuration necessary to plug it in: 
+				Please refer to the <link xl:href="http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html">OGNL language guide</link> for specifics on its EL syntax.
+				If you wish to use OGNL this is the Spring configuration necessary to plug it in:
 				<programlisting language="xml"><![CDATA[
 <webflow:flow-builder-services expression-parser="expressionParser"/>
 
@@ -140,7 +144,7 @@
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="el-portability">
+	<sect1 xml:id="el-portability">
 		<title>EL portability</title>
 		<para>
 			In general, you will find Spring EL, Unified EL and OGNL to have a very similar syntax.
@@ -162,10 +166,10 @@
 					</para>
 				</listitem>
 			</orderedlist>
-			For more information on Spring EL syntax please refer to the <ulink url="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html#expressions-language-ref">Language Reference</ulink> section in the Spring Documentation.
+			For more information on Spring EL syntax please refer to the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html#expressions-language-ref">Language Reference</link> section in the Spring Documentation.
 		</para>
 	</sect1>
-	<sect1 id="el-variables">
+	<sect1 xml:id="el-variables">
 		<title>Special EL variables</title>
 		<para>
 			There are several implicit variables you may reference from within a flow.
@@ -176,7 +180,7 @@
 			Variables referring to data scopes (flowScope, viewScope, requestScope, etc.) should only be used when assigning a new variable to one of the scopes.
 		</para>
 		<para>
-			For example when assigning the result of the call to <code>bookingService.findHotels(searchCriteria)</code> to a new variable called "hotels" you must prefix it with a scope variable in order to let Web Flow know where you want it stored: 
+			For example when assigning the result of the call to <code>bookingService.findHotels(searchCriteria)</code> to a new variable called "hotels" you must prefix it with a scope variable in order to let Web Flow know where you want it stored:
 			<programlisting language="xml"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow" ... >
@@ -188,7 +192,7 @@
 			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
 		</on-render>
 	</view-state>
-	
+
 </flow>]]>
 			</programlisting>
 			However when setting an existing variable such as "searchCriteria" in the example below, you reference the variable directly without prefixing it with any scope variables:
@@ -210,23 +214,23 @@
 		<para>
 			The following is the list of implicit variables you can reference within a flow definition:
 		</para>
-		<sect2 id="el-variable-flowScope">
+		<sect2 xml:id="el-variable-flowScope">
 			<title>flowScope</title>
 			<para>
 				Use <code>flowScope</code> to assign a flow variable.
-				Flow scope gets allocated when a flow starts and destroyed when the flow ends.  With the default 
+				Flow scope gets allocated when a flow starts and destroyed when the flow ends.  With the default
                 implementation, any objects stored in flow scope need to be Serializable.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <evaluate expression="searchService.findHotel(hotelId)" result="flowScope.hotel" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-viewScope">
+		<sect2 xml:id="el-variable-viewScope">
 			<title>viewScope</title>
 			<para>
 				Use <code>viewScope</code> to assign a view variable.
 				View scope gets allocated when a <code>view-state</code> enters and destroyed when the state exits.
-				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.  With the 
+				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.  With the
                 default implementation, any objects stored in view scope need to be Serializable.
 			</para>
 			<programlisting language="xml"><![CDATA[
@@ -235,8 +239,8 @@
               result-type="dataModel" />
 </on-render>]]>
 			</programlisting>
-		</sect2>			
-		<sect2 id="el-variable-requestScope">
+		</sect2>
+		<sect2 xml:id="el-variable-requestScope">
 			<title>requestScope</title>
 			<para>
 				Use <code>requestScope</code> to assign a request variable.
@@ -246,31 +250,31 @@
 <set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-flashScope">
+		<sect2 xml:id="el-variable-flashScope">
 			<title>flashScope</title>
 			<para>
 				Use <code>flashScope</code> to assign a flash variable.
-				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the 
+				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the
                 flow ends.  With the default implementation, any objects stored in flash scope need to be Serializable.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<set name="flashScope.statusMessage" value="'Booking confirmed'" />]]>				
+<set name="flashScope.statusMessage" value="'Booking confirmed'" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-conversationScope">
+		<sect2 xml:id="el-variable-conversationScope">
 			<title>conversationScope</title>
 			<para>
 				Use <code>conversationScope</code> to assign a conversation variable.
 				Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
-				Conversation scope is shared by a top-level flow and all of its subflows.  With the default 
-                implementation, conversation scoped objects are stored in the HTTP session and should generally be 
+				Conversation scope is shared by a top-level flow and all of its subflows.  With the default
+                implementation, conversation scoped objects are stored in the HTTP session and should generally be
                 Serializable to account for typical session replication.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <evaluate expression="searchService.findHotel(hotelId)" result="conversationScope.hotel" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-requestParameters">
+		<sect2 xml:id="el-variable-requestParameters">
 			<title>requestParameters</title>
 			<para>
 				Use <code>requestParameters</code> to access a client request parameter:
@@ -279,7 +283,7 @@
 <set name="requestScope.hotelId" value="requestParameters.id" type="long" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-currentEvent">
+		<sect2 xml:id="el-variable-currentEvent">
 			<title>currentEvent</title>
 			<para>
 				Use <code>currentEvent</code> to access attributes of the current <code>Event</code>:
@@ -288,17 +292,17 @@
 <evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-currentUser">
+		<sect2 xml:id="el-variable-currentUser">
 			<title>currentUser</title>
 			<para>
 				Use <code>currentUser</code> to access the authenticated <code>Principal</code>:
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
+<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
           result="flowScope.booking" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-messageContext">
+		<sect2 xml:id="el-variable-messageContext">
 			<title>messageContext</title>
 			<para>
 				Use <code>messageContext</code> to access a context for retrieving and creating flow execution messages, including error and success messages.
@@ -308,7 +312,7 @@
 <evaluate expression="bookingValidator.validate(booking, messageContext)" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-resourceBundle">
+		<sect2 xml:id="el-variable-resourceBundle">
 			<title>resourceBundle</title>
 			<para>
 				Use <code>resourceBundle</code> to access a message resource.
@@ -317,39 +321,39 @@
 <set name="flashScope.successMessage" value="resourceBundle.successMessage" />]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="el-variable-requestContext">
+		<sect2 xml:id="el-variable-requestContext">
 			<title>flowRequestContext</title>
 			<para>
 				Use <code>flowRequestContext</code> to access the <code>RequestContext</code> API, which is a representation of the current flow request.
 				See the API Javadocs for more information.
 			</para>
-		</sect2>		
-		<sect2 id="el-variable-flowExecutionContext">
+		</sect2>
+		<sect2 xml:id="el-variable-flowExecutionContext">
 			<title>flowExecutionContext</title>
 			<para>
 				Use <code>flowExecutionContext</code> to access the <code>FlowExecutionContext</code> API, which is a representation of the current flow state.
 				See the API Javadocs for more information.
 			</para>
-		</sect2>		
-		<sect2 id="el-variable-flowExecutionUrl">
+		</sect2>
+		<sect2 xml:id="el-variable-flowExecutionUrl">
 			<title>flowExecutionUrl</title>
 			<para>
 				Use <code>flowExecutionUrl</code> to access the context-relative URI for the current flow execution view-state.
 			</para>
-		</sect2>		
-		<sect2 id="el-variable-externalContext">
+		</sect2>
+		<sect2 xml:id="el-variable-externalContext">
 			<title>externalContext</title>
 			<para>
 				Use <code>externalContext</code> to access the client environment, including user session attributes.
 				See the <code>ExternalContext</code> API JavaDocs for more information.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="searchService.suggestHotels(externalContext.sessionMap.userProfile)" 
+<evaluate expression="searchService.suggestHotels(externalContext.sessionMap.userProfile)"
           result="viewScope.hotels" />]]>
 			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="el-scope-searching">
+	<sect1 xml:id="el-scope-searching">
 		<title>Scope searching algorithm</title>
 		<para>
 			As mentioned earlier in this section when assigning a variable in one of the flow scopes, referencing that scope is required.

@@ -1,715 +1,719 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="spring-faces">
-  <title>JSF Integration</title>
+<chapter xml:id="spring-faces"
+xmlns="http://docbook.org/ns/docbook" version="5.0"
+xmlns:xl="http://www.w3.org/1999/xlink"
+xmlns:xi="http://www.w3.org/2001/XInclude"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="
+	http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+	http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+	<title>JSF Integration</title>
 
-  <sect1 id="spring-faces-introduction">
-    <title>Introduction</title>
+	<sect1 xml:id="spring-faces-introduction">
+		<title>Introduction</title>
 
-    <para>Spring Web Flow provides a JSF integration that simplifies using JSF
-    with Spring. It lets you use the JSF UI Component Model with Spring MVC
-    and Spring Web Flow controllers. Along with the JSF integration Spring Web
-    Flow provides a Spring Security tag library for use in JSF environments 
-    (see <xref linkend="spring-faces-security-taglib" /> for more details).
-    </para>
+		<para>Spring Web Flow provides a JSF integration that simplifies using JSF
+		with Spring. It lets you use the JSF UI Component Model with Spring MVC
+		and Spring Web Flow controllers. Along with the JSF integration Spring Web
+		Flow provides a Spring Security tag library for use in JSF environments
+		(see <xref linkend="spring-faces-security-taglib" /> for more details).
+		</para>
 
-    <para>Starting with Spring Web Flow version 2.4, JSF integration requires
-    JSF v2.0 or above.  Both Sun Mojarra and Apache MyFaces runtime environments 
-    are supported.</para>
+		<para>Starting with Spring Web Flow version 2.4, JSF integration requires
+		JSF v2.0 or above.    Both Sun Mojarra and Apache MyFaces runtime environments
+		are supported.</para>
 
-    <para>Spring Web Flow also supports using JSF in a portlet environment.
-    Spring Web Flow's portlet integration supports Portlets API 2.0.
-    See <xref linkend="portlet" /> for more on Spring Web Flow's portlet
-    integration.</para>
-  </sect1>
+		<para>Spring Web Flow also supports using JSF in a portlet environment.
+		Spring Web Flow's portlet integration supports Portlets API 2.0.
+		See <xref linkend="portlet" /> for more on Spring Web Flow's portlet
+		integration.</para>
+	</sect1>
 
-  <sect1 id="spring-faces-integration">
-    <title>JSF Integration For Spring Developers</title>
+	<sect1 xml:id="spring-faces-integration">
+		<title>JSF Integration For Spring Developers</title>
 
-    <para>Spring Web Flow complements the strengths of JSF, its component
-    model, and provides more sophisticated state management and navigation. In
-    addition you have the ability to use Spring MVC @Controller or flow
-    definitions as controllers in the web layer.</para>
+		<para>Spring Web Flow complements the strengths of JSF, its component
+		model, and provides more sophisticated state management and navigation. In
+		addition you have the ability to use Spring MVC @Controller or flow
+		definitions as controllers in the web layer.</para>
 
-    <para>JSF applications using Spring Web Flow applications gain benefits in
-    the following areas: <orderedlist>
-        <listitem>
-          <para>Managed bean facility</para>
-        </listitem>
+		<para>JSF applications using Spring Web Flow applications gain benefits in
+		the following areas: <orderedlist>
+			<listitem>
+				<para>Managed bean facility</para>
+			</listitem>
 
-        <listitem>
-          <para>Scope management</para>
-        </listitem>
+			<listitem>
+				<para>Scope management</para>
+			</listitem>
 
-        <listitem>
-          <para>Event handling</para>
-        </listitem>
+			<listitem>
+				<para>Event handling</para>
+			</listitem>
 
-        <listitem>
-          <para>Navigation</para>
-        </listitem>
+			<listitem>
+				<para>Navigation</para>
+			</listitem>
 
-        <listitem>
-          <para>Modularization and packaging of views</para>
-        </listitem>
+			<listitem>
+				<para>Modularization and packaging of views</para>
+			</listitem>
 
-        <listitem>
-          <para>Cleaner URLs</para>
-        </listitem>
+			<listitem>
+				<para>Cleaner URLs</para>
+			</listitem>
 
-        <listitem>
-          <para>Model-level validation</para>
-        </listitem>
-    </orderedlist> Using these features significantly reduce the amount of
-    configuration required in faces-config.xml. They provide a cleaner
-    separation between the view and controller layers along with better
-    modularization of application functionals. These features are detailed in
-    the sections to follow. The majority of these features build on the flow
-    definition language of Spring Web Flow. Therefore it is assumed that you
-    have an understanding of the foundations presented in <xref
-    linkend="defining-flows" />.</para>
-  </sect1>
+			<listitem>
+				<para>Model-level validation</para>
+			</listitem>
+		</orderedlist> Using these features significantly reduce the amount of
+		configuration required in faces-config.xml. They provide a cleaner
+		separation between the view and controller layers along with better
+		modularization of application functionals. These features are detailed in
+		the sections to follow. The majority of these features build on the flow
+		definition language of Spring Web Flow. Therefore it is assumed that you
+		have an understanding of the foundations presented in <xref
+		linkend="defining-flows" />.</para>
+	</sect1>
 
-  <sect1 id="spring-faces-upgrade-from-swf23">
-    <title>Upgrading from Spring Web Flow 2.3</title>
+	<sect1 xml:id="spring-faces-upgrade-from-swf23">
+		<title>Upgrading from Spring Web Flow 2.3</title>
 
-    <para>If you are upgrading from Spring Web Flow 2.3 or earlier you may need to 
-    update several aspects of your project.  JSF 2.0 is now a minimum requirement
-    and as result some components from previous releases are no longer included.</para>
+		<para>If you are upgrading from Spring Web Flow 2.3 or earlier you may need to
+		update several aspects of your project.    JSF 2.0 is now a minimum requirement
+		and as result some components from previous releases are no longer included.</para>
 
-    <sect2 id="spring-faces-upgrade-from-swf23-components">
-      <title>Spring Faces Components</title>
-      <para>Previous releases of Spring Web Flow shipped with a component library 
-      which provided Ajax and client-side validation capabilities for JSF 1.2 
-      environments.  Applications using these components will need to switch to a
-      3rd party JSF component library such as PrimeFaces or RichFaces.
-      Components that have been removed include <code>&lt;sf:clientTextValidator&gt;</code>, 
-      <code>&lt;sf:clientNumberValidator&gt;</code>, <code>&lt;sf:clientDateValidator&gt;</code>,
-      <code>&lt;sf:validateAllOnClick&gt;</code>, <code>&lt;sf:resource&gt;</code> and 
-      <code>&lt;sf:resourceGroup&gt;</code>.
-      The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution 
-      shows an example built with PrimeFaces components.</para>
-    </sect2>
+		<sect2 xml:id="spring-faces-upgrade-from-swf23-components">
+			<title>Spring Faces Components</title>
+			<para>Previous releases of Spring Web Flow shipped with a component library
+			which provided Ajax and client-side validation capabilities for JSF 1.2
+			environments.    Applications using these components will need to switch to a
+			3rd party JSF component library such as PrimeFaces or RichFaces.
+			Components that have been removed include <code>&lt;sf:clientTextValidator&gt;</code>,
+			<code>&lt;sf:clientNumberValidator&gt;</code>, <code>&lt;sf:clientDateValidator&gt;</code>,
+			<code>&lt;sf:validateAllOnClick&gt;</code>, <code>&lt;sf:resource&gt;</code> and
+			<code>&lt;sf:resourceGroup&gt;</code>.
+			The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution
+			shows an example built with PrimeFaces components.</para>
+		</sect2>
 
-    <sect2 id="spring-faces-upgrade-from-swf23-faces-config">
-      <title>Configuring faces-config.xml</title>
-      <para>If your application defines a <code>faces-config.xml</code> file you should
-      ensure that the correct schema version is specified.  In addition you should remove 
-      any <code>FaceletViewHandler</code> references as Facelets are now the default rendering 
-      technology for JSF 2.0</para>
+		<sect2 xml:id="spring-faces-upgrade-from-swf23-faces-config">
+			<title>Configuring faces-config.xml</title>
+			<para>If your application defines a <code>faces-config.xml</code> file you should
+			ensure that the correct schema version is specified.    In addition you should remove
+			any <code>FaceletViewHandler</code> references as Facelets are now the default rendering
+			technology for JSF 2.0</para>
 
-    <programlisting language="xml">
+			<programlisting language="xml">
 &lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
-        version="2.0"&gt;
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+		version="2.0"&gt;
 
 &lt;/faces-config&gt;
-        </programlisting>
-    </sect2>
+			</programlisting>
+		</sect2>
 
-    <sect2 id="spring-faces-upgrade-from-swf23-thirdpartylibraries">
-      <title>Third-party Libraries</title>
-      <para>Previous releases of Spring Web Flow would often require additional configuration in order
-      for 3rd party component libraries to work correctly.  JSF 2.0 introduced standard resource
-      loading mechanisms that removes the need for such custom configuration.  As long as you
-      have a <code>&lt;faces:resources&gt;</code> element in your Spring configuration, libraries 
-      such as RichFaces or Apache Trinidad you should work.</para>
-    </sect2>
+		<sect2 xml:id="spring-faces-upgrade-from-swf23-thirdpartylibraries">
+			<title>Third-party Libraries</title>
+			<para>Previous releases of Spring Web Flow would often require additional configuration in order
+			for 3rd party component libraries to work correctly.    JSF 2.0 introduced standard resource
+			loading mechanisms that removes the need for such custom configuration.    As long as you
+			have a <code>&lt;faces:resources&gt;</code> element in your Spring configuration, libraries
+			such as RichFaces or Apache Trinidad you should work.</para>
+		</sect2>
 
-    <sect2 id="spring-faces-upgrade-from-swf23-security-taglib">
-      <title>Spring Security Facelets Tag Library</title>
-      <para>If you have a previously configured <code>/WEB-INF/springsecurity.taglib.xml</code> file
-      you may need to update the contents.  See <xref linkend="spring-faces-security-taglib"/> for 
-      details.</para>
-    </sect2>
-  </sect1>
+		<sect2 xml:id="spring-faces-upgrade-from-swf23-security-taglib">
+			<title>Spring Security Facelets Tag Library</title>
+			<para>If you have a previously configured <code>/WEB-INF/springsecurity.taglib.xml</code> file
+			you may need to update the contents.    See <xref linkend="spring-faces-security-taglib"/> for
+			details.</para>
+		</sect2>
+	</sect1>
 
-  <sect1 id="spring-faces-config-web.xml">
-    <title>Configuring web.xml</title>
+	<sect1 xml:id="spring-faces-config-web.xml">
+		<title>Configuring web.xml</title>
 
-    <para>The first step is to route requests to the
-    <code>DispatcherServlet</code> in the <code>web.xml</code> file. In this
-    example, we map all URLs that begin with <code>/spring/</code> to the
-    servlet. The servlet needs to be configured. An <code>init-param</code> is
-    used in the servlet to pass the <code>contextConfigLocation</code>. This
-    is the location of the Spring configuration for your web
-    application.</para>
+		<para>The first step is to route requests to the
+		<code>DispatcherServlet</code> in the <code>web.xml</code> file. In this
+		example, we map all URLs that begin with <code>/spring/</code> to the
+		servlet. The servlet needs to be configured. An <code>init-param</code> is
+		used in the servlet to pass the <code>contextConfigLocation</code>. This
+		is the location of the Spring configuration for your web
+		application.</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 &lt;servlet&gt;
-    &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
-    &lt;init-param&gt;
-        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
-        &lt;param-value&gt;/WEB-INF/web-application-config.xml&lt;/param-value&gt;
-    &lt;/init-param&gt;
-    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+	&lt;init-param&gt;
+		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+		&lt;param-value&gt;/WEB-INF/web-application-config.xml&lt;/param-value&gt;
+	&lt;/init-param&gt;
+	&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
 &lt;/servlet&gt;
-    
+
 &lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;/spring/*&lt;/url-pattern&gt;
+	&lt;servlet-name&gt;Spring MVC Dispatcher Servlet&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/spring/*&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
-        </programlisting>
+		</programlisting>
 
-    <para>In order for JSF to bootstrap correctly, the
-    <code>FacesServlet</code> must be configured in <code>web.xml</code> as it
-    normally would even though you generally will not need to route requests
-    through it at all when using JSF with Spring Web Flow.</para>
+		<para>In order for JSF to bootstrap correctly, the
+		<code>FacesServlet</code> must be configured in <code>web.xml</code> as it
+		normally would even though you generally will not need to route requests
+		through it at all when using JSF with Spring Web Flow.</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 &lt;!-- Just here so the JSF implementation can initialize, *not* used at runtime --&gt;
 &lt;servlet&gt;
-    &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;
-    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;
+	&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
 &lt;/servlet&gt;
-    
+
 &lt;!-- Just here so the JSF implementation can initialize --&gt;
 &lt;servlet-mapping&gt;
-    &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
-    &lt;url-pattern&gt;*.faces&lt;/url-pattern&gt;
+	&lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;*.faces&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
-        </programlisting>
+		</programlisting>
 
-    <para>The use of Facelets instead of JSP typically requires this in
-    web.xml:</para>
+		<para>The use of Facelets instead of JSP typically requires this in
+		web.xml:</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 !-- Use JSF view templates saved as *.xhtml, for use with Facelets --&gt;
 &lt;context-param&gt;
-    &lt;param-name&gt;javax.faces.DEFAULT_SUFFIX&lt;/param-name&gt;
-    &lt;param-value&gt;.xhtml&lt;/param-value&gt;
+	&lt;param-name&gt;javax.faces.DEFAULT_SUFFIX&lt;/param-name&gt;
+	&lt;param-value&gt;.xhtml&lt;/param-value&gt;
 &lt;/context-param&gt;
-        </programlisting>
+		</programlisting>
 
-  </sect1>
+	</sect1>
 
-  <sect1 id="spring-faces-webflow-config">
-    <title>Configuring Web Flow for use with JSF</title>
+	<sect1 xml:id="spring-faces-webflow-config">
+		<title>Configuring Web Flow for use with JSF</title>
 
-    <para>This section explains how to configure Web Flow with JSF.  The
-    following is sample configuration for Web Flow and JSF:</para>
+		<para>This section explains how to configure Web Flow with JSF.    The
+		following is sample configuration for Web Flow and JSF:</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:webflow="http://www.springframework.org/schema/webflow-config"
-    xmlns:faces="http://www.springframework.org/schema/faces"
-    si:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/webflow-config
-        http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd
-        http://www.springframework.org/schema/faces
-        http://www.springframework.org/schema/faces/spring-faces-2.2.xsd"&gt;
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+	xmlns:faces="http://www.springframework.org/schema/faces"
+	si:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/webflow-config
+		http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd
+		http://www.springframework.org/schema/faces
+		http://www.springframework.org/schema/faces/spring-faces-2.2.xsd"&gt;
 
-    &lt;!-- Executes flows: the central entry point into the Spring Web Flow system --&gt;
-    &lt;webflow:flow-executor id="flowExecutor"&gt;
-        &lt;webflow:flow-execution-listeners&gt;
-            &lt;webflow:listener ref="facesContextListener"/&gt;
-        &lt;/webflow:flow-execution-listeners&gt;
-    &lt;/webflow:flow-executor&gt;
-	
-    &lt;!-- The registry of executable flow definitions --&gt;
-    &lt;webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/WEB-INF"&gt;
-        &lt;webflow:flow-location-pattern value="**/*-flow.xml" /&gt;
-    &lt;/webflow:flow-registry&gt;
+	&lt;!-- Executes flows: the central entry point into the Spring Web Flow system --&gt;
+	&lt;webflow:flow-executor id="flowExecutor"&gt;
+		&lt;webflow:flow-execution-listeners&gt;
+			&lt;webflow:listener ref="facesContextListener"/&gt;
+		&lt;/webflow:flow-execution-listeners&gt;
+	&lt;/webflow:flow-executor&gt;
 
-    &lt;!-- Configures the Spring Web Flow JSF integration --&gt;
-    &lt;faces:flow-builder-services id="flowBuilderServices" /&gt;
+	&lt;!-- The registry of executable flow definitions --&gt;
+	&lt;webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/WEB-INF"&gt;
+		&lt;webflow:flow-location-pattern value="**/*-flow.xml" /&gt;
+	&lt;/webflow:flow-registry&gt;
 
-    &lt;!-- A listener maintain one FacesContext instance per Web Flow request. --&gt;
-    &lt;bean id="facesContextListener" 
-        class="org.springframework.faces.webflow.FlowFacesContextLifecycleListener" /&gt;	
+	&lt;!-- Configures the Spring Web Flow JSF integration --&gt;
+	&lt;faces:flow-builder-services id="flowBuilderServices" /&gt;
+
+	&lt;!-- A listener maintain one FacesContext instance per Web Flow request. --&gt;
+	&lt;bean id="facesContextListener"
+		class="org.springframework.faces.webflow.FlowFacesContextLifecycleListener" /&gt;
 
 &lt;/beans&gt;
-        </programlisting>
+		</programlisting>
 
-    <para>The main points are the installation of a
-    <code>FlowFacesContextLifecycleListener</code> that manages a single
-    FacesContext for the duration of Web Flow request and the use of the
-    <code>flow-builder-services</code> element from the <code>faces</code>
-    custom namespace to configure rendering for a JSF environment.</para>
+		<para>The main points are the installation of a
+		<code>FlowFacesContextLifecycleListener</code> that manages a single
+		FacesContext for the duration of Web Flow request and the use of the
+		<code>flow-builder-services</code> element from the <code>faces</code>
+		custom namespace to configure rendering for a JSF environment.</para>
 
-    <para>In a JSF environment you'll also need this Spring MVC related
-    configuration:</para>
+		<para>In a JSF environment you'll also need this Spring MVC related
+		configuration:</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:faces="http://www.springframework.org/schema/faces"
-       xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-           http://www.springframework.org/schema/faces
-           http://www.springframework.org/schema/faces/spring-faces-2.2.xsd"&gt;
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns:faces="http://www.springframework.org/schema/faces"
+		 xsi:schemaLocation="
+			 http://www.springframework.org/schema/beans
+			 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			 http://www.springframework.org/schema/faces
+			 http://www.springframework.org/schema/faces/spring-faces-2.2.xsd"&gt;
 
-    &lt;faces:resources /&gt;
-    
-    &lt;bean class="org.springframework.faces.webflow.JsfFlowHandlerAdapter"&gt;
-        &lt;property name="flowExecutor" ref="flowExecutor" /&gt;
-    &lt;/bean&gt;
+	&lt;faces:resources /&gt;
+
+	&lt;bean class="org.springframework.faces.webflow.JsfFlowHandlerAdapter"&gt;
+		&lt;property name="flowExecutor" ref="flowExecutor" /&gt;
+	&lt;/bean&gt;
 
 &lt;/beans&gt;
-        </programlisting>
+		</programlisting>
 
-    <para>The <code>resources</code> custom namespace element delegates JSF
-    resource requests to the JSF resource API. The
-    <code>JsfFlowHandlerAdapter</code> is a replacement for the
-    <code>FlowHandlerAdapter</code> normally used with Web Flow. This adapter
-    initializes itself with a <code>JsfAjaxHandler</code> instead of the
-    <code>SpringJavaSciprtAjaxHandler</code>.</para>
-  </sect1>
+		<para>The <code>resources</code> custom namespace element delegates JSF
+		resource requests to the JSF resource API. The
+		<code>JsfFlowHandlerAdapter</code> is a replacement for the
+		<code>FlowHandlerAdapter</code> normally used with Web Flow. This adapter
+		initializes itself with a <code>JsfAjaxHandler</code> instead of the
+		<code>SpringJavaSciprtAjaxHandler</code>.</para>
+	</sect1>
 
-  <sect1 id="spring-faces-managed-beans">
-    <title>Replacing the JSF Managed Bean Facility</title>
+	<sect1 xml:id="spring-faces-managed-beans">
+		<title>Replacing the JSF Managed Bean Facility</title>
 
-    <para>When using JSF with Spring Web Flow you can completely replace the
-    JSF managed bean facility with a combination of Web Flow managed variables
-    and Spring managed beans. It gives you a good deal more control over the
-    lifecycle of your managed objects with well-defined hooks for
-    initialization and execution of your domain model. Additionally, since you
-    are presumably already using Spring for your business layer, it reduces
-    the conceptual overhead of having to maintain two different managed bean
-    models.</para>
+		<para>When using JSF with Spring Web Flow you can completely replace the
+		JSF managed bean facility with a combination of Web Flow managed variables
+		and Spring managed beans. It gives you a good deal more control over the
+		lifecycle of your managed objects with well-defined hooks for
+		initialization and execution of your domain model. Additionally, since you
+		are presumably already using Spring for your business layer, it reduces
+		the conceptual overhead of having to maintain two different managed bean
+		models.</para>
 
-    <para>In doing pure JSF development, you will quickly find that request
-    scope is not long-lived enough for storing conversational model objects
-    that drive complex event-driven views. In JSF the usual option is to begin 
-    putting things into session scope, with the extra
-    burden of needing to clean the objects up before progressing to another
-    view or functional area of the application. What is really needed is a
-    managed scope that is somewhere between request and session scope. JSF
-    provides flash and view scopes that can be accessed programmatically via
-    UIViewRoot.getViewMap(). Spring Web Flow provides access to flash, view,
-    flow, and conversation scopes. These scopes are seamlessly integrated
-    through JSF variable resolvers and work the same in all JSF 
-    applications.</para>
+		<para>In doing pure JSF development, you will quickly find that request
+		scope is not long-lived enough for storing conversational model objects
+		that drive complex event-driven views. In JSF the usual option is to begin
+		putting things into session scope, with the extra
+		burden of needing to clean the objects up before progressing to another
+		view or functional area of the application. What is really needed is a
+		managed scope that is somewhere between request and session scope. JSF
+		provides flash and view scopes that can be accessed programmatically via
+		UIViewRoot.getViewMap(). Spring Web Flow provides access to flash, view,
+		flow, and conversation scopes. These scopes are seamlessly integrated
+		through JSF variable resolvers and work the same in all JSF
+		applications.</para>
 
-    <sect2 id="spring-faces-flow-variables">
-      <title>Using Flow Variables</title>
+		<sect2 xml:id="spring-faces-flow-variables">
+			<title>Using Flow Variables</title>
 
-      <para>The easiest and most natural way to declare and manage the model
-      is through the use of <link linkend="flow-variables">flow
-      variables</link>. You can declare these variables at the beginning of
-      the flow:</para>
+			<para>The easiest and most natural way to declare and manage the model
+			is through the use of <link linkend="flow-variables">flow
+			variables</link>. You can declare these variables at the beginning of
+			the flow:</para>
 
-      <programlisting language="xml">
+			<programlisting language="xml">
 &lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>and then reference this variable in one of the flow's JSF view
-      templates through EL:</para>
+			<para>and then reference this variable in one of the flow's JSF view
+			templates through EL:</para>
 
-      <programlisting language="xml">
+			<programlisting language="xml">
 &lt;h:inputText id="searchString" value="#{searchCriteria.searchString}"/&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>Note that you do not need to prefix the variable with its scope
-      when referencing it from the template (though you can do so if you need
-      to be more specific). As with standard JSF beans, all available scopes
-      will be searched for a matching variable, so you could change the scope
-      of the variable in your flow definition without having to modify the EL
-      expressions that reference it.</para>
+			<para>Note that you do not need to prefix the variable with its scope
+			when referencing it from the template (though you can do so if you need
+			to be more specific). As with standard JSF beans, all available scopes
+			will be searched for a matching variable, so you could change the scope
+			of the variable in your flow definition without having to modify the EL
+			expressions that reference it.</para>
 
-      <para>You can also define view instance variables that are scoped to the
-      current view and get cleaned up automatically upon transitioning to
-      another view. This is quite useful with JSF as views are often
-      constructed to handle multiple in-page events across many requests
-      before transitioning to another view.</para>
+			<para>You can also define view instance variables that are scoped to the
+			current view and get cleaned up automatically upon transitioning to
+			another view. This is quite useful with JSF as views are often
+			constructed to handle multiple in-page events across many requests
+			before transitioning to another view.</para>
 
-      <para>To define a view instance variable, you can use the
-      <code>var</code> element inside a <code>view-state</code>
-      definition:</para>
+			<para>To define a view instance variable, you can use the
+			<code>var</code> element inside a <code>view-state</code>
+			definition:</para>
 
-      <programlisting language="xml">
-&lt;view-state id="enterSearchCriteria"&gt; 
-    &lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/&gt; 
+			<programlisting language="xml">
+&lt;view-state id="enterSearchCriteria"&gt;
+	&lt;var name="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria"/&gt;
 &lt;/view-state&gt;
-            </programlisting>
-    </sect2>
+			</programlisting>
+		</sect2>
 
-    <sect2 id="spring-faces-spring-beans">
-      <title>Using Scoped Spring Beans</title>
+		<sect2 xml:id="spring-faces-spring-beans">
+			<title>Using Scoped Spring Beans</title>
 
-      <para>Though defining autowired flow instance variables provides nice
-      modularization and readability, occasions may arise where you want to
-      utilize the other capabilities of the Spring container such as AOP. In
-      these cases, you can define a bean in your Spring ApplicationContext and
-      give it a specific web flow scope:</para>
+			<para>Though defining autowired flow instance variables provides nice
+			modularization and readability, occasions may arise where you want to
+			utilize the other capabilities of the Spring container such as AOP. In
+			these cases, you can define a bean in your Spring ApplicationContext and
+			give it a specific web flow scope:</para>
 
-      <programlisting language="xml">
+			<programlisting language="xml">
 &lt;bean id="searchCriteria" class="com.mycompany.myapp.hotels.search.SearchCriteria" scope="flow"/&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>The major difference with this approach is that the bean will not
-      be fully initialized until it is first accessed via an EL expression.
-      This sort of lazy instantiation via EL is quite similar to how JSF
-      managed beans are typically allocated.</para>
-    </sect2>
+			<para>The major difference with this approach is that the bean will not
+			be fully initialized until it is first accessed via an EL expression.
+			This sort of lazy instantiation via EL is quite similar to how JSF
+			managed beans are typically allocated.</para>
+		</sect2>
 
-    <sect2 id="faces-manipulating-model">
-      <title>Manipulating The Model</title>
+		<sect2 xml:id="faces-manipulating-model">
+			<title>Manipulating The Model</title>
 
-      <para>The need to initialize the model before view rendering (such as by
-      loading persistent entities from a database) is quite common, but JSF by
-      itself does not provide any convenient hooks for such initialization.
-      The flow definition language provides a natural facility for this
-      through its <link linkend="flow-actions">Actions</link> . Spring Web
-      Flow provides some extra conveniences for converting the outcome of an
-      action into a JSF-specific data structure. For example:</para>
+			<para>The need to initialize the model before view rendering (such as by
+			loading persistent entities from a database) is quite common, but JSF by
+			itself does not provide any convenient hooks for such initialization.
+			The flow definition language provides a natural facility for this
+			through its <link linkend="flow-actions">Actions</link> . Spring Web
+			Flow provides some extra conveniences for converting the outcome of an
+			action into a JSF-specific data structure. For example:</para>
 
-      <programlisting language="xml"> 
+			<programlisting language="xml">
 &lt;on-render&gt;
-    &lt;evaluate expression="bookingService.findBookings(currentUser.name)" 
-              result="viewScope.bookings" result-type="dataModel" /&gt;
+	&lt;evaluate expression="bookingService.findBookings(currentUser.name)"
+				result="viewScope.bookings" result-type="dataModel" /&gt;
 &lt;/on-render&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>This will take the result of the
-      <code>bookingService.findBookings</code> method an wrap it in a custom
-      JSF DataModel so that the list can be used in a standard JSF DataTable
-      component:</para>
+			<para>This will take the result of the
+			<code>bookingService.findBookings</code> method an wrap it in a custom
+			JSF DataModel so that the list can be used in a standard JSF DataTable
+			component:</para>
 
-      <programlisting language="xml"> 
-&lt;h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking" 
-             rendered="#{bookings.rowCount &gt; 0}"&gt;
-    &lt;h:column&gt;
-        &lt;f:facet name="header"&gt;Name&lt;/f:facet&gt;
-        #{booking.hotel.name}
-    &lt;/h:column&gt;                   
-    &lt;h:column&gt;
-    &lt;f:facet name="header"&gt;Confirmation number&lt;/f:facet&gt;
-        #{booking.id}
-        &lt;/h:column&gt;
-    &lt;h:column&gt;
-        &lt;f:facet name="header"&gt;Action&lt;/f:facet&gt;
-        &lt;h:commandLink id="cancel" value="Cancel" action="cancelBooking" /&gt;
-    &lt;/h:column&gt;
+			<programlisting language="xml">
+&lt;h:dataTable id="bookings" styleClass="summary" value="#{bookings}" var="booking"
+			rendered="#{bookings.rowCount &gt; 0}"&gt;
+	&lt;h:column&gt;
+		&lt;f:facet name="header"&gt;Name&lt;/f:facet&gt;
+		#{booking.hotel.name}
+	&lt;/h:column&gt;
+	&lt;h:column&gt;
+	&lt;f:facet name="header"&gt;Confirmation number&lt;/f:facet&gt;
+		#{booking.id}
+		&lt;/h:column&gt;
+	&lt;h:column&gt;
+		&lt;f:facet name="header"&gt;Action&lt;/f:facet&gt;
+		&lt;h:commandLink id="cancel" value="Cancel" action="cancelBooking" /&gt;
+	&lt;/h:column&gt;
 &lt;/h:dataTable&gt;
-            </programlisting>
-    </sect2>
+			</programlisting>
+		</sect2>
 
-    <sect2 id="faces-data-model-implementations">
-      <title>Data Model Implementations</title>
+		<sect2 xml:id="faces-data-model-implementations">
+			<title>Data Model Implementations</title>
 
-      <para>In the example above result-type="dataModel" results in the
-      wrapping of List&lt;Booking&gt; with custom
-      <classname>DataModel</classname> type. The custom
-      <classname>DataModel</classname> provides extra conveniences such as
-      being serializable for storage beyond request scope as well as access to
-      the currently selected row in EL expressions. For example, on postback
-      from a view where the action event was fired by a component within a
-      DataTable, you can take action on the selected row's model
-      instance:</para>
+			<para>In the example above result-type="dataModel" results in the
+			wrapping of List&lt;Booking&gt; with custom
+			<classname>DataModel</classname> type. The custom
+			<classname>DataModel</classname> provides extra conveniences such as
+			being serializable for storage beyond request scope as well as access to
+			the currently selected row in EL expressions. For example, on postback
+			from a view where the action event was fired by a component within a
+			DataTable, you can take action on the selected row's model
+			instance:</para>
 
-      <programlisting language="xml">
+			<programlisting language="xml">
 &lt;transition on="cancelBooking"&gt;
-    &lt;evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" /&gt;            
+	&lt;evaluate expression="bookingService.cancelBooking(bookings.selectedRow)" /&gt;
 &lt;/transition&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>Spring Web Flow provides two custom DataModel types:
-      <classname>OneSelectionTrackingListDataModel</classname> and
-      <classname>ManySelectionTrackingListDataModel</classname>. As the names
-      indicate they keep track of one or multiple selected rows. This is done
-      with the help of a
-      <classname>SelectionTrackingActionListener</classname> listener, which
-      responds to JSF action events and invokes the appopriate methods on the
-      <classname>SelectinAware</classname> data models to record the currently
-      clicked row.</para>
+			<para>Spring Web Flow provides two custom DataModel types:
+			<classname>OneSelectionTrackingListDataModel</classname> and
+			<classname>ManySelectionTrackingListDataModel</classname>. As the names
+			indicate they keep track of one or multiple selected rows. This is done
+			with the help of a
+			<classname>SelectionTrackingActionListener</classname> listener, which
+			responds to JSF action events and invokes the appopriate methods on the
+			<classname>SelectinAware</classname> data models to record the currently
+			clicked row.</para>
 
-      <para>To understand how this is configured, keep in mind the
-      <classname>FacesConversionService</classname> registers a
-      <classname>DataModelConverter</classname> against the alias "dataModel"
-      on startup. When result-type="dataModel" is used in a flow definition it
-      causes the <classname>DataModelConverter</classname> to be used. The
-      converter then wraps the given List with an instance of
-      <classname>OneSelectionTrackingListDataModel</classname>. To use the
-      <classname>ManySelectionTrackingListDataModel</classname> you will need
-      to register your own custom converter.</para>
-    </sect2>
-  </sect1>
+			<para>To understand how this is configured, keep in mind the
+			<classname>FacesConversionService</classname> registers a
+			<classname>DataModelConverter</classname> against the alias "dataModel"
+			on startup. When result-type="dataModel" is used in a flow definition it
+			causes the <classname>DataModelConverter</classname> to be used. The
+			converter then wraps the given List with an instance of
+			<classname>OneSelectionTrackingListDataModel</classname>. To use the
+			<classname>ManySelectionTrackingListDataModel</classname> you will need
+			to register your own custom converter.</para>
+		</sect2>
+	</sect1>
 
-  <sect1 id="spring-faces-event-handling">
-    <title>Handling JSF Events With Spring Web Flow</title>
+	<sect1 xml:id="spring-faces-event-handling">
+		<title>Handling JSF Events With Spring Web Flow</title>
 
-    <para>Spring Web Flow allows you to handle JSF action events in a
-    decoupled way, requiring no direct dependencies in your Java code on JSF
-    API's. In fact, these events can often be handled completely in the flow
-    definiton language without requiring any custom Java action code at all.
-    This allows for a more agile development process since the artifacts being
-    manipulated in wiring up events (JSF view templates and SWF flow
-    definitions) are instantly refreshable without requiring a build and
-    re-deploy of the whole application.</para>
+		<para>Spring Web Flow allows you to handle JSF action events in a
+		decoupled way, requiring no direct dependencies in your Java code on JSF
+		API's. In fact, these events can often be handled completely in the flow
+		definiton language without requiring any custom Java action code at all.
+		This allows for a more agile development process since the artifacts being
+		manipulated in wiring up events (JSF view templates and SWF flow
+		definitions) are instantly refreshable without requiring a build and
+		re-deploy of the whole application.</para>
 
-    <sect2 id="spring-faces-in-page-events">
-      <title>Handling JSF In-page Action Events</title>
+		<sect2 xml:id="spring-faces-in-page-events">
+			<title>Handling JSF In-page Action Events</title>
 
-      <para>A simple but common case in JSF is the need to signal an event
-      that causes manipulation of the model in some way and then redisplays
-      the same view to reflect the changed state of the model. The flow
-      definition language has special support for this in the
-      <code>transition</code> element.</para>
+			<para>A simple but common case in JSF is the need to signal an event
+			that causes manipulation of the model in some way and then redisplays
+			the same view to reflect the changed state of the model. The flow
+			definition language has special support for this in the
+			<code>transition</code> element.</para>
 
-      <para>A good example of this is a table of paged list results. Suppose
-      you want to be able to load and display only a portion of a large result
-      list, and allow the user to page through the results. The initial
-      <code>view-state</code> definition to load and display the list would
-      be:</para>
+			<para>A good example of this is a table of paged list results. Suppose
+			you want to be able to load and display only a portion of a large result
+			list, and allow the user to page through the results. The initial
+			<code>view-state</code> definition to load and display the list would
+			be:</para>
 
-      <programlisting language="xml"> 
+			<programlisting language="xml">
 &lt;view-state id="reviewHotels"&gt;
-    &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-                  result="viewScope.hotels" result-type="dataModel" /&gt;
-    &lt;/on-render&gt;
+	&lt;on-render&gt;
+		&lt;evaluate expression="bookingService.findHotels(searchCriteria)"
+					result="viewScope.hotels" result-type="dataModel" /&gt;
+	&lt;/on-render&gt;
 &lt;/view-state&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>You construct a JSF DataTable that displays the current
-      <code>hotels</code> list, and then place a "More Results" link below the
-      table:</para>
+			<para>You construct a JSF DataTable that displays the current
+			<code>hotels</code> list, and then place a "More Results" link below the
+			table:</para>
 
-      <programlisting language="xml"> 
+			<programlisting language="xml">
 &lt;h:commandLink id="nextPageLink" value="More Results" action="next"/&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>This commandLink signals a "next" event from its action attribute.
-      You can then handle the event by adding to the <code>view-state</code>
-      definition:</para>
+			<para>This commandLink signals a "next" event from its action attribute.
+			You can then handle the event by adding to the <code>view-state</code>
+			definition:</para>
 
-      <programlisting language="xml"> 
+			<programlisting language="xml">
 &lt;view-state id="reviewHotels"&gt;
-    &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-            result="viewScope.hotels" result-type="dataModel" /&gt;
-    &lt;/on-render&gt;
-    &lt;transition on="next"&gt;
-        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-    &lt;/transition&gt;
+	&lt;on-render&gt;
+		&lt;evaluate expression="bookingService.findHotels(searchCriteria)"
+			result="viewScope.hotels" result-type="dataModel" /&gt;
+	&lt;/on-render&gt;
+	&lt;transition on="next"&gt;
+		&lt;evaluate expression="searchCriteria.nextPage()" /&gt;
+	&lt;/transition&gt;
 &lt;/view-state&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>Here you handle the "next" event by incrementing the page count on
-      the searchCriteria instance. The <code>on-render</code> action is then
-      called again with the updated criteria, which causes the next page of
-      results to be loaded into the DataModel. The same view is re-rendered
-      since there was no <code>to</code> attribute on the
-      <code>transition</code> element, and the changes in the model are
-      reflected in the view.</para>
-    </sect2>
+			<para>Here you handle the "next" event by incrementing the page count on
+			the searchCriteria instance. The <code>on-render</code> action is then
+			called again with the updated criteria, which causes the next page of
+			results to be loaded into the DataModel. The same view is re-rendered
+			since there was no <code>to</code> attribute on the
+			<code>transition</code> element, and the changes in the model are
+			reflected in the view.</para>
+		</sect2>
 
-    <sect2 id="spring-faces-action-events">
-      <title>Handling JSF Action Events</title>
+		<sect2 xml:id="spring-faces-action-events">
+			<title>Handling JSF Action Events</title>
 
-      <para>The next logical level beyond in-page events are events that
-      require navigation to another view, with some manipulation of the model
-      along the way. Achieving this with pure JSF would require adding a
-      navigation rule to faces-config.xml and likely some intermediary Java
-      code in a JSF managed bean (both tasks requiring a re-deploy). With the
-      flow defintion language, you can handle such a case concisely in one
-      place in a quite similar way to how in-page events are handled.</para>
+			<para>The next logical level beyond in-page events are events that
+			require navigation to another view, with some manipulation of the model
+			along the way. Achieving this with pure JSF would require adding a
+			navigation rule to faces-config.xml and likely some intermediary Java
+			code in a JSF managed bean (both tasks requiring a re-deploy). With the
+			flow defintion language, you can handle such a case concisely in one
+			place in a quite similar way to how in-page events are handled.</para>
 
-      <para>Continuing on with our use case of manipulating a paged list of
-      results, suppose we want each row in the displayed DataTable to contain
-      a link to a detail page for that row instance. You can add a column to
-      the table containing the following <code>commandLink</code>
-      component:</para>
+			<para>Continuing on with our use case of manipulating a paged list of
+			results, suppose we want each row in the displayed DataTable to contain
+			a link to a detail page for that row instance. You can add a column to
+			the table containing the following <code>commandLink</code>
+			component:</para>
 
-      <programlisting language="xml">
+			<programlisting language="xml">
 &lt;h:commandLink id="viewHotelLink" value="View Hotel" action="select"/&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>This raises the "select" event which you can then handle by adding
-      another <code>transition</code> element to the existing
-      <code>view-state</code> :</para>
+			<para>This raises the "select" event which you can then handle by adding
+			another <code>transition</code> element to the existing
+			<code>view-state</code> :</para>
 
-      <programlisting language="xml"> 
+			<programlisting language="xml">
 &lt;view-state id="reviewHotels"&gt;
-    &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-            result="viewScope.hotels" result-type="dataModel" /&gt;
-    &lt;/on-render&gt;
-    &lt;transition on="next"&gt;
-        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-    &lt;/transition&gt;
-    &lt;transition on="select" to="reviewHotel"&gt;
-            &lt;set name="flowScope.hotel" value="hotels.selectedRow" /&gt;
-    &lt;/transition&gt;
+	&lt;on-render&gt;
+		&lt;evaluate expression="bookingService.findHotels(searchCriteria)"
+			result="viewScope.hotels" result-type="dataModel" /&gt;
+	&lt;/on-render&gt;
+	&lt;transition on="next"&gt;
+		&lt;evaluate expression="searchCriteria.nextPage()" /&gt;
+	&lt;/transition&gt;
+	&lt;transition on="select" to="reviewHotel"&gt;
+			&lt;set name="flowScope.hotel" value="hotels.selectedRow" /&gt;
+	&lt;/transition&gt;
 &lt;/view-state&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>Here the "select" event is handled by pushing the currently
-      selected hotel instance from the DataTable into flow scope, so that it
-      may be referenced by the "reviewHotel" <code>view-state</code> .</para>
-    </sect2>
+			<para>Here the "select" event is handled by pushing the currently
+			selected hotel instance from the DataTable into flow scope, so that it
+			may be referenced by the "reviewHotel" <code>view-state</code> .</para>
+		</sect2>
 
-    <sect2 id="spring-faces-model-validation">
-      <title>Performing Model Validation</title>
+		<sect2 xml:id="spring-faces-model-validation">
+			<title>Performing Model Validation</title>
 
-      <para>JSF provides useful facilities for validating input at field-level
-      before changes are applied to the model, but when you need to then
-      perform more complex validation at the model-level after the updates
-      have been applied, you are generally left with having to add more custom
-      code to your JSF action methods in the managed bean. Validation of this
-      sort is something that is generally a responsibility of the domain model
-      itself, but it is difficult to get any error messages propagated back to
-      the view without introducing an undesirable dependency on the JSF API in
-      your domain layer.</para>
+			<para>JSF provides useful facilities for validating input at field-level
+			before changes are applied to the model, but when you need to then
+			perform more complex validation at the model-level after the updates
+			have been applied, you are generally left with having to add more custom
+			code to your JSF action methods in the managed bean. Validation of this
+			sort is something that is generally a responsibility of the domain model
+			itself, but it is difficult to get any error messages propagated back to
+			the view without introducing an undesirable dependency on the JSF API in
+			your domain layer.</para>
 
-      <para>With Web Flow, you can utilize the generic and low-level
-      <code>MessageContext</code> in your business code and any messages added
-      there will then be available to the <code>FacesContext</code> at render
-      time.</para>
+			<para>With Web Flow, you can utilize the generic and low-level
+			<code>MessageContext</code> in your business code and any messages added
+			there will then be available to the <code>FacesContext</code> at render
+			time.</para>
 
-      <para>For example, suppose you have a view where the user enters the
-      necessary details to complete a hotel booking, and you need to ensure
-      the Check In and Check Out dates adhere to a given set of business
-      rules. You can invoke such model-level validation from a
-      <code>transition</code> element:</para>
+			<para>For example, suppose you have a view where the user enters the
+			necessary details to complete a hotel booking, and you need to ensure
+			the Check In and Check Out dates adhere to a given set of business
+			rules. You can invoke such model-level validation from a
+			<code>transition</code> element:</para>
 
-      <programlisting language="xml"> 
+			<programlisting language="xml">
 &lt;view-state id="enterBookingDetails"&gt;
-    &lt;transition on="proceed" to="reviewBooking"&gt;
-        &lt;evaluate expression="booking.validateEnterBookingDetails(messageContext)" /&gt;
-    &lt;/transition&gt;
+	&lt;transition on="proceed" to="reviewBooking"&gt;
+		&lt;evaluate expression="booking.validateEnterBookingDetails(messageContext)" /&gt;
+	&lt;/transition&gt;
 &lt;/view-state&gt;
-            </programlisting>
+			</programlisting>
 
-      <para>Here the "proceed" event is handled by invoking a model-level
-      validation method on the booking instance, passing the generic
-      <code>MessageContext</code> instance so that messages may be recorded.
-      The messages can then be displayed along with any other JSF messages
-      with the <code>h:messages</code> component,</para>
+			<para>Here the "proceed" event is handled by invoking a model-level
+			validation method on the booking instance, passing the generic
+			<code>MessageContext</code> instance so that messages may be recorded.
+			The messages can then be displayed along with any other JSF messages
+			with the <code>h:messages</code> component,</para>
 
-      <para></para>
-    </sect2>
+			<para></para>
+		</sect2>
 
-    <sect2 id="spring-faces-ajax-events-jsf2">
-      <title>Handling Ajax Events In JSF</title>
+		<sect2 xml:id="spring-faces-ajax-events-jsf2">
+			<title>Handling Ajax Events In JSF</title>
 
-      <para>JSF provides built-in support for sending Ajax requests and
-      performing partial processing and rendering on the server-side. You can
-      specify a list of id's for partial rendering through the &lt;f:ajax&gt;
-      facelets tag.</para>
+			<para>JSF provides built-in support for sending Ajax requests and
+			performing partial processing and rendering on the server-side. You can
+			specify a list of id's for partial rendering through the &lt;f:ajax&gt;
+			facelets tag.</para>
 
-      <para>In Spring Web Flow you also have the option to specify the ids to
-      use for partial rendering on the server side with the render
-      action:</para>
+			<para>In Spring Web Flow you also have the option to specify the ids to
+			use for partial rendering on the server side with the render
+			action:</para>
 
-      <programlisting language="xml">
+			<programlisting language="xml">
 &lt;view-state id="reviewHotels"&gt;
-    &lt;on-render&gt;
-        &lt;evaluate expression="bookingService.findHotels(searchCriteria)" 
-                  result="viewScope.hotels" result-type="dataModel" /&gt;
-    &lt;/on-render&gt;
-    &lt;transition on="next"&gt;
-        &lt;evaluate expression="searchCriteria.nextPage()" /&gt;
-        &lt;render fragments="hotels:searchResultsFragment" /&gt;
-    &lt;/transition&gt;
+	&lt;on-render&gt;
+		&lt;evaluate expression="bookingService.findHotels(searchCriteria)"
+					result="viewScope.hotels" result-type="dataModel" /&gt;
+	&lt;/on-render&gt;
+	&lt;transition on="next"&gt;
+		&lt;evaluate expression="searchCriteria.nextPage()" /&gt;
+		&lt;render fragments="hotels:searchResultsFragment" /&gt;
+	&lt;/transition&gt;
 &lt;/view-state&gt;
-      </programlisting>
-    </sect2>
-  </sect1>
+			</programlisting>
+		</sect2>
+	</sect1>
 
-  <sect1 id="spring-faces-embedded-mode">
-    <title>Embedding a Flow On a Page</title>
+	<sect1 xml:id="spring-faces-embedded-mode">
+		<title>Embedding a Flow On a Page</title>
 
-    <para>By default when a flow enters a view state, it executes a
-    client-side redirect before rendering the view. This approach is known as
-    POST-REDIRECT-GET. It has the advantage of separating the form processing
-    for one view from the rendering of the next view. As a result the browser
-    Back and Refresh buttons work seamlessly without causing any browser
-    warnings.</para>
+		<para>By default when a flow enters a view state, it executes a
+		client-side redirect before rendering the view. This approach is known as
+		POST-REDIRECT-GET. It has the advantage of separating the form processing
+		for one view from the rendering of the next view. As a result the browser
+		Back and Refresh buttons work seamlessly without causing any browser
+		warnings.</para>
 
-    <para>Normally the client-side redirect is transparent from a user's
-    perspective. However, there are situations where POST-REDIRECT-GET may not 
-    bring the same benefits. For example sometimes it may be useful to embed
-    a flow on a page and drive it via Ajax requests refreshing only the area 
-    of the page where the flow is rendered. Not only is it unnecessary to use 
-    client-side redirects in this case, it is also not the desired behavior 
-    with regards to keeping the surrounding content of the page intact.</para>
+		<para>Normally the client-side redirect is transparent from a user's
+		perspective. However, there are situations where POST-REDIRECT-GET may not
+		bring the same benefits. For example sometimes it may be useful to embed
+		a flow on a page and drive it via Ajax requests refreshing only the area
+		of the page where the flow is rendered. Not only is it unnecessary to use
+		client-side redirects in this case, it is also not the desired behavior
+		with regards to keeping the surrounding content of the page intact.</para>
 
-    <para>To indicate a flow should execute in "page embedded" mode all
-    you need to do is pass an extra flow input attribute called "mode" 
-    with a value of "embedded". Below is an example of a top-level 
-    container flow invoking a sub-flow in an embedded mode:</para>
+		<para>To indicate a flow should execute in "page embedded" mode all
+		you need to do is pass an extra flow input attribute called "mode"
+		with a value of "embedded". Below is an example of a top-level
+		container flow invoking a sub-flow in an embedded mode:</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 &lt;subflow-state id="bookHotel" subflow="booking"&gt;
-    &lt;input name="mode" value="'embedded'"/&gt;
+	&lt;input name="mode" value="'embedded'"/&gt;
 &lt;/subflow-state&gt;
-    </programlisting>
-	
-    <para>When launched in "page embedded" mode the sub-flow will not issue
-    flow execution redirects during Ajax requests.</para>
+		</programlisting>
 
-    <para>If you'd like to see examples of an embedded flow please refer to 
-    the webflow-primefaces-showcase project. You can check out 
-    the source code locally, build it as you would a Maven project, and import 
-    it into Eclipse:</para>
+		<para>When launched in "page embedded" mode the sub-flow will not issue
+		flow execution redirects during Ajax requests.</para>
 
-    <para><programlisting language="xml">cd some-directory
+		<para>If you'd like to see examples of an embedded flow please refer to
+		the webflow-primefaces-showcase project. You can check out
+		the source code locally, build it as you would a Maven project, and import
+		it into Eclipse:</para>
+
+		<para><programlisting language="xml">cd some-directory
 svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
 cd webflow-primefaces-showcase
 mvn package
 # import into Eclipse</programlisting></para>
 
-	<para>The specific example you need to look at is under the "Advanced Ajax" 
-		tab and is called "Top Flow with Embedded Sub-Flow".</para>
+		<para>The specific example you need to look at is under the "Advanced Ajax"
+			tab and is called "Top Flow with Embedded Sub-Flow".</para>
 
-  </sect1>
+	</sect1>
 
-  <sect1 id="spring-faces-redirect-in-same-state">
-    <title>Redirect In Same State</title>
+	<sect1 xml:id="spring-faces-redirect-in-same-state">
+		<title>Redirect In Same State</title>
 
-    <para>
-    	By default Web Flow does a client-side redirect even it it remains in the same view state as long as the current request is not an Ajax request.
-    	This is quite useful after form validation failures for example.
-    	If the user hits Refresh or Back they won't see any browser warnings.
-    	They would if the Web Flow didn't do a redirect.  
-	</para>
-	<para>
-		This can lead to a problem specific to JSF environments where a specific Sun Mojarra listener component caches the FacesContext assuming the same instance is available throughout the JSF lifecycle.
-		In Web Flow however the render phase is temporarily put on hold and a client-side redirect executed. 
-	</para>
-	<para>
-		The default behavior of Web Flow is desirable and it is unlikely JSF applications will experience the issue.
-		This is because Ajax is often enabled the default in JSF component libraries and Web Flow does not redirect during Ajax requests.  
-		However if you experience this issue you can disable client-side redirects within the same view as follows:
-	    <programlisting language="xml">
+		<para>
+			By default Web Flow does a client-side redirect even it it remains in the same view state as long as the current request is not an Ajax request.
+			This is quite useful after form validation failures for example.
+			If the user hits Refresh or Back they won't see any browser warnings.
+			They would if the Web Flow didn't do a redirect.
+		</para>
+		<para>
+			This can lead to a problem specific to JSF environments where a specific Sun Mojarra listener component caches the FacesContext assuming the same instance is available throughout the JSF lifecycle.
+			In Web Flow however the render phase is temporarily put on hold and a client-side redirect executed.
+		</para>
+		<para>
+			The default behavior of Web Flow is desirable and it is unlikely JSF applications will experience the issue.
+			This is because Ajax is often enabled the default in JSF component libraries and Web Flow does not redirect during Ajax requests.
+			However if you experience this issue you can disable client-side redirects within the same view as follows:
+			<programlisting language="xml">
 &lt;webflow:flow-executor id="flowExecutor"&gt;
 	&lt;webflow:flow-execution-attributes&gt;
 		&lt;webflow:redirect-in-same-state value="false"/&gt;
 	&lt;/webflow:flow-execution-attributes&gt;
 &lt;/webflow:flow-executor&gt;
-		</programlisting>		
-	</para>
-  </sect1>
+			</programlisting>
+		</para>
+	</sect1>
 
-  <sect1 id="spring-faces-security-taglib">
-    <title>Using the Spring Security Facelets Tag Library</title>
+	<sect1 xml:id="spring-faces-security-taglib">
+		<title>Using the Spring Security Facelets Tag Library</title>
 
-    <para>To use the library you'll need to create a <code>.taglib.xml</code>
-    file and register it in <code>web.xml</code>.</para>
+		<para>To use the library you'll need to create a <code>.taglib.xml</code>
+		file and register it in <code>web.xml</code>.</para>
 
-    <para>Create the file
-    <code>/WEB-INF/springsecurity.taglib.xml</code> with the following
-    content:</para>
+		<para>Create the file
+		<code>/WEB-INF/springsecurity.taglib.xml</code> with the following
+		content:</para>
 
-    <programlisting language="xml">
+		<programlisting language="xml">
 &lt;?xml version="1.0"?&gt;
 &lt;!DOCTYPE facelet-taglib PUBLIC
-  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
-  "http://java.sun.com/dtd/facelet-taglib_1_0.dtd"&gt;
+"-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+"http://java.sun.com/dtd/facelet-taglib_1_0.dtd"&gt;
 &lt;facelet-taglib&gt;
 	&lt;namespace&gt;http://www.springframework.org/security/tags&lt;/namespace&gt;
 	&lt;tag&gt;
@@ -737,20 +741,20 @@ mvn package
 		&lt;function-signature&gt;boolean isAllowed(java.lang.String, java.lang.String)&lt;/function-signature&gt;
 	&lt;/function&gt;
 &lt;/facelet-taglib&gt;
-</programlisting>
+		</programlisting>
 
-    <para>Next, register the above file taglib in web.xml:</para>
+		<para>Next, register the above file taglib in web.xml:</para>
 
-    <programlisting language="xml">&lt;context-param&gt;
-    &lt;param-name&gt;javax.faces.FACELETS_LIBRARIES&lt;/param-name&gt;
-    &lt;param-value&gt;/WEB-INF/springsecurity.taglib.xml&lt;/param-value&gt;
+		<programlisting language="xml">&lt;context-param&gt;
+	&lt;param-name&gt;javax.faces.FACELETS_LIBRARIES&lt;/param-name&gt;
+	&lt;param-value&gt;/WEB-INF/springsecurity.taglib.xml&lt;/param-value&gt;
 &lt;/context-param&gt;
-</programlisting>
+		</programlisting>
 
-    <para>Now you are ready to use the tag library in your views. You can use
-    the authorize tag to include nested content conditionally:</para>
+		<para>Now you are ready to use the tag library in your views. You can use
+		the authorize tag to include nested content conditionally:</para>
 
-    <programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+		<programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -768,45 +772,45 @@ mvn package
 		Lorem ipsum dolor sit amet
 	&lt;/sec:authorize&gt;
 
-&lt;/ui:composition&gt;				
-</programlisting>
+&lt;/ui:composition&gt;
+		</programlisting>
 
-    <para>You can also use one of several EL functions in the rendered or
-    other attribute of any JSF component:</para>
+		<para>You can also use one of several EL functions in the rendered or
+		other attribute of any JSF component:</para>
 
-    <programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+		<programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:sec="http://www.springframework.org/security/tags"&gt;
 
 	&lt;!-- Rendered only if user has all of the listed roles --&gt;
-	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areAllGranted('ROLE_FOO, ROLE_BAR')}"/&gt;	
-	
+	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areAllGranted('ROLE_FOO, ROLE_BAR')}"/&gt;
+
 	&lt;!-- Rendered only if user does not have any of the listed roles --&gt;
-	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areNotGranted('ROLE_FOO, ROLE_BAR')}"/&gt;	
-	
+	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areNotGranted('ROLE_FOO, ROLE_BAR')}"/&gt;
+
 	&lt;!-- Rendered only if user has any of the listed roles --&gt;
-	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areAnyGranted('ROLE_FOO, ROLE_BAR')}"/&gt;	
-	
+	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:areAnyGranted('ROLE_FOO, ROLE_BAR')}"/&gt;
+
 	&lt;!-- Rendered only if user has access to given HTTP method/URL as defined in Spring Security configuration --&gt;
-	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:isAllowed('/secured/foo', 'POST')}"/&gt;	
+	&lt;h:outputText value="Lorem ipsum dolor sit amet" rendered="#{sec:isAllowed('/secured/foo', 'POST')}"/&gt;
 
-&lt;/ui:composition&gt;				
-</programlisting>
-  </sect1>
+&lt;/ui:composition&gt;
+		</programlisting>
+	</sect1>
 
-  <sect1 id="spring-faces-component-libraries">
-    <title>Third-Party Component Library Integration</title>
+	<sect1 xml:id="spring-faces-component-libraries">
+		<title>Third-Party Component Library Integration</title>
 
-    <para>The Spring Web Flow JSF integration strives to be compatible with
-    any third-party JSF component library. By honoring all of the standard
-    semantics of the JSF specification within the SWF-driven JSF lifecycle,
-    third-party libraries in general should "just work". The main thing to
-    remember is that configuration in web.xml will change slightly since Web
-    Flow requests are not routed through the standard FacesServlet. Typically,
-    anything that is traditionally mapped to the FacesServlet should be mapped
-    to the Spring DispatcherServlet instead. (You can also map to both if for
-    example you are migrating a legacy JSF application page-by-page.).</para>
-  </sect1>
+		<para>The Spring Web Flow JSF integration strives to be compatible with
+		any third-party JSF component library. By honoring all of the standard
+		semantics of the JSF specification within the SWF-driven JSF lifecycle,
+		third-party libraries in general should "just work". The main thing to
+		remember is that configuration in web.xml will change slightly since Web
+		Flow requests are not routed through the standard FacesServlet. Typically,
+		anything that is traditionally mapped to the FacesServlet should be mapped
+		to the Spring DispatcherServlet instead. (You can also map to both if for
+		example you are migrating a legacy JSF application page-by-page.).</para>
+	</sect1>
 </chapter>

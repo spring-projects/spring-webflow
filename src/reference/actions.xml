@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="actions">
+<chapter xml:id="actions"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Executing actions</title>
-	<sect1 id="actions-introduction">
+	<sect1 xml:id="actions-introduction">
 		<title>Introduction</title>
 		<para>
 			This chapter shows you how to use the <code>action-state</code> element to control the execution of an action at a point within a flow.
@@ -12,52 +16,52 @@
 			Finally, several examples of invoking actions from the various points possible within a flow will be discussed.
 		</para>
 	</sect1>
-	<sect1 id="action-state">
+	<sect1 xml:id="action-state">
 		<title>Defining action states</title>
 		<para>
 			Use the <code>action-state</code> element when you wish to invoke an action, then transition to another state based on the action's outcome:
 		</para>
 		<programlisting language="xml"><![CDATA[
 <action-state id="moreAnswersNeeded">
-    <evaluate expression="interview.moreAnswersNeeded()" />
-    <transition on="yes" to="answerQuestions" />
-    <transition on="no" to="finish" />
+	<evaluate expression="interview.moreAnswersNeeded()" />
+	<transition on="yes" to="answerQuestions" />
+	<transition on="no" to="finish" />
 </action-state>]]>
-        </programlisting>		
+		</programlisting>
 		<para>
 			The full example below illustrates a interview flow that uses the action-state above to determine if more answers are needed to complete the interview:
 		</para>
 		<programlisting language="xml"><![CDATA[
 <flow xmlns="http://www.springframework.org/schema/webflow"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow
-                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						  http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-    <on-start>
-        <evaluate expression="interviewFactory.createInterview()" result="flowScope.interview" />
-    </on-start>
+	<on-start>
+		<evaluate expression="interviewFactory.createInterview()" result="flowScope.interview" />
+	</on-start>
 
-    <view-state id="answerQuestions" model="questionSet">
-        <on-entry>
-            <evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" />
-        </on-entry>
-        <transition on="submitAnswers" to="moreAnswersNeeded">
-            <evaluate expression="interview.recordAnswers(questionSet)" />
-        </transition>
-    </view-state>
-    
-    <action-state id="moreAnswersNeeded">
-        <evaluate expression="interview.moreAnswersNeeded()" />
-        <transition on="yes" to="answerQuestions" />
-        <transition on="no" to="finish" />
-    </action-state>
+	<view-state id="answerQuestions" model="questionSet">
+		<on-entry>
+			<evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" />
+		</on-entry>
+		<transition on="submitAnswers" to="moreAnswersNeeded">
+			<evaluate expression="interview.recordAnswers(questionSet)" />
+		</transition>
+	</view-state>
 
-    <end-state id="finish" />
-    
+	<action-state id="moreAnswersNeeded">
+		<evaluate expression="interview.moreAnswersNeeded()" />
+		<transition on="yes" to="answerQuestions" />
+		<transition on="no" to="finish" />
+	</action-state>
+
+	<end-state id="finish" />
+
 </flow>]]>
-			</programlisting>		
+			</programlisting>
 	</sect1>
-	<sect1 id="decision-state">
+	<sect1 xml:id="decision-state">
 		<title>Defining decision states</title>
 		<para>
 			Use the <code>decision-state</code> element as an alternative to the action-state to make a routing decision using a convenient if/else syntax.
@@ -65,11 +69,11 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <decision-state id="moreAnswersNeeded">
-    <if test="interview.moreAnswersNeeded()" then="answerQuestions" else="finish" />
+	<if test="interview.moreAnswersNeeded()" then="answerQuestions" else="finish" />
 </decision-state>]]>
 			</programlisting>
 	</sect1>
-	<sect1 id="action-outcome-events">
+	<sect1 xml:id="action-outcome-events">
 		<title>Action outcome event mappings</title>
 		<para>
 			Actions often invoke methods on plain Java objects.
@@ -77,7 +81,7 @@
 			Since transitions are triggered by events, a method return value must first be mapped to an Event object.
 			The following table describes how common return value types are mapped to Event objects:
 		</para>
-		<table id="event-mapping-table">
+		<table xml:id="event-mapping-table">
 			<title>Action method return value to event id mappings</title>
 			<tgroup cols="2">
 				<colspec colname="Method return type" colwidth="*"/>
@@ -105,7 +109,7 @@
 						<entry>any other type</entry>
 						<entry>success</entry>
 					</row>
-				</tbody>			
+				</tbody>
 			</tgroup>
 		</table>
 		<para>
@@ -113,13 +117,13 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <action-state id="moreAnswersNeeded">
-    <evaluate expression="interview.moreAnswersNeeded()" />
-    <transition on="yes" to="answerQuestions" />
-    <transition on="no" to="finish" />
+	<evaluate expression="interview.moreAnswersNeeded()" />
+	<transition on="yes" to="answerQuestions" />
+	<transition on="no" to="finish" />
 </action-state>]]>
-        </programlisting>		
+		</programlisting>
 	</sect1>
-	<sect1 id="action-implementations">
+	<sect1 xml:id="action-implementations">
 		<title>Action implementations</title>
 		<para>
 			While writing action code as POJO logic is the most common, there are several other action implementation options.
@@ -132,26 +136,26 @@
 		<sect2>
 			<title>Invoking a POJO action</title>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="pojoAction.method(flowRequestContext)" />]]>	
-        	</programlisting>
+<evaluate expression="pojoAction.method(flowRequestContext)" />]]>
+			</programlisting>
 			<programlisting language="java"><![CDATA[
 public class PojoAction {
-    public String method(RequestContext context) {
-        ... 
-    }
+	public String method(RequestContext context) {
+		...
+	}
 }]]>
 			</programlisting>
 		</sect2>
 		<sect2>
 			<title>Invoking a custom Action implementation</title>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="customAction" />]]>	
-        	</programlisting>
+<evaluate expression="customAction" />]]>
+			</programlisting>
 			<programlisting language="java"><![CDATA[
 public class CustomAction implements Action {
-    public Event execute(RequestContext context) {
-        ... 
-    }
+	public Event execute(RequestContext context) {
+		...
+	}
 }]]>
 			</programlisting>
 		</sect2>
@@ -159,24 +163,24 @@ public class CustomAction implements Action {
 			<title>Invoking a MultiAction implementation</title>
 			<programlisting language="xml"><![CDATA[
 <evaluate expression="multiAction.actionMethod1" />
-]]>	
-        	</programlisting>
+]]>
+			</programlisting>
 			<programlisting language="java"><![CDATA[
 public class CustomMultiAction extends MultiAction {
-    public Event actionMethod1(RequestContext context) {
-        ... 
-    }
+	public Event actionMethod1(RequestContext context) {
+		...
+	}
 
-    public Event actionMethod2(RequestContext context) {
-        ... 
-    }
+	public Event actionMethod2(RequestContext context) {
+		...
+	}
 
-    ...
+	...
 }]]>
 			</programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="action-exceptions">
+	<sect1 xml:id="action-exceptions">
 		<title>Action exceptions</title>
 		<para>
 			Actions often invoke services that encapsulate complex business logic.
@@ -189,21 +193,21 @@ public class CustomMultiAction extends MultiAction {
 				The result is treated as a flow event which the calling flow can then respond to.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="bookingAction.makeBooking(booking, flowRequestContext)" />]]>	
-        	</programlisting>
+<evaluate expression="bookingAction.makeBooking(booking, flowRequestContext)" />]]>
+			</programlisting>
 			<programlisting language="java"><![CDATA[
 public class BookingAction {
-   public String makeBooking(Booking booking, RequestContext context) {
-       try {
-           BookingConfirmation confirmation = bookingService.make(booking);
-           context.getFlowScope().put("confirmation", confirmation);
-           return "success";
-       } catch (RoomNotAvailableException e) {
-           context.addMessage(new MessageBuilder().error().
-               .defaultText("No room is available at this hotel").build());
-           return "error";
-       }
-   }
+public String makeBooking(Booking booking, RequestContext context) {
+	   try {
+		   BookingConfirmation confirmation = bookingService.make(booking);
+		   context.getFlowScope().put("confirmation", confirmation);
+		   return "success";
+	   } catch (RoomNotAvailableException e) {
+		   context.addMessage(new MessageBuilder().error().
+			   .defaultText("No room is available at this hotel").build());
+		   return "error";
+	   }
+}
 }]]>
 			</programlisting>
 		</sect2>
@@ -214,144 +218,144 @@ public class BookingAction {
 				The MultiAction requires its action methods to be of the signature <code>Event ${methodName}(RequestContext)</code>, providing stronger type safety, while a POJO action allows for more freedom.
 			</para>
 			<programlisting language="xml"><![CDATA[
-<evaluate expression="bookingAction.makeBooking" />]]>	
-        	</programlisting>
+<evaluate expression="bookingAction.makeBooking" />]]>
+			</programlisting>
 			<programlisting language="java"><![CDATA[
 public class BookingAction extends MultiAction {
-   public Event makeBooking(RequestContext context) {
-       try {
-           Booking booking = (Booking) context.getFlowScope().get("booking");
-           BookingConfirmation confirmation = bookingService.make(booking);
-           context.getFlowScope().put("confirmation", confirmation);
-           return success();
-       } catch (RoomNotAvailableException e) {
-           context.getMessageContext().addMessage(new MessageBuilder().error().
-               .defaultText("No room is available at this hotel").build());
-           return error();
-       }
-   }
+public Event makeBooking(RequestContext context) {
+	   try {
+		   Booking booking = (Booking) context.getFlowScope().get("booking");
+		   BookingConfirmation confirmation = bookingService.make(booking);
+		   context.getFlowScope().put("confirmation", confirmation);
+		   return success();
+	   } catch (RoomNotAvailableException e) {
+		   context.getMessageContext().addMessage(new MessageBuilder().error().
+			   .defaultText("No room is available at this hotel").build());
+		   return error();
+	   }
+}
 }]]>
 			</programlisting>
-		</sect2>				
+		</sect2>
 	</sect1>
-	<sect1 id="action-examples">
+	<sect1 xml:id="action-examples">
 		<title>Other Action execution examples</title>
-		<sect2 id="action-on-start">
+		<sect2 xml:id="action-on-start">
 			<title>on-start</title>
 			<para>
 				The following example shows an action that creates a new Booking object by invoking a method on a service:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <flow xmlns="http://www.springframework.org/schema/webflow"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow
-                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						  http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-    <input name="hotelId" />
+	<input name="hotelId" />
 
-    <on-start>
-        <evaluate expression="bookingService.createBooking(hotelId, currentUser.name)" 
-                  result="flowScope.booking" />
-    </on-start>
+	<on-start>
+		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
+				  result="flowScope.booking" />
+	</on-start>
 
 </flow>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="action-on-state-entry">
+		<sect2 xml:id="action-on-state-entry">
 			<title>on-entry</title>
 			<para>
 				The following example shows a state entry action that sets the special <code>fragments</code> variable that causes the view-state to render a partial fragment of its view:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
-    <on-entry>
-        <render fragments="hotelSearchForm" />
-    </on-entry>
+	<on-entry>
+		<render fragments="hotelSearchForm" />
+	</on-entry>
 </view-state>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="action-on-state-exit">
+		<sect2 xml:id="action-on-state-exit">
 			<title>on-exit</title>
 			<para>
 				The following example shows a state exit action that releases a lock on a record being edited:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <view-state id="editOrder">
-    <on-entry>
-        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
-                  result="viewScope.order" />
-    </on-entry>
-    <transition on="save" to="finish">
-        <evaluate expression="orderService.update(order, currentUser)" />
-    </transition>
-    <on-exit>
-        <evaluate expression="orderService.releaseLock(order, currentUser)" />
-    </on-exit>
+	<on-entry>
+		<evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
+				  result="viewScope.order" />
+	</on-entry>
+	<transition on="save" to="finish">
+		<evaluate expression="orderService.update(order, currentUser)" />
+	</transition>
+	<on-exit>
+		<evaluate expression="orderService.releaseLock(order, currentUser)" />
+	</on-exit>
 </view-state>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="on-end">
+		<sect2 xml:id="on-end">
 			<title>on-end</title>
 			<para>
 				The following example shows the equivalent object locking behavior using flow start and end actions:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <flow xmlns="http://www.springframework.org/schema/webflow"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow
-                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						  http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
-    <input name="orderId" />
+	<input name="orderId" />
 
-    <on-start>
-        <evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
-                  result="flowScope.order" />
-    </on-start>
+	<on-start>
+		<evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
+				  result="flowScope.order" />
+	</on-start>
 
-    <view-state id="editOrder">
-        <transition on="save" to="finish">
-            <evaluate expression="orderService.update(order, currentUser)" />
-        </transition>
-    </view-state>
+	<view-state id="editOrder">
+		<transition on="save" to="finish">
+			<evaluate expression="orderService.update(order, currentUser)" />
+		</transition>
+	</view-state>
 
-    <on-end>
-        <evaluate expression="orderService.releaseLock(order, currentUser)" />
-    </on-end>
-    
+	<on-end>
+		<evaluate expression="orderService.releaseLock(order, currentUser)" />
+	</on-end>
+
 </flow>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="action-on-render">
+		<sect2 xml:id="action-on-render">
 			<title>on-render</title>
 			<para>
 				The following example shows a render action that loads a list of hotels to display before the view is rendered:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <view-state id="reviewHotels">
-    <on-render>
-        <evaluate expression="bookingService.findHotels(searchCriteria)"
-	              result="viewScope.hotels" result-type="dataModel" />
-    </on-render>
-    <transition on="select" to="reviewHotel">
-        <set name="flowScope.hotel" value="hotels.selectedRow" />
-    </transition>
+	<on-render>
+		<evaluate expression="bookingService.findHotels(searchCriteria)"
+				  result="viewScope.hotels" result-type="dataModel" />
+	</on-render>
+	<transition on="select" to="reviewHotel">
+		<set name="flowScope.hotel" value="hotels.selectedRow" />
+	</transition>
 </view-state>]]>
 			</programlisting>
 		</sect2>
-		<sect2 id="action-on-transition">
+		<sect2 xml:id="action-on-transition">
 			<title>on-transition</title>
 			<para>
 				The following example shows a transition action adds a subflow outcome event attribute to a collection:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <subflow-state id="addGuest" subflow="createGuest">
-    <transition on="guestCreated" to="reviewBooking">
-        <evaluate expression="booking.guestList.add(currentEvent.attributes.newGuest)" />  
-    </transition>
+	<transition on="guestCreated" to="reviewBooking">
+		<evaluate expression="booking.guestList.add(currentEvent.attributes.newGuest)" />
+	</transition>
 </subfow-state>]]>
 			</programlisting>
-		</sect2>					
-		<sect2 id="named-actions">
+		</sect2>
+		<sect2 xml:id="named-actions">
 			<title>Named actions</title>
 			<para>
 				The following example shows how to execute a chain of actions in an action-state.
@@ -359,13 +363,13 @@ public class BookingAction extends MultiAction {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <action-state id="doTwoThings">
-    <evaluate expression="service.thingOne()">
-        <attribute name="name" value="thingOne" />
-    </evaluate>
-    <evaluate expression="service.thingTwo()">
-        <attribute name="name" value="thingTwo" />
-    </evaluate>
-    <transition on="thingTwo.success" to="showResults" />
+	<evaluate expression="service.thingOne()">
+		<attribute name="name" value="thingOne" />
+	</evaluate>
+	<evaluate expression="service.thingTwo()">
+		<attribute name="name" value="thingTwo" />
+	</evaluate>
+	<transition on="thingTwo.success" to="showResults" />
 </action-state>]]>
 			</programlisting>
 			<para>
@@ -373,7 +377,7 @@ public class BookingAction extends MultiAction {
 				completes successfully.
 			</para>
 		</sect2>
-		<sect2 id="streaming-actions">
+		<sect2 xml:id="streaming-actions">
 			<title>Streaming actions</title>
 			<para>
 				Sometimes an Action needs to stream a custom response back to the client.
@@ -383,45 +387,45 @@ public class BookingAction extends MultiAction {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <view-state id="reviewItinerary">
-    <transition on="print">
-        <evaluate expression="printBoardingPassAction" />
-    </transition>
+	<transition on="print">
+		<evaluate expression="printBoardingPassAction" />
+	</transition>
 </view-state>]]>
 			</programlisting>
 			<programlisting language="java"><![CDATA[
 public class PrintBoardingPassAction extends AbstractAction {
-    public Event doExecute(RequestContext context) {
-        // stream PDF content here...
-        // - Access HttpServletResponse by calling context.getExternalContext().getNativeResponse();
-        // - Mark response complete by calling context.getExternalContext().recordResponseComplete();
-        return success();
-    }
+	public Event doExecute(RequestContext context) {
+		// stream PDF content here...
+		// - Access HttpServletResponse by calling context.getExternalContext().getNativeResponse();
+		// - Mark response complete by calling context.getExternalContext().recordResponseComplete();
+		return success();
+	}
 }]]>
-			</programlisting>			
+			</programlisting>
 			<para>
 				In this example, when the print event is raised the flow will call the printBoardingPassAction.
 				The action will render the PDF then mark the response as complete.
 			</para>
 		</sect2>
-		<sect2 id="file-upload">
+		<sect2 xml:id="file-upload">
 			<title>Handling File Uploads</title>
 			<para>
-				Another common task is to use Web Flow to handle multipart file uploads in combination with Spring MVC's 
-				<code>MultipartResolver</code>.  Once the resolver is set up correctly <ulink url="http://static.springsource.org/spring/docs/2.5.x/reference/mvc.html#mvc-multipart">as described here</ulink> and the submitting
-				HTML form is configured with <code>enctype="multipart/form-data"</code>, you can easily handle the file upload in a 
-				transition action.  
+				Another common task is to use Web Flow to handle multipart file uploads in combination with Spring MVC's
+				<code>MultipartResolver</code>.  Once the resolver is set up correctly <link xl:href="http://static.springsource.org/spring/docs/2.5.x/reference/mvc.html#mvc-multipart">as described here</link> and the submitting
+				HTML form is configured with <code>enctype="multipart/form-data"</code>, you can easily handle the file upload in a
+				transition action.
 			</para>
 			<para>
 				Note that the File Upload example below below is not relevant when using Web Flow with JSF.
-				Check the documentation of your JSF component library to see what file upload components it provides. 
+				Check the documentation of your JSF component library to see what file upload components it provides.
 			</para>
 			<para>
-				Given a form such as:     
+				Given a form such as:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <form:form modelAttribute="fileUploadHandler" enctype="multipart/form-data">
-	Select file: <input type="file" name="file"/>		
-	<input type="submit" name="_eventId_upload" value="Upload" />			
+	Select file: <input type="file" name="file"/>
+	<input type="submit" name="_eventId_upload" value="Upload" />
 </form:form>]]>
 			</programlisting>
 			<para>
@@ -433,16 +437,16 @@ package org.springframework.webflow.samples.booking;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadHandler {
-    
-    private transient MultipartFile file;
-    
-    public void processFile() {
-		//Do something with the MultipartFile here
-    }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
-    } 
+	private transient MultipartFile file;
+
+	public void processFile() {
+		//Do something with the MultipartFile here
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
 }]]>
 			</programlisting>
 			<para>
@@ -450,18 +454,18 @@ public class FileUploadHandler {
 			</para>
 			<programlisting language="xml"><![CDATA[
 <view-state id="uploadFile" model="uploadFileHandler">
-    <var name="fileUploadHandler" class="org.springframework.webflow.samples.booking.FileUploadHandler" />
-    <transition on="upload" to="finish" >
-        <evaluate expression="fileUploadHandler.processFile()"/>
-    </transition>
-    <transition on="cancel" to="finish" bind="false"/>
+	<var name="fileUploadHandler" class="org.springframework.webflow.samples.booking.FileUploadHandler" />
+	<transition on="upload" to="finish" >
+		<evaluate expression="fileUploadHandler.processFile()"/>
+	</transition>
+	<transition on="cancel" to="finish" bind="false"/>
 </view-state>]]>
 			</programlisting>
 			<para>
-				The <code>MultipartFile</code> will be bound to the <code>FileUploadHandler</code> bean as 
-				part of the normal form binding process so that it will be available to process during the 
+				The <code>MultipartFile</code> will be bound to the <code>FileUploadHandler</code> bean as
+				part of the normal form binding process so that it will be available to process during the
 				execution of the transition action.
 			</para>
-		</sect2>			
+		</sect2>
 	</sect1>
 </chapter>

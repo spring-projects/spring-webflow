@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xi="http://www.w3.org/2001/XInclude"
-    xml:id="upgrade-guide">
+<chapter xml:id="upgrade-guide"
+	xmlns="http://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Upgrading from 1.0</title>
-	<sect1 id="upgrade-guide-introduction">
+	<sect1 xml:id="upgrade-guide-introduction">
 		<title>Introduction</title>
 		<para>
 			This chapter shows you how to upgrade existing Web Flow 1 application to Web Flow 2.
 		</para>
 	</sect1>
-	<sect1 id="upgrade-guide-definition-language">
+	<sect1 xml:id="upgrade-guide-definition-language">
 		<title>Flow Definition Language</title>
 		<para>
 			The core concepts behind the flow definition language have not changed between Web Flow 1 and 2.
@@ -18,7 +22,7 @@
 			These changes allow for the language to be both more concise and expressive.
 			A complete list of <link linkend="field-mappings">mapping changes</link> is available as an appendix.
 		</para>
-		<sect2 id="upgrade-guide-definition-language-tool">
+		<sect2 xml:id="upgrade-guide-definition-language-tool">
 			<title>Flow Definition Updater Tool</title>
 			<para>
 				An automated tool is available to aid in the conversion of existing 1.x flows to the new 2.x style.
@@ -28,7 +32,7 @@
 			</para>
 			<para>
 				The conversion tool requires spring-webflow.jar, spring-core.jar and an XSLT 1.0 engine.
-				<ulink url="http://saxon.sourceforge.net/">Saxon 6.5.5</ulink> is recommended.
+				<link xl:href="http://saxon.sourceforge.net/">Saxon 6.5.5</link> is recommended.
 			</para>
 			<para>
 				The tool can be run from the command line with the following command.
@@ -39,9 +43,9 @@
 			<programlisting>
 java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</programlisting>
-			<sect3 id="upgrade-guide-definition-language-tool-warnings">
+			<sect3 xml:id="upgrade-guide-definition-language-tool-warnings">
 				<title>Flow Definition Updater Tool Warnings</title>
-				<sect4 id="upgrade-guide-definition-language-tool-warnings-argument-parameter-type">
+				<sect4 xml:id="upgrade-guide-definition-language-tool-warnings-argument-parameter-type">
 					<title>argument parameter-type no longer supported</title>
 					<para>
 						Bean actions have been deprecated in favor of EL based evaluate expressions.
@@ -49,7 +53,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 						A side effect of this change is that method arguments must be of the correct type before invoking the action.
 					</para>
 				</sect4>
-				<sect4 id="upgrade-guide-definition-language-tool-warnings-inline-flow">
+				<sect4 xml:id="upgrade-guide-definition-language-tool-warnings-inline-flow">
 					<title>inline-flow is no longer supported</title>
 					<para>
 						Inline flows are no longer supported.
@@ -57,21 +61,21 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 						The inline flow's content has been converted for your convenience.
 					</para>
 				</sect4>
-				<sect4 id="upgrade-guide-definition-language-tool-warnings-mapping-target-collection">
+				<sect4 xml:id="upgrade-guide-definition-language-tool-warnings-mapping-target-collection">
 					<title>mapping target-collection is no longer supported</title>
 					<para>
 						Output mappings can no longer add an item to a collection.
 						Only assignment is supported.
 					</para>
 				</sect4>
-				<sect4 id="upgrade-guide-definition-language-tool-warnings-var-bean">
+				<sect4 xml:id="upgrade-guide-definition-language-tool-warnings-var-bean">
 					<title>var bean is no longer supported</title>
 					<para>
 						The var bean attribute is no longer needed.
-						All spring beans can be resolved via EL. 
+						All spring beans can be resolved via EL.
 					</para>
 				</sect4>
-				<sect4 id="upgrade-guide-definition-language-tool-warnings-var-scope">
+				<sect4 xml:id="upgrade-guide-definition-language-tool-warnings-var-scope">
 					<title>var scope is no longer supported</title>
 					<para>
 						The var element will place all variable into flow scope.
@@ -80,26 +84,26 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				</sect4>
 			</sect3>
 		</sect2>
-		<sect2 id="upgrade-guide-definition-language-el">
+		<sect2 xml:id="upgrade-guide-definition-language-el">
 			<title>EL Expressions</title>
 			<para>
 				EL expressions are used heavily throughout the flow definition language.
 				Many of the attributes that appear to be plain text are actually interpreted as EL.
-				The standard EL delimiters (either ${} or #{} in Web Flow 2.0 or just #{} in Web Flow 2.1) are not necessary and will often cause an exception if they are included. 
+				The standard EL delimiters (either ${} or #{} in Web Flow 2.0 or just #{} in Web Flow 2.1) are not necessary and will often cause an exception if they are included.
 			</para>
 			<para>
 				EL delimiters should be removed where necessary by the updater tool.
 			</para>
 		</sect2>
 	</sect1>
-	<sect1 id="upgrade-guide-webflow-config">
+	<sect1 xml:id="upgrade-guide-webflow-config">
 		<title>Web Flow Configuration</title>
 		<para>
 			In Web Flow 1 there were two options available for configuring Web Flow, one using standard spring bean XML and the other using the <code>webflow-config-1.0</code> schema.
 			The schema configuration option simplifies the configuration process by keeping long internal class names hidden and enabling contextual auto-complete.
 			The schema configuration option is the only way to configure Web Flow 2.
 		</para>
-		<sect2 id="upgrade-guide-webflow-config-beans">
+		<sect2 xml:id="upgrade-guide-webflow-config-beans">
 			<title>Web Flow Bean Configuration</title>
 			<para>
 				The <code>FactoryBean</code> bean XML configuration method used in Web Flow 1 is no longer supported.
@@ -108,7 +112,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				Continue reading Web Flow Schema Configuration for details.
 			</para>
 		</sect2>
-		<sect2 id="upgrade-guide-webflow-config-schema">
+		<sect2 xml:id="upgrade-guide-webflow-config-schema">
 			<title>Web Flow Schema Configuration</title>
 			<para>
 				The <code>webflow-config</code> configuration schema has also changed slightly from version 1 to 2.
@@ -125,7 +129,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
            http://www.springframework.org/schema/webflow-config
            http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd">
 			]]></programlisting>
-			<sect3 id="upgrade-guide-webflow-config-schema-executor">
+			<sect3 xml:id="upgrade-guide-webflow-config-schema-executor">
 				<title>flow-executor</title>
 				<para>
 					The flow executor is the core Web Flow configuration element.
@@ -135,7 +139,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 <webflow:flow-executor id="flowExecutor" />
 				]]></programlisting>
 			</sect3>
-			<sect3 id="upgrade-guide-webflow-config-schema-listeners">
+			<sect3 xml:id="upgrade-guide-webflow-config-schema-listeners">
 				<title>flow-execution-listeners</title>
 				<para>
 					Flow execution listeners are also defined in the flow executor.
@@ -152,7 +156,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
       class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
 				]]></programlisting>
 			</sect3>
-			<sect3 id="upgrade-guide-webflow-config-schema-registry">
+			<sect3 xml:id="upgrade-guide-webflow-config-schema-registry">
 				<title>flow-registry</title>
 				<para>
 					The <code>flow-registry</code> contains a set of <code>flow-location</code>s.
@@ -166,7 +170,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				]]></programlisting>
 			</sect3>
 		</sect2>
-		<sect2 id="upgrade-guide-java-controller">
+		<sect2 xml:id="upgrade-guide-java-controller">
 			<title>Flow Controller</title>
 			<para>
 				The package name for flow controllers has changed from <code>org.springframework.webflow.executor.mvc.FlowController</code> and is now <code>org.springframework.webflow.mvc.servlet.FlowController</code> for Servlet MVC requests.
@@ -174,7 +178,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				They will need to be updated in the bean definitions.
 			</para>
 		</sect2>
-		<sect2 id="upgrade-guide-java-url-handler">
+		<sect2 xml:id="upgrade-guide-java-url-handler">
 			<title>Flow URL Handler</title>
 			<para>
 				The default URL handler has changed in Web Flow 2.
@@ -190,7 +194,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 </bean>
 			]]></programlisting>
 		</sect2>
-		<sect2 id="upgrade-guide-webflow-config-view-resolver">
+		<sect2 xml:id="upgrade-guide-webflow-config-view-resolver">
 			<title>View Resolution</title>
 			<para>
 				Web Flow 2 by default will both select and render views.
@@ -198,7 +202,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 			<para>
 				In order for version 1 flows to work in Web Flow 2 the default view resolver must be overridden.
-				A common use case is to use <ulink url="http://tiles.apache.org/">Apache Tiles</ulink> for view resolution.
+				A common use case is to use <link xl:href="http://tiles.apache.org/">Apache Tiles</link> for view resolution.
 				The following configuration will replace the default view resolver with a Tiles view resolver.
 				The <code>tilesViewResolver</code> in this example can be replaced with any other view resolver.
 			</para>
@@ -208,7 +212,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
     ...
 </webflow:flow-registry>
 
-<webflow:flow-builder-services id="flowBuilderServices" 
+<webflow:flow-builder-services id="flowBuilderServices"
                                view-factory-creator="viewFactoryCreator"/>
 
 <bean id="viewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
@@ -225,9 +229,9 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			]]></programlisting>
 		</sect2>
 	</sect1>
-	<sect1 id="upgrade-guide-webflow-concepts">
+	<sect1 xml:id="upgrade-guide-webflow-concepts">
 		<title>New Web Flow Concepts</title>
-		<sect2 id="upgrade-guide-webflow-concepts-binding">
+		<sect2 xml:id="upgrade-guide-webflow-concepts-binding">
 			<title>Automatic Model Binding</title>
 			<para>
 				Web Flow 1 required Spring MVC based flows to manually call <code>FormAction</code> methods, notably:
@@ -236,7 +240,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				Please see the <link linkend="view-model">Binding to a Model</link> section for details.
 			</para>
 		</sect2>
-		<sect2 id="upgrade-guide-webflow-concepts-el-v-ognl">
+		<sect2 xml:id="upgrade-guide-webflow-concepts-el-v-ognl">
 			<title>OGNL vs Spring EL</title>
 			<para>
 				Web Flow 1 used OGNL exclusively for expressions within the flow definitions.
@@ -246,7 +250,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				Please see <xref linkend="el"/> for details.
 			</para>
 		</sect2>
-		<sect2 id="upgrade-guide-webflow-concepts-flash-scope">
+		<sect2 xml:id="upgrade-guide-webflow-concepts-flash-scope">
 			<title>Flash Scope</title>
 			<para>
 				Flash scope in Web Flow 1 lived across the current request and into the next request.
@@ -255,14 +259,14 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 				This makes flashScope semantics in Web Flow consistent with other web frameworks.
 			</para>
 		</sect2>
-		<sect2 id="upgrade-guide-webflow-concepts-jsf">
+		<sect2 xml:id="upgrade-guide-webflow-concepts-jsf">
 			<title>JSF</title>
 			<para>
 				Web Flow 2 offers significantly improved integration with JSF.
 				Please see <xref linkend="spring-faces"/> for details.
 			</para>
 		</sect2>
-		<sect2 id="upgrade-guide-webflow-concepts-redirects">
+		<sect2 xml:id="upgrade-guide-webflow-concepts-redirects">
 			<title>External Redirects</title>
 			<para>
 				External redirects in Web Flow 1 were always considered context relative.
