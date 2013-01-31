@@ -4,10 +4,33 @@ http://www.springframework.org/webflow
 
 Changes in version 2.4.0.RELEASE
 -----------------------------------------------
-Move samples to a separate repository https://github.com/SpringSource/spring-webflow-samples
-Upgrade spring-faces to JSF 2 as a minimum requirement
-Upgrade portlet/JSF support to function in JSF 2 environment
-Add partial validation support for JSR-303 bean validation
+Save Web Flow output variables to Spring MVC Flash scope
+Support JSR303 Validation Groups for Webflow View States
+Refactor code assuming Java 5 minimum
+Upgrade code for JSF 2 minimum requirement
+Add support for partial state saving with MyFaces
+Upgrade portlet support to JSF 2.0
+Upgrade to Spring Framework 3.2.1
+Upgrade to Spring Security 3.1.3
+Upgrade Test Dependencies
+Switch to Gradle build and SpringSource Artifactory repository
+Create samples repository on Github http://githib.com/SpringSource/spring-webflow-samples
+Make ConversationManagers easier to subclass
+Add "/rfRes/**" resource handling mapping for RichFaces integration
+SerializableListDataModel should extend ListDataModel for primefaces sorting support
+Provide setter to modify redirect status code in FlowHandlerAdapter
+Skip DataModel iteration when delivering PostRestoreStateEvent
+Add additional inherited constructor to FacesConversionService
+Make <spring:eval> tag work with Web Flow
+Fix issue with Fileupload and Richfaces 4.0.0 Final
+Prevent NPE in Mojarra when creating initial view
+pdf documentation doesn't contain images
+Replace ${...} with #{...} in expression examples in Flow XSD
+JsfManagedBeanPropertyAccessor causes early release of FacesContext
+ScopeSearchingPropertyAccessor cause NPE
+Incorrect MaxHeapSize value in gradlew.bat and build.gradle
+Composite components displayed at bottom of page after clicking commandLink
+Portlet FlowHandlerAdapter config samlpe incorrect in Chapter 14
 
 Changes in version 2.3.1.RELEASE (Mar 27, 2012)
 -----------------------------------------------
