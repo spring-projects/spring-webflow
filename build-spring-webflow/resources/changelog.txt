@@ -2,6 +2,18 @@ SPRING WEB FLOW CHANGELOG
 =========================
 http://www.springframework.org/webflow
 
+Changes in version 2.3.2.RELEASE (Jan 31, 2013)
+-----------------------------------------------
+
+Upgrade to Spring Framework 3.2
+Upgrade to Spring Security 3.1.3
+Ensure proper formatting with <spring:eval> tag
+Fix issue with composite components displayed at bottom of page
+Fix issue with JsfManagedBeanPropertyAccessor causes early release of FacesContext
+Skip DataModel iteration when delivering PostRestoreStateEvent
+Add inherited constructor to FacesConversionService
+Replace ${...} with #{...} in expression examples in Flow XSD
+
 Changes in version 2.3.1.RELEASE (Mar 27, 2012)
 -----------------------------------------------
 Upgrade Spring to version 3.1.1
