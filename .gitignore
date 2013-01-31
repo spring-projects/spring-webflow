@@ -2,7 +2,6 @@
 *.sonarj
 *.sw*
 .DS_Store
-.settings
 .springBeans
 bin
 build.sh
@@ -12,4 +11,6 @@ target
 spring-build/lib/docbook
 .gradle
 build
-
+spring-webflow-samples/*/.project
+spring-webflow-samples/*/.classpath
+spring-webflow-samples/*/.settings
