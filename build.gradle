@@ -258,6 +258,7 @@ configure(rootProject) {
 
 	task docsZip(type: Zip) {
 		group = "Distribution"
+		baseName = "spring-webflow"
 		classifier = "docs"
 		description = "Builds -${classifier} archive containing api and reference " +
 			"for deployment at static.springframework.org/spring-webflow/docs."
@@ -277,6 +278,7 @@ configure(rootProject) {
 
 	task schemaZip(type: Zip) {
 		group = "Distribution"
+		baseName = "spring-webflow"
 		classifier = "schema"
 		description = "Builds -${classifier} archive containing all " +
 			"XSDs for deployment at static.springframework.org/schema."
@@ -300,15 +302,24 @@ configure(rootProject) {
 				}
 			}
 		}
+
+		project(":spring-webflow").sourceSets.main.resources.matching {
+			include '**/engine/model/builder/xml/*.xsd'
+		}.each { File file ->
+			into ('webflow') {
+				from file.path
+			}
+		}
 	}
 
 	task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
 		group = "Distribution"
+		baseName = "spring-webflow"
 		classifier = "dist"
 		description = "Builds -${classifier} archive, containing all jars and docs, " +
 					  "suitable for community download page."
 
-		def baseDir = "${project.name}-${project.version}";
+		def baseDir = "${baseName}-${project.version}";
 
 		from("src/dist") {
 			include "notice.txt"
