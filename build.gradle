@@ -210,6 +210,7 @@ project("spring-faces") {
 		optional("com.sun.facelets:jsf-facelets:1.1.14")
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
+		optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
 		optional("org.springframework:spring-webmvc-portlet:$springVersion")
 		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
