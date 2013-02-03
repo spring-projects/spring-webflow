@@ -201,6 +201,7 @@ project("spring-faces") {
 		compile("org.springframework:spring-webmvc:$springVersion")
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
+		optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
 		optional("org.springframework:spring-webmvc-portlet:$springVersion")
 		optional("com.sun.facelets:jsf-facelets:1.1.14")
 		provided("com.sun.faces:jsf-api:2.1.7")
