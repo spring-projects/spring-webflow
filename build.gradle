@@ -1,16 +1,19 @@
 buildscript {
 	repositories {
 		maven { url "http://repo.springsource.org/plugins-release" }
+		maven { url "http://repo.springsource.org/plugins-snapshot" }
 	}
 	dependencies {
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.3")
 		classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.4")
+		classpath("me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1-SNAPSHOT")
 	}
 }
 
 configure(allprojects) {
 	apply plugin: "eclipse"
 	apply plugin: "idea"
+	apply plugin: "javadocHotfix"
 	group = "org.springframework.webflow"
 }
 
