@@ -35,7 +35,7 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class FlowResourceFlowViewResolver implements FlowViewResolver {
 
-	private static final boolean JSTL_PRESENT = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext");
+	private static final boolean JSTL_PRESENT = ClassUtils.isPresent("javax.servlet.jsp.jstl.fmt.LocalizationContext", FlowResourceFlowViewResolver.class.getClassLoader());
 
 	private String defaultViewSuffix = ".jsp";
 
