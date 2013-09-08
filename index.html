@@ -1,0 +1,90 @@
+---
+title: Spring Web Flow
+
+badges:
+
+  custom:
+    - name: CI (Bamboo)
+      url:  https://build.springsource.org/browse/SWF
+      icon: ci
+
+    - name: Source (GitHub)
+      url:  https://github.com/spring-projects/spring-webflow
+      icon: github
+
+    - name: Issues (JIRA)
+      url:  http://jira.springsource.org/browse/SWF
+      icon: tracking
+
+    - name: Forum
+      url:  http://forum.spring.io/forum/spring-projects/web/web-flow
+      icon: forum
+
+    - name: StackOverflow
+      url:  http://stackoverflow.com/questions/tagged/spring-webflow
+      icon: stackoverflow
+
+---
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+{% capture billboard_description %}
+
+Spring Web Flow builds on Spring MVC and
+allows implementing the "flows" of a web application. A flow
+encapsulates a sequence of steps that guide a user through the
+execution of some business task. It spans multiple HTTP requests,
+has state, deals with transactional data, is reusable, and may be
+dynamic and long-running in nature..
+
+{% endcapture %}
+
+{% capture main_content %}
+
+The sweet spot for Spring Web Flow are
+stateful web applications with controlled navigation such as
+checking in for a flight, applying for a loan, shopping cart
+checkout, or even adding a confirmation step to a form.
+What these scenarios have in common is one or more of the
+following traits:
+
+* There is a clear start and an end point.
+* The user must go through a set of screens in a specific order.
+* The changes are not finalized until the last step.
+* Once complete it shouldn't be possible to repeat a transaction accidentally
+
+<span id="quick-start"></span>
+## Quick Start
+
+{% include download_widget.md %}
+
+Spring Web Flow provides a declarative flow definition
+language for authoring flows on a higher level of abstraction.
+It allows it to be integrated into a wide range of applications
+without any changes (to the flow programming model) including
+Spring MVC, JSF, and even Portlet web applications.
+The following are common issues observed in stateful web
+applications with navigation requirements:
+
+* Visualizing the flow is very difficult.
+* The application has a lot of code accessing the HTTP session.
+* Enforcing controlled navigation is important but not possible.
+* Proper browser back button support seems unattainable.
+* Browser and server get out of sync with "Back" button use.
+* Multiple browser tabs causes concurrency issues with HTTP session data.
+
+Spring Web Flow provides a solution to the above issues.
+
+{% endcapture %}
+
+{% capture related_resources %}
+
+### Samples
+
+* [spring-webflow-samples repository](https://github.com/SpringSource/spring-webflow-samples)
+
+{% endcapture %}
+
+
+{% include project_page.html %}
+</html>
