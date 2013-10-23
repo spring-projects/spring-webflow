@@ -80,7 +80,7 @@
 			<title>Spring EL</title>
 			<para>
 				Starting with version 2.1 Web Flow uses the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html">Spring Expression Language</link> (Spring EL).
-				Spring EL was created to provide is a single, well-supported expression language for use across all the products in the Spring portfolio.
+				Spring EL was created to provide a single, well-supported expression language for use across all the products in the Spring portfolio.
 				It is distributed as a separate jar <code>org.springframework.expression</code> in the Spring Framework.
 				Existing applications will need to remove dependencies on <code>org.jboss.el</code> or <code>org.ognl</code> and use <code>org.springframework.expression</code> instead.
 				See the section below on EL Portability for other notes on upgrading.
