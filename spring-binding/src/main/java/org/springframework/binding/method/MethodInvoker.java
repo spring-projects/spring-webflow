@@ -1,12 +1,12 @@
 /*
  * Copyright 2004-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,15 +20,15 @@ import java.lang.reflect.Method;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.core.style.StylerUtils;
-import org.springframework.util.CachingMapDecorator;
 
 /**
  * A helper for invoking typed methods on arbitrary objects, with support for argument value type conversion from values
  * retrieved from an argument attribute source, and conversion of the result to a desired type.
- * 
+ *
  * @author Keith Donald
  * @author Jeremy Grelle
  */
@@ -44,7 +44,8 @@ public class MethodInvoker {
 	/**
 	 * A cache of invoked bean methods, keyed weakly.
 	 */
-	private CachingMapDecorator<MethodKey, Method> methodCache = new CachingMapDecorator<MethodKey, Method>(true) {
+	@SuppressWarnings("serial")
+	private AbstractCachingMapDecorator<MethodKey, Method> methodCache = new AbstractCachingMapDecorator<MethodKey, Method>(true) {
 		public Method create(MethodKey key) {
 			return key.getMethod();
 		}
@@ -105,7 +106,7 @@ public class MethodInvoker {
 
 	/**
 	 * Apply type conversion on the supplied value
-	 * 
+	 *
 	 * @param value the raw value to be converted
 	 * @param targetType the target type for the conversion
 	 * @return the converted result

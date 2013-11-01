@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -31,7 +31,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 			public Event execute(RequestContext context) throws Exception {
 				assertSessionBound();
 				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) em.getReference(TestBean.class, 0);
+				TestBean bean = (TestBean) em.getReference(TestBean.class, new Long(0));
 				bean.incrementCount();
 				assertNotNull(bean);
 				return new Event(this, "success");
@@ -46,7 +46,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 			public void execute(RequestContext context, int expected) throws Exception {
 				assertSessionBound();
 				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) em.getReference(TestBean.class, 0);
+				TestBean bean = (TestBean) em.getReference(TestBean.class, new Long(0));
 				assertEquals(expected, bean.getCount());
 			}
 		};
@@ -63,8 +63,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/persistence/persistence.xml");
-		OpenJpaVendorAdapter openJpa = new OpenJpaVendorAdapter();
-		factory.setJpaVendorAdapter(openJpa);
+		factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		factory.afterPropertiesSet();
 		return factory.getObject();
 	}

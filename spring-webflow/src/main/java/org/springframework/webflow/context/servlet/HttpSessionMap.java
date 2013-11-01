@@ -29,7 +29,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
 
 /**
  * A Shared Map backed by the Servlet HTTP session, for accessing session scoped attributes.
- * 
+ *
  * @author Keith Donald
  */
 public class HttpSessionMap extends StringKeyedMapAdapter<Object> implements SharedMap<String, Object> {
@@ -87,11 +87,10 @@ public class HttpSessionMap extends StringKeyedMapAdapter<Object> implements Sha
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	protected Iterator<String> getAttributeNames() {
 		HttpSession session = getSession();
-		return session == null ? CollectionUtils.emptyIterator() : CollectionUtils.toIterator(session
-				.getAttributeNames());
+		return (session == null) ?
+				CollectionUtils.<String>emptyIterator() : CollectionUtils.toIterator(session.getAttributeNames());
 	}
 
 	public Object getMutex() {

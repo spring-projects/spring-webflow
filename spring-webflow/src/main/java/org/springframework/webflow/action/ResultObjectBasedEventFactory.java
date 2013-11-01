@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.action;
 
-import org.springframework.core.enums.LabeledEnum;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -61,7 +60,7 @@ import org.springframework.webflow.execution.RequestContext;
  * <td>&nbsp;</td>
  * </tr>
  * </table>
- * 
+ *
  * @author Keith Donald
  * @author Erwin Vervaet
  */
@@ -74,9 +73,6 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 			return event(source, getNullEventId());
 		} else if (isBoolean(resultObject.getClass())) {
 			return event(source, ((Boolean) resultObject));
-		} else if (isLabeledEnum(resultObject.getClass())) {
-			String resultId = ((LabeledEnum) resultObject).getLabel();
-			return event(source, resultId, getResultAttributeName(), resultObject);
 		} else if (isEnum(resultObject.getClass())) {
 			String eventId = EnumUtils.getEnumName(resultObject);
 			return event(source, eventId, getResultAttributeName(), resultObject);
@@ -100,17 +96,13 @@ public class ResultObjectBasedEventFactory extends EventFactorySupport implement
 	 * Check whether or not given type is mapped to a corresponding event using special mapping rules.
 	 */
 	public boolean isMappedValueType(Class<?> type) {
-		return isBoolean(type) || isLabeledEnum(type) || isEnum(type) || isString(type) || isEvent(type);
+		return isBoolean(type) || isEnum(type) || isString(type) || isEvent(type);
 	}
 
 	// internal helpers to determine the 'type' of a class
 
 	private boolean isBoolean(Class<?> type) {
 		return Boolean.class.equals(type) || boolean.class.equals(type);
-	}
-
-	private boolean isLabeledEnum(Class<?> type) {
-		return LabeledEnum.class.isAssignableFrom(type);
 	}
 
 	private boolean isEnum(Class<?> type) {

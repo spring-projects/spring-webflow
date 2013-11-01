@@ -25,16 +25,16 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.util.CachingMapDecorator;
 
 /**
  * The default message context implementation. Uses a {@link MessageSource} to resolve messages that are added by
  * callers.
- * 
+ *
  * @author Keith Donald
  */
 public class DefaultMessageContext implements StateManageableMessageContext {
@@ -43,8 +43,10 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 
 	private MessageSource messageSource;
 
-	private Map<Object, List<Message>> sourceMessages = new CachingMapDecorator<Object, List<Message>>(
+	@SuppressWarnings("serial")
+	private Map<Object, List<Message>> sourceMessages = new AbstractCachingMapDecorator<Object, List<Message>>(
 			new LinkedHashMap<Object, List<Message>>()) {
+
 		protected List<Message> create(Object source) {
 			return new ArrayList<Message>();
 		}

@@ -1,12 +1,13 @@
 package org.springframework.webflow.persistence;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.springframework.orm.jpa.JpaTemplate;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
@@ -17,8 +18,6 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 
 	private JpaFlowExecutionListener executionListener;
 
-	private JpaTemplate jpaTemplate;
-
 	private int rowCount;
 
 	@Override
@@ -26,7 +25,6 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 		entityManagerFactory = getEntityManagerFactory(dataSource);
 		JpaTransactionManager tm = new JpaTransactionManager(entityManagerFactory);
 		executionListener = new JpaFlowExecutionListener(entityManagerFactory, tm);
-		jpaTemplate = new JpaTemplate(entityManagerFactory);
 		rowCount = 1;
 	}
 
@@ -48,7 +46,8 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 	@Override
 	protected void assertCommitState(boolean insertRow, boolean isCommited) {
 		if (insertRow) {
-			jpaTemplate.persist(new TestBean(rowCount++, "Keith Donald"));
+			EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
+			em.persist(new TestBean(rowCount++, "Keith Donald"));
 		}
 		if (!isCommited) {
 			assertEquals("Nothing should be committed yet", 1,
@@ -63,8 +62,7 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/persistence/persistence.xml");
-		OpenJpaVendorAdapter openJpa = new OpenJpaVendorAdapter();
-		factory.setJpaVendorAdapter(openJpa);
+		factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		factory.afterPropertiesSet();
 		return factory.getObject();
 	}

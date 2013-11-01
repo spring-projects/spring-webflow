@@ -19,15 +19,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.binding.method.InvalidMethodKeyException;
 import org.springframework.binding.method.MethodKey;
 import org.springframework.util.Assert;
-import org.springframework.util.CachingMapDecorator;
 
 /**
  * Invoker and cache for dispatch methods that all share the same target object. The dispatch methods typically share
  * the same form, but multiple exist per target object, and they only differ in name.
- * 
+ *
  * @author Keith Donald
  * @author Ben Hale
  */
@@ -46,7 +46,8 @@ class DispatchMethodInvoker {
 	/**
 	 * The resolved method cache.
 	 */
-	private Map<String, Method> methodCache = new CachingMapDecorator<String, Method>() {
+	@SuppressWarnings("serial")
+	private Map<String, Method> methodCache = new AbstractCachingMapDecorator<String, Method>() {
 		public Method create(String key) {
 			String methodName = key;
 			try {
