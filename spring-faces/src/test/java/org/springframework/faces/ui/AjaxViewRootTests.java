@@ -26,8 +26,10 @@ public class AjaxViewRootTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		jsf.setUp();
-		jsf.facesContext().getApplication().setViewHandler(new MockViewHandler());
-		jsf.facesContext().setResponseWriter(new MockResponseWriter(output, null, null));
+		jsf.facesContext().getApplication()
+				.setViewHandler(new MockViewHandler());
+		jsf.facesContext().setResponseWriter(
+				new MockResponseWriter(output, null, null));
 
 		UIForm form = new UIForm();
 		form.setId("foo");
@@ -49,7 +51,7 @@ public class AjaxViewRootTests extends TestCase {
 	}
 
 	public void testProcessDecodes() {
-		jsf.externalContext().getRequestParameterMap().put("processIds", "foo:bar, foo:baz");
+		jsf.request().addParameter("processIds", "foo:bar, foo:baz");
 
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
 
@@ -59,7 +61,7 @@ public class AjaxViewRootTests extends TestCase {
 	}
 
 	public void testEncodeAll_NoRenderIds() throws IOException {
-		jsf.externalContext().getRequestParameterMap().put("processIds", "foo:bar, foo:baz");
+		jsf.request().addParameter("processIds", "foo:bar, foo:baz");
 
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
 
@@ -67,14 +69,20 @@ public class AjaxViewRootTests extends TestCase {
 
 		assertEquals(1, ajaxRoot.getProcessIds().length);
 		assertEquals(1, ajaxRoot.getRenderIds().length);
-		assertEquals(StringUtils.arrayToCommaDelimitedString(ajaxRoot.getProcessIds()), StringUtils
-				.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
+		assertEquals(
+				StringUtils.arrayToCommaDelimitedString(ajaxRoot
+						.getProcessIds()),
+				StringUtils.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testEncodeAll_RenderIdsExpr() throws IOException {
 
-		jsf.externalContext().getRequestMap().put(View.RENDER_FRAGMENTS_ATTRIBUTE,
-				StringUtils.delimitedListToStringArray("foo:bar,foo:baz", ",", " "));
+		jsf.externalContext()
+				.getRequestMap()
+				.put(View.RENDER_FRAGMENTS_ATTRIBUTE,
+						StringUtils.delimitedListToStringArray(
+								"foo:bar,foo:baz", ",", " "));
 
 		AjaxViewRoot ajaxRoot = new AjaxViewRoot(testTree);
 
@@ -82,6 +90,8 @@ public class AjaxViewRootTests extends TestCase {
 
 		assertEquals(1, ajaxRoot.getRenderIds().length);
 
-		assertEquals("foo:bar", StringUtils.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
+		assertEquals(
+				"foo:bar",
+				StringUtils.arrayToCommaDelimitedString(ajaxRoot.getRenderIds()));
 	}
 }

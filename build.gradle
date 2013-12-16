@@ -1,0 +1,383 @@
+buildscript {
+	repositories {
+		maven { url "http://repo.springsource.org/plugins-release" }
+		maven { url "http://repo.springsource.org/plugins-snapshot" }
+	}
+	dependencies {
+		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.5")
+		classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.8")
+		classpath("me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1")
+	}
+}
+
+configure(allprojects) {
+	apply plugin: "eclipse"
+	apply plugin: "idea"
+	apply plugin: "javadocHotfix"
+	group = "org.springframework.webflow"
+}
+
+configure(subprojects) { subproject ->
+	apply plugin: "java"
+	apply plugin: "propdeps"
+	apply from: "${rootProject.projectDir}/publish-maven.gradle"
+
+	sourceCompatibility=1.5
+	targetCompatibility=1.5
+
+	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
+
+	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
+
+	repositories {
+		maven { url "http://repo.springsource.org/libs-release" }
+	}
+
+	jar {
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+
+		from("${rootProject.projectDir}/src/dist") {
+			include "license.txt"
+			include "notice.txt"
+			into "META-INF"
+			expand(copyright: new Date().format("yyyy"), version: project.version)
+		}
+	}
+}
+
+configure(subprojects.findAll {it.name != "spring-js-resources"}) { subproject ->
+	dependencies {
+		testCompile("junit:junit-dep:4.10")
+		testCompile("org.hamcrest:hamcrest-all:1.3")
+		testCompile("org.easymock:easymock:3.1")
+	}
+
+	subproject.ext {
+	  springVersion = "3.2.1.RELEASE"
+	  springSecurityVersion = "3.1.3.RELEASE"
+	  slf4jVersion = "1.6.1"
+	  log4jVersion = "1.2.15"
+	}
+
+	test {
+	  systemProperty("java.awt.headless", "true")
+	  include "**/*Tests.class"
+	}
+
+	javadoc {
+		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.author = true
+		options.header = project.name
+	}
+
+	task sourcesJar(type: Jar, dependsOn:classes) {
+		classifier = "sources"
+		from sourceSets.main.allJava
+	}
+
+	task javadocJar(type: Jar) {
+		classifier = "javadoc"
+		from javadoc
+	}
+
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+}
+
+project("spring-binding") {
+	description = "Spring Binding"
+
+	dependencies {
+		provided("javax.el:el-api:1.0")
+		compile("commons-logging:commons-logging:1.1.1")
+		compile("opensymphony:ognl:2.6.11")
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-context:$springVersion")
+		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-expression:$springVersion")
+		testCompile("log4j:log4j:$log4jVersion") {
+			exclude group: "javax.mail", module: "mail"
+			exclude group: "javax.jms", module: "jms"
+			exclude group: "com.sun.jdmk", module: "jmxtools"
+			exclude group: "com.sun.jmx", module: "jmxri"
+		}
+		testCompile("org.jboss.el:jboss-el:2.0.1.GA")
+	}
+}
+
+project("spring-js-resources") {
+	description = "Spring JS Resources"
+
+	apply from: "spring-js-resources.gradle"
+
+	jar {
+		dependsOn prepareResources
+	}
+}
+
+project("spring-js") {
+	description = "Spring JS"
+
+	dependencies {
+		compile(project(":spring-js-resources"))
+		compile("commons-logging:commons-logging:1.1.1")
+		provided("javax.servlet:servlet-api:2.4")
+		optional("org.apache.tiles:tiles-api:2.1.2")
+		optional("org.apache.tiles:tiles-core:2.1.2")
+		optional("org.apache.tiles:tiles-jsp:2.1.2")
+		optional("org.apache.tiles:tiles-servlet:2.1.2")
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-context:$springVersion")
+		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-web:$springVersion")
+		compile("org.springframework:spring-webmvc:$springVersion")
+		testCompile("javax.servlet:jstl:1.2")
+		testCompile("log4j:log4j:$log4jVersion") {
+			exclude group: "javax.mail", module: "mail"
+			exclude group: "javax.jms", module: "jms"
+			exclude group: "com.sun.jdmk", module: "jmxtools"
+			exclude group: "com.sun.jmx", module: "jmxri"
+		}
+		testCompile("org.springframework:spring-test:$springVersion")
+	}
+}
+
+project("spring-webflow") {
+	description = "Spring Web Flow"
+
+	dependencies {
+		compile(project(":spring-binding"))
+		compile(project(":spring-js"))
+		compile("commons-logging:commons-logging:1.1.1")
+		provided("javax.el:el-api:2.2")
+		provided("javax.persistence:persistence-api:1.0.2")
+		provided("javax.servlet:servlet-api:2.4")
+		provided("javax.portlet:portlet-api:2.0")
+		provided("javax.transaction:transaction-api:1.1-rev-1")
+		provided("junit:junit:3.8.2")
+		compile("opensymphony:ognl:2.6.11")
+		optional("org.hibernate:hibernate:3.2.7.ga") {
+			exclude group: "org.slf4j", module: "slf4j-api"
+		}
+		optional("backport-util-concurrent:backport-util-concurrent:3.0")
+		optional("org.slf4j:slf4j-api:$slf4jVersion")
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-context:$springVersion")
+		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-expression:$springVersion")
+		optional("org.springframework:spring-orm:$springVersion")
+		optional("org.springframework:spring-tx:$springVersion")
+		compile("org.springframework:spring-web:$springVersion")
+		compile("org.springframework:spring-webmvc:$springVersion")
+		optional("org.springframework:spring-webmvc-portlet:$springVersion")
+		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
+		testCompile("javax.validation:validation-api:1.0.0.GA")
+		testCompile("org.apache.openjpa:openjpa:1.1.0")
+		testCompile("org.apache.openjpa:openjpa-lib:1.1.0")
+		testCompile("org.apache.openjpa:openjpa-persistence:1.1.0")
+		testCompile("org.apache.openjpa:openjpa-persistence-jdbc:1.1.0")
+		testCompile("org.hsqldb:hsqldb:2.2.8")
+		testCompile("org.jboss.el:jboss-el:2.0.1.GA")
+		testCompile("org.springframework:spring-aop:$springVersion")
+		testCompile("org.springframework:spring-jdbc:$springVersion")
+		testCompile("org.springframework:spring-test:$springVersion")
+	}
+}
+
+project("spring-faces") {
+	description = "Spring Faces"
+
+	dependencies {
+		compile(project(":spring-binding"))
+		compile(project(":spring-webflow"))
+		compile("commons-logging:commons-logging:1.1.1")
+		provided("javax.servlet:servlet-api:2.4")
+		provided("javax.portlet:portlet-api:2.0")
+		provided("javax.el:el-api:1.0")
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-context:$springVersion")
+		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-expression:$springVersion")
+		compile("org.springframework:spring-web:$springVersion")
+		compile("org.springframework:spring-webmvc:$springVersion")
+		optional("org.richfaces.framework:richfaces-api:3.1.4.GA")
+		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
+		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
+		optional("org.springframework:spring-webmvc-portlet:$springVersion")
+		optional("com.sun.facelets:jsf-facelets:1.1.14")
+		provided("com.sun.faces:jsf-api:2.1.7")
+		provided("com.sun.faces:jsf-impl:2.1.7")
+		provided("org.apache.myfaces.core:myfaces-impl:2.1.7")
+		testCompile("log4j:log4j:$log4jVersion") {
+			exclude group: "javax.mail", module: "mail"
+			exclude group: "javax.jms", module: "jms"
+			exclude group: "com.sun.jdmk", module: "jmxtools"
+			exclude group: "com.sun.jmx", module: "jmxri"
+		}
+		testCompile("org.apache.myfaces.test:myfaces-test20:1.0.4")
+		testCompile("org.jboss.el:jboss-el:2.0.1.GA")
+		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-log4j12:$slf4jVersion") {
+			exclude group: "log4j", module: "log4j"
+		}
+		testCompile("org.springframework:spring-test:$springVersion")
+	}
+}
+
+configure(rootProject) {
+	description = "Spring Web Flow"
+
+	apply plugin: "docbook-reference"
+
+	reference {
+		sourceDir = file("src/reference")
+		pdfFilename = "spring-webflow-reference.pdf"
+	}
+
+	// don"t publish the default jar for the root project
+	configurations.archives.artifacts.clear()
+
+	artifacts {
+	}
+
+	task api(type: Javadoc) {
+		group = "Documentation"
+		description = "Generates aggregated Javadoc API documentation."
+		title = "${rootProject.description} ${version} API"
+		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.author = true
+		options.header = rootProject.description
+		options.overview = "src/api/overview.html"
+		source subprojects.collect { project ->
+			project.sourceSets.main.allJava
+		}
+		destinationDir = new File(buildDir, "api")
+		classpath = files(subprojects.collect { project ->
+			project.sourceSets.main.compileClasspath
+		})
+		maxMemory = "1024m"
+	}
+
+	task docsZip(type: Zip) {
+		group = "Distribution"
+		baseName = "spring-webflow"
+		classifier = "docs"
+		description = "Builds -${classifier} archive containing api and reference " +
+			"for deployment at static.springframework.org/spring-webflow/docs."
+
+		from("src/dist") {
+			include "changelog.txt"
+		}
+
+		from (api) {
+			into "api"
+		}
+
+		from (reference) {
+			into "reference"
+		}
+	}
+
+	task schemaZip(type: Zip) {
+		group = "Distribution"
+		baseName = "spring-webflow"
+		classifier = "schema"
+		description = "Builds -${classifier} archive containing all " +
+			"XSDs for deployment at static.springframework.org/schema."
+
+		subprojects.each { subproject ->
+			def Properties schemas = new Properties();
+
+			subproject.sourceSets.main.resources.find {
+				it.path.endsWith("META-INF/spring.schemas")
+			}?.withInputStream { schemas.load(it) }
+
+			for (def key : schemas.keySet()) {
+				def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
+				assert shortName != key
+				File xsdFile = subproject.sourceSets.main.allSource.find {
+					it.path.endsWith(schemas.get(key))
+				}
+				assert xsdFile != null
+				into (shortName) {
+					from xsdFile.path
+				}
+			}
+		}
+
+		project(":spring-webflow").sourceSets.main.resources.matching {
+			include '**/engine/model/builder/xml/*.xsd'
+		}.each { File file ->
+			into ('webflow') {
+				from file.path
+			}
+		}
+	}
+
+	task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
+		group = "Distribution"
+		baseName = "spring-webflow"
+		classifier = "dist"
+		description = "Builds -${classifier} archive, containing all jars and docs, " +
+					  "suitable for community download page."
+
+		def baseDir = "${baseName}-${project.version}";
+
+		from("src/dist") {
+			include "notice.txt"
+			into "${baseDir}"
+			expand(copyright: new Date().format("yyyy"), version: project.version)
+		}
+
+		from("src/dist") {
+			include "readme.txt"
+			include "license.txt"
+			into "${baseDir}"
+		}
+
+		from(zipTree(docsZip.archivePath)) {
+			into "${baseDir}/docs"
+		}
+
+		from(zipTree(schemaZip.archivePath)) {
+			into "${baseDir}/schema"
+		}
+
+		subprojects.each { subproject ->
+			into ("${baseDir}/libs") {
+				from subproject.jar
+				if (subproject.tasks.findByPath("sourcesJar")) {
+					from subproject.sourcesJar
+				}
+				if (subproject.tasks.findByPath("javadocJar")) {
+					from subproject.javadocJar
+				}
+			}
+		}
+	}
+
+	artifacts {
+		archives docsZip
+		archives schemaZip
+		archives distZip
+	}
+
+	task wrapper(type: Wrapper) {
+		description = "Generates gradlew[.bat] scripts"
+		gradleVersion = "1.9"
+
+		doLast() {
+			def gradleOpts = "-XX:MaxPermSize=1024m -Xmx1024m"
+			def gradleBatOpts = "$gradleOpts -XX:MaxHeapSize=256m"
+			File wrapperFile = file("gradlew")
+			wrapperFile.text = wrapperFile.text.replace("DEFAULT_JVM_OPTS=",
+				"GRADLE_OPTS=\"$gradleOpts \$GRADLE_OPTS\"\nDEFAULT_JVM_OPTS=")
+			File wrapperBatFile = file("gradlew.bat")
+			wrapperBatFile.text = wrapperBatFile.text.replace("set DEFAULT_JVM_OPTS=",
+				"set GRADLE_OPTS=$gradleBatOpts %GRADLE_OPTS%\nset DEFAULT_JVM_OPTS=")
+		}
+	}
+}
