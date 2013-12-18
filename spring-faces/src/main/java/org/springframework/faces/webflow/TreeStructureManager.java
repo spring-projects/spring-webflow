@@ -94,7 +94,7 @@ class TreeStructureManager {
 		String compId = treeStructComp.getComponentId();
 		UIComponent component;
 		try {
-			component = (UIComponent) BeanUtils.instantiateClass(ClassUtils.forName(compClass));
+			component = (UIComponent) BeanUtils.instantiateClass(ClassUtils.forName(compClass, TreeStructureManager.class.getClassLoader()));
 		} catch (Exception ex) {
 			throw new FacesException("Could not restore the component tree structure.", ex);
 		}

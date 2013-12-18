@@ -111,11 +111,7 @@ class ConversationContainer implements Serializable {
 	}
 
 	private ConversationId nextId() {
-		if (JdkVersion.isAtLeastJava15()) {
-			return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
-		} else {
-			return new SimpleConversationId(new Integer(++conversationIdSequence));
-		}
+		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
 	}
 
 	/**

@@ -90,12 +90,10 @@ public class CollectionToCollection implements Converter {
 		if (elementConverter != null) {
 			return elementConverter;
 		} else {
-			if (JdkVersion.isAtLeastJava15()) {
-				Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
-				if (elementType != null) {
-					Class componentType = source.getClass().getComponentType();
-					return conversionService.getConversionExecutor(componentType, elementType);
-				}
+			Class elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
+			if (elementType != null) {
+				Class componentType = source.getClass().getComponentType();
+				return conversionService.getConversionExecutor(componentType, elementType);
 			}
 			return null;
 		}

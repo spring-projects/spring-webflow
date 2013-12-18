@@ -1,19 +1,21 @@
 package org.springframework.webflow.persistence;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.orm.jpa.JpaTemplate;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -28,8 +30,6 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private JpaTemplate jpaTemplate;
-
 	public void testTemp() {
 
 	}
@@ -41,7 +41,6 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		entityManagerFactory = getEntityManagerFactory(dataSource);
 		JpaTransactionManager tm = new JpaTransactionManager(entityManagerFactory);
 		jpaListener = new JpaFlowExecutionListener(entityManagerFactory, tm);
-		jpaTemplate = new JpaTemplate(entityManagerFactory);
 	}
 
 	public void testFlowNotAPersistenceContext() {
@@ -61,7 +60,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean = new TestBean(1, "Keith Donald");
-		jpaTemplate.persist(bean);
+		EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
+		em.persist(bean);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
@@ -84,14 +84,17 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean1 = new TestBean(1, "Keith Donald");
-		jpaTemplate.persist(bean1);
+
+		EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
+		em.persist(bean1);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		jpaListener.paused(context);
 		assertSessionNotBound();
 
 		jpaListener.resuming(context);
 		TestBean bean2 = new TestBean(2, "Keith Donald");
-		jpaTemplate.persist(bean2);
+		em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
+		em.persist(bean2);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		assertSessionBound();
 
@@ -116,7 +119,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean = new TestBean(1, "Keith Donald");
-		jpaTemplate.persist(bean);
+		EntityManager emf = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
+		emf.persist(bean);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
@@ -157,7 +161,8 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean = new TestBean(1, "Keith Donald");
-		jpaTemplate.persist(bean);
+		EntityManager emf = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
+		emf.persist(bean);
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
 		jpaListener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
 		assertEquals("Table should still only have one row", 1, jdbcTemplate.queryForInt("select count(*) from T_BEAN"));
@@ -197,8 +202,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/persistence/persistence.xml");
-		OpenJpaVendorAdapter openJpa = new OpenJpaVendorAdapter();
-		factory.setJpaVendorAdapter(openJpa);
+		factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		factory.afterPropertiesSet();
 		return factory.getObject();
 	}

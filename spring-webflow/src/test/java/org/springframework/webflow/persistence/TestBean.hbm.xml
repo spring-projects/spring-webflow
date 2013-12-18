@@ -5,7 +5,7 @@
 
 <hibernate-mapping package="org.springframework.webflow.persistence" default-lazy="false">
 	<class name="TestBean" table="T_BEAN">
-		<id name="entityId" column="ID">
+		<id name="entityId" column="ID" type="long">
 			<generator class="increment" />
 		</id>
 		<property name="name" column="NAME" />

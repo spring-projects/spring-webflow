@@ -17,13 +17,14 @@ package org.springframework.binding.method;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.binding.collection.AbstractCachingMapDecorator;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.core.style.StylerUtils;
-import org.springframework.util.CachingMapDecorator;
 
 /**
  * A helper for invoking typed methods on arbitrary objects, with support for argument value type conversion from values
@@ -44,9 +45,10 @@ public class MethodInvoker {
 	/**
 	 * A cache of invoked bean methods, keyed weakly.
 	 */
-	private CachingMapDecorator methodCache = new CachingMapDecorator(true) {
-		public Object create(Object key) {
-			return ((MethodKey) key).getMethod();
+	@SuppressWarnings("serial")
+	private Map<MethodKey, Method> methodCache = new AbstractCachingMapDecorator<MethodKey, Method>(true) {
+		public Method create(MethodKey key) {
+			return key.getMethod();
 		}
 	};
 

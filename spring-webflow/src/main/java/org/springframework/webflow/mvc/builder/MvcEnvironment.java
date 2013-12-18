@@ -43,7 +43,8 @@ public enum MvcEnvironment {
 	 * @return the web environment the context is running in, or null if not running in a web environment
 	 */
 	public static MvcEnvironment environmentFor(ApplicationContext applicationContext) {
-		if (ClassUtils.isPresent("javax.portlet.PortletContext") && isPortletApplicationContext(applicationContext)) {
+		if (ClassUtils.isPresent("javax.portlet.PortletContext",
+				MvcEnvironment.class.getClassLoader()) && isPortletApplicationContext(applicationContext)) {
 			return MvcEnvironment.PORTLET;
 		} else if (applicationContext instanceof WebApplicationContext) {
 			return MvcEnvironment.SERVLET;
@@ -53,8 +54,8 @@ public enum MvcEnvironment {
 	}
 
 	private static boolean isPortletApplicationContext(ApplicationContext applicationContext) {
-		return ClassUtils.isPresent("org.springframework.web.portlet.context.ConfigurablePortletApplicationContext")
-				&& applicationContext instanceof ConfigurablePortletApplicationContext;
+		return ClassUtils.isPresent("org.springframework.web.portlet.context.ConfigurablePortletApplicationContext",
+				MvcEnvironment.class.getClassLoader()) && applicationContext instanceof ConfigurablePortletApplicationContext;
 	}
 
 }
