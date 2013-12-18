@@ -40,6 +40,7 @@ import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.core.FlowException;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -278,7 +279,6 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * @param request the current request
 	 */
 	protected MutableAttributeMap<Object> defaultCreateFlowExecutionInputMap(HttpServletRequest request) {
-		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap.size() == 0) {
 			return null;
@@ -511,16 +511,23 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void saveFlashOutput(String location, HttpServletRequest request, HttpServletResponse response,
 			FlowExecutionResult result) {
-		Map<String, Object> output = result.getOutcome().getOutput().asMap();
-		FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
-		if (flashMapManager != null && output != null && !output.isEmpty()) {
-			UriComponents uriComponents = UriComponentsBuilder.fromUriString(location).build();
-			FlashMap flashMap = new FlashMap();
-			flashMap.setTargetRequestPath(uriComponents.getPath());
-			flashMap.addTargetRequestParams(uriComponents.getQueryParams());
-			flashMap.putAll(output);
-			flashMapManager.saveOutputFlashMap(flashMap, request, response);
+
+		if ((result == null) || (result.getOutcome() == null) || (result.getOutcome().getOutput().isEmpty())) {
+			return;
 		}
+		AttributeMap<Object> output = result.getOutcome().getOutput();
+
+		FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
+		if (flashMapManager == null) {
+			return;
+		}
+
+		UriComponents uriComponents = UriComponentsBuilder.fromUriString(location).build();
+		FlashMap flashMap = new FlashMap();
+		flashMap.setTargetRequestPath(uriComponents.getPath());
+		flashMap.addTargetRequestParams(uriComponents.getQueryParams());
+		flashMap.putAll(output.asMap());
+		flashMapManager.saveOutputFlashMap(flashMap, request, response);
 	}
 
 	private void handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
