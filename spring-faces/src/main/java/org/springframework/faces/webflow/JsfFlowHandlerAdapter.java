@@ -15,6 +15,9 @@
  */
 package org.springframework.faces.webflow;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.PartialResponseWriter;
+import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,24 +28,37 @@ import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 /**
  * An extension of {@link FlowHandlerAdapter} that replaces the default {@link AjaxHandler} instance with a
  * {@link JsfAjaxHandler}.
- * 
+ *
  * @author Rossen Stoyanchev
  * @since 2.2.0
  */
 public class JsfFlowHandlerAdapter extends FlowHandlerAdapter {
 
+
 	public void afterPropertiesSet() throws Exception {
-		boolean initializeAjaxHandler = getAjaxHandler() == null;
+
+		boolean isAjaxHandlerConfigured = (getAjaxHandler() != null);
 		super.afterPropertiesSet();
-		if (initializeAjaxHandler) {
-			JsfAjaxHandler ajaxHandler = new JsfAjaxHandler();
-			ajaxHandler.setApplicationContext(getApplicationContext());
-			setAjaxHandler(ajaxHandler);
+
+		if (!isAjaxHandlerConfigured) {
+			JsfAjaxHandler handler = new JsfAjaxHandler();
+			handler.setApplicationContext(getApplicationContext());
+			setAjaxHandler(handler);
 		}
 	}
 
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		return super.handle(request, response, handler);
+
+		FacesContextHelper helper = new FacesContextHelper();
+		try {
+			FacesContext facesContext = helper.getFacesContext(getServletContext(), request, response);
+			request.setAttribute(FlowFacesContextLifecycleListener.DEFAULT_FACES_CONTEXT, facesContext);
+			return super.handle(request, response, handler);
+
+		} finally {
+			request.removeAttribute(FlowFacesContextLifecycleListener.DEFAULT_FACES_CONTEXT);
+			helper.releaseIfNecessary();
+		}
 	}
 }

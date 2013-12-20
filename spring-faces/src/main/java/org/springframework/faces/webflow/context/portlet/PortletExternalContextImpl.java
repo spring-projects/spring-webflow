@@ -583,7 +583,7 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	private static class MojarraFlashFactory {
 		public Flash newFlash(ExternalContext context) {
-			return ELFlash.getFlash(context, true);
+			return (Flash) ELFlash.getFlash();
 		}
 	}
 
