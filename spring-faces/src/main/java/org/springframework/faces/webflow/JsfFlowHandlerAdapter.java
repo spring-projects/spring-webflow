@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,9 +33,11 @@ import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 public class JsfFlowHandlerAdapter extends FlowHandlerAdapter {
 
 	public void afterPropertiesSet() throws Exception {
-		boolean initializeAjaxHandler = getAjaxHandler() == null;
+
+		boolean isAjaxHandlerConfigured = (getAjaxHandler() != null);
 		super.afterPropertiesSet();
-		if (initializeAjaxHandler) {
+
+		if (!isAjaxHandlerConfigured) {
 			if (JsfRuntimeInformation.isAtLeastJsf20()) {
 				JsfAjaxHandler ajaxHandler = new JsfAjaxHandler();
 				ajaxHandler.setApplicationContext(getApplicationContext());
@@ -45,7 +48,17 @@ public class JsfFlowHandlerAdapter extends FlowHandlerAdapter {
 
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		return super.handle(request, response, handler);
+
+		FacesContextHelper helper = new FacesContextHelper();
+		try {
+			FacesContext facesContext = helper.getFacesContext(getServletContext(), request, response);
+			request.setAttribute(FlowFacesContextLifecycleListener.DEFAULT_FACES_CONTEXT, facesContext);
+			return super.handle(request, response, handler);
+
+		} finally {
+			request.removeAttribute(FlowFacesContextLifecycleListener.DEFAULT_FACES_CONTEXT);
+			helper.releaseIfNecessary();
+		}
 	}
 
 }

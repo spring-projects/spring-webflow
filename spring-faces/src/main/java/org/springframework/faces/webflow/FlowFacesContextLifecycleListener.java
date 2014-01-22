@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,35 @@ import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * A {@link FlowExecutionListener} that creates a {@link FlowFacesContext} instance when a flow request is submitted and
- * releases it when the request has been processed.
+ * A {@link FlowExecutionListener} that creates a {@link FlowFacesContext}
+ * instance when a flow request is submitted and releases it when the request
+ * has been processed.
  * 
  * @author Rossen Stoyanchev
  */
 public class FlowFacesContextLifecycleListener extends FlowExecutionListenerAdapter {
+
+	public static final String DEFAULT_FACES_CONTEXT =
+			FlowFacesContextLifecycleListener.class.getName() + ".DEFAULT_FACES_CONTEXT";
 
 	/**
 	 * Creates a new instance of {@link FlowFacesContext} that is then available for the duration of the request.
 	 * @param context the current flow request context
 	 */
 	public void requestSubmitted(RequestContext context) {
+
+		FacesContext facesContext = getRequestFacesContext(context);
+		if (facesContext != null) {
+			// FacesContext already created, just wrap it (sets "current" instance internally)
+			if (JsfRuntimeInformation.isAtLeastJsf20()) {
+				new Jsf2FlowFacesContext(context, facesContext);
+			}
+			else {
+				new FlowFacesContext(context, facesContext);
+			}
+			return;
+		}
+
 		FlowFacesContext.newInstance(context, FlowLifecycle.newInstance());
 	}
 
@@ -42,7 +59,15 @@ public class FlowFacesContextLifecycleListener extends FlowExecutionListenerAdap
 	 * @param context the source of the event
 	 */
 	public void requestProcessed(RequestContext context) {
+
+		if (getRequestFacesContext(context) != null) {
+			return;
+		}
+
 		FacesContext.getCurrentInstance().release();
 	}
 
+	private FacesContext getRequestFacesContext(RequestContext context) {
+		return (FacesContext) context.getExternalContext().getRequestMap().get(DEFAULT_FACES_CONTEXT);
+	}
 }

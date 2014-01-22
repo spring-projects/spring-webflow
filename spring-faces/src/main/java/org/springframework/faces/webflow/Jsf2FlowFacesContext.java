@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import javax.faces.context.Flash;
 import javax.faces.context.PartialViewContext;
 import javax.faces.context.PartialViewContextFactory;
 import javax.faces.event.PhaseId;
+import javax.faces.lifecycle.ClientWindow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -264,6 +265,24 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 		public void setSessionMaxInactiveInterval(int interval) {
 			delegate.setSessionMaxInactiveInterval(interval);
+		}
+
+		// --------------- JSF 2.2 Pass-through delegate methods ------------------//
+
+		public String getApplicationContextPath() {
+			return delegate.getApplicationContextPath();
+		}
+
+		public String getSessionId(boolean create) {
+			return delegate.getSessionId(create);
+		}
+
+		public ClientWindow getClientWindow() {
+			return delegate.getClientWindow();
+		}
+
+		public void setClientWindow(ClientWindow window) {
+			delegate.setClientWindow(window);
 		}
 	}
 }

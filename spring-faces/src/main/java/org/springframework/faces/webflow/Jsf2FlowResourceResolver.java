@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.faces.FacesException;
+import javax.faces.application.ResourceHandler;
+import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.ResourceResolver;
 
 import org.springframework.context.ApplicationContext;
@@ -29,8 +31,8 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import com.sun.faces.facelets.impl.DefaultResourceResolver;
 
 /**
- * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml". Configure it via a context
- * parameter in web.xml:
+ * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml".
+ * Configure it via a context parameter in web.xml:
  * 
  * <pre>
  * &lt;context-param/&gt; 
@@ -41,11 +43,12 @@ import com.sun.faces.facelets.impl.DefaultResourceResolver;
  */
 public class Jsf2FlowResourceResolver extends ResourceResolver {
 
-	ResourceResolver delegateResolver = new DefaultResourceResolver();
+	ResourceResolver delegateResolver;
 
 	public URL resolveUrl(String path) {
 
 		if (!JsfUtils.isFlowRequest()) {
+			initDelegateIfNecessary();
 			return delegateResolver.resolveUrl(path);
 		}
 
@@ -61,10 +64,19 @@ public class Jsf2FlowResourceResolver extends ResourceResolver {
 			if (viewResource.exists()) {
 				return viewResource.getURL();
 			} else {
+				initDelegateIfNecessary();
 				return delegateResolver.resolveUrl(path);
 			}
 		} catch (IOException ex) {
 			throw new FacesException(ex);
+		}
+	}
+
+	private void initDelegateIfNecessary() {
+		if (this.delegateResolver == null) {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			ResourceHandler resourceHandler = facesContext.getApplication().getResourceHandler();
+			this.delegateResolver = new DefaultResourceResolver(resourceHandler);
 		}
 	}
 
