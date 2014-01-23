@@ -137,10 +137,10 @@ project("spring-js") {
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		optional("org.apache.tiles:tiles-api:2.1.2")
-		optional("org.apache.tiles:tiles-core:2.1.2")
-		optional("org.apache.tiles:tiles-jsp:2.1.2")
-		optional("org.apache.tiles:tiles-servlet:2.1.2")
+		optional("org.apache.tiles:tiles-api:2.2.2")
+		optional("org.apache.tiles:tiles-core:2.2.2")
+		optional("org.apache.tiles:tiles-jsp:2.2.2")
+		optional("org.apache.tiles:tiles-servlet:2.2.2")
 		testCompile("javax.servlet:jstl:1.2")
 		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
@@ -148,6 +148,8 @@ project("spring-js") {
 			exclude group: "com.sun.jdmk", module: "jmxtools"
 			exclude group: "com.sun.jmx", module: "jmxri"
 		}
+		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
 		testCompile("org.springframework:spring-test:$springVersion")
 	}
 }
