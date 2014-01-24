@@ -53,7 +53,7 @@ configure(subprojects) { subproject ->
 	}
 }
 
-configure(subprojects.findAll {it.name != "spring-js-resources"}) { subproject ->
+configure(subprojects) { subproject ->
 	dependencies {
 		testCompile("junit:junit-dep:4.10")
 		testCompile("org.hamcrest:hamcrest-all:1.3")
