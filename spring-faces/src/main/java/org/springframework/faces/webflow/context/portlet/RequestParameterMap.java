@@ -63,8 +63,6 @@ public class RequestParameterMap extends PortletRequestParameterMap {
 	 * <li>True</li>
 	 * <li>null</li>
 	 * </ol>
-	 * 
-	 * @param useArrayForMultiValueAttributes
 	 */
 	public Boolean useArrayForMultiValueAttributes() {
 		return useArrayForMultiValueAttributes;

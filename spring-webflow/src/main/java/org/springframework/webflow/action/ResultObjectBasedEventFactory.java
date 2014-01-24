@@ -41,11 +41,6 @@ import org.springframework.webflow.execution.RequestContext;
  * <td>&nbsp;</td>
  * </tr>
  * <tr>
- * <td>{@link org.springframework.core.enums.LabeledEnum}</td>
- * <td>{@link org.springframework.core.enums.LabeledEnum#getLabel()}</td>
- * <td>The result object will included in the event as an attribute named "result".</td>
- * </tr>
- * <tr>
  * <td>{@link java.lang.Enum}</td>
  * <td>{@link java.lang.Enum#name()}</td>
  * <td>The result object will included in the event as an attribute named "result".</td>
@@ -65,7 +60,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-public class ResultObjectBasedEventFactory extends EventFactorySupport implements ResultEventFactory {
+public class ResultObjectBasedEventFactory	 extends EventFactorySupport implements ResultEventFactory {
 
 	public Event createResultEvent(Object source, Object resultObject, RequestContext context) {
 		if (resultObject == null) {
