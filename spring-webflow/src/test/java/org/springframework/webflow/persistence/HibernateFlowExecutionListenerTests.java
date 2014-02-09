@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,11 @@
  */
 package org.springframework.webflow.persistence;
 
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -31,10 +28,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.HibernateTransactionManager;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate4.HibernateCallback;
+import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;
@@ -43,7 +40,7 @@ import org.springframework.webflow.test.MockRequestContext;
 
 /**
  * Tests for {@link HibernateFlowExecutionListener}
- * 
+ *
  * @author Ben Hale
  */
 public class HibernateFlowExecutionListenerTests extends TestCase {
@@ -86,7 +83,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		hibernateTemplate.executeWithNativeSession(new HibernateCallback<Object>() {
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+			public Object doInHibernate(Session session) {
 				assertSame("Should have been original instance", hibSession, session);
 				return null;
 			}

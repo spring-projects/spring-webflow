@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,21 @@
  */
 package org.springframework.webflow.persistence;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.hibernate.FlushMode;
 import org.hibernate.Interceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.orm.hibernate4.SessionHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -48,7 +53,7 @@ import org.springframework.webflow.execution.RequestContext;
  * <li>When an existing flow ends, commit the changes made to the session in a transaction if the ending state is a
  * commit state. Then, unbind the context and close it.
  * </ul>
- * 
+ *
  * The general data access pattern implemented here is:
  * <ul>
  * <li>Create a new persistence context when a new flow execution with the 'persistenceContext' attribute starts
@@ -57,7 +62,7 @@ import org.springframework.webflow.execution.RequestContext;
  * <li>On successful flow completion, commit and flush those edits to the database, applying a version check if
  * necessary.
  * </ul>
- * 
+ *
  * <p>
  * Note: All data access except for the final commit will, by default, be non-transactional. However, a flow may call
  * into a transactional service layer to fetch objects during the conversation in the context of a read-only system
@@ -68,12 +73,22 @@ import org.springframework.webflow.execution.RequestContext;
  * want intermediate flushing to happen, as the nature of a flow implies a transient, isolated resource that can be
  * canceled before it ends. Generally, the only time a read-write transaction should be started is upon successful
  * completion of the conversation, triggered by reaching a 'commit' end state.
- * 
+ *
  * @author Keith Donald
  * @author Juergen Hoeller
  * @author Ben Hale
  */
 public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter {
+
+	private static final boolean hibernate3Present = ClassUtils.isPresent("org.hibernate.connection.ConnectionProvider",
+			HibernateFlowExecutionListener.class.getClassLoader());
+
+	private static final Method openSessionMethod =
+			ReflectionUtils.findMethod(SessionFactory.class, "openSession");
+
+	private static final Method openSessionWithInterceptorMethod =
+			ReflectionUtils.findMethod(SessionFactory.class, "openSession", Interceptor.class);
+
 
 	/**
 	 * The name of the attribute the flow {@link Session persistence context} is indexed under.
@@ -183,8 +198,33 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	private Session createSession(RequestContext context) {
-		Session session = (entityInterceptor != null ? sessionFactory.openSession(entityInterceptor) : sessionFactory
-				.openSession());
+		Session session;
+		if (entityInterceptor != null) {
+			if (hibernate3Present) {
+				try {
+					session = (Session) openSessionWithInterceptorMethod.invoke(sessionFactory, entityInterceptor);
+				} catch (IllegalAccessException ex) {
+					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
+				} catch (InvocationTargetException ex) {
+					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
+				}
+			} else {
+				session = sessionFactory.withOptions().interceptor(entityInterceptor).openSession();
+			}
+		} else {
+			if (hibernate3Present) {
+				try {
+					session = (Session) openSessionMethod.invoke(sessionFactory);
+				} catch (IllegalAccessException ex) {
+					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
+				} catch (InvocationTargetException ex) {
+					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
+				}
+			}
+			else {
+				session = sessionFactory.openSession();
+			}
+		}
 		session.setFlushMode(FlushMode.MANUAL);
 		return session;
 	}
@@ -198,7 +238,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	private void bind(Session session) {
-		TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+		Object sessionHolder = (hibernate3Present ?
+				new org.springframework.orm.hibernate3.SessionHolder(session) : new SessionHolder(session));
+		TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
 	}
 
 	private void unbind(Session session) {

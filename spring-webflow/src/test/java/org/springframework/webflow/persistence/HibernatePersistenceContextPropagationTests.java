@@ -5,9 +5,9 @@ import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.HibernateTransactionManager;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate4.HibernateTemplate;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.execution.FlowExecutionListener;
 

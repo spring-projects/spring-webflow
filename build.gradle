@@ -56,7 +56,7 @@ configure(subprojects.findAll {it.name != "spring-js-resources"}) { subproject -
 	}
 
 	subproject.ext {
-	  springVersion = "4.0.0.RELEASE"
+	  springVersion = "4.0.1.RELEASE"
 	  springSecurityVersion = "3.2.0.RELEASE"
 	  slf4jVersion = "1.6.1"
 	  log4jVersion = "1.2.15"
@@ -132,10 +132,10 @@ project("spring-js") {
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		optional("org.apache.tiles:tiles-api:2.1.2")
-		optional("org.apache.tiles:tiles-core:2.1.2")
-		optional("org.apache.tiles:tiles-jsp:2.1.2")
-		optional("org.apache.tiles:tiles-servlet:2.1.2")
+		optional("org.apache.tiles:tiles-api:2.2.2")
+		optional("org.apache.tiles:tiles-core:2.2.2")
+		optional("org.apache.tiles:tiles-jsp:2.2.2")
+		optional("org.apache.tiles:tiles-servlet:2.2.2")
 		testCompile("javax.servlet:jstl:1.2")
 		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
@@ -143,6 +143,8 @@ project("spring-js") {
 			exclude group: "com.sun.jdmk", module: "jmxtools"
 			exclude group: "com.sun.jmx", module: "jmxri"
 		}
+		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
 		testCompile("org.springframework:spring-test:$springVersion")
 	}
 }
@@ -166,7 +168,7 @@ project("spring-webflow") {
 		provided("javax.portlet:portlet-api:2.0")
 		provided("junit:junit:3.8.2")
 		provided("org.eclipse.persistence:javax.persistence:2.0.0")
-		optional("org.hibernate:hibernate-core:3.6.9.Final") {
+		optional("org.hibernate:hibernate-core:4.2.8.Final") {
 			exclude group: "org.slf4j", module: "slf4j-api"
 		}
 		optional("org.slf4j:slf4j-api:$slf4jVersion")
@@ -175,8 +177,8 @@ project("spring-webflow") {
 		optional("org.springframework:spring-tx:$springVersion")
 		optional("org.springframework:spring-webmvc-portlet:$springVersion")
 		testCompile("javax.validation:validation-api:1.0.0.GA")
-		testCompile("org.hibernate:hibernate-core:3.6.9.Final")
-		testCompile("org.hibernate:hibernate-entitymanager:3.6.9.Final")
+		testCompile("org.hibernate:hibernate-core:4.2.8.Final")
+		testCompile("org.hibernate:hibernate-entitymanager:4.2.8.Final")
 		testCompile("org.hibernate:hibernate-validator:4.3.0.Final")
 		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.27")
 		testCompile("org.hsqldb:hsqldb:2.2.8")
