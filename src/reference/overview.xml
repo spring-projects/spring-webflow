@@ -103,8 +103,8 @@
 		</para>
 			<programlisting language="xml"><![CDATA[
 <url name="springsource-repository">
-    <ivy pattern="http://repo.springsource.org/libs-release/[organization]/[module]/[revision]/[type]s/ivy-[revision].xml" />
-    <artifact pattern="http://repo.springsource.org/libs-release/[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]" />
+    <ivy pattern="http://repo.spring.io/libs-release/[organization]/[module]/[revision]/[type]s/ivy-[revision].xml" />
+    <artifact pattern="http://repo.spring.io/libs-release/[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]" />
 </url>]]>
 			</programlisting>
 		<para>
@@ -142,7 +142,7 @@
 <repository>
     <id>springsource-repository</id>
     <name>Spring project snapshots, milestones, and releases</name>
-    <url>http://repo.springsource.org/snapshot</url>
+    <url>http://repo.spring.io/snapshot</url>
 </repository>]]>
 			</programlisting>
 			<para>

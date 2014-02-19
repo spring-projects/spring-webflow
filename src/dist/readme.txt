@@ -92,7 +92,7 @@ SpringSource repository. Add the following repository to your Maven pom.xml:
 <repository>
     <id>springsource-repository</id>
     <name>Spring project releases, milestones, and snapshots</name>
-    <url>http://repo.springsource.org/snapshot</url>
+    <url>http://repo.spring.io/snapshot</url>
 </repository>
 
 Then declare the following dependencies (note that many times it's sufficient
