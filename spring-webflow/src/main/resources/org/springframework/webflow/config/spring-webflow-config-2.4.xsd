@@ -411,7 +411,7 @@ Determines if flow executions always redirect after they pause.
 					<xsd:documentation>
 						<![CDATA[
 Determines if flow executions redirect after they pause for transitions that remain in the same view state.
-This attribute effectively overrides the value of the "always-redirect-on-pause" attribute in same state tranisitions.
+This attribute effectively overrides the value of the "always-redirect-on-pause" attribute in same state transitions.
 ]]>
 					</xsd:documentation>
 				</xsd:annotation>

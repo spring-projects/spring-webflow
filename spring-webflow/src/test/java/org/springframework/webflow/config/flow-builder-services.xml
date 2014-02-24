@@ -27,9 +27,11 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="customViewFactoryCreator" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestViewFactoryCreator"/>
+	<bean id="customViewFactoryCreator"
+		class="org.springframework.webflow.config.AbstractFlowBuilderServicesConfigurationTests$TestViewFactoryCreator"/>
 	
-	<bean id="customConversionService" class="org.springframework.webflow.config.FlowBuilderServicesBeanDefinitionParserTests$TestConversionService"/>
+	<bean id="customConversionService"
+		class="org.springframework.webflow.config.AbstractFlowBuilderServicesConfigurationTests$TestConversionService"/>
 	
 	<bean id="customValidator" class="org.springframework.webflow.config.EmptySpringValidator" />
 

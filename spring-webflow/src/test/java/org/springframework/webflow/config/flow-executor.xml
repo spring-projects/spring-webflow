@@ -21,9 +21,11 @@
 		</webflow:flow-execution-listeners>
 	</webflow:flow-executor>
 	
-	<bean id="listener" class="org.springframework.webflow.config.FlowExecutorBeanDefinitionParserTests$ConfigurationListener" />
+	<bean id="listener"
+		class="org.springframework.webflow.config.AbstractFlowExecutorConfigurationTests$ConfigurationListener" />
 
-	<bean id="conversationManager" class="org.springframework.webflow.config.FlowExecutorBeanDefinitionParserTests.ExceptionThrowingConversationManager" />
+	<bean id="conversationManager"
+		class="org.springframework.webflow.config.AbstractFlowExecutorConfigurationTests.ExceptionThrowingConversationManager" />
 	
 	<webflow:flow-registry id="flowRegistry">
 		<webflow:flow-location path="org/springframework/webflow/config/flow.xml" />

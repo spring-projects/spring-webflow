@@ -26,8 +26,10 @@
 		</constructor-arg>
 	</bean>
 	
-	<bean id="customViewFactoryCreator" class="org.springframework.faces.config.FacesFlowBuilderServicesBeanDefinitionParserTests$TestViewFactoryCreator"/>
+	<bean id="customViewFactoryCreator"
+		class="org.springframework.faces.config.AbstractFacesFlowBuilderServicesConfigurationTests$TestViewFactoryCreator"/>
 	
-	<bean id="customConversionService" class="org.springframework.faces.config.FacesFlowBuilderServicesBeanDefinitionParserTests$TestConversionService"/>
+	<bean id="customConversionService"
+		class="org.springframework.faces.config.AbstractFacesFlowBuilderServicesConfigurationTests$TestConversionService"/>
 
 </beans>

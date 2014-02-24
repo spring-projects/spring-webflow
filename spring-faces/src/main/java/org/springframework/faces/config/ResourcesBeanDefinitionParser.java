@@ -43,7 +43,7 @@ public class ResourcesBeanDefinitionParser implements BeanDefinitionParser {
 
 	static final String PORTLET_RESOURCE_HANDLER_BEAN_NAME = "jsfPortletResourceRequestHandler";
 
-	private static final boolean RICH_FACES_PRESENT =
+	private static final boolean isRichFacesPresent =
 			ClassUtils.isPresent("org.richfaces.application.CoreConfiguration",
 					ResourcesBeanDefinitionParser.class.getClassLoader());
 
@@ -106,7 +106,7 @@ public class ResourcesBeanDefinitionParser implements BeanDefinitionParser {
 			Map<String, String> urlMap = new ManagedMap<String, String>();
 			urlMap.put("/javax.faces.resource/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);
 
-			if (RICH_FACES_PRESENT) {
+			if (isRichFacesPresent) {
 				urlMap.put("/rfRes/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);
 			}
 
