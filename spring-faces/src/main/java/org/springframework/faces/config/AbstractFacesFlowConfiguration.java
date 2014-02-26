@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.faces.webflow.JsfResourceRequestHandler;
@@ -50,7 +51,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * @author Rossen Stoyanchev
  * @since 2.4
  */
-public class AbstractFacesFlowConfiguration {
+public class AbstractFacesFlowConfiguration implements ApplicationContextAware {
 
 	private static final boolean isRichFacesPresent =
 			ClassUtils.isPresent("org.richfaces.application.CoreConfiguration",
