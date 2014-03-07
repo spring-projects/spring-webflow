@@ -10,16 +10,18 @@ buildscript {
 }
 
 configure(allprojects) {
-	apply plugin: "eclipse"
-	apply plugin: "idea"
-	apply plugin: "javadocHotfix"
+
 	group = "org.springframework.webflow"
+
+	apply plugin: "propdeps"
+	apply plugin: "java"
+	apply from: "${rootProject.projectDir}/ide.gradle"
+	apply plugin: "javadocHotfix"
 }
 
-configure(subprojects) { subproject ->
+configure(subprojects - project(":spring-build-src")) { subproject ->
 
-	apply plugin: "java"
-	apply plugin: "propdeps"
+	apply plugin: "merge"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
 	sourceCompatibility=1.6
@@ -58,7 +60,7 @@ configure(subprojects.findAll {it.name != "spring-js-resources"}) { subproject -
 	subproject.ext {
 	  springVersion = "4.0.1.RELEASE"
 	  springSecurityVersion = "3.2.0.RELEASE"
-	  slf4jVersion = "1.6.1"
+	  slf4jVersion = "1.7.5"
 	  log4jVersion = "1.2.15"
 	}
 
@@ -87,6 +89,18 @@ configure(subprojects.findAll {it.name != "spring-js-resources"}) { subproject -
 		archives sourcesJar
 		archives javadocJar
 	}
+}
+
+project("spring-build-src") {
+        description = "Exposes gradle buildSrc for IDE support"
+        apply plugin: "groovy"
+
+        dependencies {
+                compile gradleApi()
+                compile localGroovy()
+        }
+
+        configurations.archives.artifacts.clear()
 }
 
 project("spring-binding") {
@@ -133,16 +147,60 @@ project("spring-js") {
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
 		optional("org.apache.tiles:tiles-api:2.2.2")
-		optional("org.apache.tiles:tiles-core:2.2.2")
-		optional("org.apache.tiles:tiles-jsp:2.2.2")
-		optional("org.apache.tiles:tiles-servlet:2.2.2")
-		testCompile("javax.servlet:jstl:1.2")
+		optional("org.apache.tiles:tiles-core:2.2.2") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		optional("org.apache.tiles:tiles-jsp:2.2.2") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		optional("org.apache.tiles:tiles-servlet:2.2.2") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		testCompile("javax.servlet:jstl:1.2") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
 		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
 			exclude group: "javax.jms", module: "jms"
 			exclude group: "com.sun.jdmk", module: "jmxtools"
 			exclude group: "com.sun.jmx", module: "jmxri"
 		}
+		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
+		testCompile("org.springframework:spring-test:$springVersion")
+	}
+}
+
+project("spring-js-tiles3") {
+	description = "Spring JS Tiles 3 Integration"
+	merge.into = project(":spring-js")
+
+	dependencies {
+		compile("commons-logging:commons-logging:1.1.1")
+		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-webmvc:$springVersion")
+		optional("javax.el:javax.el-api:2.2.4")
+		optional("javax.servlet:javax.servlet-api:3.0.1")
+		optional("javax.servlet.jsp:jsp-api:2.2")
+		optional("org.apache.tiles:tiles-request-api:1.0.1")
+		optional("org.apache.tiles:tiles-api:3.0.1")
+		optional("org.apache.tiles:tiles-core:3.0.1") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		optional("org.apache.tiles:tiles-servlet:3.0.1") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		optional("org.apache.tiles:tiles-jsp:3.0.1") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		optional("org.apache.tiles:tiles-el:3.0.1") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		}
+		optional("org.apache.tiles:tiles-extras:3.0.1") {
+			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+			exclude group: "org.springframework", module: "spring-web"
+		}
+		testCompile("javax.servlet:jstl:1.2")
 		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
 		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
 		testCompile("org.springframework:spring-test:$springVersion")
