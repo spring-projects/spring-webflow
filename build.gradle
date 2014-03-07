@@ -24,8 +24,15 @@ configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
 	apply plugin: "merge"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
-	sourceCompatibility=1.6
-	targetCompatibility=1.6
+	compileJava {
+		sourceCompatibility=1.6
+		targetCompatibility=1.6
+	}
+
+	compileTestJava {
+		sourceCompatibility=1.7
+		targetCompatibility=1.7
+	}
 
 	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
 
