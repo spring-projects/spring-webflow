@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.js.ajax.tiles2.AjaxTilesView;
+import org.springframework.js.ajax.tiles3.AjaxTilesView;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
@@ -35,10 +35,11 @@ import org.springframework.webflow.execution.View;
  * action will be respected, otherwise the parent
  * {@link org.springframework.js.ajax.tiles2.AjaxTilesView}'s resolution algorithm
  * will be applied.
- * 
- * @author Jeremy Grelle
+ *
+ * @author Rossen Stoyanchev
+ * @since 2.4
  */
-public class FlowAjaxTilesView extends AjaxTilesView {
+public class FlowAjaxTiles3View extends AjaxTilesView {
 
 
 	protected String[] getRenderFragments(Map<String, Object> model, HttpServletRequest request,
