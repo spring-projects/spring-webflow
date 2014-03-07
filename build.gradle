@@ -19,7 +19,7 @@ configure(allprojects) {
 	apply plugin: "javadocHotfix"
 }
 
-configure(subprojects - project(":spring-build-src")) { subproject ->
+configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
 
 	apply plugin: "merge"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
@@ -49,7 +49,8 @@ configure(subprojects - project(":spring-build-src")) { subproject ->
 	}
 }
 
-configure(subprojects.findAll {it.name != "spring-js-resources"}) { subproject ->
+configure(subprojects.findAll {
+		it.name != "spring-build-src" && it.name != "spring-js-resources"}) { subproject ->
 
 	dependencies {
 		testCompile("junit:junit-dep:4.10")
@@ -405,14 +406,17 @@ configure(rootProject) {
 			into "${baseDir}/schema"
 		}
 
+
 		subprojects.each { subproject ->
 			into ("${baseDir}/libs") {
-				from subproject.jar
-				if (subproject.tasks.findByPath("sourcesJar")) {
-					from subproject.sourcesJar
-				}
-				if (subproject.tasks.findByPath("javadocJar")) {
-					from subproject.javadocJar
+				if (subproject.name != "spring-build-src") {
+					from subproject.jar
+					if (subproject.tasks.findByPath("sourcesJar")) {
+						from subproject.sourcesJar
+					}
+					if (subproject.tasks.findByPath("javadocJar")) {
+						from subproject.javadocJar
+					}
 				}
 			}
 		}
