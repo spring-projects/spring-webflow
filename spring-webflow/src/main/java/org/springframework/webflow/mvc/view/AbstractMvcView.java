@@ -648,7 +648,7 @@ public abstract class AbstractMvcView implements View {
 		}
 	}
 
-	private MessageResolver createMessageResolver(MappingResult error) {
+	protected MessageResolver createMessageResolver(MappingResult error) {
 		String model = getModelExpression().getExpressionString();
 		String field = error.getMapping().getTargetExpression().getExpressionString();
 		Class<?> fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
