@@ -46,6 +46,12 @@ public class FlowDefinitionResourceFactoryTests extends TestCase {
 		assertEquals("booking-flow", factory.getFlowId(resource));
 	}
 
+	public void testGetFlowIdFileSystemResourceBasePathMatch() {
+		Resource resource = new FileSystemResource("/the/path/on/the/file/system/sample-flow.xml");
+		factory.setBasePath("file:/the/path");
+		assertEquals("on/the/file/system", factory.getFlowId(resource));
+	}
+
 	public void testGetFlowIdCustomBasePath() {
 		Resource resource = resourceLoader.getResource("/WEB-INF/hotels/booking/booking-flow.xml");
 		factory.setBasePath("WEB-INF");

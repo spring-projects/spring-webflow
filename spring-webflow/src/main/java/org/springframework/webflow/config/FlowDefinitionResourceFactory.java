@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,8 @@ public class FlowDefinitionResourceFactory {
 	private static final String CLASSPATH_SCHEME = "classpath:";
 
 	private static final String CLASSPATH_STAR_SCHEME = "classpath*:";
+
+	private static final String FILESYSTEM_SCHEME = "file:";
 
 	private static final String SLASH = "/";
 
@@ -193,7 +195,7 @@ public class FlowDefinitionResourceFactory {
 		if (basePath == null) {
 			return getFlowIdFromFileName(flowResource);
 		}
-		String basePath = removeClasspathScheme(this.basePath);
+		String basePath = removeScheme(this.basePath);
 		String filePath;
 		if (flowResource instanceof ContextResource) {
 			filePath = ((ContextResource) flowResource).getPathWithinContext();
@@ -246,9 +248,11 @@ public class FlowDefinitionResourceFactory {
 		}
 	}
 
-	private String removeClasspathScheme(String basePath) {
+	private String removeScheme(String basePath) {
 		if (basePath.startsWith(CLASSPATH_SCHEME)) {
 			return basePath.substring(CLASSPATH_SCHEME.length());
+		} else if (basePath.startsWith(FILESYSTEM_SCHEME)) {
+			return basePath.substring(FILESYSTEM_SCHEME.length());
 		} else if (basePath.startsWith(CLASSPATH_STAR_SCHEME)) {
 			return basePath.substring(CLASSPATH_STAR_SCHEME.length());
 		} else {
