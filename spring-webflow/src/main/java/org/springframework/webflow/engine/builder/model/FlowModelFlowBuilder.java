@@ -812,6 +812,11 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		if (StringUtils.hasText(transition.getValidate())) {
 			attributes.put("validate", fromStringTo(Boolean.class).execute(transition.getValidate()));
 		}
+		if (StringUtils.hasText(transition.getValidationHints())) {
+			attributes.put("validationHints",
+					getLocalContext().getExpressionParser().parseExpression(transition.getValidationHints(),
+							new FluentParserContext().evaluate(RequestContext.class)));
+		}
 		if (StringUtils.hasText(transition.getHistory())) {
 			attributes.put("history", fromStringTo(History.class).execute(transition.getHistory().toUpperCase()));
 		}

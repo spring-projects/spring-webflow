@@ -14,6 +14,7 @@ import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.engine.model.FlowModel;
 import org.springframework.webflow.engine.model.SecuredModel;
+import org.springframework.webflow.engine.model.TransitionModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
@@ -327,7 +328,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertTrue(((TestBeanValidator) action.getValidator()).getInvoked());
 	}
 
-	public void testParseFlowValidationHints() {
+	public void testParsedFlowValidationHints() {
 		ClassPathResource res = new ClassPathResource("flow-validation-hints.xml", getClass());
 		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(res);
 		DefaultFlowModelHolder holder = new DefaultFlowModelHolder(builder);
@@ -335,6 +336,9 @@ public class XmlFlowModelBuilderTests extends TestCase {
 
 		ViewStateModel state = (ViewStateModel) model.getStateById("state1");
 		assertEquals("foo,bar", state.getValidationHints());
+
+		TransitionModel transition = state.getTransitions().get(0);
+		assertEquals("baz", transition.getValidationHints());
 
 		state = (ViewStateModel) model.getStateById("state2");
 		assertNull(state.getValidationHints());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -232,7 +232,7 @@ public abstract class AbstractMvcView implements View {
 					addErrorMessages(mappingResults);
 				}
 				if (shouldValidate(model, transition)) {
-					validate(model);
+					validate(model, transition);
 				}
 			}
 		} else {
@@ -593,31 +593,37 @@ public abstract class AbstractMvcView implements View {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
-	private Object[] getValidationHints(Object model) {
-		Expression expr = (Expression) requestContext.getCurrentState().getAttributes().get("validationHints");
+	private Object[] getValidationHints(Object model, TransitionDefinition transition) {
+		Expression expr = null;
+		if (transition != null) {
+			expr = (Expression) transition.getAttributes().get("validationHints");
+		}
+		if (expr == null) {
+			expr = (Expression) requestContext.getCurrentState().getAttributes().get("validationHints");
+		}
+		if (expr == null) {
+			return null;
+		}
 		String flowId = requestContext.getActiveFlow().getId();
 		String stateId = requestContext.getCurrentState().getId();
-		if (expr != null) {
-			try {
-				Object hintsValue = expr.getValue(requestContext);
-				if (hintsValue instanceof String) {
-					String[] hints = StringUtils.commaDelimitedListToStringArray((String) hintsValue);
-					return validationHintResolver.resolveValidationHints(model, flowId, stateId, hints);
-				}
-				else if (hintsValue instanceof Object[]) {
-					return (Object[]) hintsValue;
-				}
-				else {
-					throw new FlowExecutionException(flowId, stateId,
-							"Failed to resolve validation hints [" + hintsValue + "]");
-				}
+		try {
+			Object hintsValue = expr.getValue(requestContext);
+			if (hintsValue instanceof String) {
+				String[] hints = StringUtils.commaDelimitedListToStringArray((String) hintsValue);
+				return validationHintResolver.resolveValidationHints(model, flowId, stateId, hints);
 			}
-			catch (EvaluationException e) {
+			else if (hintsValue instanceof Object[]) {
+				return (Object[]) hintsValue;
+			}
+			else {
 				throw new FlowExecutionException(flowId, stateId,
-						"Failed to resolve validation hints expression [" + expr + "]", e);
+						"Failed to resolve validation hints [" + hintsValue + "]");
 			}
 		}
-		return null;
+		catch (EvaluationException e) {
+			throw new FlowExecutionException(flowId, stateId,
+					"Failed to resolve validation hints expression [" + expr + "]", e);
+		}
 	}
 
 	private Object getEmptyValue(Class<?> fieldType) {
@@ -665,14 +671,14 @@ public abstract class AbstractMvcView implements View {
 		}
 	}
 
-	private void validate(Object model) {
+	private void validate(Object model, TransitionDefinition transition) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Validating model");
 		}
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, getModelExpression()
 				.getExpressionString(), expressionParser, messageCodesResolver, mappingResults);
 		helper.setValidator(this.validator);
-		helper.setValidationHints(getValidationHints(model));
+		helper.setValidationHints(getValidationHints(model, transition));
 		helper.validate();
 	}
 

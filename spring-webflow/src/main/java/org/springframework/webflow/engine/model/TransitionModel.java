@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  * A path from this state to another state triggered by an event. Transitions may execute one or more actions. All
  * transition actions must execute successfully for the transition itself to complete. If no transition target is
  * specified, the transition acts as a simple event handler and does not change the state of the flow.
- * 
+ *
  * @author Scott Andrews
  */
 public class TransitionModel extends AbstractModel {
@@ -40,6 +40,8 @@ public class TransitionModel extends AbstractModel {
 	private String bind;
 
 	private String validate;
+
+	private String validationHints;
 
 	private String history;
 
@@ -70,6 +72,7 @@ public class TransitionModel extends AbstractModel {
 		setTo(merge(getTo(), transition.getTo()));
 		setBind(merge(getBind(), transition.getBind()));
 		setValidate(merge(getValidate(), transition.getValidate()));
+		setValidationHints(merge(getValidationHints(), transition.getValidationHints()));
 		setHistory(merge(getHistory(), transition.getHistory()));
 		setAttributes(merge(getAttributes(), transition.getAttributes()));
 		setSecured((SecuredModel) merge(getSecured(), transition.getSecured()));
@@ -83,6 +86,7 @@ public class TransitionModel extends AbstractModel {
 		copy.setTo(to);
 		copy.setBind(bind);
 		copy.setValidate(validate);
+		copy.setValidationHints(validationHints);
 		copy.setHistory(history);
 		copy.setAttributes(copyList(attributes));
 		copy.setSecured((SecuredModel) copy(secured));
@@ -177,6 +181,25 @@ public class TransitionModel extends AbstractModel {
 			this.validate = validate;
 		} else {
 			this.validate = null;
+		}
+	}
+
+
+	/**
+	 * @return the validation hints
+	 */
+	public String getValidationHints() {
+		return this.validationHints;
+	}
+
+	/**
+	 * @param validationHints the validation hints expression to set
+	 */
+	public void setValidationHints(String validationHints) {
+		if (StringUtils.hasText(validationHints)) {
+			this.validationHints = validationHints;
+		} else {
+			this.validationHints = null;
 		}
 	}
 

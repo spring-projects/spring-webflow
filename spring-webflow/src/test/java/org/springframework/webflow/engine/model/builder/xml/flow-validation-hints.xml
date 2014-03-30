@@ -2,7 +2,9 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd">
 
-	<view-state id="state1" validation-hints="foo,bar" />
+	<view-state id="state1" validation-hints="foo,bar">
+		<transition on="submit" to="state2" validation-hints="baz" />
+	</view-state>
 
 	<view-state id="state2" />
 

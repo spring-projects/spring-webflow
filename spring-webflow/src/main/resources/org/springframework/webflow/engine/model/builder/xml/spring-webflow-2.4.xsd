@@ -1485,6 +1485,21 @@ Indicates whether model validation should occur before this transition executes.
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
+				<xsd:attribute name="validation-hints" type="expression">
+					<xsd:annotation>
+						<xsd:documentation>
+							<![CDATA[
+A comma-separated list of validation hints such as validation groups against a JSR-303 provider.
+Each hint is used to find an inner Class either in the Class of the model or its parent classes.
+For example, given org.example.MyModel with inner type MyGroup, the hint "MyGroup" can be used.
+The hint "default" is reserved as the default validation group, i.e. "javax.validation.groups.Default".
+A hint can also be a fully qualified class name.
+The validation hints string is evaluated as an expression before hints are resolved.
+The result of the expression can be a String or an Object[] with Class instances.
+							]]>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 				<xsd:attribute name="history">
 					<xsd:annotation>
 						<xsd:documentation>
