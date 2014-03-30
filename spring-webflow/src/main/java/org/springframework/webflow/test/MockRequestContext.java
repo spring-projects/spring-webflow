@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springframework.webflow.test;
+
+import java.util.List;
 
 import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.MessageContext;
@@ -38,10 +40,10 @@ import org.springframework.webflow.execution.View;
 /**
  * Mock implementation of the <code>RequestContext</code> interface to facilitate standalone flow artifact (e.g. action)
  * unit tests.
- * 
+ *
  * @see org.springframework.webflow.execution.RequestContext
  * @see org.springframework.webflow.execution.Action
- * 
+ *
  * @author Keith Donald
  * @author Erwin Vervaet
  */
@@ -296,6 +298,15 @@ public class MockRequestContext implements RequestContext {
 	 * @param parameterValue the parameter value
 	 */
 	public void putRequestParameter(String parameterName, MultipartFile parameterValue) {
+		getMockExternalContext().putRequestParameter(parameterName, parameterValue);
+	}
+
+	/**
+	 * Puts a multi-valued MultipartFile request parameter into the mock parameter map.
+	 * @param parameterName the parameter name
+	 * @param parameterValue the parameter value
+	 */
+	public void putRequestParameter(String parameterName, List<MultipartFile> parameterValue) {
 		getMockExternalContext().putRequestParameter(parameterName, parameterValue);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.springframework.webflow.context.portlet;
 
 import java.util.Iterator;
+import java.util.List;
 
 import javax.portlet.PortletRequest;
 
@@ -29,7 +30,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
 /**
  * Map backed by the Portlet request parameter map for accessing request parameters. Also provides support for
  * multi-part requests, providing transparent access to the request "fileMap" as a request parameter entry.
- * 
+ *
  * @author Keith Donald
  * @author Scott Andrews
  */
@@ -51,9 +52,13 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter<Object> {
 	protected Object getAttribute(String key) {
 		if (request instanceof MultipartActionRequest) {
 			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
-			MultipartFile data = multipartRequest.getFileMap().get(key);
-			if (data != null) {
-				return data;
+			List<MultipartFile> data = multipartRequest.getMultiFileMap().get(key);
+			if (data != null && data.size() > 0) {
+				if (data.size() == 1) {
+					return data.get(0);
+				} else {
+					return data;
+				}
 			}
 		}
 		String[] parameters = request.getParameterValues(key);

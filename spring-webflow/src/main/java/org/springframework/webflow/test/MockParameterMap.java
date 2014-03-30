@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.springframework.webflow.test;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.core.collection.LocalParameterMap;
@@ -23,11 +24,12 @@ import org.springframework.webflow.core.collection.ParameterMap;
 
 /**
  * A extension of parameter map that allows for mutation of parameters. Useful as a stub for testing.
- * 
+ *
  * @see ParameterMap
- * 
+ *
  * @author Keith Donald
  */
+@SuppressWarnings("serial")
 public class MockParameterMap extends LocalParameterMap {
 
 	/**
@@ -66,6 +68,17 @@ public class MockParameterMap extends LocalParameterMap {
 	 * @return this, to support call chaining
 	 */
 	public MockParameterMap put(String parameterName, MultipartFile parameterValues) {
+		getMapInternal().put(parameterName, parameterValues);
+		return this;
+	}
+
+	/**
+	 * Add a new multi-valued multi-part file parameter to this map.
+	 * @param parameterName the parameter name
+	 * @param parameterValues the parameter values
+	 * @return this, to support call chaining
+	 */
+	public MockParameterMap put(String parameterName, List<MultipartFile> parameterValues) {
 		getMapInternal().put(parameterName, parameterValues);
 		return this;
 	}

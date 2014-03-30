@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.binding.collection.SharedMapDecorator;
@@ -334,6 +335,16 @@ public class MockExternalContext implements ExternalContext {
 	 * @param parameterValue the parameter value
 	 */
 	public void putRequestParameter(String parameterName, MultipartFile parameterValue) {
+		getMockRequestParameterMap().put(parameterName, parameterValue);
+	}
+
+	/**
+	 * Puts a multi-valued MultipartFile request parameter into the mock parameter map.
+	 *
+	 * @param parameterName the parameter name
+	 * @param parameterValue the parameter value
+	 */
+	public void putRequestParameter(String parameterName, List<MultipartFile> parameterValue) {
 		getMockRequestParameterMap().put(parameterName, parameterValue);
 	}
 
