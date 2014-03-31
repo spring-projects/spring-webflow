@@ -24,6 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.binding.expression.EvaluationException;
+import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.message.MessageContext;
@@ -37,6 +39,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.Validator;
+import org.springframework.webflow.definition.TransitionDefinition;
+import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -86,8 +90,10 @@ public class ValidationHelper {
 	 * @param expressionParser the expression parser
 	 * @param mappingResults object mapping results
 	 */
-	public ValidationHelper(Object model, RequestContext requestContext, String eventId, String modelName,
-			ExpressionParser expressionParser, MessageCodesResolver messageCodesResolver, MappingResults mappingResults) {
+	public ValidationHelper(Object model, RequestContext requestContext, String eventId,
+			String modelName, ExpressionParser expressionParser, MessageCodesResolver messageCodesResolver,
+			MappingResults mappingResults, ValidationHintResolver hintResolver) {
+
 		Assert.notNull(model, "The model to validate is required");
 		Assert.notNull(requestContext, "The request context for the validator is required");
 		this.model = model;
@@ -97,6 +103,55 @@ public class ValidationHelper {
 		this.expressionParser = expressionParser;
 		this.messageCodesResolver = messageCodesResolver;
 		this.mappingResults = mappingResults;
+		this.validationHints = initValidationHints(model, requestContext, eventId, hintResolver);
+	}
+
+	/**
+	 * An alternative constructor that creates an instance of {@link BeanValidationHintResolver}.
+	 */
+	public ValidationHelper(Object model, RequestContext requestContext, String eventId,
+			String modelName, ExpressionParser expressionParser, MessageCodesResolver messageCodesResolver,
+			MappingResults mappingResults) {
+
+		this(model, requestContext, eventId, modelName, expressionParser,
+				messageCodesResolver, mappingResults, new BeanValidationHintResolver());
+	}
+
+
+	private static Object[] initValidationHints(Object model, RequestContext requestContext, String eventId,
+			ValidationHintResolver hintResolver) {
+
+		Expression expr = null;
+		TransitionDefinition transition = requestContext.getMatchingTransition(eventId);
+		if (transition != null) {
+			expr = (Expression) transition.getAttributes().get("validationHints");
+		}
+		if (expr == null) {
+			expr = (Expression) requestContext.getCurrentState().getAttributes().get("validationHints");
+		}
+		if (expr == null) {
+			return null;
+		}
+		String flowId = requestContext.getActiveFlow().getId();
+		String stateId = requestContext.getCurrentState().getId();
+		try {
+			Object hintsValue = expr.getValue(requestContext);
+			if (hintsValue instanceof String) {
+				String[] hints = StringUtils.commaDelimitedListToStringArray((String) hintsValue);
+				return hintResolver.resolveValidationHints(model, flowId, stateId, hints);
+			}
+			else if (hintsValue instanceof Object[]) {
+				return (Object[]) hintsValue;
+			}
+			else {
+				throw new FlowExecutionException(flowId, stateId,
+						"Failed to resolve validation hints [" + hintsValue + "]");
+			}
+		}
+		catch (EvaluationException e) {
+			throw new FlowExecutionException(flowId, stateId,
+					"Failed to resolve validation hints expression [" + expr + "]", e);
+		}
 	}
 
 	/**
@@ -107,7 +162,9 @@ public class ValidationHelper {
 	}
 
 	/**
-	 * Provide validation hints such as validation groups to use against a JSR-303 provider.
+	 * Provide validation hints (e.g. JSR-303 validation groups). Note that the constructor
+	 * automatically detects validation hints specified on a view state or a transition.
+	 * Therefore use of this method should not be needed.
 	 */
 	public void setValidationHints(Object[] validationHints) {
 		this.validationHints = validationHints;

@@ -42,7 +42,6 @@ import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
@@ -53,7 +52,6 @@ import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 import org.springframework.webflow.execution.Event;
-import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -593,39 +591,6 @@ public abstract class AbstractMvcView implements View {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
-	private Object[] getValidationHints(Object model, TransitionDefinition transition) {
-		Expression expr = null;
-		if (transition != null) {
-			expr = (Expression) transition.getAttributes().get("validationHints");
-		}
-		if (expr == null) {
-			expr = (Expression) requestContext.getCurrentState().getAttributes().get("validationHints");
-		}
-		if (expr == null) {
-			return null;
-		}
-		String flowId = requestContext.getActiveFlow().getId();
-		String stateId = requestContext.getCurrentState().getId();
-		try {
-			Object hintsValue = expr.getValue(requestContext);
-			if (hintsValue instanceof String) {
-				String[] hints = StringUtils.commaDelimitedListToStringArray((String) hintsValue);
-				return validationHintResolver.resolveValidationHints(model, flowId, stateId, hints);
-			}
-			else if (hintsValue instanceof Object[]) {
-				return (Object[]) hintsValue;
-			}
-			else {
-				throw new FlowExecutionException(flowId, stateId,
-						"Failed to resolve validation hints [" + hintsValue + "]");
-			}
-		}
-		catch (EvaluationException e) {
-			throw new FlowExecutionException(flowId, stateId,
-					"Failed to resolve validation hints expression [" + expr + "]", e);
-		}
-	}
-
 	private Object getEmptyValue(Class<?> fieldType) {
 		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
 			// Special handling of boolean property.
@@ -676,9 +641,8 @@ public abstract class AbstractMvcView implements View {
 			logger.debug("Validating model");
 		}
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, getModelExpression()
-				.getExpressionString(), expressionParser, messageCodesResolver, mappingResults);
+				.getExpressionString(), expressionParser, messageCodesResolver, mappingResults, validationHintResolver);
 		helper.setValidator(this.validator);
-		helper.setValidationHints(getValidationHints(model, transition));
 		helper.validate();
 	}
 

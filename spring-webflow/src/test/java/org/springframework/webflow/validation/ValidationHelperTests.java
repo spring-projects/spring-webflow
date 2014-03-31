@@ -17,6 +17,7 @@ package org.springframework.webflow.validation;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
 import org.springframework.context.support.StaticApplicationContext;
@@ -25,7 +26,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.SmartValidator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.StubViewFactory;
+import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.engine.support.DefaultTransitionCriteria;
 import org.springframework.webflow.test.MockRequestControlContext;
 
 /**
@@ -337,15 +340,53 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
-	public void testSmartValidatorWithStateIdHint() {
+	public void testSmartValidatorWithClassHint() {
+		ViewState state = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
+		state.getAttributes().put("validationHints", new StaticExpression(new Object[] { Model.State1.class }));
+		requestContext.setCurrentState(state);
+
 		LegacyModelValidator validator = new LegacyModelValidator();
 		ExtendedModel model = new ExtendedModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null, codesResolver, null);
 		helper.setValidator(validator);
-		helper.setValidationHints(new Object[] { Model.State1.class });
+
+		helper.validate();
+
+		assertTrue(validator.fallbackInvoked);
+		assertTrue(validator.hints.length > 0);
+		assertEquals(Model.State1.class, validator.hints[0]);
+	}
+
+	public void testSmartValidatorWithHintResolution() {
+		ViewState state = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
+		state.getAttributes().put("validationHints", new StaticExpression("State1"));
+		requestContext.setCurrentState(state);
+
+		LegacyModelValidator validator = new LegacyModelValidator();
+		ExtendedModel model = new ExtendedModel();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null, codesResolver, null);
+		helper.setValidator(validator);
+
+		helper.validate();
+
+		assertTrue(validator.fallbackInvoked);
+		assertTrue(validator.hints.length > 0);
+		assertEquals(Model.State1.class, validator.hints[0]);
+	}
+
+	public void testSmartValidatorWithHintOnTransition() {
+		Transition transition = new Transition();
+		transition.setMatchingCriteria(new DefaultTransitionCriteria(new StaticExpression(eventId)));
+		transition.getAttributes().put("validationHints", new StaticExpression("State1"));
 
 		ViewState state = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
+		state.getTransitionSet().add(transition);
 		requestContext.setCurrentState(state);
+
+		LegacyModelValidator validator = new LegacyModelValidator();
+		ExtendedModel model = new ExtendedModel();
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null, codesResolver, null);
+		helper.setValidator(validator);
 
 		helper.validate();
 
@@ -367,7 +408,7 @@ public class ValidationHelperTests extends TestCase {
 			fallbackInvoked = true;
 		}
 
-		private static class State1 {}
+		private static interface State1 {}
 	}
 
 	public static class ExtendedModel extends Model {

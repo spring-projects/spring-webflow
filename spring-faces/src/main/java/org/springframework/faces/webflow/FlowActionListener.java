@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,18 +34,20 @@ import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
+import org.springframework.webflow.validation.BeanValidationHintResolver;
 import org.springframework.webflow.validation.ValidationHelper;
+import org.springframework.webflow.validation.ValidationHintResolver;
 import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
- * 
+ *
  * This implementation bypasses the JSF {@link NavigationHandler} mechanism to instead let the event be handled directly
  * by Web Flow.
  * <p>
  * Web Flow's model-level validation will be invoked here after an event has been detected if the event is not an
  * immediate event.
- * 
+ *
  * @author Jeremy Grelle
  */
 public class FlowActionListener implements ActionListener {
@@ -58,8 +60,19 @@ public class FlowActionListener implements ActionListener {
 
 	private final MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
+	private ValidationHintResolver validationHintResolver = new BeanValidationHintResolver();
+
+
 	public FlowActionListener(ActionListener delegate) {
 		this.delegate = delegate;
+	}
+
+	public void setValidationHintResolver(ValidationHintResolver validationHintResolver) {
+		this.validationHintResolver = validationHintResolver;
+	}
+
+	public ValidationHintResolver getValidationHintResolver() {
+		return validationHintResolver;
 	}
 
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
@@ -151,7 +164,11 @@ public class FlowActionListener implements ActionListener {
 	}
 
 	private void validate(RequestContext requestContext, Object model, String eventId) {
-		new ValidationHelper(model, requestContext, eventId, getModelExpression(requestContext).getExpressionString(),
-				null, this.messageCodesResolver, null).validate();
+
+		String modelName = getModelExpression(requestContext).getExpressionString();
+
+		new ValidationHelper(model, requestContext,
+				eventId, modelName, null, this.messageCodesResolver, null, this.validationHintResolver).validate();
 	}
+
 }
