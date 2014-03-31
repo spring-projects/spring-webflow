@@ -24,11 +24,13 @@ import org.springframework.util.StringUtils;
 
 /**
  * Ajax handler for Spring Javascript (Spring.js).
- * 
+ *
  * @see AbstractAjaxHandler
- * 
+ *
  * @author Jeremy Grelle
  * @author Keith Donald
+ *
+ * @deprecated as of version 2.4 Spring.js is deprecated
  */
 public class SpringJavascriptAjaxHandler extends AbstractAjaxHandler {
 

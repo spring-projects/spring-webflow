@@ -81,6 +81,15 @@
 		<sect2 xml:id="whatsnew-deprecation">
 			<title>Deprecations</title>
 			<para>
+				This release deprecates <emphasis>Spring.js</emphasis>. The deprecation includes the entire
+				<emphasis>spring-js-resources</emphasis> module including <emphasis>Spring.js</emphasis> and
+				<emphasis>Spring-Dojo.js</emphasis> and the bundled Dojo and CSS Framework.
+				Also deprecated is the <classname>SpringJavascriptAjaxHandler</classname>
+				from the <emphasis>spring-js</emphasis> module. The rest of <emphasis>spring-js</emphasis>,
+				e.g. <classname>AjaxHandler</classname>, <classname>AjaxTilesView</classname>, will be
+				folded into <emphasis>spring-webflow</emphasis> in a future release.
+			</para>
+			<para>
 				OGNL support is now deprecated.
 			</para>
 		</sect2>
