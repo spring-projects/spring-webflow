@@ -121,6 +121,11 @@
 		</sect2>
 		<sect2 xml:id="el-ognl">
 			<title>OGNL</title>
+			<note>
+				<para>
+					OGNL support is deprecated as of Web Flow version 2.4.
+				</para>
+			</note>
 			<para>
 				<link xl:href="http://www.ognl.org">OGNL</link> is the third supported expression language.
 				OGNL is the EL most familiar to Web Flow version 1.0 users.

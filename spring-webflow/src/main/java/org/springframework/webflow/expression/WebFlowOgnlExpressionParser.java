@@ -33,11 +33,14 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.AnnotatedAction;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 
 /**
  * An extension of {@link OgnlExpressionParser} that registers Web Flow-specific PropertyAccessors.
- * 
+ *
  * @author Keith Donald
+ *
+ * @deprecated in favor of Spring EL, see {@link WebFlowSpringELExpressionParser}
  */
 @SuppressWarnings("rawtypes")
 public class WebFlowOgnlExpressionParser extends OgnlExpressionParser {

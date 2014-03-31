@@ -1,12 +1,12 @@
 /*
  * Copyright 2004-2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,12 +25,15 @@ import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
+import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.binding.expression.support.AbstractExpressionParser;
 
 /**
  * An expression parser that parses Ognl expressions.
- * 
+ *
  * @author Keith Donald
+ *
+ * @deprecated in favor of Spring EL, see {@link SpringELExpressionParser}
  */
 public class OgnlExpressionParser extends AbstractExpressionParser {
 

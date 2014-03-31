@@ -78,6 +78,12 @@
 				See <xref linkend="portlet-jsf"/>.
 			</para>
 		</sect2>
+		<sect2 xml:id="whatsnew-deprecation">
+			<title>Deprecations</title>
+			<para>
+				OGNL support is now deprecated.
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 xml:id="whatsnew-swf-230">
 		<title>Spring Web Flow 2.3</title>
