@@ -8,6 +8,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
+import org.springframework.webflow.validation.BeanValidationHintResolver;
 
 public class FacesFlowBuilderServicesJavaConfigTests extends AbstractFacesFlowBuilderServicesConfigurationTests {
 
@@ -36,6 +37,8 @@ public class FacesFlowBuilderServicesJavaConfigTests extends AbstractFacesFlowBu
 					.setExpressionParser(customExpressionParser())
 					.setViewFactoryCreator(customViewFactoryCreator())
 					.setConversionService(customConversionService())
+					.setValidator(new EmptySpringValidator())
+					.setValidationHintResolver(new MyBeanValidationHintResolver())
 					.setDevelopmentMode(true)
 					.build();
 		}

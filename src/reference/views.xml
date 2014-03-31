@@ -529,14 +529,6 @@ private String name;
 &lt;webflow:flow-builder-services id="flowBuilderServices" validator=".." validationHintResolver=".." /&gt;
 </programlisting>
 				</para>
-				<para>
-					The above configuration example works in applications not using JSF.
-					For JSF applications that rely on Web Flow-based validation,
-					you will need to register a
-					custom extension of Web Flow's <emphasis>FlowActionListener</emphasis>
-					via faces-config.xml configured with the custom
-					<classname>ValidationHintResolver</classname>. 
-				</para>
 			</sect3>
 
 		</sect2>

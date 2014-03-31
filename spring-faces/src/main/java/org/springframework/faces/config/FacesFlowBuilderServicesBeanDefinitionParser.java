@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 
 /**
  * Parser for the flow-builder-services tag.
- * 
+ *
  * @author Jeremy Grelle
  * @author Christian Dupuis
  */
@@ -48,12 +48,16 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	private static final String ENABLE_MANAGED_BEANS_ATTR = "enable-managed-beans";
 	private static final String EXPRESSION_PARSER_ATTR = "expression-parser";
 	private static final String VIEW_FACTORY_CREATOR_ATTR = "view-factory-creator";
+	private static final String VALIDATOR_ATTR = "validator";
+	private static final String VALIDATION_HINT_RESOLVER_ATTR = "validation-hint-resolver";
 
 	// --------------------------- Bean Configuration Properties --------------------- //
 	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
 	private static final String DEVELOPMENT_PROPERTY = "development";
 	private static final String EXPRESSION_PARSER_PROPERTY = "expressionParser";
 	private static final String VIEW_FACTORY_CREATOR_PROPERTY = "viewFactoryCreator";
+	private static final String VALIDATOR_PROPERTY = "validator";
+	private static final String VALIDATION_HINT_RESOLVER_PROPERTY = "validationHintResolver";
 
 	protected String getBeanClassName(Element element) {
 		return FLOW_BUILDER_SERVICES_CLASS_NAME;
@@ -68,6 +72,8 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 		parseExpressionParser(element, parserContext, definitionBuilder,
 				parseEnableManagedBeans(element, definitionBuilder));
 		parseViewFactoryCreator(element, parserContext, definitionBuilder);
+		parseValidator(element, parserContext, definitionBuilder);
+		parseValidationHintResolver(element, parserContext, definitionBuilder);
 		parseDevelopment(element, definitionBuilder);
 
 		parserContext.popAndRegisterContainingComponent();
@@ -100,6 +106,20 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 			viewFactoryCreator = registerInfrastructureComponent(element, context, viewFactoryCreatorBuilder);
 		}
 		definitionBuilder.addPropertyReference(VIEW_FACTORY_CREATOR_PROPERTY, viewFactoryCreator);
+	}
+
+	private void parseValidator(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
+		String validator = element.getAttribute(VALIDATOR_ATTR);
+		if (StringUtils.hasText(validator)) {
+			definitionBuilder.addPropertyReference(VALIDATOR_PROPERTY, validator);
+		}
+	}
+
+	private void parseValidationHintResolver(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
+		String resolver = element.getAttribute(VALIDATION_HINT_RESOLVER_ATTR);
+		if (StringUtils.hasText(resolver)) {
+			definitionBuilder.addPropertyReference(VALIDATION_HINT_RESOLVER_PROPERTY, resolver);
+		}
 	}
 
 	private void parseExpressionParser(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder,

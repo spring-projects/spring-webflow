@@ -11,12 +11,13 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.FacesSpringELExpressionParser;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.validation.Validator;
+import org.springframework.faces.config.EmptySpringValidator;
+import org.springframework.faces.config.MyBeanValidationHintResolver;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
@@ -68,6 +69,8 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends
 		assertTrue(this.builderServices.getExpressionParser() instanceof WebFlowSpringELExpressionParser);
 		assertTrue(this.builderServices.getViewFactoryCreator() instanceof TestViewFactoryCreator);
 		assertTrue(this.builderServices.getConversionService() instanceof TestConversionService);
+		assertTrue(builderServices.getValidator() instanceof EmptySpringValidator);
+		assertTrue(builderServices.getValidationHintResolver() instanceof MyBeanValidationHintResolver);
 		assertTrue(this.builderServices.getDevelopment());
 	}
 

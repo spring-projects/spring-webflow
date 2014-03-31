@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/faces
-           http://www.springframework.org/schema/faces/spring-faces-2.2.xsd">
+           http://www.springframework.org/schema/faces/spring-faces-2.4.xsd">
 	
 	<faces:flow-builder-services id="flowBuilderServicesDefault"/>
 	
@@ -15,7 +15,10 @@
 	<faces:flow-builder-services id="flowBuilderServicesAllCustom" 
 		expression-parser="customExpressionParser"
 		view-factory-creator="customViewFactoryCreator"
-		conversion-service="customConversionService" development="true" />
+		conversion-service="customConversionService"
+		validator="customValidator"
+		validation-hint-resolver="customValidationHintResolver"
+		development="true" />
 
 	<faces:flow-builder-services id="flowBuilderServicesConversionServiceCustom" 
 		conversion-service="customConversionService"/>
@@ -31,5 +34,9 @@
 	
 	<bean id="customConversionService"
 		class="org.springframework.faces.config.AbstractFacesFlowBuilderServicesConfigurationTests$TestConversionService"/>
+
+	<bean id="customValidator" class="org.springframework.faces.config.EmptySpringValidator" />
+
+	<bean id="customValidationHintResolver" class="org.springframework.faces.config.MyBeanValidationHintResolver" />
 
 </beans>

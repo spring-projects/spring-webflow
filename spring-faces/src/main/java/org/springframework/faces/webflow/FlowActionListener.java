@@ -30,7 +30,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.MessageCodesResolver;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.definition.TransitionDefinition;
+import org.springframework.webflow.engine.builder.model.FlowModelFlowBuilder;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
@@ -60,19 +62,8 @@ public class FlowActionListener implements ActionListener {
 
 	private final MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
-	private ValidationHintResolver validationHintResolver = new BeanValidationHintResolver();
-
-
 	public FlowActionListener(ActionListener delegate) {
 		this.delegate = delegate;
-	}
-
-	public void setValidationHintResolver(ValidationHintResolver validationHintResolver) {
-		this.validationHintResolver = validationHintResolver;
-	}
-
-	public ValidationHintResolver getValidationHintResolver() {
-		return validationHintResolver;
 	}
 
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
@@ -167,8 +158,21 @@ public class FlowActionListener implements ActionListener {
 
 		String modelName = getModelExpression(requestContext).getExpressionString();
 
-		new ValidationHelper(model, requestContext,
-				eventId, modelName, null, this.messageCodesResolver, null, this.validationHintResolver).validate();
+		String attr = FlowModelFlowBuilder.VALIDATOR_FLOW_ATTR;
+		Validator validator = (Validator) requestContext.getActiveFlow().getAttributes().get(attr);
+
+		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId,
+				modelName, null, this.messageCodesResolver, null, getHintResolver(requestContext));
+		helper.setValidator(validator);
+		helper.validate();
+	}
+
+	private ValidationHintResolver getHintResolver(RequestContext requestContext) {
+
+		ValidationHintResolver hintResolver = (ValidationHintResolver) requestContext.getActiveFlow()
+				.getAttributes().get(FlowModelFlowBuilder.VALIDATION_HINT_RESOLVER_FLOW_ATTR);
+
+		return (hintResolver != null ? hintResolver : new BeanValidationHintResolver());
 	}
 
 }

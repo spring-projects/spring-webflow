@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,6 +119,13 @@ import org.springframework.webflow.security.SecurityRule;
  */
 public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
+	private static final boolean IS_SPRING_FACES_PRESENT = ClassUtils.isPresent(
+			"org.springframework.faces.webflow.FlowActionListener", FlowModelFlowBuilder.class.getClassLoader());
+
+	public static final String VALIDATOR_FLOW_ATTR = FlowModelFlowBuilder.class.getSimpleName() + ".validator";
+
+	public static final String VALIDATION_HINT_RESOLVER_FLOW_ATTR = FlowModelFlowBuilder.class.getSimpleName() + ".validationHintResolver";
+
 	private FlowModelHolder flowModelHolder;
 
 	private FlowModel flowModel;
@@ -155,6 +162,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		String flowId = getContext().getFlowId();
 		AttributeMap<Object> flowAttributes = parseFlowMetaAttributes(flowModel);
 		flowAttributes = getContext().getFlowAttributes().union(flowAttributes);
+		if (IS_SPRING_FACES_PRESENT) {
+			flowAttributes.asMap().put(VALIDATOR_FLOW_ATTR, getLocalContext().getValidator());
+			flowAttributes.asMap().put(VALIDATION_HINT_RESOLVER_FLOW_ATTR, getLocalContext().getValidationHintResolver());
+		}
 		Flow flow = getLocalContext().getFlowArtifactFactory().createFlow(flowId, flowAttributes);
 		flow.setApplicationContext(getLocalContext().getApplicationContext());
 		return flow;

@@ -23,9 +23,12 @@ import org.springframework.faces.model.converter.FacesConversionService;
 import org.springframework.faces.webflow.FacesSpringELExpressionParser;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.util.Assert;
+import org.springframework.validation.Validator;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
+import org.springframework.webflow.validation.BeanValidationHintResolver;
+import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
  * A builder for {@link FlowBuilderServices} instances for use in JSF applications.
@@ -45,6 +48,10 @@ public class FlowBuilderServicesBuilder {
 	private ExpressionParser expressionParser;
 
 	private ViewFactoryCreator viewFactoryCreator = new JsfViewFactoryCreator();
+
+	private Validator validator;
+
+	private ValidationHintResolver validationHintResolver;
 
 	private boolean enableDevelopmentMode;
 
@@ -90,6 +97,26 @@ public class FlowBuilderServicesBuilder {
 	}
 
 	/**
+	 * Set the {@link Validator} to use for validating a model declared on a view state.
+	 * By default no validator is set.
+	 * @param validator the validator to use
+	 */
+	public FlowBuilderServicesBuilder setValidator(Validator validator) {
+		this.validator = validator;
+		return this;
+	}
+
+	/**
+	 * The {@link ValidationHintResolver} to use to resolve validation hints such as bean validation groups.
+	 * By default a {@link BeanValidationHintResolver} is used.
+	 * @param resolver the resolver to use
+	 */
+	public FlowBuilderServicesBuilder setValidationHintResolver(ValidationHintResolver resolver) {
+		this.validationHintResolver = resolver;
+		return this;
+	}
+
+	/**
 	 * Put all flows in development mode. When set to {@code true}, changes to a flow
 	 * definition are auto-detected and result in a flow refresh.
 	 * By default this is set to {@code false}
@@ -108,6 +135,8 @@ public class FlowBuilderServicesBuilder {
 		flowBuilderServices.setConversionService(this.conversionService);
 		flowBuilderServices.setExpressionParser(getExpressionParser());
 		flowBuilderServices.setViewFactoryCreator(this.viewFactoryCreator);
+		flowBuilderServices.setValidator(this.validator);
+		flowBuilderServices.setValidationHintResolver(this.validationHintResolver);
 		flowBuilderServices.setDevelopment(this.enableDevelopmentMode);
 		return flowBuilderServices;
 	}

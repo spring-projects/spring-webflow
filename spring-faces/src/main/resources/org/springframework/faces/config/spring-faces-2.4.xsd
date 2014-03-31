@@ -49,6 +49,26 @@ The custom ViewFactoryCreator implementation to use produce ViewFactories capabl
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
+					<xsd:attribute name="validator">
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.validation.Validator">
+								<![CDATA[
+The bean name of the Validator that is to be used for validating a model declared on a view state.
+This is an optional attribute. By default it is not set.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="validation-hint-resolver">
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.webflow.validation.ValidationHintResolver">
+								<![CDATA[
+The bean name of a ValidationHintResolver used to resolve String-based validation hints.
+This is an optional attribute. The default an instance of BeanValidationHintResolver is used.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
 					<xsd:attribute name="enable-managed-beans" type="xsd:boolean">
 						<xsd:annotation>
 							<xsd:documentation>
