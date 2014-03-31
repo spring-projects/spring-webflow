@@ -526,7 +526,7 @@ private String name;
 			<programlisting language="xml">
 &lt;webflow:flow-registry flow-builder-services="flowBuilderServices" /&gt;
 
-&lt;webflow:flow-builder-services id="flowBuilderServices" validator=".." validationHintResolver=".." /&gt;
+&lt;webflow:flow-builder-services id="flowBuilderServices" validator=".." validation-hint-resolver=".." /&gt;
 </programlisting>
 				</para>
 			</sect3>

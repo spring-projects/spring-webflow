@@ -236,7 +236,7 @@ If not specified, JSR-303 validation will be installed if a JSR-303 provider is 
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
-					<xsd:attribute name="validationHintResolver">
+					<xsd:attribute name="validation-hint-resolver">
 						<xsd:annotation>
 							<xsd:documentation source="java:org.springframework.webflow.validation.ValidationHintResolver">
 								<![CDATA[

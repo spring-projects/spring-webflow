@@ -46,6 +46,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	private static final String EXPRESSION_PARSER_ATTR = "expression-parser";
 	private static final String VIEW_FACTORY_CREATOR_ATTR = "view-factory-creator";
 	private static final String VALIDATOR_ATTR = "validator";
+	private static final String VALIDATION_HINT_RESOLVER_ATTR = "validation-hint-resolver";
 
 	// --------------------------- Bean Configuration Properties --------------------- //
 	private static final String CONVERSION_SERVICE_PROPERTY = "conversionService";
@@ -118,7 +119,7 @@ class FlowBuilderServicesBeanDefinitionParser extends AbstractSingleBeanDefiniti
 	}
 
 	private void parseValidationHintResolver(Element element, ParserContext context, BeanDefinitionBuilder definitionBuilder) {
-		String resolver = element.getAttribute(VALIDATION_HINT_RESOLVER_PROPERTY);
+		String resolver = element.getAttribute(VALIDATION_HINT_RESOLVER_ATTR);
 		if (StringUtils.hasText(resolver)) {
 			definitionBuilder.addPropertyReference(VALIDATION_HINT_RESOLVER_PROPERTY, resolver);
 		}
