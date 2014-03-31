@@ -10,11 +10,59 @@
 	<title>What's New</title>
 	<sect1 xml:id="whatsnew-swf-240">
 		<title>Spring Web Flow 2.4</title>
+		<para>This release requires JDK 1.6.</para>
+		<sect2 xml:id="whatsnew-swf-java-config">
+			<title>Java-based Configuration</title>
+			<para>
+				Web Flow now supports a Java-based alternative for its system configuration.
+				See the updated <xref linkend="system-setup" />.
+			</para>
+			<para>
+				Also see the
+				<link xl:href="https://github.com/spring-projects/spring-webflow-samples/tree/master/booking-mvc">booking-mvc</link> and
+				<link xl:href="https://github.com/spring-projects/spring-webflow-samples/tree/master/booking-faces">booking-faces</link>
+				samples that have been updated to use all Java config.
+			</para>
+		</sect2>
+		<sect2 xml:id="whatsnew-swf-mvcflash">
+			<title>Spring MVC Flash Scope Integration</title>
+			<para>
+				When a flow ends it can now redirect to a Spring MVC controller after saving
+				attributes in Spring MVC's flash scope for the controller to access.
+			</para>
+			<para>
+				See <xref linkend="spring-mvc-flash-output"/>.
+			</para>
+		</sect2>
+		<sect2 xml:id="whatsnew-partial-validation">
+			<title>Partial JSR-303 Bean Validation</title>
+			<para>
+				A flow definition can apply partial validation on the model through the validation-hints
+				attribute supported on view state and transition elements.
+			</para>
+			<para>
+				See <xref linkend="view-validation-jsr303-partial" />.
+			</para>
+		</sect2>
+		<sect2 xml:id="whatsnew-hibernate4">
+			<title>Hibernate4 Support</title>
+			<para>
+				The <classname>HibernateFlowExecutionListener</classname> now supports Hibernate 4 in addition to Hibernate 3.
+			</para>
+		</sect2>
+		<sect2 xml:id="whatsnew-tiles3">
+			<title>Tiles 3 Support</title>
+			<para>
+				The <classname>AjaxTilesView</classname> now supports Tiles 3 in addition to Tiles 2.2.
+			</para>
+		</sect2>
 		<sect2 xml:id="whatsnew-swf-jsf20">
 			<title>Minimum JSF 2.0 Requirement</title>
 			<para>
 				Java ServerFaces version 1.2 and earlier are no longer supported by Spring Web Flow, if you have not done so already you will need to upgrade to JSF 2.0 or above.
 				In addition the Spring Faces components that were previously provided with JSF 1.2 for progressive AJAX enhancements have been removed in this release.
+			</para>
+			<para>
 				See <xref linkend="spring-faces-upgrade-from-swf23"/>.
 			</para>
 		</sect2>
@@ -24,20 +72,10 @@
 				The internal Portlet integration introduced in Spring Web Flow 2.2 has been upgraded for JSF 2.0 compatibility.
 				Some of the more advanced JSF 2.0 features, such as partial state saving, are not supported in a Portlet environment, however, existing application can now upgrade to the minimum required JSF version.
 				Upgraded projects will need to ensure that the <code>&lt;faces:resources&gt;</code> elements is
-				included as part of their Spring configuration. See <xref linkend="portlet-jsf"/>.
+				included as part of their Spring configuration.
 			</para>
-		</sect2>
-		<sect2 xml:id="whatsnew-swf-mvcflash">
-			<title>Saving Flow Output to Spring MVC Flash Scope</title>
 			<para>
-				Flow output can now be saved to Spring MVC Flash Scope for any <code>end-state</code> that issues an internal redirect.  To enable this feature set <code>FlowHandlerAdapter.saveOutputToFlashScopeOnRedirect</code>.  See <xref linkend="spring-mvc-flash-output"/>.
-			</para>
-		</sect2>
-		<sect2 xml:id="whatsnew-partial-validation">
-			<title>Partial JSR-303 Bean Validation</title>
-			<para>
-				Partial validation with JSR-303 Bean Validation groups is now supported through the validation-hints
-				view-state attribute. See <xref linkend="view-validation-jsr303-partial" />.
+				See <xref linkend="portlet-jsf"/>.
 			</para>
 		</sect2>
 	</sect1>
