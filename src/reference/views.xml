@@ -487,38 +487,55 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 			<sect3 xml:id="view-validation-jsr303-partial">
 				<title>Partial Validation</title>
 				<para>
-					JSR-303 Bean Validation supports partial validation via groups. For example:
+					JSR-303 Bean Validation supports partial validation through validation groups. For example:
 
 <programlisting language="java">
 @NotNull
 @Size(min = 2, max = 30, groups = State1.class)
 private String name;
 </programlisting>
-					You can specify validation hints in a view state:
+					In a flow definition you can specify validation hints on a view state
+					or on a transition and those will be resolved to validation groups.
+					For example:
 <programlisting language="xml"><![CDATA[
-<view-state id="state1" model="myModel" validation-hints="group1,group2">
+<view-state id="state1" model="myModel" validation-hints="'group1,group2'">
 ]]>
 </programlisting>
-					Each hint can be an inner Class either in the model type or its parent types.
-					For example, given <classname>org.example.MyModel</classname> with inner type
-					<classname>Group1</classname> and <classname>Group2</classname> you can
-					specify the hints "group1", "group2" or both "group1,group2".
-					A hint can also be a fully qualified class name.
-					The hint "default" indicates the default validation group, i.e.
-					<classname>javax.validation.groups.Default</classname>.
-					Also, the <emphasis>validation-hints</emphasis> property can be an expression that
-					resolves to a String or an <classname>Object[]</classname>
-					containing <classname>Class</classname> based hints.
+					The <emphasis>validation-hints</emphasis> attribute is an expression
+					that in the above example resolves to a comma-delimited String consisting
+					of the hints "group1" and "group2". A <classname>ValidationHintResolver</classname>
+					is used to resolve these hints. The <classname>BeanValidationHintResolver</classname>
+					used by default tries to resolve these strings to Class-based bean validation
+					groups. To do that it looks for matching inner types in the model or its parent.
 				</para>
 				<para>
-					Note that a custom <classname>ValidationHintResolver</classname> can be plugged if
-					necessary through the validationHintResolver property of the
-					flow-builder-services element:
+					For example given <classname>org.example.MyModel</classname> with inner types
+					<classname>Group1</classname> and <classname>Group2</classname> it is
+					sufficient to supply the simple type names, i.e. "group1" and "group2".
+					You can also provide fully qualified type names.
+				</para>
+				<para>
+					A hint with the value "default" has a special meaning and is translated
+					to the default validation group in Bean Validation
+					<classname>javax.validation.groups.Default</classname>.
+				</para>
+				<para>
+					A custom <classname>ValidationHintResolver</classname>
+					can be configured if necessary through the validationHintResolver property
+					of the flow-builder-services element:
 			<programlisting language="xml">
 &lt;webflow:flow-registry flow-builder-services="flowBuilderServices" /&gt;
 
 &lt;webflow:flow-builder-services id="flowBuilderServices" validator=".." validationHintResolver=".." /&gt;
 </programlisting>
+				</para>
+				<para>
+					The above configuration example works in applications not using JSF.
+					For JSF applications that rely on Web Flow-based validation,
+					you will need to register a
+					custom extension of Web Flow's <emphasis>FlowActionListener</emphasis>
+					via faces-config.xml configured with the custom
+					<classname>ValidationHintResolver</classname>. 
 				</para>
 			</sect3>
 
