@@ -196,8 +196,9 @@ xsi:schemaLocation="
 	<sect1 xml:id="spring-faces-webflow-config">
 		<title>Configuring Web Flow for use with JSF</title>
 
-		<para>This section explains how to configure Web Flow with JSF.    The
-		following is sample configuration for Web Flow and JSF:</para>
+		<para>This section explains how to configure Web Flow with JSF.
+		Both Java and XML style configuration are supported.
+		The following is sample configuration for Web Flow and JSF in XML:</para>
 
 		<programlisting language="xml">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -235,6 +236,34 @@ xsi:schemaLocation="
 &lt;/beans&gt;
 		</programlisting>
 
+		<para>
+			The following is an example of the same in Java configuration:
+		</para>
+
+		<programlisting language="java"><![CDATA[
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.faces.config.*;
+
+@Configuration
+public class WebFlowConfig extends AbstractFacesFlowConfiguration {
+
+    @Bean
+    public FlowExecutor flowExecutor() {
+        return getFlowExecutorBuilder(flowRegistry())
+                .addFlowExecutionListener(new FlowFacesContextLifecycleListener())
+                .build();
+    }
+
+    @Bean
+    public FlowDefinitionRegistry flowRegistry() {
+        return getFlowDefinitionRegistryBuilder()
+                .setBasePath("/WEB-INF")
+                .addFlowLocationPattern("**/*-flow.xml").build();
+
+}]]>
+		</programlisting>
+
 		<para>The main points are the installation of a
 		<code>FlowFacesContextLifecycleListener</code> that manages a single
 		FacesContext for the duration of Web Flow request and the use of the
@@ -270,6 +299,12 @@ xsi:schemaLocation="
 		<code>FlowHandlerAdapter</code> normally used with Web Flow. This adapter
 		initializes itself with a <code>JsfAjaxHandler</code> instead of the
 		<code>SpringJavaSciprtAjaxHandler</code>.</para>
+
+		<para>When using Java config, the <classname>AbstractFacesFlowConfiguration</classname>
+		base class automatically registers <classname>JsfResourceRequestHandler</classname>
+		so there is nothing further to do.
+		</para>
+
 	</sect1>
 
 	<sect1 xml:id="spring-faces-managed-beans">

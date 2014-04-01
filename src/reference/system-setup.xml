@@ -44,6 +44,7 @@
 		</para>
 		<programlisting language="java"><![CDATA[
 import org.springframework.context.annotation.Configuration;
+import org.springframework.webflow.config.AbstractFlowConfiguration;
 
 @Configuration
 public class WebFlowConfig extends AbstractFlowConfiguration {
