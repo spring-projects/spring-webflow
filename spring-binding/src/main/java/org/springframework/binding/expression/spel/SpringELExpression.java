@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,9 @@ import org.springframework.expression.spel.support.StandardTypeConverter;
 import org.springframework.util.Assert;
 
 /**
- * <p>
- * A wrapper for a Spring EL {@link org.springframework.expression.Expression} allowing it to be used under the Spring
- * Binding {@link Expression} abstraction.
- * </p>
- * 
+ * A wrapper for a Spring EL {@link org.springframework.expression.Expression}
+ * allowing it to be used under the Spring Binding {@link Expression} abstraction.
+ *
  * @author Rossen Stoyanchev
  * @since 2.1.0
  */
@@ -55,18 +53,20 @@ public class SpringELExpression implements Expression {
 
 	/**
 	 * Constructor for SpringELExpression.
-	 * 
+	 *
 	 * @param expression a parsed Spring EL expression instance. Must not be null.
-	 * @param expressionVariables provides a mapping between variables names and parsed Spring EL expression instances.
+	 * @param expressionVariables provides a mapping between variables names and
+	 * parsed Spring EL expression instances.
 	 * This parameter is optional (may be null).
-	 * @param expectedType the target type expected from the evaluation of the expression or null. This parameter is
-	 * optional (may be null).
+	 * @param expectedType the target type expected from the evaluation of the expression or null.
+	 * This parameter is optional (may be null).
 	 * @param conversionService the Spring ConversionService instance to use for type conversion
 	 * @param propertyAccessors propertyAccessors for Spring EL to use when evaluating expressions
 	 */
 	public SpringELExpression(org.springframework.expression.Expression expression,
 			Map<String, Expression> expressionVariables, Class<?> expectedType, ConversionService conversionService,
 			List<PropertyAccessor> propertyAccessors) {
+
 		Assert.notNull(expression, "The SpelExpression is required for evaluation");
 		this.expression = expression;
 		this.expressionVariables = expressionVariables;
@@ -81,7 +81,7 @@ public class SpringELExpression implements Expression {
 
 	public Object getValue(Object rootObject) throws EvaluationException {
 		try {
-			return expression.getValue(newEvaluationContext(rootObject), expectedType);
+			return expression.getValue(createEvaluationContext(rootObject), expectedType);
 		} catch (SpelEvaluationException e) {
 			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE)) {
 				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
@@ -97,7 +97,7 @@ public class SpringELExpression implements Expression {
 
 	public Class<?> getValueType(Object rootObject) throws EvaluationException {
 		try {
-			return expression.getValueType(newEvaluationContext(rootObject));
+			return expression.getValueType(createEvaluationContext(rootObject));
 		} catch (SpelEvaluationException e) {
 			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_READABLE)) {
 				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
@@ -110,7 +110,8 @@ public class SpringELExpression implements Expression {
 
 	public void setValue(Object rootObject, Object value) throws EvaluationException {
 		try {
-			expression.setValue(newEvaluationContext(rootObject), value);
+			StandardEvaluationContext evaluationContext = createEvaluationContext(rootObject);
+			expression.setValue(evaluationContext, value);
 		} catch (SpelEvaluationException e) {
 			if (e.getMessageCode().equals(SpelMessage.PROPERTY_OR_FIELD_NOT_WRITABLE)) {
 				throw new PropertyNotFoundException(rootObject.getClass(), getExpressionString(), e);
@@ -125,12 +126,9 @@ public class SpringELExpression implements Expression {
 	}
 
 	/**
-	 * Updates the Spring EL evaluation context to reflect the given rootObject.
-	 * 
-	 * @param rootObject the object for the evaluation.
-	 * @return
+	 * Create a new Spring EL evaluation context for the given rootObject.
 	 */
-	private StandardEvaluationContext newEvaluationContext(Object rootObject) {
+	private StandardEvaluationContext createEvaluationContext(Object rootObject) {
 		StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
 		context.setVariables(getVariableValues(rootObject));
 		context.setTypeConverter(new StandardTypeConverter(conversionService));
@@ -139,9 +137,9 @@ public class SpringELExpression implements Expression {
 	}
 
 	/**
-	 * Turns the map of variable-names-to-expressions into a map of variable-names-to-plain-objects by evaluating each
-	 * object against the input rootObject.
-	 * 
+	 * Turn the map of variable-names-to-expressions into a map of variable-names-to-plain-objects
+	 * by evaluating each object against the input rootObject.
+	 *
 	 * @param rootObject the Object to evaluate variable expressions against.
 	 * @return a mapping between variables names and plain Object's.
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,9 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.Assert;
 
 /**
- * <p>
- * Adapts the Spring EL {@link SpelExpressionParser} to the Spring Binding {@link ExpressionParser} interface.
- * </p>
- * 
+ * Adapt the Spring EL {@link SpelExpressionParser} to the Spring Binding
+ * {@link ExpressionParser} contract.
+ *
  * @author Rossen Stoyanchev
  * @since 2.1.0
  */
@@ -68,42 +67,45 @@ public class SpringELExpressionParser implements ExpressionParser {
 		propertyAccessors.add(propertyAccessor);
 	}
 
-	public Expression parseExpression(String expressionString, ParserContext parserContext) throws ParserException {
-		Assert.hasText(expressionString, "The expression string to parse is required and must not be empty");
-		parserContext = (parserContext == null) ? NullParserContext.INSTANCE : parserContext;
-		Map<String, Expression> spelExpressionVariables = parseSpelExpressionVariables(parserContext
-				.getExpressionVariables());
-		return new SpringELExpression(parseSpelExpression(expressionString, parserContext), spelExpressionVariables,
-				parserContext.getExpectedEvaluationResultType(), conversionService.getDelegateConversionService(),
-				propertyAccessors);
+	public Expression parseExpression(String expression, ParserContext context) throws ParserException {
+
+		Assert.hasText(expression, "The expression string to parse is required and must not be empty");
+
+		context = (context == null) ? NullParserContext.INSTANCE : context;
+		Map<String, Expression> expressionVars = parseSpelExpressionVariables(context.getExpressionVariables());
+
+		org.springframework.expression.Expression spelExpression = parseSpelExpression(expression, context);
+		Class<?> expectedResultType = context.getExpectedEvaluationResultType();
+		org.springframework.core.convert.ConversionService cs = conversionService.getDelegateConversionService();
+
+		return new SpringELExpression(spelExpression, expressionVars, expectedResultType, cs, propertyAccessors);
 	}
 
-	private org.springframework.expression.Expression parseSpelExpression(String expression, ParserContext parserContext) {
-		return expressionParser.parseExpression(expression, getSpelParserContext(parserContext));
+	private org.springframework.expression.Expression parseSpelExpression(String expression, ParserContext context) {
+		return expressionParser.parseExpression(expression, getSpelParserContext(context));
 	}
 
-	private org.springframework.expression.ParserContext getSpelParserContext(ParserContext parserContext) {
-		return parserContext.isTemplate() ? org.springframework.expression.ParserContext.TEMPLATE_EXPRESSION : null;
+	private org.springframework.expression.ParserContext getSpelParserContext(ParserContext context) {
+		return context.isTemplate() ? org.springframework.expression.ParserContext.TEMPLATE_EXPRESSION : null;
 	}
 
 	/**
-	 * Turns {@link ExpressionVariable}'s (pairs of variable names and string expressions) into a map of variable names
-	 * and parsed Spring EL expressions. The map will be saved in a Spring EL {@link EvaluationContext} for later use at
-	 * evaluation time.
-	 * 
-	 * @param expressionVariables an array of ExpressionVariable instances.
+	 * Turn {@link ExpressionVariable}'s (pairs of variable names and string expressions)
+	 * into a map of variable names and parsed Spring EL expressions. The map will be saved
+	 * in a Spring EL {@link EvaluationContext} for later use at evaluation time.
+	 *
+	 * @param expressionVars an array of ExpressionVariable instances.
 	 * @return a Map or null if the input array is empty.
 	 */
-	private Map<String, Expression> parseSpelExpressionVariables(ExpressionVariable[] expressionVariables) {
-		if (expressionVariables == null || expressionVariables.length == 0) {
+	private Map<String, Expression> parseSpelExpressionVariables(ExpressionVariable[] expressionVars) {
+		if (expressionVars == null || expressionVars.length == 0) {
 			return null;
 		}
-		Map<String, Expression> spelExpressionVariables = new HashMap<String, Expression>(expressionVariables.length);
-		for (ExpressionVariable var : expressionVariables) {
-			spelExpressionVariables.put(var.getName(),
-					parseExpression(var.getValueExpression(), var.getParserContext()));
+		Map<String, Expression> result = new HashMap<String, Expression>(expressionVars.length);
+		for (ExpressionVariable var : expressionVars) {
+			result.put(var.getName(), parseExpression(var.getValueExpression(), var.getParserContext()));
 		}
-		return spelExpressionVariables;
+		return result;
 	}
 
 }

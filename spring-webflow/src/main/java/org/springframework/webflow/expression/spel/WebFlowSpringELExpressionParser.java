@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,22 @@ import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 /**
- * A sub-class for {@link SpringELExpressionParser} that registers Web Flow specific Spring EL PropertyAccessors.
- * 
+ * A sub-class for {@link SpringELExpressionParser} that registers Web Flow
+ * specific Spring EL PropertyAccessors.
+ *
  * @author Rossen Stoyanchev
  * @since 2.1
  */
 public class WebFlowSpringELExpressionParser extends SpringELExpressionParser {
+
 
 	public WebFlowSpringELExpressionParser(SpelExpressionParser expressionParser) {
 		super(expressionParser);
 		addDefaultPropertyAccessors();
 	}
 
-	public WebFlowSpringELExpressionParser(SpelExpressionParser expressionParser, ConversionService conversionService) {
-		super(expressionParser, conversionService);
+	public WebFlowSpringELExpressionParser(SpelExpressionParser parser, ConversionService conversionService) {
+		super(parser, conversionService);
 		addDefaultPropertyAccessors();
 	}
 
