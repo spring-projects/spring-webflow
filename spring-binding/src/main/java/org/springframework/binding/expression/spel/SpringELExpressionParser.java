@@ -78,7 +78,18 @@ public class SpringELExpressionParser implements ExpressionParser {
 		Class<?> expectedResultType = context.getExpectedEvaluationResultType();
 		org.springframework.core.convert.ConversionService cs = conversionService.getDelegateConversionService();
 
-		return new SpringELExpression(spelExpression, expressionVars, expectedResultType, cs, propertyAccessors);
+		return createSpringELExpression(expressionVars, spelExpression, expectedResultType, cs);
+	}
+
+	/**
+	 * Create the {@link SpringELExpression}.
+	 */
+	protected SpringELExpression createSpringELExpression(Map<String, Expression> expressionVars,
+			org.springframework.expression.Expression spelExpression, Class<?> expectedResultType,
+			org.springframework.core.convert.ConversionService conversionService) {
+
+		return new SpringELExpression(spelExpression, expressionVars,
+				expectedResultType, conversionService, propertyAccessors);
 	}
 
 	private org.springframework.expression.Expression parseSpelExpression(String expression, ParserContext context) {

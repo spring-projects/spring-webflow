@@ -133,7 +133,15 @@ public class SpringELExpression implements Expression {
 		context.setVariables(getVariableValues(rootObject));
 		context.setTypeConverter(new StandardTypeConverter(conversionService));
 		context.getPropertyAccessors().addAll(propertyAccessors);
+		extendEvaluationContext(context);
 		return context;
+	}
+
+	/**
+	 * Invoked every time an evaluation context is created allowing further
+	 * initialization from sub-classes.
+	 */
+	protected void extendEvaluationContext(StandardEvaluationContext context) {
 	}
 
 	/**
