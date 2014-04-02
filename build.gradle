@@ -328,10 +328,6 @@ configure(rootProject) {
 		description = "Builds -${classifier} archive containing api and reference " +
 			"for deployment at static.springframework.org/spring-webflow/docs."
 
-		from("src/dist") {
-			include "changelog.txt"
-		}
-
 		from (api) {
 			into "api"
 		}
