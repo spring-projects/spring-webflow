@@ -182,7 +182,7 @@ project("spring-js-tiles3") {
 		compile("org.springframework:spring-webmvc:$springVersion")
 		optional("javax.el:javax.el-api:2.2.4")
 		optional("javax.servlet:javax.servlet-api:3.0.1")
-		optional("javax.servlet.jsp:jsp-api:2.2")
+		optional("javax.servlet.jsp:javax.servlet.jsp-api:2.2.1")
 		optional("org.apache.tiles:tiles-request-api:1.0.1")
 		optional("org.apache.tiles:tiles-api:3.0.1")
 		optional("org.apache.tiles:tiles-core:3.0.1") {
