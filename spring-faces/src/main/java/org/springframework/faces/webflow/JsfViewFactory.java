@@ -132,12 +132,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	private UIViewRoot getViewStateViewRoot(RequestContext context, FacesContext facesContext, ViewHandler viewHandler,
 			String viewName) {
-		UIViewRoot viewRoot = null;
-		if (FlowResponseStateManager.hasState(context)) {
-			// Only try an initial restore if we have state (see SWF-1571)
-			viewRoot = viewHandler.restoreView(facesContext, viewName);
-		}
-
+		UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
 		if (viewRoot != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("UIViewRoot restored for '" + viewName + "'");
@@ -149,7 +144,6 @@ public class JsfViewFactory implements ViewFactory {
 			}
 			viewRoot = viewHandler.createView(facesContext, viewName);
 		}
-
 		return viewRoot;
 	}
 

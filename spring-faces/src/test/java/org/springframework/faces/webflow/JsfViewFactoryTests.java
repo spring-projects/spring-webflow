@@ -72,15 +72,12 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-	private LocalAttributeMap<Object> viewScope = new LocalAttributeMap<Object>();
-
 	protected void setUp() throws Exception {
 		configureJsf();
 		this.extContext.setNativeContext(this.servletContext);
 		this.extContext.setNativeRequest(this.request);
 		this.extContext.setNativeResponse(this.response);
 		RequestContextHolder.setRequestContext(this.context);
-		EasyMock.expect(this.context.getViewScope()).andStubReturn(this.viewScope);
 		EasyMock.expect(this.context.getFlashScope()).andStubReturn(this.flashMap);
 		EasyMock.expect(this.context.getExternalContext()).andStubReturn(this.extContext);
 		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(
@@ -151,7 +148,6 @@ public class JsfViewFactoryTests extends TestCase {
 		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { this.context });
-		setupViewState();
 
 		View restoredView = this.factory.getView(this.context);
 
@@ -198,7 +194,6 @@ public class JsfViewFactoryTests extends TestCase {
 		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { this.context });
-		setupViewState();
 
 		View restoredView = this.factory.getView(this.context);
 
@@ -234,7 +229,6 @@ public class JsfViewFactoryTests extends TestCase {
 		EasyMock.expectLastCall().andReturn(true);
 
 		EasyMock.replay(new Object[] { this.context });
-		setupViewState();
 
 		View restoredView = this.factory.getView(this.context);
 
@@ -285,7 +279,6 @@ public class JsfViewFactoryTests extends TestCase {
 
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
-		setupViewState();
 
 		EasyMock.replay(new Object[] { this.context });
 		this.factory.getView(this.context);
@@ -294,10 +287,6 @@ public class JsfViewFactoryTests extends TestCase {
 		assertNotNull("Expected exception event", application.getExceptionQueuedEventContext());
 		assertSame("Expected same exception", existingRoot.getAbortProcessingException(), application
 				.getExceptionQueuedEventContext().getException());
-	}
-
-	private void setupViewState() {
-		this.viewScope.put(FlowResponseStateManager.FACES_VIEW_STATE, "X");
 	}
 
 	private class NoExecutionLifecycle extends FlowLifecycle {
