@@ -400,6 +400,56 @@ public interface FlowOutcome {
 			</para>
 		</sect2>
 	</sect1>
+	<sect1 xml:id="scopes">
+		<title>Variable Scopes</title>
+		<para>
+			Web Flow can store variables in one of several scopes: 
+		</para>
+		<sect2>
+			<title>Flow Scope</title>
+			<para>
+				Flow scope gets allocated when a flow starts and destroyed when the flow ends.
+				With the default implementation, any objects stored in flow scope need to be Serializable.
+			</para>
+		</sect2>
+		<sect2>
+			<title>View Scope</title>
+			<para>
+				View scope gets allocated when a <code>view-state</code> enters and destroyed when the state exits.
+				View scope is <emphasis>only</emphasis> referenceable from within a <code>view-state</code>.  With the
+                default implementation, any objects stored in view scope need to be Serializable.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Request Scope</title>
+			<para>
+				Request scope gets allocated when a flow is called and destroyed when the flow returns.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Flash Scope</title>
+			<para>
+				Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the
+                flow ends.  With the default implementation, any objects stored in flash scope need to be Serializable.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Conversation Scope</title>
+			<para>
+				Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
+				Conversation scope is shared by a top-level flow and all of its subflows.  With the default
+                implementation, conversation scoped objects are stored in the HTTP session and should generally be
+                Serializable to account for typical session replication.
+			</para>
+		</sect2>		
+		<para>
+			The scope to use is often determined contextually, for example depending on where a
+			variable is defined -- at the start of the flow definition (flow scope), inside a
+			a view state (view scope), etc. In other cases, for example in EL expressions and
+			Java code, it needs to be specified explicitly. Subsequent sections explain
+			how this is done.
+		</para>
+	</sect1>
 	<sect1 xml:id="calling-subflows">
 		<title>Calling subflows</title>
 		<para>
