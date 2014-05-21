@@ -18,6 +18,7 @@ package org.springframework.webflow.config;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -314,7 +315,7 @@ public class FlowDefinitionRegistryBuilder {
 			this.id = id;
 			this.attributes = (attributes != null) ?
 					new LocalAttributeMap<Object>(attributes) :
-					new LocalAttributeMap<Object>(Collections.<String, Object>emptyMap());
+					new LocalAttributeMap<Object>(new HashMap<String, Object>());
 		}
 
 		public String getPath() {
@@ -343,7 +344,7 @@ public class FlowDefinitionRegistryBuilder {
 			this.id = id;
 			this.attributes = (attributes != null) ?
 					new LocalAttributeMap<Object>(attributes) :
-					new LocalAttributeMap<Object>(Collections.<String, Object>emptyMap());
+					new LocalAttributeMap<Object>(new HashMap<String, Object>());
 		}
 
 		public FlowBuilder getBuilder() {
