@@ -237,6 +237,19 @@ public Event makeBooking(RequestContext context) {
 }]]>
 			</programlisting>
 		</sect2>
+		<sect2>
+			<title>Using an exception-handler element</title>
+			<para>
+				In general it is recommended to catch exceptions in actions and return result
+				events that drive standard transitions, it is also possible to add an
+				<code>exception-handler</code> sub-element to any state type with a
+				<code>bean</code> attribute referencing a bean of type
+				<classname>FlowExecutionExceptionHandler</classname>. This is an advanced
+				option that if used incorrectly can leave the flow execution in an invalid state.
+				Consider the build-in <classname>TransitionExecutingFlowExecutionExceptionHandler</classname>
+				as example of a correct implementation. 
+			</para>
+		</sect2>
 	</sect1>
 	<sect1 xml:id="action-examples">
 		<title>Other Action execution examples</title>
