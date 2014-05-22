@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,12 @@
  */
 package org.springframework.faces.webflow;
 
-import java.lang.reflect.Method;
-
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
-import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
@@ -66,20 +63,6 @@ public class JsfUtils {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	// This method is here for JSF 1.2 backwards compatibility
-
-	static void publishPostRestoreStateEvent() {
-		try {
-			Class<?> clazz = Class.forName("org.springframework.faces.webflow.Jsf2FlowApplication");
-			Method method = ReflectionUtils.findMethod(clazz, "publishPostRestoreStateEvent");
-			ReflectionUtils.makeAccessible(method);
-			ReflectionUtils.invokeMethod(method, null);
-
-		} catch (ClassNotFoundException ex) {
-			throw new IllegalStateException("Expected Jsf2FlowApplication: " + ex);
 		}
 	}
 

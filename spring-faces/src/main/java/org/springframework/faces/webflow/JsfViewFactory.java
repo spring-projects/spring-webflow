@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,20 @@ import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJ
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitHint;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.ServletContext;
@@ -128,8 +134,8 @@ public class JsfViewFactory implements ViewFactory {
 				view = createJsfView(viewRoot, lifecycle, context);
 			}
 		}
-		if (isAtLeastJsf20()) {
-			JsfUtils.publishPostRestoreStateEvent();
+		if (JsfRuntimeInformation.isAtLeastJsf20()) {
+			new PostRestoreStateEvenHelper().publishPostRestoreStateEvent();
 		}
 		if (!facesContext.getRenderResponse()) {
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
@@ -183,6 +189,33 @@ public class JsfViewFactory implements ViewFactory {
 		while (it.hasNext()) {
 			UIComponent child = (UIComponent) it.next();
 			processTree(context, child);
+		}
+	}
+
+
+	private static class PostRestoreStateEvenHelper {
+
+		public void publishPostRestoreStateEvent() {
+			VisitHint visitHint = null;
+			try {
+				visitHint = Enum.valueOf(VisitHint.class, "SKIP_ITERATION");
+			}
+			catch (IllegalArgumentException ex) {
+				// JSF < 2.1
+			}
+			FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+			try {
+				facesContext.getAttributes().put("javax.faces.visit.SKIP_ITERATION", true);
+				VisitContext visitContext = (visitHint != null ?
+						VisitContext.createVisitContext(facesContext, null, EnumSet.of(visitHint)) : 
+						VisitContext.createVisitContext(facesContext));
+				facesContext.getViewRoot().visitTree(visitContext, new PostRestoreStateEventVisitCallback());
+			} catch (AbortProcessingException e) {
+				facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
+						new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
+			} finally {
+				facesContext.getAttributes().remove("javax.faces.visit.SKIP_ITERATION");
+			}
 		}
 	}
 

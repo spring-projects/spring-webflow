@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,12 +26,7 @@ import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.Behavior;
-import javax.faces.component.visit.VisitContext;
-import javax.faces.component.visit.VisitHint;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ExceptionQueuedEvent;
-import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 
@@ -43,8 +37,6 @@ import javax.faces.event.SystemEventListener;
  * @author Rossen Stoyanchev
  */
 public class Jsf2FlowApplication extends FlowApplication {
-
-	private static String SKIP_ITERATION_HINT = "javax.faces.visit.SKIP_ITERATION";
 
 	public Jsf2FlowApplication(Application delegate) {
 		super(delegate);
@@ -124,21 +116,4 @@ public class Jsf2FlowApplication extends FlowApplication {
 		getDelegate().unsubscribeFromEvent(systemEventClass, listener);
 	}
 
-	// Ideally this method should be in JsfView
-	// We keep it here to avoid ClassNotFoundExceptions for JSF 1.2 apps
-
-	static void publishPostRestoreStateEvent() {
-		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
-		try {
-			facesContext.getAttributes().put(SKIP_ITERATION_HINT, true);
-			VisitContext visitContext = VisitContext.createVisitContext(facesContext, null, EnumSet.of(VisitHint.SKIP_ITERATION));
-			facesContext.getViewRoot().visitTree(visitContext,
-					new PostRestoreStateEventVisitCallback());
-		} catch (AbortProcessingException e) {
-			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
-					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
-		} finally {
-			facesContext.getAttributes().remove(SKIP_ITERATION_HINT);
-		}
-	}
 }
