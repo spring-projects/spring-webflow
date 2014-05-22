@@ -106,10 +106,6 @@ public class JsfView implements View {
 	 */
 	public void processUserEvent() {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
-
-		// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). SWF-1577
-		saveState();
-
 		// Must respect these flags in case user set them during RESTORE_VIEW phase
 		if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
 			this.facesLifecycle.execute(facesContext);
@@ -127,8 +123,11 @@ public class JsfView implements View {
 	}
 
 	public Serializable getUserEventState() {
-		// Set the temporary UIViewRoot state so that it will be available across the redirect (see comments in render()
-		// method)
+		// Set the temporary UIViewRoot state so that it will be available across the redirect (see comments in render() method)
+
+		// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). SWF-1577
+		saveState();
+
 		return new ViewRootHolder(getViewRoot());
 	}
 
