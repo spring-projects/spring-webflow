@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,13 +87,6 @@ public class JsfView implements View {
 		try {
 			logger.debug("Asking faces lifecycle to render");
 			facesLifecycle.render(facesContext);
-
-			/* Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). */
-			if (JsfRuntimeInformation.isAtLeastJsf20()) {
-				if (requestContext.getExternalContext().isAjaxRequest()) {
-					saveState();
-				}
-			}
 		} finally {
 			logger.debug("View rendering complete");
 			facesContext.responseComplete();
@@ -141,6 +134,10 @@ public class JsfView implements View {
 
 	public Serializable getUserEventState() {
 		// Set the temporary UIViewRoot state so that it will be available across the redirect
+
+		// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). SWF-1577
+		saveState();
+
 		return new ViewRootHolder(getViewRoot());
 	}
 
