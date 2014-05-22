@@ -37,19 +37,37 @@ public class JsfRuntimeInformation {
 	/** JSF Version 2.0 */
 	public static final int JSF_20 = 2;
 
+	/** JSF Version 2.1 */
+	public static final int JSF_21 = 3;
+
+	/** JSF Version 2.2 */
+	public static final int JSF_22 = 4;
+
 	private static final int jsfVersion;
 
 	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet",
 			JsfUtils.class.getClassLoader());
 
 	static {
-		if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
+		if (ReflectionUtils.findMethod(FacesContext.class, "getResourceLibraryContracts") != null) {
+			jsfVersion = JSF_22;
+		} else if (ReflectionUtils.findMethod(FacesContext.class, "isReleased") != null) {
+			jsfVersion = JSF_21;
+		} else if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
 			jsfVersion = JSF_20;
 		} else if (ReflectionUtils.findMethod(FacesContext.class, "getELContext") != null) {
 			jsfVersion = JSF_12;
 		} else {
 			jsfVersion = JSF_11;
 		}
+	}
+
+	public static boolean isAtLeastJsf22() {
+		return jsfVersion >= JSF_22;
+	}
+
+	public static boolean isAtLeastJsf21() {
+		return jsfVersion >= JSF_21;
 	}
 
 	public static boolean isAtLeastJsf20() {

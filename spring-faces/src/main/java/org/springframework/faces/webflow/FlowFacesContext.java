@@ -90,7 +90,7 @@ public class FlowFacesContext extends FacesContext {
 		this.context = context;
 		this.delegate = delegate;
 		this.messageDelegate = new FlowFacesContextMessageDelegate(context);
-		this.externalContext = new FlowExternalContext(delegate.getExternalContext());
+		this.externalContext = new FlowExternalContext(delegate.getExternalContext(), context);
 		setCurrentInstance(this);
 	}
 
@@ -218,12 +218,15 @@ public class FlowFacesContext extends FacesContext {
 		return messageDelegate;
 	}
 
-	protected class FlowExternalContext extends ExternalContextWrapper {
+	protected static class FlowExternalContext extends ExternalContextWrapper {
 
 		private static final String CUSTOM_RESPONSE = "customResponse";
 
-		public FlowExternalContext(ExternalContext delegate) {
+		private RequestContext context;
+
+		public FlowExternalContext(ExternalContext delegate, RequestContext context) {
 			super(delegate);
+			this.context = context;
 		}
 
 		public Object getResponse() {

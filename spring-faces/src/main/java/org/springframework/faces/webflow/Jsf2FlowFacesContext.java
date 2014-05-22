@@ -44,15 +44,16 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class Jsf2FlowFacesContext extends FlowFacesContext {
 
-	private ExternalContext externalContext;
+	private final ExternalContext externalContext;
 
-	private PartialViewContext partialViewContext;
+	private final PartialViewContext partialViewContext;
+
 
 	public Jsf2FlowFacesContext(RequestContext context, FacesContext delegate) {
 		super(context, delegate);
-
-		this.externalContext = new Jsf2FlowExternalContext(getDelegate().getExternalContext());
-
+		this.externalContext = (JsfRuntimeInformation.isAtLeastJsf22() ?
+				new Jsf22FlowExternalContext(getDelegate().getExternalContext(), context) :
+				new Jsf2FlowExternalContext(getDelegate().getExternalContext(), context));
 		PartialViewContextFactory factory = (PartialViewContextFactory) FactoryFinder
 				.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
 		PartialViewContext partialViewContextDelegate = factory.getPartialViewContext(this);
@@ -138,12 +139,12 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 		return getDelegate().isReleased();
 	}
 
-	protected class Jsf2FlowExternalContext extends FlowExternalContext {
+	private static class Jsf2FlowExternalContext extends FlowExternalContext {
 
 		Log logger = LogFactory.getLog(FlowExternalContext.class);
 
-		public Jsf2FlowExternalContext(ExternalContext delegate) {
-			super(delegate);
+		public Jsf2FlowExternalContext(ExternalContext delegate, RequestContext context) {
+			super(delegate, context);
 		}
 
 		public void responseSendError(int statusCode, String message) throws IOException {
@@ -265,6 +266,14 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 		public void setSessionMaxInactiveInterval(int interval) {
 			delegate.setSessionMaxInactiveInterval(interval);
+		}
+
+	}
+
+	private static class Jsf22FlowExternalContext extends FlowExternalContext {
+
+		public Jsf22FlowExternalContext(ExternalContext delegate, RequestContext context) {
+			super(delegate, context);
 		}
 
 		// --------------- JSF 2.2 Pass-through delegate methods ------------------//
