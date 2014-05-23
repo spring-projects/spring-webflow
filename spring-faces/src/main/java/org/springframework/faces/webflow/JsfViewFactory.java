@@ -180,9 +180,18 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private void publishPostRestoreStateEvent(FacesContext facesContext) {
+		VisitHint visitHint = null;
+		try {
+			Enum.valueOf(VisitHint.class, "SKIP_ITERATION");
+		}
+		catch (IllegalArgumentException ex) {
+			// JSF < 2.1
+		}
 		try {
             facesContext.getAttributes().put(SKIP_ITERATION_HINT, true);
-			VisitContext visitContext = VisitContext.createVisitContext(facesContext, null, EnumSet.of(VisitHint.SKIP_ITERATION));
+			VisitContext visitContext = (visitHint != null ?
+					VisitContext.createVisitContext(facesContext, null, EnumSet.of(VisitHint.SKIP_ITERATION)) :
+					VisitContext.createVisitContext(facesContext));
 			facesContext.getViewRoot().visitTree(visitContext,
 					new PostRestoreStateEventVisitCallback());
 		} catch (AbortProcessingException e) {

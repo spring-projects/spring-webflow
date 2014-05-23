@@ -25,7 +25,7 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Helper class to provide information about the JSF runtime environment such as JSF version and implementation.
- * 
+ *
  * @author Rossen Stoyanchev
  * @author Phillip Webb
  */
@@ -33,7 +33,7 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * JSF Version 1.1
-	 * 
+	 *
 	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
 	 */
 	@Deprecated
@@ -41,7 +41,7 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * JSF Version 1.2
-	 * 
+	 *
 	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
 	 */
 	@Deprecated
@@ -50,6 +50,12 @@ public class JsfRuntimeInformation {
 	/** JSF Version 2.0 */
 	public static final int JSF_20 = 2;
 
+	/** JSF Version 2.1 */
+	public static final int JSF_21 = 3;
+
+	/** JSF Version 2.2 */
+	public static final int JSF_22 = 4;
+
 	private static final int jsfVersion;
 
 	private static final ClassLoader CLASS_LOADER = JsfUtils.class.getClassLoader();
@@ -57,17 +63,29 @@ public class JsfRuntimeInformation {
 	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASS_LOADER);
 
 	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASS_LOADER);
-	
+
 	private static boolean springPortletPresent = ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASS_LOADER);
 
 	static {
-		if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
+		if (ReflectionUtils.findMethod(FacesContext.class, "getResourceLibraryContracts") != null) {
+			jsfVersion = JSF_22;
+		} else if (ReflectionUtils.findMethod(FacesContext.class, "isReleased") != null) {
+			jsfVersion = JSF_21;
+		} else if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
 			jsfVersion = JSF_20;
 		} else if (ReflectionUtils.findMethod(FacesContext.class, "getELContext") != null) {
 			jsfVersion = JSF_12;
 		} else {
 			jsfVersion = JSF_11;
 		}
+	}
+
+	public static boolean isAtLeastJsf22() {
+		return jsfVersion >= JSF_22;
+	}
+
+	public static boolean isAtLeastJsf21() {
+		return jsfVersion >= JSF_21;
 	}
 
 	/**
@@ -100,7 +118,7 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * Determines if the container has support for portlets and if Spring MVC portlet support is available
-	 * 
+	 *
 	 * @return <tt>true</tt> if a portlet environment is detected
 	 */
 	public static boolean isSpringPortletPresent() {
@@ -109,7 +127,7 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * Determine if the specified {@link FacesContext} is from a portlet request.
-	 * 
+	 *
 	 * @param context the faces context
 	 * @return <tt>true</tt> if the request is from a portlet
 	 */
@@ -120,7 +138,7 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * Determine if the specified {@link RequestContext} is from a portlet request.
-	 * 
+	 *
 	 * @param context the request context
 	 * @return <tt>true</tt> if the request is from a portlet
 	 */
@@ -131,7 +149,7 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * Determine if the specified context object is from portlet.
-	 * 
+	 *
 	 * @param nativeContext the native context
 	 * @return <tt>true</tt> if the context is from a portlet
 	 */
