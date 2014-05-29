@@ -61,7 +61,7 @@ import org.springframework.util.ObjectUtils;
  * implementation provides an alternative that accepts Portlet request and response structures and creates a
  * {@link PortletExternalContextImpl} in its constructor. The rest of the method implementations mimic the equivalent
  * methods in the default FacesContext implementation.
- * 
+ *
  * @author Rossen Stoyanchev
  * @author Phillip Webb
  * @since 2.2.0
@@ -119,8 +119,9 @@ public class PortletFacesContextImpl extends FacesContext {
 		application = JsfUtils.findFactory(ApplicationFactory.class).getApplication();
 		renderKitFactory = JsfUtils.findFactory(RenderKitFactory.class);
 		this.externalContext = new PortletExternalContextImpl(portletContext, portletRequest, portletResponse);
-		this.exceptionHandler = JsfUtils.findFactory(ExceptionHandlerFactory.class).getExceptionHandler();
 		FacesContext.setCurrentInstance(this);
+		// This depends on the current FacesContext instance
+		this.exceptionHandler = JsfUtils.findFactory(ExceptionHandlerFactory.class).getExceptionHandler();
 	}
 
 	public void release() {

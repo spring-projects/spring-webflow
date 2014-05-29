@@ -308,11 +308,18 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public String getRequestCharacterEncoding() {
-		return getActionRequest().getCharacterEncoding();
+		if (request instanceof ClientDataRequest) {
+			return ((ClientDataRequest) request).getCharacterEncoding();
+		}
+		else {
+			Assert.state(response instanceof MimeResponse);
+			return ((MimeResponse) response).getCharacterEncoding();
+		}
 	}
 
 	public void setRequestCharacterEncoding(String encoding) throws java.io.UnsupportedEncodingException {
-		getActionRequest().setCharacterEncoding(encoding);
+		Assert.isInstanceOf(ClientDataRequest.class, request);
+		((ClientDataRequest) request).setCharacterEncoding(encoding);
 	}
 
 	@Override
@@ -366,11 +373,6 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	public String getRequestPathInfo() {
-		return null;
-	}
-
-	@Override
 	public String getRequestServletPath() {
 		// Return "" instead of null in order to prevent NullPointerException in Apache MyFaces 1.2 when it tries to
 		// determine the servlet mappings in DefaultViewHandlerSupport.calculateFacesServletMapping(..).
@@ -379,17 +381,18 @@ public class PortletExternalContextImpl extends ExternalContext {
 		// Alternatively this method could be implemented to provide an actual servlet path derived from the
 		// viewId when that becomes available during rendering as the MyFaces Portlet Bridge does.
 		//
-		return (JsfRuntimeInformation.isMyFacesPresent()) ? "" : null;
+//		return JsfRuntimeInformation.isMyFacesPresent() ? "" : null;
+		return "";
+	}
+
+	@Override
+	public String getRequestPathInfo() {
+		return "";
 	}
 
 	public int getRequestContentLength() {
 		Assert.isInstanceOf(ClientDataRequest.class, request);
 		return ((ClientDataRequest) request).getContentLength();
-	}
-
-	private ActionRequest getActionRequest() {
-		Assert.isInstanceOf(ActionRequest.class, request);
-		return (ActionRequest) request;
 	}
 
 	@Override
