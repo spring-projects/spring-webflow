@@ -270,7 +270,7 @@ public class Jsf2FlowFacesContext extends FlowFacesContext {
 
 	}
 
-	private static class Jsf22FlowExternalContext extends FlowExternalContext {
+	private static class Jsf22FlowExternalContext extends Jsf2FlowExternalContext {
 
 		public Jsf22FlowExternalContext(ExternalContext delegate, RequestContext context) {
 			super(delegate, context);
