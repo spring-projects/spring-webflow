@@ -15,6 +15,9 @@
  */
 package org.springframework.faces.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,9 @@ import org.springframework.util.Assert;
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
+@SuppressWarnings("serial")
 public class SerializableListDataModel<T> extends ListDataModel<T> implements Serializable {
+
 
 	public SerializableListDataModel() {
 		this(new ArrayList<T>());
@@ -57,6 +62,16 @@ public class SerializableListDataModel<T> extends ListDataModel<T> implements Se
 		}
 		Assert.isInstanceOf(List.class, data, "The data object for " + getClass() + " must be a List");
 		super.setWrappedData(data);
+	}
+
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+		oos.writeObject(getWrappedData());
+		oos.write(getRowIndex());
+	}
+
+	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+		setWrappedData(ois.readObject());
+		setRowIndex(ois.read());
 	}
 
 	public String toString() {

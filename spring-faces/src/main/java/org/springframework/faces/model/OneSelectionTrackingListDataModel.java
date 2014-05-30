@@ -24,9 +24,10 @@ import org.springframework.util.Assert;
 
 /**
  * A {@link DataModel} implementation that tracks the currently selected row, allowing only one selection at a time.
- * 
+ *
  * @author Jeremy Grelle
  */
+@SuppressWarnings("serial")
 public class OneSelectionTrackingListDataModel<T> extends SerializableListDataModel<T> implements SelectionAware<T> {
 
 	/**
