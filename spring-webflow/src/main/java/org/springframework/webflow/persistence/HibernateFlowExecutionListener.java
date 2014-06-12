@@ -89,6 +89,8 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	private static final Method openSessionWithInterceptorMethod =
 			ReflectionUtils.findMethod(SessionFactory.class, "openSession", Interceptor.class);
 
+	private static final Method currentSessionMethod = ClassUtils.getMethod(SessionFactory.class, "getCurrentSession");
+
 
 	/**
 	 * The name of the attribute the flow {@link Session persistence context} is indexed under.
@@ -160,7 +162,12 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 			if (Boolean.TRUE.equals(commitStatus)) {
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 					protected void doInTransactionWithoutResult(TransactionStatus status) {
-						sessionFactory.getCurrentSession();
+						if (hibernate3Present) {
+							ReflectionUtils.invokeMethod(currentSessionMethod, sessionFactory);
+						}
+						else {
+							sessionFactory.getCurrentSession();
+						}
 						// nothing to do; a flush will happen on commit automatically as this is a read-write
 						// transaction
 					}
