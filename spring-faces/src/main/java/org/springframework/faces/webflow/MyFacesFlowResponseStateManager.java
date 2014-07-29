@@ -28,29 +28,31 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * A wrapper for {@link FlowResponseStateManager} used to support MyFaces partial state saving. MyFaces supports an
- * extension to the {@link ResponseStateManager} that reduces the amount of buffering required when writing a response.
- * Empty state is provided at the time that the {@link #writeState(FacesContext, Object) writeState} method is invoked
- * with an additional {@link #saveState(FacesContext, Object) saveState} method called later containing the real state
- * to save.
- * <p>
- * Since JSF 2.0, the strategy used by MyFaces to determine if a {@link MyfacesResponseStateManager} is available will
- * always succeed since it follows {@link FacesWrapper}s to find the root <tt>HtmlResponseStateManager</tt>
- * implementation. Since state management for web flow requests is handled by the {@link FlowResponseStateManager} this
- * assumption causes problems and results in empty state data being saved. This wrapper provides the additional hook
- * required to ensure that the {@link #saveState(FacesContext, Object) saveState} method also triggers web flow state
- * management.
+ * A wrapper for {@link FlowResponseStateManager} used to support MyFaces partial
+ * state saving. MyFaces supports an extension to the {@link ResponseStateManager}
+ * that reduces the amount of buffering required when writing a response. Empty
+ * state is provided at the time that the {@link #writeState(FacesContext, Object)
+ * writeState} method is invoked with an additional
+ * {@link #saveState(FacesContext, Object) saveState} method called later
+ * containing the real state to save.
  *
- * @see FlowResponseStateManager
- * @see FlowRenderKit
+ * <p>Since JSF 2.0, the strategy used by MyFaces to determine if a
+ * {@link MyfacesResponseStateManager} is available will always succeed since it
+ * follows {@link FacesWrapper}s to find the root <tt>HtmlResponseStateManager</tt>
+ * implementation. Since state management for web flow requests is handled by the
+ * {@link FlowResponseStateManager} this* assumption causes problems and results
+ * in empty state data being saved. This wrapper provides the additional hook
+ * required to ensure that the {@link #saveState(FacesContext, Object) saveState}
+ * method also triggers web flow state management.
  *
  * @author Phillip Webb
- *
  * @since 2.4
+ * @see FlowResponseStateManager
+ * @see FlowRenderKit
  */
 @SuppressWarnings("deprecation")
-public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager implements
-		FacesWrapper<ResponseStateManager> {
+public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager
+		implements FacesWrapper<ResponseStateManager> {
 
 	private final ResponseStateManager wrapped;
 
