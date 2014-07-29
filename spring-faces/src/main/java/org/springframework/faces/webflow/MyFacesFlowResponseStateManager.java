@@ -23,7 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.ResponseStateManager;
 
 import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
-import org.apache.myfaces.renderkit.StateCacheUtils;
+import org.apache.myfaces.application.viewstate.StateCacheUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 

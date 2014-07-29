@@ -282,7 +282,7 @@ project("spring-faces") {
 		provided("javax.portlet:portlet-api:2.0")
 		provided("com.sun.faces:jsf-api:2.2.4")
 		provided("com.sun.faces:jsf-impl:2.2.4")
-		provided("org.apache.myfaces.core:myfaces-impl:2.1.9")
+		provided("org.apache.myfaces.core:myfaces-impl:2.1.14")
 		optional("com.sun.facelets:jsf-facelets:1.1.14")
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
