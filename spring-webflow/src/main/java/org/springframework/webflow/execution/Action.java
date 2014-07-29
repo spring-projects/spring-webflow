@@ -69,8 +69,8 @@ public interface Action {
 	 * <ul>
 	 * <li>Attributes set in {@link RequestContext#getRequestScope() request scope} exist for the life of the currently
 	 * executing request only.
-	 * <li>Attributes set in {@link RequestContext#getFlashScope() flash scope} exist until the next external user event
-	 * is signaled. That time includes the current request plus any redirect or additional refreshes to the next view.
+	 * <li>Attributes set in {@link RequestContext#getFlashScope() flash scope} exist until after view rendering is
+	 * completed. That time includes the current request plus any redirect required for the view render to complete.
 	 * <li>Attributes set in {@link RequestContext#getFlowScope() flow scope} exist for the life of the flow session and
 	 * will be cleaned up automatically when the flow session ends.
 	 * <li>Attributes set in {@link RequestContext#getConversationScope() conversation scope} exist for the life of the
