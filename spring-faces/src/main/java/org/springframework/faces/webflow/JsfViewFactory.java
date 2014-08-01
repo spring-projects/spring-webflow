@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,22 +38,20 @@ import com.sun.faces.component.CompositeComponentStackManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
-import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
 /**
  * JSF-specific {@link ViewFactory} implementation.
- * <p>
- * This factory is responsible for performing the duties of the RESTORE_VIEW phase of the JSF lifecycle.
+ *
+ * <p>This factory is responsible for performing the duties of the RESTORE_VIEW
+ * phase of the JSF lifecycle.
  *
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
 public class JsfViewFactory implements ViewFactory {
-
-    private static String SKIP_ITERATION_HINT = "javax.faces.visit.SKIP_ITERATION";
 
 	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
 
@@ -72,12 +70,10 @@ public class JsfViewFactory implements ViewFactory {
 	 */
 	public View getView(RequestContext context) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		Assert.state(
-				facesContext != null,
-				"FacesContext has not been initialized within the current Web Flow request."
-						+ " Check the configuration for your <webflow:flow-executor>."
-						+ " For JSF you will need FlowFacesContextLifecycleListener configured as one of its flow execution listeners.");
-
+		if (facesContext == null) {
+			throw new IllegalStateException("FacesContext has not been initialized within " +
+					"the current Web Flow request. Has FlowFacesContextLifecycleListener been added?");
+		}
 		facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
 
 		// only publish a RESTORE_VIEW event if this is the first phase of the lifecycle
@@ -131,19 +127,21 @@ public class JsfViewFactory implements ViewFactory {
 		return viewRoot;
 	}
 
-	private UIViewRoot getViewStateViewRoot(RequestContext context, FacesContext facesContext, ViewHandler viewHandler,
-			String viewName) {
-		UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewName);
+	private UIViewRoot getViewStateViewRoot(RequestContext context, FacesContext facesContext,
+			ViewHandler handler, String viewName) {
+
+		UIViewRoot viewRoot = handler.restoreView(facesContext, viewName);
 		if (viewRoot != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("UIViewRoot restored for '" + viewName + "'");
 			}
 			processTree(facesContext, viewRoot);
-		} else {
+		}
+		else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating UIViewRoot from '" + viewName + "'");
 			}
-			viewRoot = viewHandler.createView(facesContext, viewName);
+			viewRoot = handler.createView(facesContext, viewName);
 		}
 		return viewRoot;
 	}
@@ -160,9 +158,6 @@ public class JsfViewFactory implements ViewFactory {
 
 	/**
 	 * Walk the component tree to perform any required per-component operations.
-	 *
-	 * @param context
-	 * @param component
 	 */
 	private void processTree(FacesContext context, UIComponent component) {
 
@@ -195,25 +190,28 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private void publishPostRestoreStateEvent(FacesContext facesContext) {
-		VisitHint visitHint = null;
+		EnumSet<VisitHint> visitHints = null;
 		try {
-			Enum.valueOf(VisitHint.class, "SKIP_ITERATION");
+			visitHints = EnumSet.of(VisitHint.SKIP_ITERATION);
 		}
 		catch (IllegalArgumentException ex) {
 			// JSF < 2.1
 		}
+		String attributeName = "javax.faces.visit.SKIP_ITERATION";
+		facesContext.getAttributes().put(attributeName, true);
 		try {
-            facesContext.getAttributes().put(SKIP_ITERATION_HINT, true);
-			VisitContext visitContext = (visitHint != null ?
-					VisitContext.createVisitContext(facesContext, null, EnumSet.of(VisitHint.SKIP_ITERATION)) :
+			VisitContext visitContext = (visitHints != null ?
+					VisitContext.createVisitContext(facesContext, null, visitHints) :
 					VisitContext.createVisitContext(facesContext));
-			facesContext.getViewRoot().visitTree(visitContext,
-					new PostRestoreStateEventVisitCallback());
-		} catch (AbortProcessingException e) {
-			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
-					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
-		} finally {
-            facesContext.getAttributes().remove(SKIP_ITERATION_HINT);
+			facesContext.getViewRoot().visitTree(visitContext, new PostRestoreStateEventVisitCallback());
+		}
+		catch (AbortProcessingException e) {
+			PhaseId phaseId = facesContext.getCurrentPhaseId();
+			ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(facesContext, e, null, phaseId);
+			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class, eventContext);
+		}
+		finally {
+			facesContext.getAttributes().remove(attributeName);
 		}
 	}
 
