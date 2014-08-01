@@ -34,6 +34,7 @@ import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 
+import com.sun.faces.component.CompositeComponentStackManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
@@ -164,18 +165,32 @@ public class JsfViewFactory implements ViewFactory {
 	 * @param component
 	 */
 	private void processTree(FacesContext context, UIComponent component) {
+
+		// For correct evaluation of #{cc.XXX} binding expressions
+		CompositeComponentStackManager stackManager = CompositeComponentStackManager.getManager(context);
+		boolean pushed = false;
+		if (UIComponent.isCompositeComponent(component)) {
+			pushed = stackManager.push(component, CompositeComponentStackManager.StackType.TreeCreation);
+		}
+
 		// Only resetting the valid flag in the RESTORE_VIEW phase,
 		// not during RENDER_RESPONSE
 		if (!context.getRenderResponse() && component instanceof EditableValueHolder) {
 			((EditableValueHolder) component).setValid(true);
 		}
+
 		ValueExpression binding = component.getValueExpression("binding");
 		if (binding != null) {
 			binding.setValue(context.getELContext(), component);
 		}
+
 		Iterator<UIComponent> it = component.getFacetsAndChildren();
 		while (it.hasNext()) {
 			processTree(context, it.next());
+		}
+
+		if (pushed) {
+			stackManager.pop(CompositeComponentStackManager.StackType.TreeCreation);
 		}
 	}
 
