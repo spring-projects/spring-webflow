@@ -44,7 +44,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 	}
 
 	private ResponseStateManager initResponseStateManager(ResponseStateManager wrapped) {
-		if (!JsfRuntimeInformation.isMyFacesPresent()) {
+		if (!JsfRuntimeInformation.isMyFacesPresent() && !JsfRuntimeInformation.isMyFacesInUse()) {
 			return new FlowResponseStateManager(wrapped);
 		}
 		Constructor<?> constructor;

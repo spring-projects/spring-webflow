@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.springframework.faces.webflow;
 
+import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 
 import org.springframework.util.Assert;
@@ -62,6 +63,8 @@ public class JsfRuntimeInformation {
 
 	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASS_LOADER);
 
+	private static final boolean myFacesInUse = checkMyFacesContextFactory();
+
 	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASS_LOADER);
 
 	private static boolean springPortletPresent = ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASS_LOADER);
@@ -77,6 +80,19 @@ public class JsfRuntimeInformation {
 			jsfVersion = JSF_12;
 		} else {
 			jsfVersion = JSF_11;
+		}
+
+	}
+
+	private static boolean checkMyFacesContextFactory() {
+		ClassLoader classLoader = JsfUtils.class.getClassLoader();
+		try {
+			Class<?> clazz = classLoader.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
+			Object factory = FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			return clazz.isInstance(factory);
+		}
+		catch (Throwable ex) {
+			return false;
 		}
 	}
 
@@ -114,6 +130,10 @@ public class JsfRuntimeInformation {
 
 	public static boolean isMyFacesPresent() {
 		return myFacesPresent;
+	}
+
+	public static boolean isMyFacesInUse() {
+		return myFacesInUse;
 	}
 
 	/**
