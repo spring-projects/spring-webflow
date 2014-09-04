@@ -20,7 +20,7 @@ Some key benefits of using Spring Web Flow:
 
 # Documentation
 
-See the current [Javadoc](http://static.springsource.org/spring-webflow/docs/current/javadoc-api/) and [Reference](http://static.springsource.org/spring-webflow/docs/current/spring-webflow-reference/) docs.
+See the current [Javadoc](http://docs.spring.io/spring-webflow/docs/current/api/) and [Reference](http://docs.spring.io/spring-webflow/docs/current/reference/html/) docs.
 
 # Samples
 
