@@ -23,7 +23,7 @@ public class JsfAjaxHandlerTests extends TestCase {
 
 	public void testSendAjaxRedirect() throws Exception {
 		this.ajaxHandler.sendAjaxRedirectInternal("/target", this.jsfMock.request(), this.jsfMock.response(), false);
-		assertTrue(this.jsfMock.contentAsString().matches("<partial-response.*><redirect url=\"/target\"/></partial-response>"));
+		assertTrue(this.jsfMock.contentAsString().matches("<\\?xml version='1.0' encoding='utf-8'\\?>\n<partial-response.*><redirect url=\"/target\"/></partial-response>"));
 		assertEquals("application/xml", this.jsfMock.response().getContentType());
 	}
 
