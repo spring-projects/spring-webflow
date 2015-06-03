@@ -3,9 +3,9 @@ buildscript {
 		maven { url "http://repo.spring.io/plugins-release" }
 	}
 	dependencies {
-		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.5")
+		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
 		classpath("org.springframework.build.gradle:spring-io-plugin:0.0.3.RELEASE")
-		classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.8")
+		classpath("io.spring.gradle:docbook-reference-plugin:0.3.1")
 		classpath("me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1")
 	}
 }
@@ -21,7 +21,6 @@ configure(allprojects) {
 }
 
 configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
-
 	apply plugin: "merge"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
@@ -217,6 +216,7 @@ project("spring-js-tiles3") {
 		optional("org.apache.tiles:tiles-extras:3.0.1") {
 			exclude group: "org.slf4j", module: "jcl-over-slf4j"
 			exclude group: "org.springframework", module: "spring-web"
+			exclude group: "ognl", module: "ognl"
 		}
 		testCompile("javax.servlet:jstl:1.2")
 		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
