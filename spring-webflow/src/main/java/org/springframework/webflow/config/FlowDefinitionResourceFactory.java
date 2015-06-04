@@ -25,6 +25,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.VfsResource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -203,9 +204,9 @@ public class FlowDefinitionResourceFactory {
 			filePath = ((ClassPathResource) flowResource).getPath();
 		} else if (flowResource instanceof FileSystemResource) {
 			filePath = truncateFilePath(((FileSystemResource) flowResource).getPath(), basePath);
-		} else if (flowResource instanceof UrlResource) {
+		} else if (flowResource instanceof UrlResource || flowResource instanceof VfsResource) {
 			try {
-				filePath = truncateFilePath(((UrlResource) flowResource).getURL().getPath(), basePath);
+				filePath = truncateFilePath(flowResource.getURL().getPath(), basePath);
 			} catch (IOException e) {
 				throw new IllegalArgumentException("Unable to obtain path: " + e.getMessage());
 			}
