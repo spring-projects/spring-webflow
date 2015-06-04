@@ -4,8 +4,8 @@ buildscript {
 		maven { url "http://repo.springsource.org/plugins-snapshot" }
 	}
 	dependencies {
-		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.5")
-		classpath("org.springframework.build.gradle:docbook-reference-plugin:0.2.8")
+		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+		classpath("io.spring.gradle:docbook-reference-plugin:0.3.1")
 		classpath("me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1")
 	}
 }
