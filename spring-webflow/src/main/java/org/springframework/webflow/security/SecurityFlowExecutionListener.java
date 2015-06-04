@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 package org.springframework.webflow.security;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -29,6 +31,7 @@ import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -43,6 +46,8 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter {
 
+	private static final boolean SPRING_SECURITY_3_PRESENT = ClassUtils.hasConstructor(AffirmativeBased.class);
+
 	private AccessDecisionManager accessDecisionManager;
 
 	/**
@@ -50,7 +55,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * @return the decision manager
 	 */
 	public AccessDecisionManager getAccessDecisionManager() {
-		return accessDecisionManager;
+		return this.accessDecisionManager;
 	}
 
 	/**
@@ -95,18 +100,43 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 		if (accessDecisionManager != null) {
 			accessDecisionManager.decide(authentication, object, configAttributes);
 		} else {
-			AbstractAccessDecisionManager abstractAccessDecisionManager;
-			List<AccessDecisionVoter> voters = new ArrayList<AccessDecisionVoter>();
-			voters.add(new RoleVoter());
-			if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
-				abstractAccessDecisionManager = new AffirmativeBased();
-			} else if (rule.getComparisonType() == SecurityRule.COMPARISON_ALL) {
-				abstractAccessDecisionManager = new UnanimousBased();
-			} else {
-				throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());
-			}
-			abstractAccessDecisionManager.setDecisionVoters(voters);
-			abstractAccessDecisionManager.decide(authentication, object, configAttributes);
+			AccessDecisionManager manager = (SPRING_SECURITY_3_PRESENT ?
+					createManagerWithSpringSecurity3(rule) : createManager(rule));
+			manager.decide(authentication, object, configAttributes);
+		}
+	}
+
+	private AbstractAccessDecisionManager createManager(SecurityRule rule) {
+		List<AccessDecisionVoter<? extends Object>> voters = new ArrayList<AccessDecisionVoter<? extends Object>>();
+		voters.add(new RoleVoter());
+		if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
+			return new AffirmativeBased(voters);
+		} else if (rule.getComparisonType() == SecurityRule.COMPARISON_ALL) {
+			return new UnanimousBased(voters);
+		} else {
+			throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());
+		}
+	}
+
+	private AbstractAccessDecisionManager createManagerWithSpringSecurity3(SecurityRule rule) {
+		List<AccessDecisionVoter> voters = new ArrayList<AccessDecisionVoter>();
+		voters.add(new RoleVoter());
+		Class<?> managerType;
+		if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
+			managerType = AffirmativeBased.class;
+		} else if (rule.getComparisonType() == SecurityRule.COMPARISON_ALL) {
+			managerType = UnanimousBased.class;
+		} else {
+			throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());
+		}
+		try {
+			Constructor<?> constructor = managerType.getConstructor();
+			AbstractAccessDecisionManager manager = (AbstractAccessDecisionManager) constructor.newInstance();
+			new DirectFieldAccessor(manager).setPropertyValue("decisionVoters", voters);
+			return manager;
+		}
+		catch (Throwable ex) {
+			throw new IllegalStateException("Failed to initialize AccessDecisionManager", ex);
 		}
 	}
 

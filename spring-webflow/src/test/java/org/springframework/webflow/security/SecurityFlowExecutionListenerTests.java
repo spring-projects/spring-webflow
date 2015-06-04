@@ -11,7 +11,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -156,8 +156,8 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	}
 
 	private Authentication getAuthentication() {
-		List<GrantedAuthority> authorities = Arrays.<GrantedAuthority> asList(new GrantedAuthorityImpl("ROLE_1"),
-				new GrantedAuthorityImpl("ROLE_2"), new GrantedAuthorityImpl("ROLE_3"));
+		List<GrantedAuthority> authorities = Arrays.<GrantedAuthority> asList(new SimpleGrantedAuthority("ROLE_1"),
+				new SimpleGrantedAuthority("ROLE_2"), new SimpleGrantedAuthority("ROLE_3"));
 		return new UsernamePasswordAuthenticationToken("test", "", authorities);
 	}
 }

@@ -71,8 +71,8 @@ configure(subprojects.findAll {
 	}
 
 	subproject.ext {
-	  springVersion = "4.0.6.RELEASE"
-	  springSecurityVersion = "3.2.4.RELEASE"
+	  springVersion = "4.1.6.RELEASE"
+	  springSecurityVersion = "4.0.1.RELEASE"
 	  slf4jVersion = "1.7.5"
 	  log4jVersion = "1.2.17"
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2013 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.springframework.security.taglibs.authz.AbstractAuthorizeTag;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * A concrete implementation of {@link AbstractAuthorizeTag} for use with standard Facelets rendering technology.
@@ -76,7 +78,53 @@ public class FaceletsAuthorizeTag extends AbstractAuthorizeTag {
 		return (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 	}
 
-	/*---- Pirvate helper methods ----*/
+	void setIfAllGranted(String ifAllGranted) {
+		String[] roles = StringUtils.tokenizeToStringArray(ifAllGranted, ",");
+		if (!ObjectUtils.isEmpty(roles)) {
+			String expression = toHasRoleExpression(roles);
+			setAccess(getAccess() != null ? getAccess() + " and " + expression: expression);
+		}
+	}
+
+	void setIfAnyGranted(String ifAnyGranted) {
+		String[] roles = StringUtils.tokenizeToStringArray(ifAnyGranted, ",");
+		if (!ObjectUtils.isEmpty(roles)) {
+			String expression = toHasAnyRoleExpression(roles, false);
+			setAccess(getAccess() != null ? getAccess() + " and " + expression: expression);
+		}
+	}
+
+	void setIfNotGranted(String ifNotGranted) {
+		String[] roles = StringUtils.tokenizeToStringArray(ifNotGranted, ",");
+		if (!ObjectUtils.isEmpty(roles)) {
+			String expression = toHasAnyRoleExpression(roles, true);
+			setAccess(getAccess() != null ? getAccess() + " and " + expression: expression);
+		}
+	}
+
+	private static String toHasRoleExpression(String[] roles) {
+		StringBuilder expression = new StringBuilder();
+		boolean insertSeparator = false;
+		for (String role : roles) {
+			expression.append(insertSeparator ? " and " : "");
+			expression.append("hasRole('").append(role).append("')");
+			insertSeparator = true;
+		}
+		return expression.toString();
+	}
+
+	private static String toHasAnyRoleExpression(String[] roles, boolean negate) {
+		StringBuilder expression = new StringBuilder();
+		expression.append(negate ? "!" : "");
+		expression.append("hasAnyRole(");
+		boolean insertSeparator = false;
+		for (String role : roles) {
+			expression.append(insertSeparator ? "," : "");
+			expression.append("'").append(role).append("'");
+			insertSeparator = true;
+		}
+		return expression.append(")").toString();
+	}
 
 	private String getAttributeValue(FaceletContext faceletContext, TagAttribute tagAttribute, boolean evaluate) {
 		String value = null;

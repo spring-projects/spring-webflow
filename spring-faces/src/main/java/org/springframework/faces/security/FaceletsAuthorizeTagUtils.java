@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public abstract class FaceletsAuthorizeTagUtils {
 	public static boolean areAllGranted(String authorities) throws IOException {
 		FaceletsAuthorizeTag authorizeTag = new FaceletsAuthorizeTag();
 		authorizeTag.setIfAllGranted(authorities);
-		return authorizeTag.authorizeUsingGrantedAuthorities();
+		return authorizeTag.authorize();
 	}
 
 	/**
@@ -45,7 +45,7 @@ public abstract class FaceletsAuthorizeTagUtils {
 	public static boolean areAnyGranted(String authorities) throws IOException {
 		FaceletsAuthorizeTag authorizeTag = new FaceletsAuthorizeTag();
 		authorizeTag.setIfAnyGranted(authorities);
-		return authorizeTag.authorizeUsingGrantedAuthorities();
+		return authorizeTag.authorize();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public abstract class FaceletsAuthorizeTagUtils {
 	public static boolean areNotGranted(String authorities) throws IOException {
 		FaceletsAuthorizeTag authorizeTag = new FaceletsAuthorizeTag();
 		authorizeTag.setIfNotGranted(authorities);
-		return authorizeTag.authorizeUsingGrantedAuthorities();
+		return authorizeTag.authorize();
 	}
 
 	/**
