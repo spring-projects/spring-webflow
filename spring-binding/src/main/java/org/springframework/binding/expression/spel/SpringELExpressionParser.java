@@ -43,11 +43,11 @@ import org.springframework.util.Assert;
  */
 public class SpringELExpressionParser implements ExpressionParser {
 
-	private SpelExpressionParser expressionParser;
+	private final SpelExpressionParser expressionParser;
 
-	private ConversionService conversionService;
+	private final ConversionService conversionService;
 
-	private List<PropertyAccessor> propertyAccessors = new ArrayList<PropertyAccessor>();
+	private final List<PropertyAccessor> propertyAccessors = new ArrayList<PropertyAccessor>();
 
 	public SpringELExpressionParser(SpelExpressionParser expressionParser) {
 		this(expressionParser, new DefaultConversionService());

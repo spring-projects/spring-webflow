@@ -41,15 +41,15 @@ import org.springframework.util.Assert;
  */
 public class SpringELExpression implements Expression {
 
-	private org.springframework.expression.Expression expression;
+	private final org.springframework.expression.Expression expression;
 
-	private Class<?> expectedType;
+	private final Class<?> expectedType;
 
-	private Map<String, Expression> expressionVariables;
+	private final Map<String, Expression> expressionVariables;
 
-	private ConversionService conversionService;
+	private final ConversionService conversionService;
 
-	private List<PropertyAccessor> propertyAccessors;
+	private final List<PropertyAccessor> propertyAccessors;
 
 	/**
 	 * Constructor for SpringELExpression.
