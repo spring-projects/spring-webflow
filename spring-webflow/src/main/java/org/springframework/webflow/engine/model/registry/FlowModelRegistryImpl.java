@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,9 @@ import org.springframework.webflow.engine.model.FlowModel;
  * 
  * @author Keith Donald
  * @author Scott Andrews
+ * @author Rossen Stoyanchev
  */
-public class FlowModelRegistryImpl implements FlowModelRegistry {
+public class FlowModelRegistryImpl implements FlowModelRegistry, FlowModelHolderLocator {
 
 	/**
 	 * The map of loaded Flow models maintained in this registry.
@@ -48,7 +49,7 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 
 	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException {
 		try {
-			return getFlowModelHolder(id).getFlowModel();
+			return getLocalFlowModelHolder(id).getFlowModel();
 		} catch (NoSuchFlowModelException e) {
 			if (parent != null) {
 				// try parent
@@ -69,12 +70,25 @@ public class FlowModelRegistryImpl implements FlowModelRegistry {
 		flowModels.put(id, modelHolder);
 	}
 
+	// implementing FlowModelHolderLocator
+
+	public FlowModelHolder getFlowModelHolder(String id) throws NoSuchFlowModelException {
+		try {
+			return getLocalFlowModelHolder(id);
+		} catch (NoSuchFlowModelException e) {
+			if (parent != null && parent instanceof FlowModelHolderLocator) {
+				return ((FlowModelHolderLocator) parent).getFlowModelHolder(id);
+			}
+			throw e;
+		}
+	}
+
 	// internal helpers
 
 	/**
 	 * Returns the identified flow model holder. Throws an exception if it cannot be found.
 	 */
-	private FlowModelHolder getFlowModelHolder(String id) throws NoSuchFlowModelException {
+	private FlowModelHolder getLocalFlowModelHolder(String id) throws NoSuchFlowModelException {
 		FlowModelHolder holder = flowModels.get(id);
 		if (holder == null) {
 			throw new NoSuchFlowModelException(id);

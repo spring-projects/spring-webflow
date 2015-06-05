@@ -1,0 +1,36 @@
+/*
+ * Copyright 2004-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springframework.webflow.engine.model.registry;
+
+/**
+ * A companion to {@link FlowModelLocator} for access to the FlowModelHolder
+ * wrapping the FlowModel.
+ *
+ * @author Rossen Stoyanchev
+ * @since 2.4.2
+ */
+public interface FlowModelHolderLocator {
+
+	/**
+	 * Lookup the FlowModelHolder with the specified id.
+	 * @param id the flow model identifier
+	 * @return the flow model holder
+	 * @throws NoSuchFlowModelException when the flow model with the specified
+	 * id does not exist
+	 */
+	public FlowModelHolder getFlowModelHolder(String id) throws NoSuchFlowModelException;
+
+}

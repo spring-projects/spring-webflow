@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.springframework.webflow.engine.model.builder.xml;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +53,8 @@ import org.springframework.webflow.engine.model.VarModel;
 import org.springframework.webflow.engine.model.ViewStateModel;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
+import org.springframework.webflow.engine.model.registry.FlowModelHolder;
+import org.springframework.webflow.engine.model.registry.FlowModelHolderLocator;
 import org.springframework.webflow.engine.model.registry.FlowModelLocator;
 import org.springframework.webflow.engine.model.registry.NoSuchFlowModelException;
 import org.w3c.dom.Document;
@@ -63,6 +66,7 @@ import org.xml.sax.SAXException;
  *
  * @author Keith Donald
  * @author Scott Andrews
+ * @author Rossen Stoyanchev
  */
 public class XmlFlowModelBuilder implements FlowModelBuilder {
 
@@ -77,6 +81,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private long lastModifiedTimestamp;
 
 	private FlowModel flowModel;
+
+	private final List<FlowModelHolder> parentHolders = new ArrayList<FlowModelHolder>(4);
 
 	/**
 	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
@@ -157,6 +163,11 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			if (lastModified > lastModifiedTimestamp) {
 				return true;
 			} else {
+				for (FlowModelHolder parent : this.parentHolders) {
+					if (parent.hasFlowModelChanged()) {
+						return true;
+					}
+				}
 				return false;
 			}
 		} catch (IOException e) {
@@ -634,6 +645,14 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 					} catch (NoSuchFlowModelException e) {
 						throw new FlowModelBuilderException("Unable to find flow '" + parentFlowId
 								+ "' to inherit from", e);
+					}
+					try {
+						if (this.modelLocator instanceof FlowModelHolderLocator) {
+							FlowModelHolderLocator locator = (FlowModelHolderLocator) this.modelLocator;
+							this.parentHolders.add(locator.getFlowModelHolder(parentFlowId));
+						}
+					} catch (NoSuchFlowModelException e) {
+						// Ignore
 					}
 				}
 			}
