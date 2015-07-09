@@ -53,10 +53,10 @@ public class HibernatePersistenceContextPropagationTests extends AbstractPersist
 		}
 		if (!isCommited) {
 			assertEquals("Nothing should be committed yet", 1,
-					getJdbcTemplate().queryForInt("select count(*) from T_BEAN"));
+					(int)getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class));
 		} else {
 			assertEquals("All rows should be committed", rowCount,
-					getJdbcTemplate().queryForInt("select count(*) from T_BEAN"));
+					(int)getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class));
 		}
 	}
 
