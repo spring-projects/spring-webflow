@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,8 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
-
 import java.util.EnumSet;
 import java.util.Iterator;
-
 import javax.el.ValueExpression;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.EditableValueHolder;
@@ -37,10 +34,13 @@ import javax.faces.lifecycle.Lifecycle;
 import com.sun.faces.component.CompositeComponentStackManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.binding.expression.Expression;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
+
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 /**
  * JSF-specific {@link ViewFactory} implementation.
@@ -161,11 +161,9 @@ public class JsfViewFactory implements ViewFactory {
 	 */
 	private void processTree(FacesContext context, UIComponent component) {
 
-		// For correct evaluation of #{cc.XXX} binding expressions
-		CompositeComponentStackManager stackManager = CompositeComponentStackManager.getManager(context);
-		boolean pushed = false;
-		if (UIComponent.isCompositeComponent(component)) {
-			pushed = stackManager.push(component, CompositeComponentStackManager.StackType.TreeCreation);
+		Object mojarraTreeHandler = null;
+		if (!JsfRuntimeInformation.isMyFacesInUse()) {
+			mojarraTreeHandler = new MojarraProcessTreeHandler().handleBefore(context, component);
 		}
 
 		// Only resetting the valid flag in the RESTORE_VIEW phase,
@@ -184,8 +182,8 @@ public class JsfViewFactory implements ViewFactory {
 			processTree(context, it.next());
 		}
 
-		if (pushed) {
-			stackManager.pop(CompositeComponentStackManager.StackType.TreeCreation);
+		if (mojarraTreeHandler != null) {
+			((MojarraProcessTreeHandler) mojarraTreeHandler).handleAfter();
 		}
 	}
 
@@ -215,4 +213,26 @@ public class JsfViewFactory implements ViewFactory {
 		}
 	}
 
+	private static class MojarraProcessTreeHandler {
+
+		private CompositeComponentStackManager stackManager;
+
+		private boolean pushed;
+
+
+		public MojarraProcessTreeHandler handleBefore(FacesContext context, UIComponent component) {
+			// For correct evaluation of #{cc.XXX} binding expressions
+			this.stackManager = CompositeComponentStackManager.getManager(context);
+			if (UIComponent.isCompositeComponent(component)) {
+				this.pushed = stackManager.push(component, CompositeComponentStackManager.StackType.TreeCreation);
+			}
+			return this;
+		}
+
+		public void handleAfter() {
+			if (this.pushed) {
+				this.stackManager.pop(CompositeComponentStackManager.StackType.TreeCreation);
+			}
+		}
+	}
 }
