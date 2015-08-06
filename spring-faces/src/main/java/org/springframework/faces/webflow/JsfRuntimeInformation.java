@@ -16,6 +16,7 @@
 
 package org.springframework.faces.webflow;
 
+import javax.faces.FacesWrapper;
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 
@@ -25,7 +26,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * Helper class to provide information about the JSF runtime environment such as JSF version and implementation.
+ * Helper class to provide information about the JSF runtime environment such as
+ * JSF version and implementation.
  *
  * @author Rossen Stoyanchev
  * @author Phillip Webb
@@ -89,7 +91,10 @@ public class JsfRuntimeInformation {
 		try {
 			Class<?> clazz = classLoader.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
 			Object factory = FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			return clazz.isInstance(factory);
+			while (!clazz.isInstance(factory) && factory instanceof FacesWrapper) {
+				factory = ((FacesWrapper) factory).getWrapped();
+			}
+			return (factory != null && clazz.isInstance(factory));
 		}
 		catch (Throwable ex) {
 			return false;
