@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.springframework.faces.webflow;
 
 import java.util.Locale;
-
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
 import javax.faces.component.UIViewRoot;
@@ -118,6 +117,9 @@ public class FlowViewHandler extends ViewHandlerWrapper {
 		RequestContext context = RequestContextHolder.getRequestContext();
 		ViewRootHolder holder = (ViewRootHolder) context.getFlashScope().get(View.USER_EVENT_STATE_ATTRIBUTE);
 		if (holder != null && holder.getViewRoot() != null && holder.getViewRoot().getViewId().equals(resourcePath)) {
+			if (facesContext instanceof FlowFacesContext) {
+				((FlowFacesContext) facesContext).setViewRootRestoredFromFlashScope();
+			}
 			return holder.getViewRoot();
 		} else {
 			return super.restoreView(facesContext, resourcePath);

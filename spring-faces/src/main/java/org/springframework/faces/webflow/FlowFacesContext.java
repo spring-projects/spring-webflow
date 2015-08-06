@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -91,6 +90,9 @@ public class FlowFacesContext extends FacesContextWrapper {
 	private final ExternalContext externalContext;
 
 	private final PartialViewContext partialViewContext;
+
+	private boolean viewRootHolderFromFlashScope;
+
 
 	public FlowFacesContext(RequestContext context, FacesContext wrapped) {
 		this.context = context;
@@ -257,6 +259,23 @@ public class FlowFacesContext extends FacesContextWrapper {
 			severity = FacesMessage.SEVERITY_INFO;
 		}
 		return new FacesMessage(severity, message.getText(), null);
+	}
+
+	/**
+	 * This flag is set internally when the UIViewRoot is restored following a
+	 * redirect and prior to rendering and is then checked whether to return
+	 * {@code true} from {@link #isPostback()} so that JSF (2.2.7+) won't think
+	 * it's building a new component tree.
+	 * @see com.sun.faces.facelets.tag.jsf.ComponentSupport#isBuildingNewComponentTree
+	 * @since 2.4.2
+	 */
+	void setViewRootRestoredFromFlashScope() {
+		this.viewRootHolderFromFlashScope = true;
+	}
+
+	@Override
+	public boolean isPostback() {
+		return (this.viewRootHolderFromFlashScope || super.isPostback());
 	}
 
 	public static FlowFacesContext newInstance(RequestContext context, Lifecycle lifecycle) {
