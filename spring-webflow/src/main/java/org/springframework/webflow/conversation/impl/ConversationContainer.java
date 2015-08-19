@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,7 @@ import org.springframework.webflow.conversation.NoSuchConversationException;
  * {@link SessionBindingConversationManager}.
  *
  * @author Erwin Vervaet
+ * @author Rossen Stoyanchev
  */
 public class ConversationContainer implements Serializable {
 
@@ -63,7 +65,7 @@ public class ConversationContainer implements Serializable {
 	public ConversationContainer(int maxConversations, String sessionKey) {
 		this.maxConversations = maxConversations;
 		this.sessionKey = sessionKey;
-		this.conversations = new ArrayList<ContainedConversation>();
+		this.conversations = new CopyOnWriteArrayList<ContainedConversation>();
 	}
 
 	/**
@@ -135,7 +137,7 @@ public class ConversationContainer implements Serializable {
 		for (Iterator<ContainedConversation> it = conversations.iterator(); it.hasNext();) {
 			ContainedConversation conversation = it.next();
 			if (conversation.getId().equals(id)) {
-				it.remove();
+				conversations.remove(conversation);
 				break;
 			}
 		}
