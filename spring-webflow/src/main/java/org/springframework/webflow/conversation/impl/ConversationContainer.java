@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,19 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.conversation.NoSuchConversationException;
 
 /**
- * Container for conversations that is stored in the session. When the session expires this container will go with it,
- * implicitly expiring all contained conversations.
- * <p>
- * This is an internal helper class of the {@link SessionBindingConversationManager}.
+ * Container for conversations that is stored in the session. When the session
+ * expires this container will go with it, implicitly expiring all contained
+ * conversations.
+ *
+ * <p>This is an internal helper class of the
+ * {@link SessionBindingConversationManager}.
  * 
  * @author Erwin Vervaet
  */
@@ -39,29 +42,22 @@ public class ConversationContainer implements Serializable {
 
 	private static final Log logger = LogFactory.getLog(ConversationContainer.class);
 
-	/**
-	 * Maximum number of conversations in this container. -1 for unlimited.
-	 */
+	/** Maximum number of conversations in this container. -1 for unlimited. */
 	private int maxConversations;
 
-	/**
-	 * The key of this conversation container in the session.
-	 */
+	/** The key of this conversation container in the session. */
 	private String sessionKey;
 
-	/**
-	 * The contained conversations. A list of {@link ContainedConversation} objects.
-	 */
+	/** The contained conversations. A list of {@link ContainedConversation} objects. */
 	private List<ContainedConversation> conversations;
 
-	/**
-	 * The sequence for unique conversation identifiers within this container.
-	 */
+	/** The sequence for unique conversation identifiers within this container. */
 	private int conversationIdSequence;
+
 
 	/**
 	 * Create a new conversation container.
-	 * @param maxConversations the maximum number of allowed concurrent conversations, -1 for unlimited
+	 * @param maxConversations the max number of allowed concurrent conversations, -1 for unlimited
 	 * @param sessionKey the key of this conversation container in the session
 	 */
 	public ConversationContainer(int maxConversations, String sessionKey) {
@@ -71,14 +67,16 @@ public class ConversationContainer implements Serializable {
 	}
 
 	/**
-	 * Returns the key of this conversation container in the session. For package level use only.
+	 * Return the key of this conversation container in the session.
+	 * For package level use only.
 	 */
 	String getSessionKey() {
 		return sessionKey;
 	}
 
 	/**
-	 * Returns the current size of the conversation container: the number of conversations contained within it.
+	 * Return the current size of the conversation container:
+	 * the number of conversations contained within it.
 	 */
 	public int size() {
 		return conversations.size();
@@ -98,17 +96,17 @@ public class ConversationContainer implements Serializable {
 		conversations.add(conversation);
 		if (maxExceeded()) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("The maximum number of flow executions has been exceeded for the current user. Removing the oldest conversation with id: "
-						+ ((Conversation) conversations.get(0)).getId());
+				logger.debug("The max number of flow executions has been exceeded for the current user. " +
+						"Removing the oldest conversation with id: " + conversations.get(0).getId());
 			}
 			// end oldest conversation
-			((Conversation) conversations.get(0)).end();
+			conversations.get(0).end();
 		}
 		return conversation;
 	}
 
 	protected ConversationId nextId() {
-		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
+		return new SimpleConversationId(++conversationIdSequence);
 	}
 
 	/**
