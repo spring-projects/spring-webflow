@@ -35,7 +35,7 @@ import org.springframework.webflow.conversation.NoSuchConversationException;
  *
  * <p>This is an internal helper class of the
  * {@link SessionBindingConversationManager}.
- * 
+ *
  * @author Erwin Vervaet
  */
 public class ConversationContainer implements Serializable {
