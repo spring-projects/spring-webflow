@@ -26,6 +26,10 @@ See the current [Javadoc](http://docs.spring.io/spring-webflow/docs/current/api/
 
 Samples can be found in the spring-webflow-samples [Github repository](https://github.com/SpringSource/spring-webflow-samples).
 
+## Code of Conduct
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
 # Downloading artifacts
 
 Instructions on [downloading Spring Web Flow](https://github.com/SpringSource/spring-webflow/wiki/Downloading-Spring-Web-Flow-Artifacts) artifacts via Maven and other build systems are available via the project wiki.
