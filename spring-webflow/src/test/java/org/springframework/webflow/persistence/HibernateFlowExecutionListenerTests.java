@@ -17,26 +17,21 @@ package org.springframework.webflow.persistence;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.orm.hibernate4.HibernateCallback;
-import org.springframework.orm.hibernate4.HibernateTemplate;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;
+import org.springframework.webflow.persistence.HibernateHandler.SessionCallback;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for {@link HibernateFlowExecutionListener}
@@ -45,11 +40,9 @@ import org.springframework.webflow.test.MockRequestContext;
  */
 public class HibernateFlowExecutionListenerTests extends TestCase {
 
-	private SessionFactory sessionFactory;
+	private HibernateHandler hibernate;
 
 	private JdbcTemplate jdbcTemplate;
-
-	private HibernateTemplate hibernateTemplate;
 
 	private HibernateFlowExecutionListener hibernateListener;
 
@@ -57,11 +50,8 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		DataSource dataSource = getDataSource();
 		populateDataBase(dataSource);
 		jdbcTemplate = new JdbcTemplate(dataSource);
-		sessionFactory = getSessionFactory(dataSource);
-		hibernateTemplate = new HibernateTemplate(sessionFactory);
-		hibernateTemplate.setCheckWriteOperations(false);
-		HibernateTransactionManager tm = new HibernateTransactionManager(sessionFactory);
-		hibernateListener = new HibernateFlowExecutionListener(sessionFactory, tm);
+		hibernate = HibernateHandlerFactory.create(dataSource);
+		hibernateListener = new HibernateFlowExecutionListener(hibernate.getSessionFactory(), hibernate.getTransactionManager());
 	}
 
 	public void testSameSession() {
@@ -82,10 +72,10 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener.resuming(context);
 		assertSessionBound();
 
-		hibernateTemplate.executeWithNativeSession(new HibernateCallback<Object>() {
-			public Object doInHibernate(Session session) {
+		hibernate.templateExecuteWithNativeSession(new SessionCallback() {			
+			@Override
+			public void doWithSession(Session session) {
 				assertSame("Should have been original instance", hibSession, session);
-				return null;
 			}
 		});
 		hibernateListener.paused(context);
@@ -109,7 +99,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean);
+		hibernate.templateSave(bean);
 		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
@@ -132,14 +122,14 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean1 = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean1);
+		hibernate.templateSave(bean1);
 		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
 		hibernateListener.paused(context);
 		assertSessionNotBound();
 
 		hibernateListener.resuming(context);
 		TestBean bean2 = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean2);
+		hibernate.templateSave(bean2);
 		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
 		assertSessionBound();
 
@@ -164,7 +154,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean);
+		hibernate.templateSave(bean);
 		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
@@ -205,7 +195,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionBound();
 
 		TestBean bean1 = new TestBean("Keith Donald");
-		hibernateTemplate.save(bean1);
+		hibernate.templateSave(bean1);
 		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
 		hibernateListener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
 		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
@@ -231,7 +221,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		context.setActiveSession(flowSession);
 		assertSessionBound();
 
-		TestBean bean = hibernateTemplate.get(TestBean.class, Long.valueOf(0));
+		TestBean bean = hibernate.templateGet(TestBean.class, Long.valueOf(0));
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
 		hibernateListener.paused(context);
 		assertFalse("addresses should not be initialized", Hibernate.isInitialized(bean.getAddresses()));
@@ -250,29 +240,19 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 
 	private void populateDataBase(DataSource dataSource) throws Exception {
 		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-		databasePopulator.addScript(new ClassPathResource("test-data.sql", this.getClass()));
+		databasePopulator.addScript(new ClassPathResource("test-data.sql", getClass()));
 		DataSourceInitializer initializer = new DataSourceInitializer();
 		initializer.setDataSource(dataSource);
 		initializer.setDatabasePopulator(databasePopulator);
 		initializer.afterPropertiesSet();
 	}
 
-	private SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-		factory.setDataSource(dataSource);
-		factory.setMappingLocations(new Resource[] {
-				new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),
-				new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
-		factory.afterPropertiesSet();
-		return factory.getObject();
-	}
-
 	private void assertSessionNotBound() {
-		assertNull(TransactionSynchronizationManager.getResource(sessionFactory));
+		assertNull(TransactionSynchronizationManager.getResource(hibernate.getSessionFactory()));
 	}
 
 	private void assertSessionBound() {
-		assertNotNull(TransactionSynchronizationManager.getResource(sessionFactory));
+		assertNotNull(TransactionSynchronizationManager.getResource(hibernate.getSessionFactory()));
 	}
 
 }
