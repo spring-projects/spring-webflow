@@ -83,6 +83,9 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	private static final boolean hibernate3Present = ClassUtils.isPresent("org.hibernate.connection.ConnectionProvider",
 			HibernateFlowExecutionListener.class.getClassLoader());
 
+	private static final boolean hibernate5Present = ClassUtils.isPresent("org.hibernate.boot.model.naming.PhysicalNamingStrategy",
+			HibernateFlowExecutionListener.class.getClassLoader());
+
 	private static final Method openSessionMethod =
 			ReflectionUtils.findMethod(SessionFactory.class, "openSession");
 
@@ -90,6 +93,8 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 			ReflectionUtils.findMethod(SessionFactory.class, "openSession", Interceptor.class);
 
 	private static final Method currentSessionMethod = ClassUtils.getMethod(SessionFactory.class, "getCurrentSession");
+
+	private static final Method closeSessionMethod = ReflectionUtils.findMethod(Session.class, "close");
 
 
 	/**
@@ -174,7 +179,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 				});
 			}
 			unbind(hibernateSession);
-			hibernateSession.close();
+			ReflectionUtils.invokeMethod(closeSessionMethod, hibernateSession);
 		}
 	}
 
@@ -245,8 +250,16 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	private void bind(Session session) {
-		Object sessionHolder = (hibernate3Present ?
-				new org.springframework.orm.hibernate3.SessionHolder(session) : new SessionHolder(session));
+		Object sessionHolder;
+		if (hibernate3Present) {
+			sessionHolder = new org.springframework.orm.hibernate3.SessionHolder(session);
+		}
+		else if (hibernate5Present) {
+			sessionHolder = new org.springframework.orm.hibernate5.SessionHolder(session);
+		}
+		else {
+			sessionHolder = new SessionHolder(session);
+		}
 		TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
 	}
 
