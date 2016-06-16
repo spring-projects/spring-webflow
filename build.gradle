@@ -75,13 +75,13 @@ configure(subprojects.findAll {
 	}
 
 	subproject.ext {
-		springVersion = "4.2.6.RELEASE"
-		springSecurityVersion = "4.0.4.RELEASE"
+		springVersion = "4.3.0.RELEASE"
+		springSecurityVersion = "4.1.0.RELEASE"
 		slf4jVersion = "1.7.21"
 		log4jVersion = "1.2.17"
 		tiles2Version = "2.2.2"
 		tiles3Version = "3.0.5"
-		hibernate4Version = "4.2.21.Final"
+		hibernate4Version = "4.3.11.Final"
 
 	}
 
@@ -251,7 +251,6 @@ project("spring-webflow") {
 		provided("javax.servlet:javax.servlet-api:3.0.1")
 		provided("javax.portlet:portlet-api:2.0")
 		provided("junit:junit:3.8.2")
-		provided("org.eclipse.persistence:javax.persistence:2.0.5")
 		optional("org.hibernate:hibernate-core:$hibernate4Version") {
 			exclude group: "org.slf4j", module: "slf4j-api"
 		}
@@ -261,7 +260,9 @@ project("spring-webflow") {
 		optional("org.springframework:spring-tx:$springVersion")
 		optional("org.springframework:spring-webmvc-portlet:$springVersion")
 		testCompile("javax.validation:validation-api:1.0.0.GA")
-		testCompile("org.hibernate:hibernate-entitymanager:$hibernate4Version")
+		testCompile("org.hibernate:hibernate-entitymanager:$hibernate4Version") {
+			exclude group: "org.slf4j", module: "slf4j-api"
+		}
 		testCompile("org.hibernate:hibernate-validator:4.3.2.Final")
 		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.69")
 		testCompile("org.hsqldb:hsqldb:2.3.1")
