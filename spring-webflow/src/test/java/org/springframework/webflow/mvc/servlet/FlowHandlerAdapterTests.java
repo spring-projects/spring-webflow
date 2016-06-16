@@ -387,6 +387,19 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(new Object[] { flowExecutor });
 	}
 
+	public void testRemoteHost() throws Exception {
+		assertFalse(flowHandlerAdapter.isRemoteHost("http://url.somewhere.com"));
+		assertFalse(flowHandlerAdapter.isRemoteHost("/path"));
+		assertFalse(flowHandlerAdapter.isRemoteHost("http://url.somewhereelse.com"));
+
+		flowHandlerAdapter.setHosts(new String[] {"url.somewhere.com"});
+
+		assertFalse(flowHandlerAdapter.isRemoteHost("http://url.somewhere.com"));
+		assertFalse(flowHandlerAdapter.isRemoteHost("/path"));
+		assertTrue(flowHandlerAdapter.isRemoteHost("http://url.somewhereelse.com"));
+
+	}
+
 	public void testDefaultHandleFlowException() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		Map<String, String> parameters = new HashMap<String, String>();

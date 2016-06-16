@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -86,6 +88,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private boolean redirectHttp10Compatible = true;
 
 	private HttpStatus statusCode;
+
+	private String[] hosts;
 
 	private boolean saveOutputToFlashScopeOnRedirect;
 
@@ -176,6 +180,27 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 */
 	public void setStatusCode(HttpStatus statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	/**
+	 * Configure one or more hosts associated with the application. All other
+	 * hosts will be considered external hosts. In effect this property
+	 * provides a way turn off encoding via
+	 * {@link HttpServletResponse#encodeRedirectURL} for URLs that have a host
+	 * and that host is not listed as a known host.
+	 * <p>If not set (the default) all URLs are encoded through the response.
+	 * @param hosts one or more application hosts
+	 * @since 2.4.3
+	 */
+	public void setHosts(String[] hosts) {
+		this.hosts = hosts;
+	}
+
+	/**
+	 * Return the configured hosts associated with the application.
+	 */
+	public String[] getHosts() {
+		return this.hosts;
 	}
 
 	/**
@@ -357,7 +382,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (ajaxHandler.isAjaxRequest(request, response)) {
 			ajaxHandler.sendAjaxRedirect(url, request, response, false);
 		} else {
-			String encodedRedirectURL = response.encodeRedirectURL(url);
+			String encodedRedirectURL = (isRemoteHost(url) ? url : response.encodeRedirectURL(url));
 			if (redirectHttp10Compatible) {
 				if (statusCode != null) {
 					response.setStatus(statusCode.value());
@@ -374,6 +399,32 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 				response.setHeader("Location", response.encodeRedirectURL(url));
 			}
 		}
+	}
+
+	/**
+	 * Whether the given targetUrl has a host that is a "foreign" system in which
+	 * case {@link HttpServletResponse#encodeRedirectURL} will not be applied.
+	 * This method returns {@code true} if the {@link #setHosts(String[])}
+	 * property is configured and the target URL has a host that does not match.
+	 * @param targetUrl the target redirect URL
+	 * @return {@code true} the target URL has a remote host, {@code false} if it
+	 * the URL does not have a host or the "host" property is not configured.
+	 * @since 2.4.3
+	 */
+	protected boolean isRemoteHost(String targetUrl) {
+		if (ObjectUtils.isEmpty(getHosts())) {
+			return false;
+		}
+		String targetHost = UriComponentsBuilder.fromUriString(targetUrl).build().getHost();
+		if (StringUtils.isEmpty(targetHost)) {
+			return false;
+		}
+		for (String host : getHosts()) {
+			if (targetHost.equals(host)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// internal helpers
