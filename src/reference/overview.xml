@@ -19,44 +19,37 @@
 	<sect1 xml:id="system-requirements">
 		<title>What Web Flow requires to run</title>
 		<para>
-			Java 1.5 or higher
+			Java 1.6 or higher.
 		</para>
 		<para>
-			Spring 3.1 or higher
-		</para>
-	</sect1>
-	<sect1 xml:id="support">
-		<title>Where to get support</title>
-		<para>
-			Professional from-the-source support on Spring Web Flow is available from
-			<link xl:href="http://www.springsource.com">SpringSource</link>, the company behind Spring, and
-			<link xl:href="http://www.ervacon.com">Ervacon</link>, operated by Web Flow project co-founder Erwin Vervaet
+			Spring 3.2 or higher.
 		</para>
 	</sect1>
-	<sect1 xml:id="development">
-		<title>Where to follow development</title>
+	<sect1 xml:id="resources">
+		<title>Resources</title>
 		<para>
-			You can help make Web Flow best serve the needs of the Spring community by interacting with developers
-			at the <link xl:href="http://forum.springframework.org">Spring Community Forums</link>.
+			You can ask questions and interact on StackOverflow using the designated tags,
+			see <link xl:href="https://spring.io/questions">Spring at StackOverflow</link>.
 		</para>
 		<para>
-			Report bugs and influence the Web Flow project roadmap using the <link xl:href="http://jira.springframework.org">Spring Issue Tracker</link>.
+			Report bugs and make requests using the
+			<link xl:href="http://jira.spring.io">Spring Issue Tracker</link>.
 		</para>
 		<para>
-			Subscribe to the <link xl:href="http://www.springframework.org">Spring Community Portal</link> for the latest Spring news and announcements.
-		</para>
-		<para>
-			Visit the <link xl:href="http://www.springframework.org/webflow">Web Flow Project Home</link> for more resources on the project.
+			Submit pull requests and work with the source code  ,
+			see <link xl:href="https://github.com/spring-projects/spring-webflow">Web Flow on Github</link>.
 		</para>
 	</sect1>
 	<sect1 xml:id="jars-mvn-central">
 		<title>How to access Web Flow artifacts from Maven Central</title>
 		<para>
 			Each jar in the Web Flow distribution is available in the <link xl:href="http://search.maven.org">Maven Central Repository</link>.
-			This allows you to easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
+			This allows you to easily integrate Web Flow into your application if you are already using Maven as the
+			build system for your web development project.
 		</para>
 		<para>
-			To access Web Flow jars from Maven Central, declare the following dependency in your pom (includes transitive dependencies "spring-binding" and "spring-js"):
+			To access Web Flow jars from Maven Central, declare the following dependency in your pom (includes
+			transitive dependencies "spring-binding" and "spring-js"):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
