@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 			FacesContext facesContext = helper.getFacesContext(getServletContext(), request, response);
 			PartialResponseWriter writer = createPartialResponseWriter(facesContext);
 			writer.startDocument();
-			writer.redirect(targetUrl);
+			writer.redirect(response.encodeRedirectURL(targetUrl));
 			writer.endDocument();
 		} finally {
 			helper.releaseIfNecessary();
