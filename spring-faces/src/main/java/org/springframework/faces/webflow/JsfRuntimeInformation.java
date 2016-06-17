@@ -74,7 +74,7 @@ public class JsfRuntimeInformation {
 	private static final boolean myFacesPresent =
 			ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASSLOADER);
 
-	private static final boolean myFacesInUse = checkMyFacesContextFactory();
+	private static boolean myFacesInUse = isMyFacesContextFactoryInUse();
 
 
 	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASSLOADER);
@@ -83,19 +83,6 @@ public class JsfRuntimeInformation {
 			ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASSLOADER);
 
 
-	private static boolean checkMyFacesContextFactory() {
-		try {
-			Class<?> clazz = CLASSLOADER.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
-			Object factory = FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			while (!clazz.isInstance(factory) && factory instanceof FacesWrapper) {
-				factory = ((FacesWrapper) factory).getWrapped();
-			}
-			return (factory != null && clazz.isInstance(factory));
-		}
-		catch (Throwable ex) {
-			return false;
-		}
-	}
 
 	public static boolean isAtLeastJsf22() {
 		return jsfVersion >= JSF_22;
@@ -127,7 +114,26 @@ public class JsfRuntimeInformation {
 	}
 
 	public static boolean isMyFacesInUse() {
+		if (myFacesInUse) {
+			return true;
+		}
+		// On WebSphere MyFaces may have loaded after this class...
+		myFacesInUse = isMyFacesContextFactoryInUse();
 		return myFacesInUse;
+	}
+
+	private static boolean isMyFacesContextFactoryInUse() {
+		try {
+			Class<?> clazz = CLASSLOADER.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
+			Object factory = FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			while (!clazz.isInstance(factory) && factory instanceof FacesWrapper) {
+				factory = ((FacesWrapper) factory).getWrapped();
+			}
+			return (factory != null && clazz.isInstance(factory));
+		}
+		catch (Throwable ex) {
+			return false;
+		}
 	}
 
 
