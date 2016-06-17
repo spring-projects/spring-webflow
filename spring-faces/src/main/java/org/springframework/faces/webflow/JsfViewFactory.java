@@ -188,28 +188,28 @@ public class JsfViewFactory implements ViewFactory {
 	}
 
 	private void publishPostRestoreStateEvent(FacesContext facesContext) {
-		EnumSet<VisitHint> visitHints = null;
+		VisitHint visitHint = null;
 		try {
-			visitHints = EnumSet.of(VisitHint.SKIP_ITERATION);
+			visitHint = Enum.valueOf(VisitHint.class, "SKIP_ITERATION");
 		}
 		catch (IllegalArgumentException ex) {
 			// JSF < 2.1
 		}
-		String attributeName = "javax.faces.visit.SKIP_ITERATION";
-		facesContext.getAttributes().put(attributeName, true);
+		String name = "javax.faces.visit.SKIP_ITERATION";
+		facesContext.getAttributes().put(name, true);
 		try {
-			VisitContext visitContext = (visitHints != null ?
-					VisitContext.createVisitContext(facesContext, null, visitHints) :
+			VisitContext visitContext = (visitHint != null ?
+					VisitContext.createVisitContext(facesContext, null, EnumSet.of(visitHint)) :
 					VisitContext.createVisitContext(facesContext));
 			facesContext.getViewRoot().visitTree(visitContext, new PostRestoreStateEventVisitCallback());
 		}
 		catch (AbortProcessingException e) {
 			PhaseId phaseId = facesContext.getCurrentPhaseId();
-			ExceptionQueuedEventContext eventContext = new ExceptionQueuedEventContext(facesContext, e, null, phaseId);
+			Object eventContext = new ExceptionQueuedEventContext(facesContext, e, null, phaseId);
 			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class, eventContext);
 		}
 		finally {
-			facesContext.getAttributes().remove(attributeName);
+			facesContext.getAttributes().remove(name);
 		}
 	}
 
