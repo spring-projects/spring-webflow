@@ -487,7 +487,12 @@ public interface FlowOutcome {
 			<sect3 xml:id="subflow-state-element-output">
 				<title>Mapping subflow output</title>
 				<para>
-					Simply refer to a subflow output attribute by its name within a outcome transition:
+					When a subflow completes, its end-state id is returned to the calling flow as
+					the event to use to continue navigation.
+				</para>
+				<para>
+					The subflow can also create output attributes to which the calling flow can refer
+					within an outcome transition as follows:
 				</para>
 				<programlisting language="xml"><![CDATA[
 <transition on="guestCreated" to="reviewBooking">
