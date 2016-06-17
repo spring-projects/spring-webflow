@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 the original author or authors.
+ * Copyright 2004-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,42 +34,27 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class JsfRuntimeInformation {
 
-	/**
-	 * JSF Version 1.1
-	 *
-	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
-	 */
-	@Deprecated
-	public static final int JSF_11 = 0;
+	private static final ClassLoader CLASSLOADER = JsfRuntimeInformation.class.getClassLoader();
 
-	/**
-	 * JSF Version 1.2
-	 *
-	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
-	 */
-	@Deprecated
-	public static final int JSF_12 = 1;
-
-	/** JSF Version 2.0 */
-	public static final int JSF_20 = 2;
-
-	/** JSF Version 2.1 */
-	public static final int JSF_21 = 3;
 
 	/** JSF Version 2.2 */
 	public static final int JSF_22 = 4;
 
+	/** JSF Version 2.1 */
+	public static final int JSF_21 = 3;
+
+	/** JSF Version 2.0 */
+	public static final int JSF_20 = 2;
+
+	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
+	@Deprecated
+	public static final int JSF_12 = 1;
+
+	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
+	@Deprecated
+	public static final int JSF_11 = 0;
+
 	private static final int jsfVersion;
-
-	private static final ClassLoader CLASS_LOADER = JsfUtils.class.getClassLoader();
-
-	private static final boolean myFacesPresent = ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASS_LOADER);
-
-	private static final boolean myFacesInUse = checkMyFacesContextFactory();
-
-	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASS_LOADER);
-
-	private static boolean springPortletPresent = ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASS_LOADER);
 
 	static {
 		if (ReflectionUtils.findMethod(FacesContext.class, "getResourceLibraryContracts") != null) {
@@ -86,10 +71,21 @@ public class JsfRuntimeInformation {
 
 	}
 
+	private static final boolean myFacesPresent =
+			ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASSLOADER);
+
+	private static final boolean myFacesInUse = checkMyFacesContextFactory();
+
+
+	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASSLOADER);
+
+	private static boolean springPortletPresent =
+			ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASSLOADER);
+
+
 	private static boolean checkMyFacesContextFactory() {
-		ClassLoader classLoader = JsfUtils.class.getClassLoader();
 		try {
-			Class<?> clazz = classLoader.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
+			Class<?> clazz = CLASSLOADER.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
 			Object factory = FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 			while (!clazz.isInstance(factory) && factory instanceof FacesWrapper) {
 				factory = ((FacesWrapper) factory).getWrapped();
@@ -109,29 +105,22 @@ public class JsfRuntimeInformation {
 		return jsfVersion >= JSF_21;
 	}
 
-	/**
-	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
-	 */
-	@Deprecated
 	public static boolean isAtLeastJsf20() {
 		return jsfVersion >= JSF_20;
 	}
 
-	/**
-	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
-	 */
+	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
 	@Deprecated
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
 	}
 
-	/**
-	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
-	 */
+	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
 	@Deprecated
 	public static boolean isLessThanJsf20() {
 		return jsfVersion < JSF_20;
 	}
+
 
 	public static boolean isMyFacesPresent() {
 		return myFacesPresent;
@@ -140,6 +129,7 @@ public class JsfRuntimeInformation {
 	public static boolean isMyFacesInUse() {
 		return myFacesInUse;
 	}
+
 
 	/**
 	 * Determines if the container has support for portlets and if Spring MVC portlet support is available
@@ -152,7 +142,6 @@ public class JsfRuntimeInformation {
 
 	/**
 	 * Determine if the specified {@link FacesContext} is from a portlet request.
-	 *
 	 * @param context the faces context
 	 * @return <tt>true</tt> if the request is from a portlet
 	 */
@@ -182,4 +171,5 @@ public class JsfRuntimeInformation {
 		Assert.notNull(nativeContext, "Context must not be null");
 		return ClassUtils.getMethodIfAvailable(nativeContext.getClass(), "getPortletContextName") != null;
 	}
+
 }
