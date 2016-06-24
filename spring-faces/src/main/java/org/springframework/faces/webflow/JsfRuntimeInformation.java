@@ -71,6 +71,9 @@ public class JsfRuntimeInformation {
 
 	}
 
+	private static final boolean mojarraPresent =
+			ClassUtils.isPresent("com.sun.faces.context.FacesContextImpl", CLASSLOADER);
+
 	private static final boolean myFacesPresent =
 			ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASSLOADER);
 
@@ -108,6 +111,10 @@ public class JsfRuntimeInformation {
 		return jsfVersion < JSF_20;
 	}
 
+
+	public static boolean isMojarraPresent() {
+		return mojarraPresent;
+	}
 
 	public static boolean isMyFacesPresent() {
 		return myFacesPresent;

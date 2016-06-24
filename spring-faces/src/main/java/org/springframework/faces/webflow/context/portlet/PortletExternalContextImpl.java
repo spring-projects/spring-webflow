@@ -127,10 +127,11 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	private Flash createFlash() {
-		if (JsfRuntimeInformation.isMyFacesInUse()) {
-			return new MyFacesFlashFactory().newFlash(this);
-		} else {
+		if (JsfRuntimeInformation.isMojarraPresent() && !JsfRuntimeInformation.isMyFacesInUse()) {
 			return new MojarraFlashFactory().newFlash(this);
+		}
+		else {
+			return new MyFacesFlashFactory().newFlash(this);
 		}
 	}
 

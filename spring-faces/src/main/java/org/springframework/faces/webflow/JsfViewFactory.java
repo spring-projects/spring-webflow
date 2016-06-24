@@ -40,6 +40,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
+import static org.springframework.faces.webflow.JsfRuntimeInformation.isMojarraPresent;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 /**
@@ -162,7 +163,7 @@ public class JsfViewFactory implements ViewFactory {
 	private void processTree(FacesContext context, UIComponent component) {
 
 		Object mojarraTreeHandler = null;
-		if (!JsfRuntimeInformation.isMyFacesInUse()) {
+		if (isMojarraPresent() && !JsfRuntimeInformation.isMyFacesInUse()) {
 			mojarraTreeHandler = new MojarraProcessTreeHandler().handleBefore(context, component);
 		}
 
