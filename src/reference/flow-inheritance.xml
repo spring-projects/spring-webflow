@@ -65,6 +65,16 @@
 			<programlisting language="xml"><![CDATA[
 <view-state id="child-state" parent="parent-flow#parent-view-state">]]>
 			</programlisting>
+			<note>
+				<para>
+					The intent for flow-level inheritance is to define common states to be
+					added to and shared among multiple flow definitions while the intent
+					for state-level inheritance is to extend from and merge with a single
+					parent state. Flow-level inheritance is a good fit for composition
+					and multiple inheritance but at the state level you can still only
+					inherit from a single parent state.
+				</para>
+			</note>
 		</sect2>
 	</sect1>
 	<sect1 xml:id="flow-inheritance-abstract">
