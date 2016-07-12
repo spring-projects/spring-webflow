@@ -45,9 +45,12 @@
 			</para>
 		</sect2>
 		<sect2 xml:id="whatsnew-hibernate4">
-			<title>Hibernate 4 Support</title>
+			<title>Hibernate Support</title>
 			<para>
 				The <classname>HibernateFlowExecutionListener</classname> now supports Hibernate 4 in addition to Hibernate 3.
+			</para>
+			<para>
+				As of 2.4.3 the <classname>HibernateFlowExecutionListener</classname> also works with Hibernate 5.
 			</para>
 		</sect2>
 		<sect2 xml:id="whatsnew-tiles3">
