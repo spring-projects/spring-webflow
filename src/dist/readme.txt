@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.4.3
+SPRING WEB FLOW 2.4.4
 ----------------------
 http://www.springframework.org/webflow
 
@@ -56,19 +56,19 @@ via transitive dependencies):
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.binding</artifactId>
-    <version>2.4.3.RELEASE</version>
+    <version>2.4.4.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.js</artifactId>
-    <version>2.4.3.RELEASE</version>
+    <version>2.4.4.RELEASE</version>
 </dependency> 
 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.webflow</artifactId>
-    <version>2.4.3.RELEASE</version>
+    <version>2.4.4.RELEASE</version>
 </dependency> 
 
 If using JSF all you need to include is:
@@ -76,7 +76,7 @@ If using JSF all you need to include is:
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>org.springframework.faces</artifactId>
-    <version>2.4.3.RELEASE</version>
+    <version>2.4.4.RELEASE</version>
 </dependency> 
 
 To access jars using Ivy, add the following repositories to your Ivy config:
@@ -93,13 +93,13 @@ To access jars using Ivy, add the following repositories to your Ivy config:
 
 Then declare the following dependencies in your ivy.xml:
 
-<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.4.3.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.4.3.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.4.3.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="2.4.4.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.js" rev="2.4.4.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="2.4.4.RELEASE" conf="compile->runtime" />
 
 If using JavaServerFaces:
 
-<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.4.3.RELEASE" conf="compile->runtime" />
+<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="2.4.4.RELEASE" conf="compile->runtime" />
 
 For more information see the reference documentation and the SpringSource Repository FAQ:
 https://github.com/spring-projects/spring-framework/wiki/Spring-repository-FAQ

@@ -50,7 +50,7 @@
 				The <classname>HibernateFlowExecutionListener</classname> now supports Hibernate 4 in addition to Hibernate 3.
 			</para>
 			<para>
-				As of 2.4.3 the <classname>HibernateFlowExecutionListener</classname> also works with Hibernate 5.
+				As of 2.4.4 the <classname>HibernateFlowExecutionListener</classname> also works with Hibernate 5.
 			</para>
 		</sect2>
 		<sect2 xml:id="whatsnew-tiles3">
