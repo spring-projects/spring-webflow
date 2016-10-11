@@ -23,109 +23,129 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
+import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 
 /**
  * A generic registry implementation for housing one or more flow definitions.
- * 
+ *
  * @author Keith Donald
  * @author Scott Andrews
  */
 public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 
-	private static final Log logger = LogFactory.getLog(FlowDefinitionRegistryImpl.class);
+    private static final Log logger = LogFactory.getLog(FlowDefinitionRegistryImpl.class);
 
-	/**
-	 * The map of loaded Flow definitions maintained in this registry.
-	 */
-	private Map<String, FlowDefinitionHolder> flowDefinitions;
+    /**
+     * The map of loaded Flow definitions maintained in this registry.
+     */
+    private Map<String, FlowDefinitionHolder> flowDefinitions;
 
-	/**
-	 * An optional parent flow definition registry.
-	 */
-	private FlowDefinitionRegistry parent;
+    /**
+     * An optional parent flow definition registry.
+     */
+    private FlowDefinitionRegistry parent;
 
-	public FlowDefinitionRegistryImpl() {
-		flowDefinitions = new TreeMap<String, FlowDefinitionHolder>();
-	}
+    protected FlowModelRegistry flowModelRegistry = new FlowModelRegistryImpl();
 
-	// implementing FlowDefinitionLocator
+    public FlowDefinitionRegistryImpl() {
+        flowDefinitions = new TreeMap<String, FlowDefinitionHolder>();
+    }
 
-	public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
-			FlowDefinitionConstructionException {
-		Assert.hasText(id, "An id is required to lookup a FlowDefinition");
-		try {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Getting FlowDefinition with id '" + id + "'");
-			}
-			return getFlowDefinitionHolder(id).getFlowDefinition();
-		} catch (NoSuchFlowDefinitionException e) {
-			if (parent != null) {
-				// try parent
-				return parent.getFlowDefinition(id);
-			}
-			throw e;
-		}
-	}
+    @Override
+    public FlowModelRegistry getFlowModelRegistry() {
+        return flowModelRegistry;
+    }
 
-	// implementing FlowDefinitionRegistry
+    // implementing FlowDefinitionLocator
 
-	public boolean containsFlowDefinition(String flowId) {
-		boolean containsFlow = flowDefinitions.containsKey(flowId);
-		if (!containsFlow && parent != null) {
-			containsFlow = parent.containsFlowDefinition(flowId);
-		}
-		return containsFlow;
-	}
+    public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
+            FlowDefinitionConstructionException {
+        Assert.hasText(id, "An id is required to lookup a FlowDefinition");
+        try {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Getting FlowDefinition with id '" + id + "'");
+            }
+            return getFlowDefinitionHolder(id).getFlowDefinition();
+        } catch (NoSuchFlowDefinitionException e) {
+            if (parent != null) {
+                // try parent
+                return parent.getFlowDefinition(id);
+            }
+            throw e;
+        }
+    }
 
-	public int getFlowDefinitionCount() {
-		return flowDefinitions.size();
-	}
+    // implementing FlowDefinitionRegistry
 
-	public String[] getFlowDefinitionIds() {
-		return flowDefinitions.keySet().toArray(new String[flowDefinitions.size()]);
-	}
+    public boolean containsFlowDefinition(String flowId) {
+        boolean containsFlow = flowDefinitions.containsKey(flowId);
+        if (!containsFlow && parent != null) {
+            containsFlow = parent.containsFlowDefinition(flowId);
+        }
+        return containsFlow;
+    }
 
-	public FlowDefinitionRegistry getParent() {
-		return parent;
-	}
+    public int getFlowDefinitionCount() {
+        return flowDefinitions.size();
+    }
 
-	public void setParent(FlowDefinitionRegistry parent) {
-		this.parent = parent;
-	}
+    public String[] getFlowDefinitionIds() {
+        return flowDefinitions.keySet().toArray(new String[flowDefinitions.size()]);
+    }
 
-	public void registerFlowDefinition(FlowDefinitionHolder definitionHolder) {
-		Assert.notNull(definitionHolder, "The holder of the flow definition to register is required");
-		if (logger.isDebugEnabled()) {
-			logger.debug("Registering flow definition '" + definitionHolder.getFlowDefinitionResourceString()
-					+ "' under id '" + definitionHolder.getFlowDefinitionId() + "'");
-		}
-		flowDefinitions.put(definitionHolder.getFlowDefinitionId(), definitionHolder);
-	}
+    public FlowDefinitionRegistry getParent() {
+        return parent;
+    }
 
-	public void registerFlowDefinition(FlowDefinition definition) {
-		registerFlowDefinition(new StaticFlowDefinitionHolder(definition));
-	}
+    /**
+     * Set the parent of this definition registry as well as its flow model.
+     * Link so a flow in the child registry that extends 
+     * from a flow in the parent registry can find its parent
+     * @param parent the parent flow definition registry, may be null
+     */
+    public void setParent(FlowDefinitionRegistry parent) {
+        this.parent = parent;
+        
+        if (parent != null) {
+            flowModelRegistry.setParent(parent.getFlowModelRegistry());
+        }
+    }
 
-	public void destroy() {
-		for (FlowDefinitionHolder holder : flowDefinitions.values()) {
-			holder.destroy();
-		}
-	}
+    public void registerFlowDefinition(FlowDefinitionHolder definitionHolder) {
+        Assert.notNull(definitionHolder, "The holder of the flow definition to register is required");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Registering flow definition '" + definitionHolder.getFlowDefinitionResourceString()
+                    + "' under id '" + definitionHolder.getFlowDefinitionId() + "'");
+        }
+        flowDefinitions.put(definitionHolder.getFlowDefinitionId(), definitionHolder);
+    }
 
-	// internal helpers
+    public void registerFlowDefinition(FlowDefinition definition) {
+        registerFlowDefinition(new StaticFlowDefinitionHolder(definition));
+    }
 
-	/**
-	 * Returns the identified flow definition holder. Throws an exception if it cannot be found.
-	 */
-	private FlowDefinitionHolder getFlowDefinitionHolder(String id) throws NoSuchFlowDefinitionException {
-		FlowDefinitionHolder holder = flowDefinitions.get(id);
-		if (holder == null) {
-			throw new NoSuchFlowDefinitionException(id);
-		}
-		return holder;
-	}
+    @Override
+    public void destroy() {
+        for (FlowDefinitionHolder holder : flowDefinitions.values()) {
+            holder.destroy();
+        }
+    }
 
-	public String toString() {
-		return new ToStringCreator(this).append("flowIds", getFlowDefinitionIds()).append("parent", parent).toString();
-	}
+    // internal helpers
+
+    /**
+     * Returns the identified flow definition holder. Throws an exception if it cannot be found.
+     */
+    private FlowDefinitionHolder getFlowDefinitionHolder(String id) throws NoSuchFlowDefinitionException {
+        FlowDefinitionHolder holder = flowDefinitions.get(id);
+        if (holder == null) {
+            throw new NoSuchFlowDefinitionException(id);
+        }
+        return holder;
+    }
+
+    public String toString() {
+        return new ToStringCreator(this).append("flowIds", getFlowDefinitionIds()).append("parent", parent).toString();
+    }
 }

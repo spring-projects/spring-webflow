@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
 import org.springframework.webflow.engine.builder.DefaultFlowHolder;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
@@ -67,7 +68,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Create a new instance with the given ApplicationContext.
 	 *
-	 * @param applicationContext the ApplicationContext to use for initializing the
+	 * @param appContext the ApplicationContext to use for initializing the
 	 * 	FlowDefinitionResourceFactory and FlowBuilderServices instances with
 	 */
 	public FlowDefinitionRegistryBuilder(ApplicationContext appContext) {
@@ -77,7 +78,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Create a new instance with the given ApplicationContext and {@link FlowBuilderServices}.
 	 *
-	 * @param applicationContext the ApplicationContext to use for initializing the
+	 * @param appContext the ApplicationContext to use for initializing the
 	 * 	FlowDefinitionResourceFactory and FlowBuilderServices instances with
 	 * @param builderServices a {@link FlowBuilderServices} instance to configure
 	 * 	on the FlowDefinitionRegistry
@@ -224,7 +225,7 @@ public class FlowDefinitionRegistryBuilder {
 	 */
 	public FlowDefinitionRegistry build() {
 
-		DefaultFlowRegistry flowRegistry = new DefaultFlowRegistry();
+		FlowDefinitionRegistry flowRegistry = new FlowDefinitionRegistryImpl();
 		flowRegistry.setParent(this.parent);
 
 		registerFlowLocations(flowRegistry);
@@ -234,7 +235,7 @@ public class FlowDefinitionRegistryBuilder {
 		return flowRegistry;
 	}
 
-	private void registerFlowLocations(DefaultFlowRegistry flowRegistry) {
+	private void registerFlowLocations(FlowDefinitionRegistry flowRegistry) {
 		for (FlowLocation location : this.flowLocations) {
 			String path = location.getPath();
 			String id = location.getId();
@@ -245,7 +246,7 @@ public class FlowDefinitionRegistryBuilder {
 		}
 	}
 
-	private void registerFlowLocationPatterns(DefaultFlowRegistry flowRegistry) {
+	private void registerFlowLocationPatterns(FlowDefinitionRegistry flowRegistry) {
 		for (String pattern : this.flowLocationPatterns) {
 			AttributeMap<Object> attributes = new LocalAttributeMap<Object>();
 			updateFlowAttributes(attributes);
@@ -264,7 +265,7 @@ public class FlowDefinitionRegistryBuilder {
 		}
 	}
 
-	private void registerFlow(FlowDefinitionResource resource, DefaultFlowRegistry flowRegistry) {
+	private void registerFlow(FlowDefinitionResource resource, FlowDefinitionRegistry flowRegistry) {
 		FlowModelBuilder flowModelBuilder = null;
 		if (resource.getPath().getFilename().endsWith(".xml")) {
 			flowModelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowRegistry.getFlowModelRegistry());
@@ -283,7 +284,7 @@ public class FlowDefinitionRegistryBuilder {
 		flowRegistry.registerFlowDefinition(flowHolder);
 	}
 
-	private void registerFlowBuilders(DefaultFlowRegistry flowRegistry) {
+	private void registerFlowBuilders(FlowDefinitionRegistry flowRegistry) {
 		for (FlowBuilderInfo info : this.flowBuilderInfos) {
 			AttributeMap<Object> attributes = info.getAttributes();
 			updateFlowAttributes(attributes);
