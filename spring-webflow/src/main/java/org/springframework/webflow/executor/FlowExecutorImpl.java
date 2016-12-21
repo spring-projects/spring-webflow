@@ -40,7 +40,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * to use. The name <i>executor</i> was chosen as <i>executors drive executions</i>.
  * <p>
  * <b>Commonly used configurable properties</b><br>
- * <table border="1">
+ * <table summary="" border="1">
  * <tr>
  * <td><b>name</b></td>
  * <td><b>description</b></td>
@@ -62,7 +62,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * <td>None</td>
  * </tr>
  * </table>
- * </p>
+ * <p>
  * 
  * @see FlowDefinitionLocator
  * @see FlowExecutionFactory

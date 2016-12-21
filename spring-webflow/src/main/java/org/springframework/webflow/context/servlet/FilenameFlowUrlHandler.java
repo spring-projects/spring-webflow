@@ -42,7 +42,7 @@ import org.springframework.webflow.mvc.servlet.FlowController;
  * </pre>
  * 
  * will all treat the filename "foo" as the flow id.
- * </p>
+ * <p>
  * 
  * <strong>Note:</strong> Because this class only treats a filename as a flow id, clashes can result. For example:
  * 
