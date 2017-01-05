@@ -33,7 +33,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.mvc.portlet.PortletMvcViewFactory;
 import org.springframework.webflow.mvc.servlet.ServletMvcViewFactory;
 import org.springframework.webflow.mvc.view.AbstractMvcViewFactory;
 import org.springframework.webflow.mvc.view.FlowViewResolver;
@@ -52,7 +51,6 @@ import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
  * pre-existing Spring MVC {@link ViewResolver view resolvers}.
  *
  * @see ServletMvcViewFactory
- * @see PortletMvcViewFactory
  * @see FlowResourceFlowViewResolver
  * @see DelegatingFlowViewResolver
  *
@@ -197,9 +195,6 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 			ConversionService conversionService, BinderConfiguration binderConfiguration) {
 		if (environment == MvcEnvironment.SERVLET) {
 			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
-					binderConfiguration, messageCodesResolver);
-		} else if (environment == MvcEnvironment.PORTLET) {
-			return new PortletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
 					binderConfiguration, messageCodesResolver);
 		} else {
 			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");

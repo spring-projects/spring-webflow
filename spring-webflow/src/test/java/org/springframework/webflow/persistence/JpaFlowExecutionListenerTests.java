@@ -15,7 +15,6 @@ import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;

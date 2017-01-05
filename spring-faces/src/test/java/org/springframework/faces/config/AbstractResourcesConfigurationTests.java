@@ -37,9 +37,4 @@ public abstract class AbstractResourcesConfigurationTests extends TestCase {
 		assertEquals(0, handlerMapping.getOrder());
 	}
 
-	public void testConfigurePortlet() {
-		Object resourceHandler = this.context.getBean(ResourcesBeanDefinitionParser.PORTLET_RESOURCE_HANDLER_BEAN_NAME);
-		assertNotNull(resourceHandler);
-		assertTrue(resourceHandler instanceof org.springframework.faces.webflow.context.portlet.JsfResourceRequestHandler);
-	}
 }

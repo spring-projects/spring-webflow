@@ -16,85 +16,22 @@
 package org.springframework.webflow.persistence;
 
 import java.io.Serializable;
-
 import javax.sql.DataSource;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.orm.hibernate4.HibernateCallback;
-import org.springframework.orm.hibernate4.HibernateTemplate;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.util.ClassUtils;
 
 public class HibernateHandlerFactory {
 	
 	static HibernateHandler create(DataSource dataSource) throws Exception {
-		if (ClassUtils.isPresent("org.hibernate.engine.transaction.spi.TransactionContext",
-				HibernateHandlerFactory.class.getClassLoader())) {
-			return new Hibernate4Handler(dataSource);
-		}
 		return new Hibernate5Handler(dataSource);
 	}
 	
-	private static class Hibernate4Handler implements HibernateHandler {
-
-		private final HibernateTemplate template;
-
-		private final PlatformTransactionManager tranasactionManager;
-		
-		private final SessionFactory sessionFactory;
-
-		private Hibernate4Handler(DataSource dataSource) throws Exception {
-			sessionFactory = createSessionFactory(dataSource);
-			template = new HibernateTemplate(sessionFactory);
-			template.setCheckWriteOperations(false);
-			tranasactionManager = new HibernateTransactionManager(sessionFactory);
-		}
-
-		public void templateSave(Object entity) {
-			template.save(entity);
-		}
-
-		public <T> T templateGet(Class<T> entityClass, Serializable id) {
-			return template.get(entityClass, id);
-		}
-
-		public void templateExecuteWithNativeSession(final SessionCallback callback) {
-			template.executeWithNativeSession(new HibernateCallback<Void>() {
-
-				@Override
-				public Void doInHibernate(Session session) throws HibernateException {
-					callback.doWithSession(session);
-					return null;
-				}
-			});
-		}
-
-		public PlatformTransactionManager getTransactionManager() {
-			return tranasactionManager;
-		}
-		
-		public SessionFactory getSessionFactory() {
-			return sessionFactory;
-		}
-
-		private static SessionFactory createSessionFactory(DataSource dataSource) throws Exception {
-			LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
-			factory.setDataSource(dataSource);
-			factory.setMappingLocations(new Resource[] {
-					new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),
-					new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
-			factory.afterPropertiesSet();
-			return factory.getObject();
-		}
-
-	}
-
 	private static class Hibernate5Handler implements HibernateHandler {
 
 		private final org.springframework.orm.hibernate5.HibernateTemplate template;

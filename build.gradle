@@ -24,8 +24,8 @@ configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
 	apply plugin: "merge"
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
-	sourceCompatibility=1.6
-	targetCompatibility=1.6
+	sourceCompatibility=1.8
+	targetCompatibility=1.8
 
 	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
 
@@ -75,13 +75,12 @@ configure(subprojects.findAll {
 	}
 
 	subproject.ext {
-		springVersion = "4.3.0.RELEASE"
+		springVersion = "5.0.0.M4"
 		springSecurityVersion = "4.1.0.RELEASE"
 		slf4jVersion = "1.7.21"
 		log4jVersion = "1.2.17"
-		tiles2Version = "2.2.2"
 		tiles3Version = "3.0.5"
-		hibernate4Version = "4.3.11.Final"
+		hibernate5Version = "5.2.6.Final"
 
 	}
 
@@ -171,16 +170,6 @@ project("spring-js") {
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		optional("org.apache.tiles:tiles-api:$tiles2Version")
-		optional("org.apache.tiles:tiles-core:$tiles2Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
-		optional("org.apache.tiles:tiles-jsp:$tiles2Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
-		optional("org.apache.tiles:tiles-servlet:$tiles2Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
 		testCompile("javax.servlet:jstl:1.2") {
 			exclude group: "org.slf4j", module: "jcl-over-slf4j"
 		}
@@ -249,18 +238,16 @@ project("spring-webflow") {
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.el:javax.el-api:2.2.5")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		provided("javax.portlet:portlet-api:2.0")
 		provided("junit:junit:3.8.2")
-		optional("org.hibernate:hibernate-core:$hibernate4Version") {
+		optional("org.hibernate:hibernate-core:$hibernate5Version") {
 			exclude group: "org.slf4j", module: "slf4j-api"
 		}
 		optional("org.slf4j:slf4j-api:$slf4jVersion")
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework:spring-orm:$springVersion")
 		optional("org.springframework:spring-tx:$springVersion")
-		optional("org.springframework:spring-webmvc-portlet:$springVersion")
 		testCompile("javax.validation:validation-api:1.0.0.GA")
-		testCompile("org.hibernate:hibernate-entitymanager:$hibernate4Version") {
+		testCompile("org.hibernate:hibernate-entitymanager:$hibernate5Version") {
 			exclude group: "org.slf4j", module: "slf4j-api"
 		}
 		testCompile("org.hibernate:hibernate-validator:4.3.2.Final")
@@ -287,7 +274,6 @@ project("spring-faces") {
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.el:javax.el-api:2.2.5")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		provided("javax.portlet:portlet-api:2.0")
 		provided("com.sun.faces:jsf-api:2.2.13")
 		provided("com.sun.faces:jsf-impl:2.2.13")
 		provided("org.apache.myfaces.core:myfaces-impl:2.1.18")
@@ -295,7 +281,6 @@ project("spring-faces") {
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
-		optional("org.springframework:spring-webmvc-portlet:$springVersion")
 		testCompile("log4j:log4j:$log4jVersion") {
 			exclude group: "javax.mail", module: "mail"
 			exclude group: "javax.jms", module: "jms"
@@ -454,7 +439,7 @@ configure(rootProject) {
 		gradleVersion = "1.11"
 
 		doLast() {
-			def gradleOpts = "-XX:MaxPermSize=1024m -Xmx1024m"
+			def gradleOpts = "-XX:MaxMetaspaceSize=1024m -Xmx1024m"
 			def gradleBatOpts = "$gradleOpts -XX:MaxHeapSize=256m"
 			File wrapperFile = file("gradlew")
 			wrapperFile.text = wrapperFile.text.replace("DEFAULT_JVM_OPTS=",

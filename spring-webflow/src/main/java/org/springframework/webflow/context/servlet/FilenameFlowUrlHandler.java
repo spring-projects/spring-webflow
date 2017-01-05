@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
-import org.springframework.web.util.WebUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.mvc.servlet.FlowController;
 
@@ -68,7 +67,30 @@ public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 	}
 
 	public String getFlowId(HttpServletRequest request) {
-		return WebUtils.extractFilenameFromUrlPath(urlPathHelper.getLookupPathForRequest(request));
+		return extractFilenameFromUrlPath(urlPathHelper.getLookupPathForRequest(request));
+	}
+
+	public static String extractFilenameFromUrlPath(String urlPath) {
+		String filename = extractFullFilenameFromUrlPath(urlPath);
+		int dotIndex = filename.lastIndexOf('.');
+		if (dotIndex != -1) {
+			filename = filename.substring(0, dotIndex);
+		}
+		return filename;
+	}
+
+	public static String extractFullFilenameFromUrlPath(String urlPath) {
+		int end = urlPath.indexOf('?');
+		if (end == -1) {
+			end = urlPath.indexOf('#');
+			if (end == -1) {
+				end = urlPath.length();
+			}
+		}
+		int begin = urlPath.lastIndexOf('/', end) + 1;
+		int paramIndex = urlPath.indexOf(';', begin);
+		end = (paramIndex != -1 && paramIndex < end ? paramIndex : end);
+		return urlPath.substring(begin, end);
 	}
 
 	/**

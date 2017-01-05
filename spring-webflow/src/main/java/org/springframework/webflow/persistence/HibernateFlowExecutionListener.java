@@ -22,7 +22,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.Interceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate4.SessionHolder;
+
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -250,16 +250,7 @@ public class HibernateFlowExecutionListener extends FlowExecutionListenerAdapter
 	}
 
 	private void bind(Session session) {
-		Object sessionHolder;
-		if (hibernate3Present) {
-			sessionHolder = new org.springframework.orm.hibernate3.SessionHolder(session);
-		}
-		else if (hibernate5Present) {
-			sessionHolder = new org.springframework.orm.hibernate5.SessionHolder(session);
-		}
-		else {
-			sessionHolder = new SessionHolder(session);
-		}
+		Object sessionHolder = new org.springframework.orm.hibernate5.SessionHolder(session);
 		TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
 	}
 
