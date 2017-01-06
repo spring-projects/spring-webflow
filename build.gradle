@@ -49,8 +49,7 @@ configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
 	}
 }
 
-configure(subprojects.findAll {
-		it.name != "spring-build-src" && it.name != "spring-js-resources"}) { subproject ->
+configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
 
 	if (project.hasProperty('platformVersion')) {
 		apply plugin: 'spring-io'
@@ -148,21 +147,10 @@ project("spring-binding") {
 	}
 }
 
-project("spring-js-resources") {
-	description = "Spring JS Resources"
-
-	apply from: "spring-js-resources.gradle"
-
-	jar {
-		dependsOn prepareResources
-	}
-}
-
 project("spring-js") {
 	description = "Spring JS"
 
 	dependencies {
-		compile(project(":spring-js-resources"))
 		compile("commons-logging:commons-logging:1.1.1")
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-context:$springVersion")

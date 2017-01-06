@@ -33,7 +33,7 @@ public interface AjaxHandler {
 	 * @param request the current request
 	 * @param response the current response
 	 */
-	public boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response);
+	boolean isAjaxRequest(HttpServletRequest request, HttpServletResponse response);
 
 	/**
 	 * Send a redirect request to the Ajax client. This should cause the client-side agent to send a new request to the
@@ -43,6 +43,6 @@ public interface AjaxHandler {
 	 * @param targetUrl the target url to redirect to
 	 * @param popup wheter the redirect should be sent from a new popup dialog window
 	 */
-	public void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
+	void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
 			boolean popup) throws IOException;
 }
