@@ -16,12 +16,10 @@
 package org.springframework.faces.webflow;
 
 import javax.faces.context.FacesContext;
-import javax.faces.context.PartialResponseWriter;
-import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.js.ajax.AjaxHandler;
+import org.springframework.webflow.context.servlet.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 

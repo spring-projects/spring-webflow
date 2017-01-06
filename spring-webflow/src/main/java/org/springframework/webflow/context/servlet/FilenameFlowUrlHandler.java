@@ -20,13 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.webflow.core.collection.AttributeMap;
-import org.springframework.webflow.mvc.servlet.FlowController;
 
 /**
  * A file name based {@link FlowUrlHandler} implementation that is an alternative to the standard
  * {@link DefaultFlowUrlHandler}. Treats the filename of a request without the URL suffix and/or prefix as the flow id.
- * Used by the {@link FlowController} implementation as a default implementation to preserve compatibility with existing
- * Web Flow 2 applications.
+ * Used by the {@link org.springframework.webflow.mvc.servlet.FlowController} implementation as a default
+ * implementation to preserve compatibility with existing Web Flow 2 applications.
  * 
  * <p>
  * This implementation extracts the filename and removes the file extension from the request URL. The results will be

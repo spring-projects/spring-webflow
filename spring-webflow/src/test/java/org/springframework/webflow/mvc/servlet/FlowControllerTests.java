@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+
+import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -165,9 +166,9 @@ public class FlowControllerTests extends TestCase {
 		ModelAndView mv = controller.handleRequest(request, response);
 		assertNull(mv);
 		assertEquals(null, response.getRedirectedUrl());
-		assertEquals("true", response.getHeader(SpringJavascriptAjaxHandler.POPUP_VIEW_HEADER));
+		assertEquals("true", response.getHeader(DefaultAjaxHandler.POPUP_VIEW_HEADER));
 		assertEquals("/springtravel/app/foo?execution=12345",
-				response.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
+				response.getHeader(DefaultAjaxHandler.REDIRECT_URL_HEADER));
 		EasyMock.verify(new Object[] { executor });
 	}
 
@@ -189,9 +190,9 @@ public class FlowControllerTests extends TestCase {
 		ModelAndView mv = controller.handleRequest(request, response);
 		assertNull(mv);
 		assertEquals(null, response.getRedirectedUrl());
-		assertEquals(null, response.getHeader(SpringJavascriptAjaxHandler.POPUP_VIEW_HEADER));
+		assertEquals(null, response.getHeader(DefaultAjaxHandler.POPUP_VIEW_HEADER));
 		assertEquals("/springtravel/app/foo?execution=12345",
-				response.getHeader(SpringJavascriptAjaxHandler.REDIRECT_URL_HEADER));
+				response.getHeader(DefaultAjaxHandler.REDIRECT_URL_HEADER));
 		EasyMock.verify(new Object[] { executor });
 	}
 

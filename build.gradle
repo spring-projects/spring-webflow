@@ -147,43 +147,29 @@ project("spring-binding") {
 	}
 }
 
-project("spring-js") {
-	description = "Spring JS"
+project("spring-webflow") {
+	description = "Spring Web Flow"
 
 	dependencies {
+		compile(project(":spring-binding"))
 		compile("commons-logging:commons-logging:1.1.1")
+		compile("opensymphony:ognl:2.6.11")
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-context:$springVersion")
 		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-expression:$springVersion")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
+		provided("javax.el:javax.el-api:2.2.5")
 		provided("javax.servlet:javax.servlet-api:3.0.1")
-		testCompile("javax.servlet:jstl:1.2") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
+		provided("junit:junit:3.8.2")
+		optional("org.hibernate:hibernate-core:$hibernate5Version") {
+			exclude group: "org.slf4j", module: "slf4j-api"
 		}
-		testCompile("log4j:log4j:$log4jVersion") {
-			exclude group: "javax.mail", module: "mail"
-			exclude group: "javax.jms", module: "jms"
-			exclude group: "com.sun.jdmk", module: "jmxtools"
-			exclude group: "com.sun.jmx", module: "jmxri"
-		}
-		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
-		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
-		testCompile("org.springframework:spring-test:$springVersion")
-	}
-}
-
-project("spring-js-tiles3") {
-	description = "Spring JS Tiles 3 Integration"
-	merge.into = project(":spring-js")
-
-	dependencies {
-		compile("commons-logging:commons-logging:1.1.1")
-		compile("org.springframework:spring-core:$springVersion")
-		compile("org.springframework:spring-webmvc:$springVersion")
-		optional("javax.el:javax.el-api:2.2.5")
-		optional("javax.servlet:javax.servlet-api:3.0.1")
-		optional("javax.servlet.jsp:javax.servlet.jsp-api:2.2.1")
+		optional("org.slf4j:slf4j-api:$slf4jVersion")
+		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
+		optional("org.springframework:spring-orm:$springVersion")
+		optional("org.springframework:spring-tx:$springVersion")
 		optional("org.apache.tiles:tiles-request-api:1.0.1")
 		optional("org.apache.tiles:tiles-api:$tiles3Version")
 		optional("org.apache.tiles:tiles-core:$tiles3Version") {
@@ -203,37 +189,6 @@ project("spring-js-tiles3") {
 			exclude group: "org.springframework", module: "spring-web"
 			exclude group: "ognl", module: "ognl"
 		}
-		testCompile("javax.servlet:jstl:1.2")
-		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
-		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
-		testCompile("org.springframework:spring-test:$springVersion")
-	}
-}
-
-project("spring-webflow") {
-	description = "Spring Web Flow"
-
-	dependencies {
-		compile(project(":spring-binding"))
-		compile(project(":spring-js"))
-		compile("commons-logging:commons-logging:1.1.1")
-		compile("opensymphony:ognl:2.6.11")
-		compile("org.springframework:spring-beans:$springVersion")
-		compile("org.springframework:spring-context:$springVersion")
-		compile("org.springframework:spring-core:$springVersion")
-		compile("org.springframework:spring-expression:$springVersion")
-		compile("org.springframework:spring-web:$springVersion")
-		compile("org.springframework:spring-webmvc:$springVersion")
-		provided("javax.el:javax.el-api:2.2.5")
-		provided("javax.servlet:javax.servlet-api:3.0.1")
-		provided("junit:junit:3.8.2")
-		optional("org.hibernate:hibernate-core:$hibernate5Version") {
-			exclude group: "org.slf4j", module: "slf4j-api"
-		}
-		optional("org.slf4j:slf4j-api:$slf4jVersion")
-		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
-		optional("org.springframework:spring-orm:$springVersion")
-		optional("org.springframework:spring-tx:$springVersion")
 		testCompile("javax.validation:validation-api:1.0.0.GA")
 		testCompile("org.hibernate:hibernate-entitymanager:$hibernate5Version") {
 			exclude group: "org.slf4j", module: "slf4j-api"
@@ -244,6 +199,15 @@ project("spring-webflow") {
 		testCompile("org.springframework:spring-aop:$springVersion")
 		testCompile("org.springframework:spring-jdbc:$springVersion")
 		testCompile("org.springframework:spring-test:$springVersion")
+		testCompile("javax.servlet.jsp:javax.servlet.jsp-api:2.2.1")
+		testCompile("javax.servlet:jstl:1.2")
+		testCompile("log4j:log4j:$log4jVersion") {
+			exclude group: "javax.mail", module: "mail"
+			exclude group: "javax.jms", module: "jms"
+			exclude group: "com.sun.jdmk", module: "jmxtools"
+			exclude group: "com.sun.jmx", module: "jmxri"
+		}
+		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
 	}
 }
 

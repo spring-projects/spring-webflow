@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.js.ajax.tiles3;
+package org.springframework.webflow.mvc.view;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,8 +33,8 @@ import org.apache.tiles.impl.BasicTilesContainer;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
-import org.springframework.js.ajax.AjaxHandler;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.webflow.context.servlet.AjaxHandler;
+import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.support.JstlUtils;
@@ -45,7 +45,7 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
  * Tiles 3 view implementation that is able to handle partial rendering for Spring
  * Javascript Ajax requests.
  *
- * <p>This implementation uses the {@link SpringJavascriptAjaxHandler} by default
+ * <p>This implementation uses the {@link DefaultAjaxHandler} by default
  * to determine whether the current request is an Ajax request. On an Ajax request,
  * a "fragments" parameter will be extracted from the request in order to
  * determine which attributes to render from the current tiles view.
@@ -53,11 +53,11 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
  * @author Rossen Stoyanchev
  * @since 2.4
  */
-public class AjaxTilesView extends TilesView {
+public class AjaxTiles3View extends TilesView {
 
 	private static final String FRAGMENTS_PARAM = "fragments";
 
-	private AjaxHandler ajaxHandler = new SpringJavascriptAjaxHandler();
+	private AjaxHandler ajaxHandler = new DefaultAjaxHandler();
 
 
 	public AjaxHandler getAjaxHandler() {

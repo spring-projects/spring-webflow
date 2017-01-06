@@ -27,7 +27,7 @@ import javax.faces.render.RenderKitFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.js.ajax.AbstractAjaxHandler;
+import org.springframework.webflow.context.servlet.AbstractAjaxHandler;
 
 /**
  * Ajax handler for JSF 2 requests that can identify JSF 2 Ajax requests and send redirect instructions back to the

@@ -1,7 +1,6 @@
-package org.springframework.js.ajax;
+package org.springframework.webflow.context.servlet;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

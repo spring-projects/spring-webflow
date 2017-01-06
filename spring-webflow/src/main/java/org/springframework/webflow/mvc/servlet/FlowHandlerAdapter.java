@@ -25,8 +25,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.js.ajax.AjaxHandler;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.webflow.context.servlet.AjaxHandler;
+import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -234,7 +234,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			flowUrlHandler = new DefaultFlowUrlHandler();
 		}
 		if (ajaxHandler == null) {
-			ajaxHandler = new SpringJavascriptAjaxHandler();
+			ajaxHandler = new DefaultAjaxHandler();
 		}
 	}
 

@@ -25,7 +25,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.js.ajax.AjaxHandler;
+import org.springframework.webflow.context.servlet.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.webflow.context.servlet.FilenameFlowUrlHandler;

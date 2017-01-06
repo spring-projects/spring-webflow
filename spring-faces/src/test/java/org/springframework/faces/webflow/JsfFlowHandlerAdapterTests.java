@@ -2,8 +2,8 @@ package org.springframework.faces.webflow;
 
 import junit.framework.TestCase;
 
-import org.springframework.js.ajax.AjaxHandler;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
+import org.springframework.webflow.context.servlet.AjaxHandler;
+import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.context.ExternalContext;
@@ -31,7 +31,7 @@ public class JsfFlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testAjaxHandlerProvided() throws Exception {
-		AjaxHandler myAjaxHandler = new SpringJavascriptAjaxHandler();
+		AjaxHandler myAjaxHandler = new DefaultAjaxHandler();
 		this.handlerAdapter.setAjaxHandler(myAjaxHandler);
 		this.handlerAdapter.afterPropertiesSet();
 		assertTrue(myAjaxHandler == this.handlerAdapter.getAjaxHandler());

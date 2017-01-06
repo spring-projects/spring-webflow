@@ -49,7 +49,7 @@
 		</para>
 		<para>
 			To access Web Flow jars from Maven Central, declare the following dependency in your pom (includes
-			transitive dependencies "spring-binding" and "spring-js"):
+			transitive dependencies "spring-binding"):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
@@ -60,7 +60,8 @@
 ]]>
 		</programlisting>
 		<para>
-			If using JavaServer Faces, declare the following dependency in your pom (includes transitive dependencies "spring-binding", "spring-webflow" and "spring-js"):
+			If using JavaServer Faces, declare the following dependency in your pom
+			(includes transitive dependencies "spring-binding", "spring-webflow"):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
@@ -145,12 +146,6 @@
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-binding</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-js</artifactId>
     <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>
 

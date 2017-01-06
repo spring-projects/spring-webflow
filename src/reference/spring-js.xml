@@ -48,7 +48,7 @@
 				(note that these extensions require the use of Tiles for templating):
 			</para>
 			<programlisting language="xml"><![CDATA[
-<bean id="tilesViewResolver" class="org.springframework.js.ajax.AjaxUrlBasedViewResolver">
+<bean id="tilesViewResolver" class="org.springframework.webflow.mvc.view.AjaxUrlBasedViewResolver">
 	<property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
 </bean>]]>
 			</programlisting>

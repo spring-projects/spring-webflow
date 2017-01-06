@@ -16,11 +16,10 @@
 package org.springframework.webflow.mvc.view;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.js.ajax.tiles3.AjaxTilesView;
+import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
@@ -29,17 +28,16 @@ import org.springframework.webflow.execution.View;
  * Tiles view implementation that is able to handle partial rendering for Spring
  * Javascript Ajax requests.
  *
- * <p>This implementation uses the {@link org.springframework.js.ajax.SpringJavascriptAjaxHandler}
+ * <p>This implementation uses the {@link DefaultAjaxHandler}
  * by default to determine whether the current request is an Ajax request. On an
  * Ajax request for an active flow execution, the fragments set by a {@code <render>}
- * action will be respected, otherwise the parent
- * {@link org.springframework.js.ajax.tiles2.AjaxTilesView}'s resolution algorithm
+ * action will be respected, otherwise the parent {@link AjaxTiles3View}'s resolution algorithm
  * will be applied.
  *
  * @author Rossen Stoyanchev
  * @since 2.4
  */
-public class FlowAjaxTiles3View extends AjaxTilesView {
+public class FlowAjaxTiles3View extends AjaxTiles3View {
 
 
 	protected String[] getRenderFragments(Map<String, Object> model, HttpServletRequest request,

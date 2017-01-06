@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.js.ajax;
+package org.springframework.webflow.context.servlet;
 
 import java.io.IOException;
 
@@ -41,7 +41,7 @@ public interface AjaxHandler {
 	 * @param request the current request
 	 * @param response the current response
 	 * @param targetUrl the target url to redirect to
-	 * @param popup wheter the redirect should be sent from a new popup dialog window
+	 * @param popup whether the redirect should be sent from a new popup dialog window
 	 */
 	void sendAjaxRedirect(String targetUrl, HttpServletRequest request, HttpServletResponse response,
 			boolean popup) throws IOException;

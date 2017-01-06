@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.js.ajax;
+package org.springframework.webflow.mvc.view;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.webflow.context.servlet.AjaxHandler;
+import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 
 /**
  * View resolver that provides special view resolution for Spring Javascript Ajax requests.
@@ -54,7 +56,7 @@ public class AjaxUrlBasedViewResolver extends UrlBasedViewResolver {
 
 	private class AjaxRedirectView extends RedirectView implements View {
 
-		private AjaxHandler ajaxHandler = new SpringJavascriptAjaxHandler();
+		private AjaxHandler ajaxHandler = new DefaultAjaxHandler();
 
 		public AjaxRedirectView(String redirectUrl, boolean redirectContextRelative, boolean redirectHttp10Compatible) {
 			super(redirectUrl, redirectContextRelative, redirectHttp10Compatible);
