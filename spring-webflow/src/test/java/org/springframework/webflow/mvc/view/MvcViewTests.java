@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -451,7 +450,6 @@ public class MvcViewTests extends TestCase {
 		assertEquals(null, bindBean.getBeanProperty().getName());
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testResumeEventModelBindingCustomConverter() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");

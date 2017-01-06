@@ -132,9 +132,6 @@ public class GenericConversionService implements ConversionService {
 	 * 
 	 * @param id the id of the custom converter instance
 	 * @param converter the converter
-	 * 
-	 * @deprecated use {@link #addConverter(Converter)} instead or better yet use Spring 3 type conversion and
-	 * formatting options (see Spring Documentation).
 	 */
 	public void addConverter(String id, Converter converter) {
 		customConverters.put(id, converter);

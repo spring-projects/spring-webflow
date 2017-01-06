@@ -45,7 +45,6 @@ import org.springframework.binding.format.DefaultNumberFormatFactory;
  * 
  * @author Keith Donald
  */
-@SuppressWarnings("deprecation")
 public class DefaultConversionServiceTests extends TestCase {
 
 	public void testConvertCompatibleTypes() {

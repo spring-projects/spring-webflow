@@ -64,10 +64,9 @@ public abstract class AbstractBindingModelTests extends TestCase {
 
 	public void testGetRawValue() {
 		testBean.datum2 = 3;
-		assertEquals(new Integer(3), model.getRawFieldValue("datum2"));
+		assertEquals(3, model.getRawFieldValue("datum2"));
 	}
 
-	@SuppressWarnings("deprecation")
 	public void testGetFieldValueConvertedWithCustomConverter() {
 		testBean.datum2 = 3;
 		conversionService.addConverter("customConverter", new StringToObject(Integer.class) {

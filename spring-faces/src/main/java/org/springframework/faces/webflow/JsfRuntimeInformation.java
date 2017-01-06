@@ -35,21 +35,14 @@ public class JsfRuntimeInformation {
 	private static final ClassLoader CLASSLOADER = JsfRuntimeInformation.class.getClassLoader();
 
 
-	/** JSF Version 2.2 */
 	public static final int JSF_22 = 4;
 
-	/** JSF Version 2.1 */
 	public static final int JSF_21 = 3;
 
-	/** JSF Version 2.0 */
 	public static final int JSF_20 = 2;
 
-	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
-	@Deprecated
 	public static final int JSF_12 = 1;
 
-	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
-	@Deprecated
 	public static final int JSF_11 = 0;
 
 	private static final int jsfVersion;
@@ -66,7 +59,6 @@ public class JsfRuntimeInformation {
 		} else {
 			jsfVersion = JSF_11;
 		}
-
 	}
 
 	private static final boolean mojarraPresent =
@@ -91,14 +83,10 @@ public class JsfRuntimeInformation {
 		return jsfVersion >= JSF_20;
 	}
 
-	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
-	@Deprecated
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
 	}
 
-	/** @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement */
-	@Deprecated
 	public static boolean isLessThanJsf20() {
 		return jsfVersion < JSF_20;
 	}
