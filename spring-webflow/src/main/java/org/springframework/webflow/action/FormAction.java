@@ -174,8 +174,8 @@ import org.springframework.webflow.execution.ScopeType;
  * </ul>
  * 
  * <p>
- * <b>FormAction configurable properties</b><br>
  * <table border="1">
+ * <caption>FormAction configurable properties</caption>
  * <tr>
  * <td><b>name</b></td>
  * <td><b>default</b></td>

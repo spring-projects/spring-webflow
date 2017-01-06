@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 /**
  * The default document loader strategy for XSD-based XML documents with validation enabled by default.
  * <p>
- * Note: full XSD support requires JDK 5.0 or a capable parser such as Xerces 2.0. JDK 1.4 or < do not fully support XSD
+ * Note: full XSD support requires JDK 5.0 or a capable parser such as Xerces 2.0. JDK 1.4 or less do not fully support XSD
  * out of the box. To use this implementation on JDK 1.4 make sure Xerces is available in your classpath or disable XSD
  * validation by {@link #setValidating(boolean) setting the validating property to false}.
  * 

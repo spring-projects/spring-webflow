@@ -30,8 +30,9 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * <p>
  * This implementation extracts the filename and removes the file extension from the request URL. The results will be
  * used as the flow Id that must be unique throughout the application.
- * 
- * For example the URLs
+ *
+ * <p>
+ * For example the URLs:
  * 
  * <pre>
  * 	http://someHost/someApp/someServlet/foo
@@ -40,8 +41,8 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * </pre>
  * 
  * will all treat the filename "foo" as the flow id.
- * </p>
- * 
+ *
+ * <p>
  * <strong>Note:</strong> Because this class only treats a filename as a flow id, clashes can result. For example:
  * 
  * <pre>

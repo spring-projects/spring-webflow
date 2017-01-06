@@ -21,8 +21,9 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Result object-to-event adapter interface that tries to do a sensible conversion of the result object into a web flow
- * event. It uses the following conversion table:
+ * event. It uses the following:
  * <table border="1">
+ * <caption>Conversion Table</caption>
  * <tr>
  * <th>Result object type</th>
  * <th>Event id</th>
@@ -38,11 +39,6 @@ import org.springframework.webflow.execution.RequestContext;
  * <td>{@link org.springframework.webflow.action.EventFactorySupport#getYesEventId()}/
  * {@link org.springframework.webflow.action.EventFactorySupport#getNoEventId()}</td>
  * <td>&nbsp;</td>
- * </tr>
- * <tr>
- * <td>{@link org.springframework.core.enums.LabeledEnum}</td>
- * <td>{@link org.springframework.core.enums.LabeledEnum#getLabel()}</td>
- * <td>The result object will included in the event as an attribute named "result".</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.Enum}</td>

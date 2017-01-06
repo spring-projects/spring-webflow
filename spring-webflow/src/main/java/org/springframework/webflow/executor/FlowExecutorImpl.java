@@ -39,8 +39,8 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * This object is a facade or entry point into the Spring Web Flow execution system and makes the overall system easier
  * to use. The name <i>executor</i> was chosen as <i>executors drive executions</i>.
  * <p>
- * <b>Commonly used configurable properties</b><br>
  * <table border="1">
+ * <caption>Commonly used configurable properties</caption>
  * <tr>
  * <td><b>name</b></td>
  * <td><b>description</b></td>
@@ -62,8 +62,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * <td>None</td>
  * </tr>
  * </table>
- * </p>
- * 
+ *
  * @see FlowDefinitionLocator
  * @see FlowExecutionFactory
  * @see FlowExecutionRepository

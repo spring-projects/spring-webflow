@@ -33,7 +33,7 @@ import org.springframework.core.GenericCollectionTypeResolver;
  * Special converter that converts from a source array to a target collection. Supports the selection of an
  * "approximate" collection implementation when a target collection interface such as <code>List.class</code> is
  * specified. Supports type conversion of array elements when a concrete parameterized collection class is provided,
- * such as <code>IntegerList<Integer>.class</code>.
+ * such as {@code IntegerList<Integer>.class}.
  * 
  * Note that type erasure prevents arbitrary access to generic collection element type information at runtime,
  * preventing the ability to convert elements for collections declared as properties.
