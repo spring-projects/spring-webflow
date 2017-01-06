@@ -60,20 +60,31 @@ subprojects { subproject ->
 		}
 	}
 
-	dependencies {
-		testCompile("junit:junit-dep:4.11")
-		testCompile("org.hamcrest:hamcrest-all:1.3")
-		testCompile("org.easymock:easymock:3.4")
+	subproject.ext {
+		hibernate5Version     = "5.2.6.Final"
+		log4jVersion          = "2.7"
+		servletVersion        = "3.1.0"
+		slf4jVersion          = "1.7.22"
+		springVersion         = "5.0.0.M4"
+		springSecurityVersion = "4.2.1.RELEASE"
+		tiles3Version         = "3.0.7"
 	}
 
-	subproject.ext {
-		springVersion = "5.0.0.M4"
-		springSecurityVersion = "4.1.0.RELEASE"
-		slf4jVersion = "1.7.21"
-		log4jVersion = "1.2.17"
-		tiles3Version = "3.0.5"
-		hibernate5Version = "5.2.6.Final"
-
+	dependencies {
+		compile("org.springframework:spring-beans:$springVersion")
+		compile("org.springframework:spring-context:$springVersion")
+		compile("org.springframework:spring-core:$springVersion")
+		compile("org.springframework:spring-expression:$springVersion")
+		compile("commons-logging:commons-logging:1.2")
+		provided("javax.el:javax.el-api:2.2.5")
+		testCompile("junit:junit:4.12") {
+			exclude group:'org.hamcrest', module:'hamcrest-core'
+		}
+		testCompile("org.hamcrest:hamcrest-all:1.3")
+		testCompile("org.easymock:easymock:3.4")
+		testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-jcl:${log4jVersion}")
+		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.69")
 	}
 
 	tasks.withType(Test).all {
@@ -111,20 +122,7 @@ project("spring-binding") {
 	description = "Spring Binding"
 
 	dependencies {
-		compile("commons-logging:commons-logging:1.1.1")
 		compile("opensymphony:ognl:2.6.11")
-		compile("org.springframework:spring-beans:$springVersion")
-		compile("org.springframework:spring-context:$springVersion")
-		compile("org.springframework:spring-core:$springVersion")
-		compile("org.springframework:spring-expression:$springVersion")
-		provided("javax.el:javax.el-api:2.2.5")
-		testCompile("log4j:log4j:$log4jVersion") {
-			exclude group: "javax.mail", module: "mail"
-			exclude group: "javax.jms", module: "jms"
-			exclude group: "com.sun.jdmk", module: "jmxtools"
-			exclude group: "com.sun.jmx", module: "jmxri"
-		}
-		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.69")
 	}
 }
 
@@ -133,25 +131,14 @@ project("spring-webflow") {
 
 	dependencies {
 		compile(project(":spring-binding"))
-		compile("commons-logging:commons-logging:1.1.1")
 		compile("opensymphony:ognl:2.6.11")
-		compile("org.springframework:spring-beans:$springVersion")
-		compile("org.springframework:spring-context:$springVersion")
-		compile("org.springframework:spring-core:$springVersion")
-		compile("org.springframework:spring-expression:$springVersion")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
-		provided("javax.el:javax.el-api:2.2.5")
-		provided("javax.servlet:javax.servlet-api:3.0.1")
-		provided("junit:junit:3.8.2")
-		optional("org.hibernate:hibernate-core:$hibernate5Version") {
-			exclude group: "org.slf4j", module: "slf4j-api"
-		}
-		optional("org.slf4j:slf4j-api:$slf4jVersion")
+		provided("javax.servlet:javax.servlet-api:$servletVersion")
+		optional("org.hibernate:hibernate-core:$hibernate5Version")
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework:spring-orm:$springVersion")
 		optional("org.springframework:spring-tx:$springVersion")
-		optional("org.apache.tiles:tiles-request-api:1.0.1")
 		optional("org.apache.tiles:tiles-api:$tiles3Version")
 		optional("org.apache.tiles:tiles-core:$tiles3Version") {
 			exclude group: "org.slf4j", module: "jcl-over-slf4j"
@@ -170,25 +157,18 @@ project("spring-webflow") {
 			exclude group: "org.springframework", module: "spring-web"
 			exclude group: "ognl", module: "ognl"
 		}
-		testCompile("javax.validation:validation-api:1.0.0.GA")
-		testCompile("org.hibernate:hibernate-entitymanager:$hibernate5Version") {
-			exclude group: "org.slf4j", module: "slf4j-api"
-		}
-		testCompile("org.hibernate:hibernate-validator:4.3.2.Final")
-		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.69")
-		testCompile("org.hsqldb:hsqldb:2.3.1")
+		provided("junit:junit:3.8.2")
 		testCompile("org.springframework:spring-aop:$springVersion")
 		testCompile("org.springframework:spring-jdbc:$springVersion")
 		testCompile("org.springframework:spring-test:$springVersion")
+		testCompile("javax.validation:validation-api:1.1.0.Final")
+		testCompile("org.hibernate:hibernate-entitymanager:$hibernate5Version")
+		testCompile("org.hibernate:hibernate-validator:4.3.2.Final")
+		testCompile("org.hsqldb:hsqldb:2.3.1")
 		testCompile("javax.servlet.jsp:javax.servlet.jsp-api:2.2.1")
 		testCompile("javax.servlet:jstl:1.2")
-		testCompile("log4j:log4j:$log4jVersion") {
-			exclude group: "javax.mail", module: "mail"
-			exclude group: "javax.jms", module: "jms"
-			exclude group: "com.sun.jdmk", module: "jmxtools"
-			exclude group: "com.sun.jmx", module: "jmxri"
-		}
-		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-jcl:${slf4jVersion}")
 	}
 }
 
@@ -198,34 +178,19 @@ project("spring-faces") {
 	dependencies {
 		compile(project(":spring-binding"))
 		compile(project(":spring-webflow"))
-		compile("commons-logging:commons-logging:1.1.1")
-		compile("org.springframework:spring-beans:$springVersion")
-		compile("org.springframework:spring-context:$springVersion")
-		compile("org.springframework:spring-core:$springVersion")
-		compile("org.springframework:spring-expression:$springVersion")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
-		provided("javax.el:javax.el-api:2.2.5")
-		provided("javax.servlet:javax.servlet-api:3.0.1")
-		provided("com.sun.faces:jsf-api:2.2.13")
-		provided("com.sun.faces:jsf-impl:2.2.13")
+		provided("javax.servlet:javax.servlet-api:$servletVersion")
+		provided("com.sun.faces:jsf-api:2.2.14")
+		provided("com.sun.faces:jsf-impl:2.2.14")
 		provided("org.apache.myfaces.core:myfaces-impl:2.1.18")
 		optional("com.sun.facelets:jsf-facelets:1.1.14")
 		optional("org.springframework.security:spring-security-core:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
-		testCompile("log4j:log4j:$log4jVersion") {
-			exclude group: "javax.mail", module: "mail"
-			exclude group: "javax.jms", module: "jms"
-			exclude group: "com.sun.jdmk", module: "jmxtools"
-			exclude group: "com.sun.jmx", module: "jmxri"
-		}
 		testCompile("org.apache.myfaces.test:myfaces-test22:1.0.7")
-		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.69")
-		testCompile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
-		testCompile("org.slf4j:slf4j-log4j12:$slf4jVersion") {
-			exclude group: "log4j", module: "log4j"
-		}
+		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
+		testCompile("org.slf4j:slf4j-jcl:${slf4jVersion}")
 		testCompile("org.springframework:spring-test:$springVersion")
 	}
 }
