@@ -3,7 +3,3 @@ rootProject.name = 'webflow'
 include 'spring-binding'
 include 'spring-faces'
 include 'spring-webflow'
-
-// Exposes gradle buildSrc
-include "buildSrc"
-rootProject.children.find{ it.name == "buildSrc" }.name = "spring-build-src"
