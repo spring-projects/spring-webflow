@@ -47,8 +47,8 @@ import org.springframework.webflow.test.MockExternalContext;
  * <p>
  * A flow execution test can effectively automate and validate the orchestration required to drive an end-to-end
  * business task that spans several steps involving the user to complete. Such tests are a good way to test your system
- * top-down starting at the web-tier and pushing through all the way to the DB without having to deploy to a servlet or
- * portlet container. In addition, they can be used to effectively test a flow's execution (the web layer) standalone,
+ * top-down starting at the web-tier and pushing through all the way to the DB without having to deploy to a servlet
+ * container. In addition, they can be used to effectively test a flow's execution (the web layer) standalone,
  * typically with a mock service layer.
  * 
  * @author Keith Donald

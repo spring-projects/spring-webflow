@@ -60,7 +60,7 @@ import org.springframework.webflow.validation.ValidationHelper;
 import org.springframework.webflow.validation.ValidationHintResolver;
 
 /**
- * Base view implementation for the Spring Web MVC Servlet and Spring Web MVC Portlet frameworks.
+ * Base view implementation for the Spring Web MVC Servlet frameworks.
  *
  * @author Keith Donald
  */

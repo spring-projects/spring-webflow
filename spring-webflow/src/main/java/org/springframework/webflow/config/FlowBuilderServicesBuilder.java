@@ -52,21 +52,17 @@ public class FlowBuilderServicesBuilder {
 	private boolean enableDevelopmentMode;
 
 
+	public FlowBuilderServicesBuilder() {
+		this.viewFactoryCreator = new MvcViewFactoryCreator();
+	}
+
 	/**
 	 * Create a new instance with the given ApplicationContext.
-	 *
-	 * @param applicationContext the ApplicationContext to use to initialize a
-	 * 	default ViewFactoryCreator instance with.
+	 * @deprecated as of 2.5 an ApplicationContext is no longer required
 	 */
 	public FlowBuilderServicesBuilder(ApplicationContext applicationContext) {
 		Assert.notNull(applicationContext, "applicationContext is required");
-		this.viewFactoryCreator = initViewFactoryCreator(applicationContext);
-	}
-
-	private static ViewFactoryCreator initViewFactoryCreator(ApplicationContext applicationContext) {
-		MvcViewFactoryCreator viewFactoryCreator = new MvcViewFactoryCreator();
-		viewFactoryCreator.setApplicationContext(applicationContext);
-		return viewFactoryCreator;
+		this.viewFactoryCreator = new MvcViewFactoryCreator();
 	}
 
 

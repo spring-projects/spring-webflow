@@ -17,15 +17,12 @@ package org.springframework.webflow.config;
 
 import java.util.Set;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.conversation.ConversationManager;
@@ -45,7 +42,6 @@ import org.springframework.webflow.execution.repository.snapshot.SerializedFlowE
 import org.springframework.webflow.execution.repository.snapshot.SimpleFlowExecutionSnapshotFactory;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
-import org.springframework.webflow.mvc.builder.MvcEnvironment;
 
 /**
  * This factory encapsulates the construction and assembly of a {@link FlowExecutor}, including the provision of its
@@ -57,8 +53,7 @@ import org.springframework.webflow.mvc.builder.MvcEnvironment;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationContextAware, BeanClassLoaderAware,
-		InitializingBean {
+class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, BeanClassLoaderAware, InitializingBean {
 
 	private static final String ALWAYS_REDIRECT_ON_PAUSE = "alwaysRedirectOnPause";
 
@@ -79,8 +74,6 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 	private ConversionService conversionService;
 
 	private FlowExecutor flowExecutor;
-
-	private MvcEnvironment environment;
 
 	private ClassLoader classLoader;
 
@@ -133,12 +126,6 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		this.conversationManager = conversationManager;
 	}
 
-	// implementing ApplicationContextAware
-
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		environment = MvcEnvironment.environmentFor(applicationContext);
-	}
-
 	// implement BeanClassLoaderAware
 
 	public void setBeanClassLoader(ClassLoader classLoader) {
@@ -186,12 +173,10 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 
 	private void putDefaultFlowExecutionAttributes(LocalAttributeMap<Object> executionAttributes) {
 		if (!executionAttributes.contains(ALWAYS_REDIRECT_ON_PAUSE)) {
-			Boolean redirect = (environment != MvcEnvironment.PORTLET);
-			executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, redirect);
+			executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, true);
 		}
 		if (!executionAttributes.contains(REDIRECT_IN_SAME_STATE)) {
-			Boolean redirect = (environment != MvcEnvironment.PORTLET);
-			executionAttributes.put(REDIRECT_IN_SAME_STATE, redirect);
+			executionAttributes.put(REDIRECT_IN_SAME_STATE, true);
 		}
 	}
 

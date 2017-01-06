@@ -32,7 +32,6 @@ import org.springframework.webflow.execution.repository.snapshot.SerializedFlowE
 import org.springframework.webflow.execution.repository.snapshot.SimpleFlowExecutionSnapshotFactory;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
-import org.springframework.webflow.mvc.builder.MvcEnvironment;
 
 /**
  * A builder for {@link FlowExecutor} instances designed for programmatic use in
@@ -50,8 +49,6 @@ public class FlowExecutorBuilder {
 
 	private Integer maxFlowExecutionSnapshots;
 
-	private MvcEnvironment environment;
-
 	private LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
 
 	private ConditionalFlowExecutionListenerLoader listenerLoader;
@@ -61,18 +58,21 @@ public class FlowExecutorBuilder {
 	private ConversationManager conversationManager;
 
 
+	public FlowExecutorBuilder(FlowDefinitionLocator flowRegistry) {
+		Assert.notNull(flowRegistry, "FlowDefinitionLocator is required");
+		this.flowRegistry = flowRegistry;
+	}
+
 	/**
 	 * Create a new instance with the given flow registry and ApplicationContext.
 	 *
 	 * @param flowRegistry the flow registry that will locate flow definitions
-	 * @param applicationContext the Spring ApplicationContext to use for
-	 * 	initializing an instance of {@link MvcEnvironment}
+	 * @param applicationContext the Spring ApplicationContext
+	 * @deprecated as of 2.5 an ApplicationContext is no longer required
 	 */
 	public FlowExecutorBuilder(FlowDefinitionLocator flowRegistry, ApplicationContext applicationContext) {
 		Assert.notNull(flowRegistry, "FlowDefinitionLocator is required");
-		Assert.notNull(applicationContext, "applicationContext is required");
 		this.flowRegistry = flowRegistry;
-		this.environment = MvcEnvironment.environmentFor(applicationContext);
 	}
 
 
@@ -216,10 +216,10 @@ public class FlowExecutorBuilder {
 	private LocalAttributeMap<Object> getExecutionAttributes() {
 		LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>(this.executionAttributes.asMap());
 		if (!attributes.contains("alwaysRedirectOnPause")) {
-			attributes.put("alwaysRedirectOnPause", (this.environment != MvcEnvironment.PORTLET));
+			attributes.put("alwaysRedirectOnPause", true);
 		}
 		if (!attributes.contains("redirectInSameState")) {
-			attributes.put("redirectInSameState", (this.environment != MvcEnvironment.PORTLET));
+			attributes.put("redirectInSameState", true);
 		}
 		return attributes;
 	}

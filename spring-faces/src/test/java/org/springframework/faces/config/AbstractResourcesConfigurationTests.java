@@ -26,7 +26,7 @@ public abstract class AbstractResourcesConfigurationTests extends TestCase {
 		Map<String, ?> map = this.context.getBeansOfType(HttpRequestHandlerAdapter.class);
 		assertEquals(1, map.values().size());
 
-		Object resourceHandler = this.context.getBean(ResourcesBeanDefinitionParser.SERVLET_RESOURCE_HANDLER_BEAN_NAME);
+		Object resourceHandler = this.context.getBean("jsfResourceRequestHandler");
 		assertNotNull(resourceHandler);
 		assertTrue(resourceHandler instanceof JsfResourceRequestHandler);
 

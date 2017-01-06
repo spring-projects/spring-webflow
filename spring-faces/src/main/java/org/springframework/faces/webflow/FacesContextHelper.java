@@ -66,8 +66,7 @@ public class FacesContextHelper {
 	}
 
 	/**
-	 * Factory method that can be used to create a new default {@link FacesContext} instance for the running
-	 * (Portlet/Servlet) environment.
+	 * Factory method that can be used to create a new default {@link FacesContext} instance.
 	 *
 	 * @param context the native context
 	 * @param request the native request

@@ -41,7 +41,6 @@ import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isMojarraPresent;
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 /**
  * JSF-specific {@link ViewFactory} implementation.
@@ -107,9 +106,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	private ViewHandler getViewHandler(FacesContext facesContext) {
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-		if (!isPortletRequest(facesContext)) {
-			viewHandler.initView(facesContext);
-		}
+		viewHandler.initView(facesContext);
 		return viewHandler;
 	}
 

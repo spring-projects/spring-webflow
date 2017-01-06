@@ -49,7 +49,7 @@ import org.springframework.webflow.definition.TransitionDefinition;
  * The web flow system will ensure that a RequestContext object is local to the current thread. It can be safely
  * manipulated without needing to worry about concurrent access.
  * <p>
- * Note: this request context is in no way linked to an HTTP or Portlet request. It uses the familiar "request" naming
+ * Note: this request context is in no way linked to an HTTP request. It uses the familiar "request" naming
  * convention to indicate a single call to manipulate a runtime execution of a flow definition.
  * 
  * @author Keith Donald
@@ -151,7 +151,7 @@ public interface RequestContext {
 	 * constructs within that environment.
 	 * <p>
 	 * In addition, this context may be downcastable to a specific context type for a specific client environment, such
-	 * as Servlets or Portlets. Such downcasting will give you full access to a native HttpServletRequest, for example.
+	 * as Servlets. Such downcasting will give you full access to a native HttpServletRequest, for example.
 	 * With that said, for portability reasons you should avoid coupling your flow artifacts to a specific deployment
 	 * environment when possible.
 	 * @return the originating external context, the one that triggered the current execution request

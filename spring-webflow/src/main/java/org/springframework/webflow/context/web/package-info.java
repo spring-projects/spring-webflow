@@ -15,7 +15,7 @@
  */
 
 /**
- * Shared classes used by the Servlet and Portlet ExternalContext implementations.
+ * Shared classes used with Servlet or alternative ExternalContext implementations.
  */
 package org.springframework.webflow.context.web;
 

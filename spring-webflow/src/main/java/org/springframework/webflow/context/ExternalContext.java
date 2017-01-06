@@ -73,8 +73,7 @@ public interface ExternalContext {
 	 * session and accessible to both internal and external SWF artifacts.
 	 * <p>
 	 * Note: most external context implementations do not distinguish between the concept of a "local" user session
-	 * scope and a "global" session scope. The Portlet world does, but not the Servlet for example. In those cases
-	 * calling this method returns the same map as calling {@link #getSessionMap()}.
+	 * scope and a "global" session scope. Otherwise this method returns the same map as calling {@link #getSessionMap()}.
 	 * @return the mutable global session attribute map
 	 */
 	public SharedAttributeMap<Object> getGlobalSessionMap();
@@ -140,8 +139,7 @@ public interface ExternalContext {
 
 	/**
 	 * Is a <i>render</i> response allowed to be written for this request? Always return false after a response has been
-	 * completed. May return false before that to indicate a response is not allowed to be completed. For example, in a
-	 * Portlet environment, render responses are only allowed in render requests.
+	 * completed. May return false before that to indicate a response is not allowed to be completed.
 	 * @return true if yes, false otherwise
 	 */
 	public boolean isResponseAllowed();

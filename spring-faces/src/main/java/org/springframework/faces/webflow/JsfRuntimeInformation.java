@@ -20,10 +20,8 @@ import javax.faces.FacesWrapper;
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Helper class to provide information about the JSF runtime environment such as
@@ -78,12 +76,6 @@ public class JsfRuntimeInformation {
 			ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASSLOADER);
 
 	private static boolean myFacesInUse = isMyFacesContextFactoryInUse();
-
-
-	private static boolean portletPresent = ClassUtils.isPresent("javax.portlet.Portlet", CLASSLOADER);
-
-	private static boolean springPortletPresent =
-			ClassUtils.isPresent("org.springframework.web.portlet.DispatcherPortlet", CLASSLOADER);
 
 
 
@@ -141,48 +133,6 @@ public class JsfRuntimeInformation {
 		catch (Throwable ex) {
 			return false;
 		}
-	}
-
-
-	/**
-	 * Determines if the container has support for portlets and if Spring MVC portlet support is available
-	 *
-	 * @return <tt>true</tt> if a portlet environment is detected
-	 */
-	public static boolean isSpringPortletPresent() {
-		return portletPresent && springPortletPresent;
-	}
-
-	/**
-	 * Determine if the specified {@link FacesContext} is from a portlet request.
-	 * @param context the faces context
-	 * @return <tt>true</tt> if the request is from a portlet
-	 */
-	public static boolean isPortletRequest(FacesContext context) {
-		Assert.notNull(context, "Context must not be null");
-		return isPortletContext(context.getExternalContext().getContext());
-	}
-
-	/**
-	 * Determine if the specified {@link RequestContext} is from a portlet request.
-	 *
-	 * @param context the request context
-	 * @return <tt>true</tt> if the request is from a portlet
-	 */
-	public static boolean isPortletRequest(RequestContext context) {
-		Assert.notNull(context, "Context must not be null");
-		return isPortletContext(context.getExternalContext().getNativeContext());
-	}
-
-	/**
-	 * Determine if the specified context object is from portlet.
-	 *
-	 * @param nativeContext the native context
-	 * @return <tt>true</tt> if the context is from a portlet
-	 */
-	public static boolean isPortletContext(Object nativeContext) {
-		Assert.notNull(nativeContext, "Context must not be null");
-		return ClassUtils.getMethodIfAvailable(nativeContext.getClass(), "getPortletContextName") != null;
 	}
 
 }

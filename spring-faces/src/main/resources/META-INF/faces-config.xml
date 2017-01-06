@@ -13,7 +13,6 @@
 
 	<factory>
 		<application-factory>org.springframework.faces.webflow.FlowApplicationFactory</application-factory>
-		<faces-context-factory>org.springframework.faces.webflow.context.portlet.PortletFacesContextFactory</faces-context-factory>
 	</factory>
 
 	<lifecycle>

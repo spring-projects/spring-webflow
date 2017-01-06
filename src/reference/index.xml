@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <book xml:id="spring-framework-reference"
-	xmlns="http://docbook.org/ns/docbook" version="5.0"
-	xmlns:xl="http://www.w3.org/1999/xlink"
-	xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+	  xmlns="http://docbook.org/ns/docbook" version="5.0"
+	  xmlns:xi="http://www.w3.org/2001/XInclude"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd">
 
 	<info>
 		<title>Spring Web Flow Reference Guide</title>
@@ -96,9 +93,7 @@
 	<xi:include href="spring-mvc.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="spring-js.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="spring-faces.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="portlet.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="testing.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="upgrade-guide.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="flow-definition-field-mappings.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </book>

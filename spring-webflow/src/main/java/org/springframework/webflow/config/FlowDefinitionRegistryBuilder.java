@@ -17,7 +17,6 @@ package org.springframework.webflow.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Create a new instance with the given ApplicationContext.
 	 *
-	 * @param applicationContext the ApplicationContext to use for initializing the
+	 * @param appContext the ApplicationContext to use for initializing the
 	 * 	FlowDefinitionResourceFactory and FlowBuilderServices instances with
 	 */
 	public FlowDefinitionRegistryBuilder(ApplicationContext appContext) {
@@ -77,7 +76,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Create a new instance with the given ApplicationContext and {@link FlowBuilderServices}.
 	 *
-	 * @param applicationContext the ApplicationContext to use for initializing the
+	 * @param appContext the ApplicationContext to use for initializing the
 	 * 	FlowDefinitionResourceFactory and FlowBuilderServices instances with
 	 * @param builderServices a {@link FlowBuilderServices} instance to configure
 	 * 	on the FlowDefinitionRegistry
@@ -89,7 +88,7 @@ public class FlowDefinitionRegistryBuilder {
 			this.flowBuilderServices = builderServices;
 		}
 		else {
-			this.flowBuilderServices = new FlowBuilderServicesBuilder(appContext).build();
+			this.flowBuilderServices = new FlowBuilderServicesBuilder().build();
 			this.flowBuilderServices.setApplicationContext(appContext);
 		}
 	}

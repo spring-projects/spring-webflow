@@ -80,7 +80,7 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * This class and the rest of the Spring Web Flow (SWF) engine have been designed with minimal dependencies on other
  * libraries. Spring Web Flow is usable in a standalone fashion. The engine system is fully usable outside an HTTP
- * servlet environment, for example in portlets, tests, or standalone applications. One of the major architectural
+ * servlet environment, for example in tests, or standalone applications. One of the major architectural
  * benefits of Spring Web Flow is the ability to design reusable, high-level controller modules that may be executed in
  * <i>any</i> environment.
  * <p>

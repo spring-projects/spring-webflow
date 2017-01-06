@@ -15,10 +15,7 @@
  */
 package org.springframework.faces.mvc;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
-
 import java.util.Map;
-
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -60,10 +57,7 @@ public class JsfView extends AbstractUrlBasedView {
 		JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, this.facesLifecycle, facesContext);
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-
-		if (!isPortletRequest(facesContext)) {
-			viewHandler.initView(facesContext);
-		}
+		viewHandler.initView(facesContext);
 
 		UIViewRoot viewRoot = viewHandler.createView(facesContext, getUrl());
 		Assert.notNull(viewRoot, "A JSF view could not be created for " + getUrl());

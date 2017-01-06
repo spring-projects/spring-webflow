@@ -22,8 +22,6 @@ import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.DefaultMessageCodesResolver;
 import org.springframework.validation.MessageCodesResolver;
@@ -43,9 +41,6 @@ import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
  * Returns {@link ViewFactory view factories} that create native Spring MVC-based views. Used by a FlowBuilder to
  * configure a flow's view states with Spring MVC-based view factories.
  * <p>
- * This implementation detects whether it is running in a Servlet or Portlet MVC environment, and returns instances of
- * the default view factory implementation for that environment.
- * <p>
  * By default, this implementation creates view factories that resolve their views by loading flow-relative resources,
  * such as .jsp templates located in a flow working directory. This class also supports rendering views resolved by
  * pre-existing Spring MVC {@link ViewResolver view resolvers}.
@@ -57,9 +52,7 @@ import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationContextAware {
-
-	private MvcEnvironment environment;
+public class MvcViewFactoryCreator implements ViewFactoryCreator {
 
 	private FlowViewResolver flowViewResolver = new FlowResourceFlowViewResolver();
 
@@ -162,11 +155,6 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 		this.messageCodesResolver = messageCodesResolver;
 	}
 
-	// implementing ApplicationContextAware
-
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		environment = MvcEnvironment.environmentFor(applicationContext);
-	}
 
 	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
 			ConversionService conversionService, BinderConfiguration binderConfiguration,
@@ -188,17 +176,13 @@ public class MvcViewFactoryCreator implements ViewFactoryCreator, ApplicationCon
 	}
 
 	/**
-	 * Creates a concrete instance of an AbstractMvcViewFactory according to the runtime environment (Servlet or
-	 * Portlet).
+	 * Creates a concrete instance of an AbstractMvcViewFactory.
 	 */
 	protected AbstractMvcViewFactory createMvcViewFactory(Expression viewId, ExpressionParser expressionParser,
 			ConversionService conversionService, BinderConfiguration binderConfiguration) {
-		if (environment == MvcEnvironment.SERVLET) {
-			return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
-					binderConfiguration, messageCodesResolver);
-		} else {
-			throw new IllegalStateException("Web MVC Environment " + environment + " not supported ");
-		}
+
+		return new ServletMvcViewFactory(viewId, flowViewResolver, expressionParser, conversionService,
+				binderConfiguration, messageCodesResolver);
 	}
 
 	public String getViewIdByConvention(String viewStateId) {

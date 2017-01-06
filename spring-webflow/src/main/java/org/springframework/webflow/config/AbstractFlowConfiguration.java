@@ -61,7 +61,7 @@ public class AbstractFlowConfiguration implements ApplicationContextAware {
 	 * @return the created builder
 	 */
 	protected FlowExecutorBuilder getFlowExecutorBuilder(FlowDefinitionLocator flowRegistry) {
-		return new FlowExecutorBuilder(flowRegistry, this.applicationContext);
+		return new FlowExecutorBuilder(flowRegistry);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class AbstractFlowConfiguration implements ApplicationContextAware {
 	 * @return the created builder
 	 */
 	protected FlowBuilderServicesBuilder getFlowBuilderServicesBuilder() {
-		return new FlowBuilderServicesBuilder(this.applicationContext);
+		return new FlowBuilderServicesBuilder();
 	}
 
 }

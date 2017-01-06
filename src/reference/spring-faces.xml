@@ -23,10 +23,6 @@ xsi:schemaLocation="
 		JSF v2.0 or above.    Both Sun Mojarra and Apache MyFaces runtime environments
 		are supported.</para>
 
-		<para>Spring Web Flow also supports using JSF in a portlet environment.
-		Spring Web Flow's portlet integration supports Portlets API 2.0.
-		See <xref linkend="portlet" /> for more on Spring Web Flow's portlet
-		integration.</para>
 	</sect1>
 
 	<sect1 xml:id="spring-faces-integration">
