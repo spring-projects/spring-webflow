@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.binding.expression.ognl;
+package org.springframework.binding.expression.beanwrapper;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -79,21 +79,19 @@
 		<sect2 xml:id="el-spring-el">
 			<title>Spring EL</title>
 			<para>
-				Starting with version 2.1 Web Flow uses the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html">Spring Expression Language</link> (Spring EL).
+				Web Flow uses the <link xl:href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html">Spring Expression Language</link> (Spring EL).
 				Spring EL was created to provide a single, well-supported expression language for use across all the products in the Spring portfolio.
 				It is distributed as a separate jar <code>org.springframework.expression</code> in the Spring Framework.
-				Existing applications will need to remove dependencies on <code>org.jboss.el</code> or <code>org.ognl</code> and use <code>org.springframework.expression</code> instead.
-				See the section below on EL Portability for other notes on upgrading.
 			</para>
 		</sect2>
 		<sect2 xml:id="el-unified-el">
 			<title>Unified EL</title>
 			<para>
-				In Web Flow 2.0 <link xl:href="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</link> was the default expression language with <code>jboss-el</code> as the implementation.
-				Use of Unified EL also implies a dependency on <code>el-api</code> although that is typically <emphasis>provided</emphasis> by your web container.
-				Tomcat 6 includes it, for example.
-				Spring EL is the default and recommended expression language to use.
-				However it is possible to replace it with Unified EL if you wish to do so.
+				Use of <link xl:href="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</link>
+				also implies a dependency on <code>el-api</code> although that is typically <emphasis>provided</emphasis>
+				by your web container.
+				Although Spring EL is the default and recommended expression language to use,
+				it is possible to replace it with Unified EL if you wish to do so.
 				You need the following Spring configuration to plug in the <code>WebFlowELExpressionParser</code> to the <code>flow-builder-services</code>:
 				<programlisting language="xml"><![CDATA[
 <webflow:flow-builder-services expression-parser="expressionParser"/>
@@ -119,40 +117,11 @@
                 </programlisting>
 			</para>
 		</sect2>
-		<sect2 xml:id="el-ognl">
-			<title>OGNL</title>
-			<note>
-				<para>
-					OGNL support is deprecated as of Web Flow version 2.4.
-				</para>
-			</note>
-			<para>
-				<link xl:href="http://www.ognl.org">OGNL</link> is the third supported expression language.
-				OGNL is the EL most familiar to Web Flow version 1.0 users.
-				Please refer to the <link xl:href="http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html">OGNL language guide</link> for specifics on its EL syntax.
-				If you wish to use OGNL this is the Spring configuration necessary to plug it in:
-				<programlisting language="xml"><![CDATA[
-<webflow:flow-builder-services expression-parser="expressionParser"/>
-
-<bean id="expressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser"/>]]>
-                </programlisting>
-                Note that if your application is registering custom converters it's important to ensure the WebFlowOgnlExpressionParser is configured with the conversion service that has those custom converters.
-				<programlisting language="xml"><![CDATA[
-<webflow:flow-builder-services expression-parser="expressionParser" conversion-service="conversionService"/>
-
-<bean id="expressionParser" class="org.springframework.webflow.expression.WebFlowOgnlExpressionParser">
-    <property name="conversionService" ref="conversionService"/>
-</bean>
-
-<bean id="conversionService" class="somepackage.ApplicationConversionService"/>]]>
-                </programlisting>
-			</para>
-		</sect2>
 	</sect1>
 	<sect1 xml:id="el-portability">
 		<title>EL portability</title>
 		<para>
-			In general, you will find Spring EL, Unified EL and OGNL to have a very similar syntax.
+			In general, you will find Spring EL and Unified EL to have a very similar syntax.
 		</para>
 		<para>
 			Note however there are some advantages to Spring EL.
@@ -160,7 +129,7 @@
 			Specifically the automatic detection of generic types as well as the use of formatting annotations is currently supported with Spring EL only.
 		</para>
 		<para>
-			There are some minor changes to keep in mind when upgrading to Spring EL from Unified EL or OGNL as follows:
+			There are some minor changes to keep in mind when upgrading to Spring EL from Unified EL as follows:
 			<orderedlist>
 				<listitem><para>Expressions deliniated with <code>${}</code> in flow definitions must be changed to <code>#{}</code>.</para></listitem>
 				<listitem><para>Expressions testing the current event <code>#{currentEvent == 'submit'}</code> must be changed to <code>#{currentEvent.id == 'submit'}</code>.</para></listitem>

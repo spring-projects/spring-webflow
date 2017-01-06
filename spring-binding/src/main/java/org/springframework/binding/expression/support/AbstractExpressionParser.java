@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2016 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,10 @@ import org.springframework.binding.expression.ParserException;
 import org.springframework.util.Assert;
 
 /**
- * An expression parser that parses Ognl expressions.
+ * Abstract base class for parsing ${...} style expressions.
  * 
  * @author Keith Donald
+ * @see org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser
  */
 public abstract class AbstractExpressionParser implements ExpressionParser {
 
@@ -117,14 +118,15 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 				if (!allowDelimitedEvalExpressions) {
 					throw new ParserException(
 							expressionString,
-							"The expression '"
-									+ expressionString
-									+ "' being parsed is expected be a standard OGNL expression. Do not attempt to enclose such expression strings in ${} delimiters--this is redundant. If you need to parse a template that mixes literal text with evaluatable blocks, set the 'template' parser context attribute to true.",
+							"The expression '" + expressionString + "' being parsed is expected be an expression. " +
+									"Do not enclose such expression strings in ${} delimiters as it's redundant. " +
+									"If you need to parse a template that mixes literal text with evaluatable blocks, " +
+									"set the 'template' parser context attribute to true.",
 							null);
 				} else {
 					int lastIndex = expressionString.length() - getExpressionSuffix().length();
-					String ognlExpression = expressionString.substring(getExpressionPrefix().length(), lastIndex);
-					return doParseExpression(ognlExpression, context);
+					String expression = expressionString.substring(getExpressionPrefix().length(), lastIndex);
+					return doParseExpression(expression, context);
 				}
 			} else {
 				return doParseExpression(expressionString, context);

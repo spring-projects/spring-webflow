@@ -121,9 +121,6 @@ subprojects { subproject ->
 project("spring-binding") {
 	description = "Spring Binding"
 
-	dependencies {
-		compile("opensymphony:ognl:2.6.11")
-	}
 }
 
 project("spring-webflow") {
@@ -131,7 +128,6 @@ project("spring-webflow") {
 
 	dependencies {
 		compile(project(":spring-binding"))
-		compile("opensymphony:ognl:2.6.11")
 		compile("org.springframework:spring-web:$springVersion")
 		compile("org.springframework:spring-webmvc:$springVersion")
 		provided("javax.servlet:javax.servlet-api:$servletVersion")
@@ -155,7 +151,6 @@ project("spring-webflow") {
 		optional("org.apache.tiles:tiles-extras:$tiles3Version") {
 			exclude group: "org.slf4j", module: "jcl-over-slf4j"
 			exclude group: "org.springframework", module: "spring-web"
-			exclude group: "ognl", module: "ognl"
 		}
 		provided("junit:junit:3.8.2")
 		testCompile("org.springframework:spring-aop:$springVersion")

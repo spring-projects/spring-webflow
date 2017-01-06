@@ -23,7 +23,6 @@ import org.springframework.binding.convert.service.GenericConversionService;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.ValueCoercionException;
-import org.springframework.binding.expression.ognl.TestBean;
 import org.springframework.binding.expression.support.FluentParserContext;
 
 public class BeanWrapperExpressionParserTests extends TestCase {

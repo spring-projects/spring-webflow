@@ -393,7 +393,7 @@ public ViewFactoryCreator viewFactoryCreator() {
 				<title>expression-parser</title>
 				<para>
 					Use the <code>expression-parser</code> attribute to customize the <code>ExpressionParser</code> used by the Web Flow system.
-					The default ExpressionParser uses the Unified EL if available on the classpath, otherwise OGNL is used.
+					The default ExpressionParser uses the Unified EL if available on the classpath, otherwise Spring EL is used.
 				</para>
 			</sect3>
 			<sect3 xml:id="builder-service-view-factory-creator">
