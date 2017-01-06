@@ -40,8 +40,6 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * 	&lt;param-value&gt;org.springframework.faces.webflow.FlowResourceResolver&lt;/param-value&gt; 
  * &lt;/context-param&gt;
  * </pre>
- * 
- * @see Jsf2FlowResourceResolver
  */
 public class FlowResourceResolver extends ResourceResolver {
 
