@@ -67,7 +67,7 @@ subprojects { subproject ->
 		log4jVersion          = "2.7"
 		servletVersion        = "3.1.0"
 		slf4jVersion          = "1.7.22"
-		springVersion         = "5.0.0.M4"
+		springVersion         = "5.0.0.BUILD-SNAPSHOT"
 		springSecurityVersion = "4.2.1.RELEASE"
 		tiles3Version         = "3.0.7"
 	}

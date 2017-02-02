@@ -27,7 +27,7 @@ import java.util.TreeSet;
 
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
-import org.springframework.core.GenericCollectionTypeResolver;
+import org.springframework.core.ResolvableType;
 
 /**
  * Special converter that converts from a source array to a target collection. Supports the selection of an
@@ -137,8 +137,7 @@ public class ArrayToCollection implements TwoWayConverter {
 		if (elementConverter != null) {
 			return elementConverter;
 		} else {
-			Class<?> elementType = GenericCollectionTypeResolver
-					.getCollectionType((Class<? extends Collection<?>>) targetClass);
+			Class<?> elementType = ResolvableType.forClass(targetClass).asCollection().resolveGeneric(0);
 			if (elementType != null) {
 				Class<?> componentType = source.getClass().getComponentType();
 				return conversionService.getConversionExecutor(componentType, elementType);

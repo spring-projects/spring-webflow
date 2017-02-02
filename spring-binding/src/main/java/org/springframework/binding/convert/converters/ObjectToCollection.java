@@ -20,7 +20,7 @@ import java.util.Collection;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.core.CollectionFactory;
-import org.springframework.core.GenericCollectionTypeResolver;
+import org.springframework.core.ResolvableType;
 
 /**
  * Special two-way converter that converts an object to an single-element collection. Supports type conversion of the
@@ -82,7 +82,7 @@ public class ObjectToCollection implements Converter {
 		if (elementConverter != null) {
 			return elementConverter;
 		} else {
-			Class<?> elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
+			Class<?> elementType = ResolvableType.forClass(targetClass).asCollection().resolveGeneric(0);
 			if (elementType != null) {
 				Class<?> componentType = source.getClass().getComponentType();
 				return conversionService.getConversionExecutor(componentType, elementType);

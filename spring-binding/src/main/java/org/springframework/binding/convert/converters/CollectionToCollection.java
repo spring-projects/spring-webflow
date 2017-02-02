@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.core.CollectionFactory;
-import org.springframework.core.GenericCollectionTypeResolver;
+import org.springframework.core.ResolvableType;
 
 /**
  * A converter that can convert from one collection type to another.
@@ -66,7 +66,7 @@ public class CollectionToCollection implements Converter {
 		if (elementConverter != null) {
 			return elementConverter;
 		} else {
-			Class<?> elementType = GenericCollectionTypeResolver.getCollectionType(targetClass);
+			Class<?> elementType = ResolvableType.forClass(targetClass).asCollection().resolveGeneric(0);
 			if (elementType != null) {
 				Class<?> componentType = source.getClass().getComponentType();
 				return conversionService.getConversionExecutor(componentType, elementType);

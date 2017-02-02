@@ -16,19 +16,14 @@
 package org.springframework.faces.webflow;
 
 import javax.el.CompositeELResolver;
-import javax.el.ELContext;
 import javax.el.ELResolver;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.access.el.SpringBeanELResolver;
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.binding.expression.el.MapAdaptableELResolver;
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.expression.el.FlowResourceELResolver;
 import org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver;
 import org.springframework.webflow.expression.el.RequestContextELResolver;
 import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
+import org.springframework.webflow.expression.el.SpringBeanWebFlowELResolver;
 
 /**
  * Custom {@link ELResolver} for resolving web flow specific expressions.
@@ -46,21 +41,7 @@ public class FlowELResolver extends CompositeELResolver {
 		add(new FlowResourceELResolver());
 		add(new ScopeSearchingELResolver());
 		add(new MapAdaptableELResolver());
-		add(new BeanELResolver());
-	}
-
-	private static class BeanELResolver extends SpringBeanELResolver {
-
-		private static final BeanFactory EMPTY_BEAN_FACTORY = new StaticListableBeanFactory();
-
-		protected BeanFactory getBeanFactory(ELContext elContext) {
-			RequestContext requestContext = RequestContextHolder.getRequestContext();
-			if (requestContext == null) {
-				return EMPTY_BEAN_FACTORY;
-			}
-			BeanFactory beanFactory = requestContext.getActiveFlow().getApplicationContext();
-			return beanFactory != null ? beanFactory : EMPTY_BEAN_FACTORY;
-		}
+		add(new SpringBeanWebFlowELResolver());
 	}
 
 }
