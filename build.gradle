@@ -78,7 +78,7 @@ subprojects { subproject ->
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-expression:$springVersion")
 		compile("commons-logging:commons-logging:1.2")
-		provided("javax.el:javax.el-api:2.2.5")
+		compileOnly("javax.el:javax.el-api:3.0.1-b04")
 		testCompile("junit:junit:4.12") {
 			exclude group:'org.hamcrest', module:'hamcrest-core'
 		}
@@ -86,7 +86,7 @@ subprojects { subproject ->
 		testCompile("org.easymock:easymock:3.4")
 		testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 		testRuntime("org.apache.logging.log4j:log4j-jcl:${log4jVersion}")
-		testCompile("org.apache.tomcat:tomcat-jasper-el:7.0.69")
+		testCompile("org.apache.tomcat:tomcat-jasper-el:8.5.11")
 	}
 
 	tasks.withType(Test).all {
