@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2016 the original author or authors.
+ * Copyright 2004-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.springframework.faces.webflow;
 
-import javax.faces.FacesWrapper;
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 
 import org.springframework.util.ClassUtils;
@@ -67,7 +65,7 @@ public class JsfRuntimeInformation {
 	private static final boolean myFacesPresent =
 			ClassUtils.isPresent("org.apache.myfaces.webapp.MyFacesServlet", CLASSLOADER);
 
-	private static boolean myFacesInUse = isMyFacesContextFactoryInUse();
+	private static Boolean myFacesInUse;
 
 
 
@@ -101,26 +99,14 @@ public class JsfRuntimeInformation {
 	}
 
 	public static boolean isMyFacesInUse() {
-		if (myFacesInUse) {
-			return true;
-		}
-		// On WebSphere MyFaces may have loaded after this class...
-		myFacesInUse = isMyFacesContextFactoryInUse();
-		return myFacesInUse;
-	}
-
-	private static boolean isMyFacesContextFactoryInUse() {
-		try {
-			Class<?> clazz = CLASSLOADER.loadClass("org.apache.myfaces.context.FacesContextFactoryImpl");
-			Object factory = FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			while (!clazz.isInstance(factory) && factory instanceof FacesWrapper) {
-				factory = ((FacesWrapper) factory).getWrapped();
+		if (myFacesInUse == null) {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			if (facesContext == null) {
+				return false;
 			}
-			return (factory != null && clazz.isInstance(factory));
+			myFacesInUse = facesContext.getClass().getPackage().getName().startsWith("org.apache.myfaces.");
 		}
-		catch (Throwable ex) {
-			return false;
-		}
+		return myFacesInUse;
 	}
 
 }
