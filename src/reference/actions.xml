@@ -60,6 +60,22 @@
 
 </flow>]]>
 			</programlisting>
+		<para>
+			After the execution of each action, the action-state checks the result to see if matches a declared
+			transition to another state. That means if more than one action is configured they are executed in
+			an ordered chain until one returns a result event that matches a state transition out of the
+			action-state while the rest are ignored. This is a form of the Chain of Responsibility (CoR) pattern.
+		</para>
+		<para>
+			The result of an action's execution is typically the criteria for a transition out of this state.
+			Additional information in the current RequestContext may also be tested as part of custom
+			transitional criteria allowing for sophisticated transition expressions that reason on contextual
+			state.
+		</para>
+		<para>
+			Note also that an action-state just like any other state can have one more on-entry actions
+			that are executed as a list from start to end.
+		</para>
 	</sect1>
 	<sect1 xml:id="decision-state">
 		<title>Defining decision states</title>
