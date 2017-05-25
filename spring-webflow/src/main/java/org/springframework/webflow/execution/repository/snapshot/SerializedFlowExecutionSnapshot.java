@@ -248,12 +248,7 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 
 		public ConfigurableObjectInputStream(InputStream in, ClassLoader classLoader) throws IOException {
 			super(in);
-			this.classLoader = initClassLoader(classLoader);
-		}
-
-		private static ClassLoader initClassLoader(ClassLoader defaultClassLoader) {
-			ClassLoader result = Thread.currentThread().getContextClassLoader();
-			return result != null ? result : defaultClassLoader;
+			this.classLoader = classLoader;
 		}
 
 		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
