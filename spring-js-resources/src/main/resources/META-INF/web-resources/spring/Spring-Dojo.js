@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -287,7 +287,8 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 					var location = window.location.protocol + "//" + window.location.host + window.location.pathname;
 					var appendIndex = location.lastIndexOf("/");
 					location = location.substr(0,appendIndex+1) + redirectURL;
-					if (location == window.location) {
+          var operation = redirectURL.indexOf("fullredirect");
+					if (location == window.location && operation < 0) {
 						Spring.remoting.getResource(location, ioArgs.args.content, false);
 					}
 					else {
