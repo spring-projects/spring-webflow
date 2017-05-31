@@ -1,4 +1,4 @@
-SPRING WEB FLOW 2.4.4
+SPRING WEB FLOW 2.5.0
 ----------------------
 http://www.springframework.org/webflow
 
@@ -20,7 +20,7 @@ It is a powerful controller engine that addresses the "C" in MVC.
 
 2. RELEASE NOTES
 ----------------
-Spring Web Flow 2.4 requires JDK 1.6 to run.
+Spring Web Flow 2.5 requires JDK 1.8 and Spring Framework 5.0 to run.
 
 Release distribution contents:
 

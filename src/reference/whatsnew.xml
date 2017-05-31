@@ -8,6 +8,13 @@
 		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
 		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>What's New</title>
+
+	<sect1 xml:id="whatsnew-swf-250">
+		<title>Spring Web Flow 2.5</title>
+		<para>This release requires JDK 1.8 and Spring Framework 5.0.</para>
+		<!-- TODO -->
+	</sect1>
+
 	<sect1 xml:id="whatsnew-swf-240">
 		<title>Spring Web Flow 2.4</title>
 		<para>This release requires JDK 1.6.</para>
