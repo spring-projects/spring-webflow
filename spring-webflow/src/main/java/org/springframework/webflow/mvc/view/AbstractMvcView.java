@@ -31,6 +31,7 @@ import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
+import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.mapping.MappingResult;
@@ -77,6 +78,8 @@ public abstract class AbstractMvcView implements View {
 	private RequestContext requestContext;
 
 	private ExpressionParser expressionParser;
+
+	private final ExpressionParser emptyValueExpressionParser = new BeanWrapperExpressionParser();
 
 	private ConversionService conversionService;
 
@@ -482,7 +485,7 @@ public abstract class AbstractMvcView implements View {
 	 */
 	protected void addEmptyValueMapping(DefaultMapper mapper, String field, Object model) {
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
-		Expression target = expressionParser.parseExpression(field, parserContext);
+		Expression target = emptyValueExpressionParser.parseExpression(field, parserContext);
 		try {
 			Class<?> propertyType = target.getValueType(model);
 			Expression source = new StaticExpression(getEmptyValue(propertyType));
