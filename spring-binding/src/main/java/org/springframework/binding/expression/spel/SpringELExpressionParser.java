@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the original author or authors.
+ * Copyright 2004-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,11 @@ public class SpringELExpressionParser implements ExpressionParser {
 	}
 
 	private org.springframework.expression.Expression parseSpelExpression(String expression, ParserContext context) {
-		return expressionParser.parseExpression(expression, getSpelParserContext(context));
+		org.springframework.expression.ParserContext spelParserContext = getSpelParserContext(context);
+		if (spelParserContext != null) {
+			return expressionParser.parseExpression(expression, spelParserContext);
+		}
+		return expressionParser.parseExpression(expression);
 	}
 
 	private org.springframework.expression.ParserContext getSpelParserContext(ParserContext context) {
