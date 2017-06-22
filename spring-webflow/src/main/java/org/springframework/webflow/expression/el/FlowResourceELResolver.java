@@ -9,6 +9,7 @@ import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
 import org.springframework.context.MessageSource;
+import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -57,7 +58,7 @@ public class FlowResourceELResolver extends ELResolver {
 		} else if (base instanceof MessageSource) {
 			MessageSource messageSource = (MessageSource) base;
 			String message = messageSource.getMessage(property.toString(), null, null, getLocale());
-			if (message != null) {
+			if (StringUtils.hasText(message)) {
 				context.setPropertyResolved(true);
 				return String.class;
 			}
@@ -76,7 +77,7 @@ public class FlowResourceELResolver extends ELResolver {
 		} else if (base instanceof MessageSource) {
 			MessageSource messageSource = (MessageSource) base;
 			String message = messageSource.getMessage(property.toString(), null, null, getLocale());
-			if (message != null) {
+			if (StringUtils.hasText(message)) {
 				context.setPropertyResolved(true);
 				return message;
 			}
