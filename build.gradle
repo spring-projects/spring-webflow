@@ -297,6 +297,7 @@ configure(rootProject) {
 			include "readme.txt"
 			include "license.txt"
 			into "${baseDir}"
+			expand(version: project.version)
 		}
 
 		from(zipTree(docsZip.archivePath)) {
