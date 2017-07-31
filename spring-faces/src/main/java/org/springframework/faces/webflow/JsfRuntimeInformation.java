@@ -17,6 +17,7 @@
 package org.springframework.faces.webflow;
 
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextWrapper;
 
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -103,6 +104,9 @@ public class JsfRuntimeInformation {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			if (facesContext == null) {
 				return false;
+			}
+			while (facesContext instanceof FacesContextWrapper) {
+				facesContext = ((FacesContextWrapper) facesContext).getWrapped();
 			}
 			myFacesInUse = facesContext.getClass().getPackage().getName().startsWith("org.apache.myfaces.");
 		}
