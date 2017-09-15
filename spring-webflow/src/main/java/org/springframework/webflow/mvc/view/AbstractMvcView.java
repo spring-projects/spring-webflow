@@ -18,13 +18,19 @@ package org.springframework.webflow.mvc.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.SourceVersion;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
@@ -508,12 +514,56 @@ public abstract class AbstractMvcView implements View {
 	protected void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
 		Expression source = new RequestParameterExpression(parameter);
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		validateDataBindingExpression(parameter, model);
 		Expression target = expressionParser.parseExpression(parameter, parserContext);
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding default mapping for parameter '" + parameter + "'");
 		}
 		mapper.addMapping(mapping);
+	}
+
+	/**
+	 * Check that the expression is a property path where each nested property
+	 * is a {@link SourceVersion#isName(CharSequence) valid Java identifier} and
+	 * that the first nested property name at least is a valid readable property
+	 * on the target object.
+	 */
+	private void validateDataBindingExpression(String expression, Object model) {
+
+		if (expressionParser instanceof BeanWrapperExpressionParser) {
+			return;
+		}
+
+		String errorMessage = "Invalid data binding expression: '" + expression + "' " +
+				"for target model class '" + model.getClass() + "'";
+
+		List<String> propertyNames = new ArrayList<String>();
+		while (true) {
+			int index = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(expression);
+			String nestedProperty = index != -1 ? expression.substring(0, index) : expression;
+			nestedProperty = PropertyAccessorUtils.getPropertyName(nestedProperty);
+			propertyNames.add(nestedProperty);
+			if (index == -1) {
+				break;
+			}
+			if (expression.length() == index + 1) {
+				throw new IllegalStateException(errorMessage);
+			}
+			expression = expression.substring(index + 1);
+		}
+
+		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(model);
+		if (!beanWrapper.isReadableProperty(propertyNames.get(0))) {
+			throw new IllegalStateException(errorMessage);
+		}
+
+		for (int i=0; i < propertyNames.size(); i++) {
+			if (!SourceVersion.isName(propertyNames.get(i))) {
+				throw new IllegalStateException(errorMessage);
+			}
+		}
+
 	}
 
 	// package private
