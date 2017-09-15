@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.lang.model.SourceVersion;
 
 import org.apache.commons.logging.Log;
@@ -514,30 +513,22 @@ public abstract class AbstractMvcView implements View {
 	protected void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
 		Expression source = new RequestParameterExpression(parameter);
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
-		validateDataBindingExpression(parameter, model);
-		Expression target = expressionParser.parseExpression(parameter, parserContext);
-		DefaultMapping mapping = new DefaultMapping(source, target);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Adding default mapping for parameter '" + parameter + "'");
+		if (expressionParser instanceof BeanWrapperExpressionParser || checkModelProperty(parameter, model)) {
+			Expression target = expressionParser.parseExpression(parameter, parserContext);
+			DefaultMapping mapping = new DefaultMapping(source, target);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Adding default mapping for parameter '" + parameter + "'");
+			}
+			mapper.addMapping(mapping);
 		}
-		mapper.addMapping(mapping);
 	}
 
 	/**
-	 * Check that the expression is a property path where each nested property
-	 * is a {@link SourceVersion#isName(CharSequence) valid Java identifier} and
-	 * that the first nested property name at least is a valid readable property
-	 * on the target object.
+	 * Perform basic checks on the given expression to see if it looks like a property path.
+	 * Check if the top nested property is a readable property on the Model.
+	 * Check if the remaining nested properties are valid Java identifiers.
 	 */
-	private void validateDataBindingExpression(String expression, Object model) {
-
-		if (expressionParser instanceof BeanWrapperExpressionParser) {
-			return;
-		}
-
-		String errorMessage = "Invalid data binding expression: '" + expression + "' " +
-				"for target model class '" + model.getClass() + "'";
-
+	private boolean checkModelProperty(String expression, Object model) {
 		List<String> propertyNames = new ArrayList<String>();
 		while (true) {
 			int index = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(expression);
@@ -548,22 +539,20 @@ public abstract class AbstractMvcView implements View {
 				break;
 			}
 			if (expression.length() == index + 1) {
-				throw new IllegalStateException(errorMessage);
+				return false;
 			}
 			expression = expression.substring(index + 1);
 		}
-
 		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(model);
 		if (!beanWrapper.isReadableProperty(propertyNames.get(0))) {
-			throw new IllegalStateException(errorMessage);
+			return false;
 		}
-
 		for (int i=0; i < propertyNames.size(); i++) {
 			if (!SourceVersion.isName(propertyNames.get(i))) {
-				throw new IllegalStateException(errorMessage);
+				return false;
 			}
 		}
-
+		return true;
 	}
 
 	// package private
