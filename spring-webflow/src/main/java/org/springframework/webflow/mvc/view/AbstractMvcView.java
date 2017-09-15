@@ -18,13 +18,19 @@ package org.springframework.webflow.mvc.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.SourceVersion;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.binding.convert.ConversionExecutor;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.EvaluationException;
@@ -508,12 +514,46 @@ public abstract class AbstractMvcView implements View {
 	protected void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
 		Expression source = new RequestParameterExpression(parameter);
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
-		Expression target = expressionParser.parseExpression(parameter, parserContext);
-		DefaultMapping mapping = new DefaultMapping(source, target);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Adding default mapping for parameter '" + parameter + "'");
+		if (expressionParser instanceof BeanWrapperExpressionParser || checkModelProperty(parameter, model)) {
+			Expression target = expressionParser.parseExpression(parameter, parserContext);
+			DefaultMapping mapping = new DefaultMapping(source, target);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Adding default mapping for parameter '" + parameter + "'");
+			}
+			mapper.addMapping(mapping);
 		}
-		mapper.addMapping(mapping);
+	}
+
+	/**
+	 * Perform basic checks on the given expression to see if it looks like a property path.
+	 * Check if the top nested property is a readable property on the Model.
+	 * Check if the remaining nested properties are valid Java identifiers.
+	 */
+	private boolean checkModelProperty(String expression, Object model) {
+		List<String> propertyNames = new ArrayList<String>();
+		while (true) {
+			int index = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(expression);
+			String nestedProperty = index != -1 ? expression.substring(0, index) : expression;
+			nestedProperty = PropertyAccessorUtils.getPropertyName(nestedProperty);
+			propertyNames.add(nestedProperty);
+			if (index == -1) {
+				break;
+			}
+			if (expression.length() == index + 1) {
+				return false;
+			}
+			expression = expression.substring(index + 1);
+		}
+		BeanWrapperImpl beanWrapper = new BeanWrapperImpl(model);
+		if (!beanWrapper.isReadableProperty(propertyNames.get(0))) {
+			return false;
+		}
+		for (int i=0; i < propertyNames.size(); i++) {
+			if (!SourceVersion.isName(propertyNames.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// package private
