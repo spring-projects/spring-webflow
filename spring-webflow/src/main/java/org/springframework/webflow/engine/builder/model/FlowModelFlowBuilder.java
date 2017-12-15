@@ -346,13 +346,21 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		flowContext.getBeanFactory().registerScope("view", new ViewScope());
 		flowContext.getBeanFactory().registerScope("flow", new FlowScope());
 		flowContext.getBeanFactory().registerScope("conversation", new ConversationScope());
+
+		// Ensure the current ClassLoader is used, or otherwise setting the ResourceLoader would suppress it
+		ClassLoader classLoaderToUse = flowContext.getClassLoader();
+		flowContext.setClassLoader(classLoaderToUse);
+
 		Resource flowResource = flowModelHolder.getFlowModelResource();
 		flowContext.setResourceLoader(new FlowRelativeResourceLoader(flowResource));
+
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(flowContext);
 		new XmlBeanDefinitionReader(flowContext).loadBeanDefinitions(resources);
 		registerFlowBeans(flowContext.getBeanFactory());
 		registerMessageSource(flowContext, flowResource);
+
 		flowContext.refresh();
+
 		return flowContext;
 	}
 
