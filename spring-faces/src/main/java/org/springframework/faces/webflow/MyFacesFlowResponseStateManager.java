@@ -22,8 +22,6 @@ import javax.faces.application.StateManager.SerializedView;
 import javax.faces.context.FacesContext;
 import javax.faces.render.ResponseStateManager;
 
-import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
-import org.apache.myfaces.application.viewstate.StateCacheUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -37,7 +35,8 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * containing the real state to save.
  *
  * <p>Since JSF 2.0, the strategy used by MyFaces to determine if a
- * {@link MyfacesResponseStateManager} is available will always succeed since it
+ * {@link org.apache.myfaces.renderkit.MyfacesResponseStateManager} is available
+ * will always succeed since it
  * follows {@link FacesWrapper}s to find the root <tt>HtmlResponseStateManager</tt>
  * implementation. Since state management for web flow requests is handled by the
  * {@link FlowResponseStateManager} this* assumption causes problems and results
@@ -51,7 +50,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * @see FlowRenderKit
  */
 @SuppressWarnings("deprecation")
-public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager
+public class MyFacesFlowResponseStateManager extends ResponseStateManager
 		implements FacesWrapper<ResponseStateManager> {
 
 	private final ResponseStateManager wrapped;
@@ -64,29 +63,9 @@ public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager
 		return this.wrapped;
 	}
 
-	private MyfacesResponseStateManager getWrappedMyfacesResponseStateManager() {
-		return StateCacheUtils.getMyFacesResponseStateManager(this.wrapped);
-	}
-
-	public boolean isWriteStateAfterRenderViewRequired(FacesContext facesContext) {
-		MyfacesResponseStateManager wrapped = getWrappedMyfacesResponseStateManager();
-		if (wrapped != null) {
-			return wrapped.isWriteStateAfterRenderViewRequired(facesContext);
-		}
-		return super.isWriteStateAfterRenderViewRequired(facesContext);
-	}
-
 	public void saveState(FacesContext facesContext, Object state) {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		requestContext.getViewScope().put(FlowResponseStateManager.FACES_VIEW_STATE, state);
-	}
-
-	public void writeStateAsUrlParams(FacesContext facesContext, SerializedView serializedview) {
-		MyfacesResponseStateManager wrapped = getWrappedMyfacesResponseStateManager();
-		if (wrapped != null) {
-			wrapped.writeStateAsUrlParams(facesContext, serializedview);
-		}
-		super.writeStateAsUrlParams(facesContext, serializedview);
 	}
 
 	public Object getComponentStateToRestore(FacesContext context) {
