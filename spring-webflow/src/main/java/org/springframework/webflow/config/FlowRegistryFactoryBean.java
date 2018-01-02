@@ -33,6 +33,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionHolder;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
+import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
 import org.springframework.webflow.engine.builder.DefaultFlowHolder;
 import org.springframework.webflow.engine.builder.FlowAssembler;
 import org.springframework.webflow.engine.builder.FlowBuilder;
@@ -74,7 +75,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	/**
 	 * The definition registry produced by this factory bean.
 	 */
-	private DefaultFlowRegistry flowRegistry;
+	private FlowDefinitionRegistry flowRegistry;
 
 	/**
 	 * A helper for creating abstract representation of externalized flow definition resources.
@@ -136,7 +137,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		if (basePath != null) {
 			flowResourceFactory.setBasePath(basePath);
 		}
-		flowRegistry = new DefaultFlowRegistry();
+		flowRegistry = new FlowDefinitionRegistryImpl();
 		flowRegistry.setParent(parent);
 		registerFlowLocations();
 		registerFlowLocationPatterns();
