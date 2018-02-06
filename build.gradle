@@ -67,8 +67,8 @@ subprojects { subproject ->
 		springSecurityVersion = "5.0.1.RELEASE"
 		servletVersion        = "3.1.0"
 		hibernate5Version     = "5.2.12.Final"
-		log4jVersion          = "2.10.0"
 		tiles3Version         = "3.0.7"
+		log4jVersion          = "2.10.0"
 	}
 
 	configurations.all {
@@ -112,7 +112,7 @@ subprojects { subproject ->
 	}
 
 	javadoc {
-		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.memberLevel = JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
 	}
@@ -212,7 +212,7 @@ configure(rootProject) {
 		group = "Documentation"
 		description = "Generates aggregated Javadoc API documentation."
 		title = "${rootProject.description} ${version} API"
-		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.memberLevel = JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.overview = "src/api/overview.html"
@@ -250,7 +250,7 @@ configure(rootProject) {
 			"XSDs for deployment at static.springframework.org/schema."
 
 		subprojects.each { subproject ->
-			def Properties schemas = new Properties();
+			Properties schemas = new Properties()
 
 			subproject.sourceSets.main.resources.find {
 				it.path.endsWith("META-INF/spring.schemas")
@@ -261,7 +261,7 @@ configure(rootProject) {
 				assert shortName != key
 				File xsdFile = subproject.sourceSets.main.allSource.find {
 					it.path.endsWith(schemas.get(key))
-				}
+				} as File
 				assert xsdFile != null
 				into (shortName) {
 					from xsdFile.path
@@ -285,7 +285,7 @@ configure(rootProject) {
 		description = "Builds -${classifier} archive, containing all jars and docs, " +
 					  "suitable for community download page."
 
-		def baseDir = "${baseName}-${project.version}";
+		def baseDir = "${baseName}-${project.version}"
 
 		from("src/dist") {
 			include "notice.txt"
