@@ -67,9 +67,22 @@ subprojects { subproject ->
 		springSecurityVersion = "5.0.1.RELEASE"
 		servletVersion        = "3.1.0"
 		hibernate5Version     = "5.2.12.Final"
-		slf4jVersion          = "1.7.22"
+		log4jVersion          = "2.10.0"
 		tiles3Version         = "3.0.7"
-		log4jVersion          = "2.7"
+	}
+
+	configurations.all {
+		// Check for updates every build
+		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+
+		// Consistent slf4j version (e.g. clashes between slf4j versions)
+		resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+			if (details.requested.group == 'org.slf4j') {
+				details.useVersion "1.7.25"
+			}
+		}
+
+		exclude group: "org.slf4j", module: "jcl-over-slf4j"
 	}
 
 	dependencies {
@@ -77,16 +90,16 @@ subprojects { subproject ->
 		compile("org.springframework:spring-context:$springVersion")
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-expression:$springVersion")
-		compile("commons-logging:commons-logging:1.2")
 		compileOnly("javax.el:javax.el-api:3.0.1-b04")
 		testCompile("junit:junit:4.12") {
 			exclude group:'org.hamcrest', module:'hamcrest-core'
 		}
 		testCompile("org.hamcrest:hamcrest-all:1.3")
 		testCompile("org.easymock:easymock:3.5.1")
-		testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-		testRuntime("org.apache.logging.log4j:log4j-jcl:${log4jVersion}")
 		testCompile("org.apache.tomcat:tomcat-jasper-el:8.5.27")
+		testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 	}
 
 	tasks.withType(Test).all {
@@ -138,20 +151,11 @@ project("spring-webflow") {
 		optional("org.springframework:spring-orm:$springVersion")
 		optional("org.springframework:spring-tx:$springVersion")
 		optional("org.apache.tiles:tiles-api:$tiles3Version")
-		optional("org.apache.tiles:tiles-core:$tiles3Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
-		optional("org.apache.tiles:tiles-servlet:$tiles3Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
-		optional("org.apache.tiles:tiles-jsp:$tiles3Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
-		optional("org.apache.tiles:tiles-el:$tiles3Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
-		}
+		optional("org.apache.tiles:tiles-core:$tiles3Version")
+		optional("org.apache.tiles:tiles-servlet:$tiles3Version")
+		optional("org.apache.tiles:tiles-jsp:$tiles3Version")
+		optional("org.apache.tiles:tiles-el:$tiles3Version")
 		optional("org.apache.tiles:tiles-extras:$tiles3Version") {
-			exclude group: "org.slf4j", module: "jcl-over-slf4j"
 			exclude group: "org.springframework", module: "spring-web"
 		}
 		provided("junit:junit:3.8.2")
@@ -164,8 +168,6 @@ project("spring-webflow") {
 		testCompile("org.hsqldb:hsqldb:2.4.0")
 		testCompile("javax.servlet.jsp:javax.servlet.jsp-api:2.3.2-b02")
 		testCompile("javax.servlet:jstl:1.2")
-		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
-		testCompile("org.slf4j:slf4j-jcl:${slf4jVersion}")
 	}
 }
 
@@ -186,8 +188,6 @@ project("spring-faces") {
 		optional("org.springframework.security:spring-security-web:$springSecurityVersion")
 		optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
 		testCompile("org.apache.myfaces.test:myfaces-test22:1.0.8")
-		testCompile("org.slf4j:slf4j-api:$slf4jVersion")
-		testCompile("org.slf4j:slf4j-jcl:${slf4jVersion}")
 		testCompile("org.springframework:spring-test:$springVersion")
 	}
 }
