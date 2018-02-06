@@ -105,10 +105,6 @@ subprojects { subproject ->
 	tasks.withType(Test).all {
 		systemProperty("java.awt.headless", "true")
 		include "**/*Tests.class"
-
-		if (name ==~ /springIo.*/) {
-			exclude '**/tiles2/**'
-		}
 	}
 
 	javadoc {
