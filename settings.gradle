@@ -1,5 +1,6 @@
 rootProject.name = 'webflow'
 
 include 'spring-binding'
-include 'spring-faces'
 include 'spring-webflow'
+include 'spring-faces'
+include 'spring-js-resources'

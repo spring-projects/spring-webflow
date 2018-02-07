@@ -45,6 +45,10 @@ subprojects { subproject ->
 			expand(copyright: new Date().format("yyyy"), version: project.version)
 		}
 	}
+}
+
+configure(subprojects.findAll {
+		it.name != "spring-build-src" && it.name != "spring-js-resources"}) { subproject ->
 
 	if (project.hasProperty('platformVersion')) {
 		apply plugin: 'spring-io'
@@ -131,7 +135,6 @@ subprojects { subproject ->
 
 project("spring-binding") {
 	description = "Spring Binding"
-
 }
 
 project("spring-webflow") {
@@ -185,6 +188,16 @@ project("spring-faces") {
 		optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
 		testCompile("org.apache.myfaces.test:myfaces-test22:1.0.8")
 		testCompile("org.springframework:spring-test:$springVersion")
+	}
+}
+
+project("spring-js-resources") {
+	description = "Spring JS Resources"
+
+	apply from: "spring-js-resources.gradle"
+
+	jar {
+		dependsOn prepareResources
 	}
 }
 

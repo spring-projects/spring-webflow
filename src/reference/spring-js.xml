@@ -7,14 +7,228 @@
 	xsi:schemaLocation="
 		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
 		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
-	<title>Handling Ajax Requests</title>
+	<title>Spring JavaScript Quick Reference</title>
+	<sect1 xml:id="spring-js-introduction">
+		<title>Introduction</title>
+		<para>
+			Spring Javascript (spring-js) is a lightweight abstraction over common JavaScript toolkits such as Dojo.
+			It aims to provide a common client-side programming model for progressively enhancing a web page with rich widget behavior and Ajax remoting.
+		</para>
+		<para>
+			Use of the Spring JS API is demonstrated in the the Spring MVC + Web Flow version of the Spring Travel reference application.
+		</para>
+	</sect1>
+	<sect1 xml:id="spring-js-resource-servlet">
+		<title>Serving Javascript Resources</title>
+		<para>
+			Spring JS provides a generic <code>ResourceServlet</code> to serve web resources such as JavaScript and CSS files from jar files,
+			as well as the webapp root directory.
+			This servlet provides a convenient way to serve Spring.js files to your pages.
+			To deploy this servlet, declare the following in <code>web.xml</code>:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<!-- Serves static resource content from .jar files such as spring-js.jar -->
+<servlet>
+	<servlet-name>Resource Servlet</servlet-name>
+	<servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
+</servlet>
+
+<!-- Map all /resources requests to the Resource Servlet for handling -->
+<servlet-mapping>
+	<servlet-name>Resource Servlet</servlet-name>
+	<url-pattern>/resources/*</url-pattern>
+</servlet-mapping>]]>
+		</programlisting>
+		<para>
+			Note that starting with version 3.0.4, the Spring Framework includes
+			a replacement for the <code>ResourceServlet</code> (see the
+			<link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">Spring Framework documentation</link>).
+			With the new &lt;mvc:resources&gt; element resource requests (.js, .css) are handled by the
+			<code>DispatcherSevlet</code> without the need for a separate <code>ResourceServlet</code>.
+			Here is the relevant portion of the Spring MVC configuration in
+			the mvc-booking sample:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<mvc:annotation-driven/>
+
+	<mvc:resources mapping="/resources/**" location="/, classpath:/META-INF/web-resources/" />
+
+	...
+
+</beans>
+]]>
+		</programlisting>
+		<para>
+			This incoming maps requests for <code>/resources</code> to resources found under
+			<code>/META-INF/web-resources</code> on the classpath. That's where Spring JavaScript resources
+			are bundled. However, you can modify the location attribute in the above configuration in order
+			to serve resources from any classpath or web application relative location.
+		</para>
+		<para>
+			Note that the full resource URL depends on how your DispatcherServlet is mapped.
+			In the mvc-booking sample we've chosen to map it with the default servlet mapping '/':
+		</para>
+		<programlisting language="xml"><![CDATA[
+<servlet>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<url-pattern>/</url-pattern>
+</servlet-mapping>
+]]>
+		</programlisting>
+		<para>
+			That means the full URL to load <code>Spring.js</code> is <code>/myapp/resources/spring/Spring.js</code>.
+			If your <code>DispatcherServlet</code> was instead mapped to <code>/main/*</code> then the full
+			URL would be <code>/myapp/main/resources/spring/Spring.js</code>.
+		</para>
+		<para>
+			When using of the default servlet mapping it is also recommended to add this to your Spring MVC
+			configuration, which ensures that any resource requests not handled by your Spring MVC mappings
+			will be delegated back to the Servlet container.
+		</para>
+		<programlisting language="xml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	...
+
+	<mvc:default-servlet-handler />
+
+</beans>
+]]>
+		</programlisting>
+	</sect1>
+	<sect1 xml:id="spring-js-includes">
+		<title>Including Spring Javascript in a Page</title>
+		<para>
+			Spring JS is designed such that an implementation of its API can be built for any of the popular Javascript toolkits.
+			The initial implementation of Spring.js builds on the Dojo toolkit.
+		</para>
+		<para>
+			Using Spring Javascript in a page requires including the underlying toolkit as normal,
+			the <code>Spring.js</code> base interface file, and the <code>Spring-(library implementation).js</code> file for the underlying toolkit.
+			As an example, the following includes obtain the Dojo implementation of Spring.js using the <code>ResourceServlet</code>:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<script type="text/javascript" src="<c:url value="/resources/dojo/dojo.js" />"> </script>
+<script type="text/javascript" src="<c:url value="/resources/spring/Spring.js" />"> </script>
+<script type="text/javascript" src="<c:url value="/resources/spring/Spring-Dojo.js" />"> </script>]]>
+		</programlisting>
+		<para>
+			When using the widget system of an underlying library, typically you must also include some CSS resources to obtain the desired look and feel.
+			For the booking-mvc reference application, Dojo's <code>tundra.css</code> is included:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<link type="text/css" rel="stylesheet" href="<c:url value="/resources/dijit/themes/tundra/tundra.css" />" />]]>
+		</programlisting>
+	</sect1>
+	<sect1 xml:id="spring-js-decorations">
+		<title>Spring Javascript Decorations</title>
+		<para>
+			A central concept in Spring Javascript is the notion of applying decorations to existing DOM nodes.
+			This technique is used to progressively enhance a web page such that the page will still be functional in a less capable browser.
+			The <code>addDecoration</code> method is used to apply decorations.
+		</para>
+		<para>
+			 The following example illustrates enhancing a Spring MVC <code>&lt;form:input&gt;</code> tag with rich suggestion behavior:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<form:input id="searchString" path="searchString"/>
+<script type="text/javascript">
+	Spring.addDecoration(new Spring.ElementDecoration({
+		elementId: "searchString",
+		widgetType: "dijit.form.ValidationTextBox",
+		widgetAttrs: { promptMessage : "Search hotels by name, address, city, or zip." }}));
+</script>]]>
+		</programlisting>
+		<para>
+			The <code>ElementDecoration</code> is used to apply rich widget behavior to an existing DOM node.
+			This decoration type does not aim to completely hide the underlying toolkit, so the toolkit's native widget type and attributes are used directly.
+			This approach allows you to use a common decoration model to integrate any widget from the underlying toolkit in a consistent manner.
+			See the <code>booking-mvc</code> reference application for more examples of applying decorations to do things from suggestions to client-side validation.
+		</para>
+		<para>
+			When using the <code>ElementDecoration</code> to apply widgets that have rich validation behavior, a common need is to prevent the form from being submitted to the server until validation passes.
+			This can be done with the <code>ValidateAllDecoration</code>:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" />
+<script type="text/javascript">
+	Spring.addDecoration(new Spring.ValidateAllDecoration({ elementId:'proceed', event:'onclick' }));
+</script>]]>
+		</programlisting>
+		<para>
+			This decorates the "Proceed" button with a special onclick event handler that fires the client side validators and does not allow the form to submit until they pass successfully.
+		</para>
+		<para>
+			An <code>AjaxEventDecoration</code> applies a client-side event listener that fires a remote Ajax request to the server.  It also auto-registers a callback function to link in the response:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<a id="prevLink" href="search?searchString=${criteria.searchString}&page=${criteria.page - 1}">Previous</a>
+<script type="text/javascript">
+	Spring.addDecoration(new Spring.AjaxEventDecoration({
+		elementId: "prevLink",
+		event: "onclick",
+		params: { fragments: "body" }
+	}));
+</script>]]>
+		</programlisting>
+		<para>
+			This decorates the onclick event of the "Previous Results" link with an Ajax call, passing along a special parameter that specifies the fragment to be re-rendered in the response.
+			Note that this link would still be fully functional if Javascript was unavailable in the client.
+			(See <xref linkend="spring-js-ajax"/> for details on how this request is handled on the server.)
+		</para>
+		<para>
+			It is also possible to apply more than one decoration to an element.
+			The following example shows a button being decorated with Ajax and validate-all submit suppression:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<input type="submit" id="proceed" name="_eventId_proceed" value="Proceed" />
+<script type="text/javascript">
+	Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));
+	Spring.addDecoration(new Spring.AjaxEventDecoration({elementId:'proceed', event:'onclick',formId:'booking', params:{fragments:'messages'}}));
+</script>]]>
+		</programlisting>
+		<para>
+			It is also possible to apply a decoration to multiple elements in a single statement using Dojo's query API.
+			The following example decorates a set of checkbox elements as Dojo Checkbox widgets:
+		</para>
+		<programlisting language="xml"><![CDATA[
+<div id="amenities">
+<form:checkbox path="amenities" value="OCEAN_VIEW" label="Ocean View" /></li>
+<form:checkbox path="amenities" value="LATE_CHECKOUT" label="Late Checkout" /></li>
+<form:checkbox path="amenities" value="MINIBAR" label="Minibar" /></li>
+<script type="text/javascript">
+	dojo.query("#amenities input[type='checkbox']").forEach(function(element) {
+		Spring.addDecoration(new Spring.ElementDecoration({
+			elementId: element.id,
+			widgetType : "dijit.form.CheckBox",
+			widgetAttrs : { checked : element.checked }
+		}));
+	});
+</script>
+</div>]]>
+		</programlisting>
+	</sect1>
 	<sect1 xml:id="spring-js-ajax">
 		<title>Handling Ajax Requests</title>
 		<para>
-			TODO
-		</para>
-		<para>
-			Spring Web Flow's Ajax response handling is built upon the notion of receiving "fragments" back from the server.
+			Spring Javascript's client-side Ajax response handling is built upon the notion of receiving "fragments" back from the server.
 			These fragments are just standard HTML that is meant to replace portions of the existing page.
 			The key piece needed on the server is a way to determine which pieces of a full response need to be pulled out for partial rendering.
 		</para>
@@ -22,11 +236,11 @@
 			In order to be able to render partial fragments of a full response, the full response must be built using a
 			templating technology that allows the use of composition for constructing the response, and for the member
 			parts of the composition to be referenced and rendered individually.
-			Spring Web Flow provides some simple Spring MVC extensions that make use of Tiles to achieve this.
+			Spring Javascript provides some simple Spring MVC extensions that make use of Tiles to achieve this.
 			The same technique could theoretically be used with any templating system supporting composition.
 		</para>
 		<para>
-			Spring Web Flow's Ajax remoting functionality is built upon the notion that the core handling code for an
+			Spring Javascript's Ajax remoting functionality is built upon the notion that the core handling code for an
 			Ajax request should not differ from a standard browser request, thus no special knowledge of an Ajax request
 			is needed directly in the code and the same hanlder can be used for both styles of request.
 		</para>
