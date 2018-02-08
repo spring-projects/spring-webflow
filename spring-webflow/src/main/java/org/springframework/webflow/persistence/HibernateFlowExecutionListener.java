@@ -15,9 +15,6 @@
  */
 package org.springframework.webflow.persistence;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.hibernate.FlushMode;
 import org.hibernate.Interceptor;
 import org.hibernate.Session;
@@ -28,8 +25,6 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -79,26 +74,7 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class HibernateFlowExecutionListener implements FlowExecutionListener {
 
-	private static final boolean hibernate3Present = ClassUtils.isPresent("org.hibernate.connection.ConnectionProvider",
-			HibernateFlowExecutionListener.class.getClassLoader());
-
-	private static final boolean hibernate5Present = ClassUtils.isPresent("org.hibernate.boot.model.naming.PhysicalNamingStrategy",
-			HibernateFlowExecutionListener.class.getClassLoader());
-
-	private static final Method openSessionMethod =
-			ReflectionUtils.findMethod(SessionFactory.class, "openSession");
-
-	private static final Method openSessionWithInterceptorMethod =
-			ReflectionUtils.findMethod(SessionFactory.class, "openSession", Interceptor.class);
-
-	private static final Method currentSessionMethod = ClassUtils.getMethod(SessionFactory.class, "getCurrentSession");
-
-	private static final Method closeSessionMethod = ReflectionUtils.findMethod(Session.class, "close");
-
-
-	/**
-	 * The name of the attribute the flow {@link Session persistence context} is indexed under.
-	 */
+	/** The name of the attribute the flow {@link Session persistence context} is indexed under. */
 	public static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
 	private SessionFactory sessionFactory;
@@ -166,19 +142,14 @@ public class HibernateFlowExecutionListener implements FlowExecutionListener {
 			if (Boolean.TRUE.equals(commitStatus)) {
 				transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 					protected void doInTransactionWithoutResult(TransactionStatus status) {
-						if (hibernate3Present) {
-							ReflectionUtils.invokeMethod(currentSessionMethod, sessionFactory);
-						}
-						else {
-							sessionFactory.getCurrentSession();
-						}
+						sessionFactory.getCurrentSession();
 						// nothing to do; a flush will happen on commit automatically as this is a read-write
 						// transaction
 					}
 				});
 			}
 			unbind(hibernateSession);
-			ReflectionUtils.invokeMethod(closeSessionMethod, hibernateSession);
+			hibernateSession.close();
 		}
 	}
 
@@ -211,32 +182,11 @@ public class HibernateFlowExecutionListener implements FlowExecutionListener {
 	private Session createSession(RequestContext context) {
 		Session session;
 		if (entityInterceptor != null) {
-			if (hibernate3Present) {
-				try {
-					session = (Session) openSessionWithInterceptorMethod.invoke(sessionFactory, entityInterceptor);
-				} catch (IllegalAccessException ex) {
-					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
-				} catch (InvocationTargetException ex) {
-					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
-				}
-			} else {
-				session = sessionFactory.withOptions().interceptor(entityInterceptor).openSession();
-			}
+			session = sessionFactory.withOptions().interceptor(entityInterceptor).openSession();
 		} else {
-			if (hibernate3Present) {
-				try {
-					session = (Session) openSessionMethod.invoke(sessionFactory);
-				} catch (IllegalAccessException ex) {
-					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
-				} catch (InvocationTargetException ex) {
-					throw new IllegalStateException("Unable to open Hibernate 3 session", ex);
-				}
-			}
-			else {
-				session = sessionFactory.openSession();
-			}
+			session = sessionFactory.openSession();
 		}
-		session.setFlushMode(FlushMode.MANUAL);
+		session.setHibernateFlushMode(FlushMode.MANUAL);
 		return session;
 	}
 

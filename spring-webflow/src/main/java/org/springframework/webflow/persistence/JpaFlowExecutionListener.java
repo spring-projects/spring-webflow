@@ -74,9 +74,7 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class JpaFlowExecutionListener implements FlowExecutionListener {
 
-	/**
-	 * The name of the attribute the flow {@link EntityManager persistence context} is indexed under.
-	 */
+	/** The name of the attribute the flow {@link EntityManager persistence context} is indexed under.d */
 	public static final String PERSISTENCE_CONTEXT_ATTRIBUTE = "persistenceContext";
 
 	private EntityManagerFactory entityManagerFactory;
