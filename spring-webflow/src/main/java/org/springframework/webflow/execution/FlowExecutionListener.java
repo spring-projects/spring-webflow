@@ -1,7 +1,8 @@
 /*
  * Copyright 2004-2012 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License") {
+	}
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -56,13 +57,15 @@ public interface FlowExecutionListener {
 	 * processing.
 	 * @param context the current flow request context
 	 */
-	void requestSubmitted(RequestContext context);
+	default void requestSubmitted(RequestContext context) {
+	}
 
 	/**
 	 * Called when a client request has completed processing.
 	 * @param context the source of the event
 	 */
-	void requestProcessed(RequestContext context);
+	default void requestProcessed(RequestContext context) {
+	}
 
 	/**
 	 * Called to indicate a new flow definition session is about to be created. Called before the session is created. An
@@ -71,7 +74,8 @@ public interface FlowExecutionListener {
 	 * @param context the current flow request context
 	 * @param definition the flow for which a new session is starting
 	 */
-	void sessionCreating(RequestContext context, FlowDefinition definition);
+	default void sessionCreating(RequestContext context, FlowDefinition definition) {
+	}
 
 	/**
 	 * Called after a new flow session has been created but before it starts. Useful for setting arbitrary attributes in
@@ -81,7 +85,8 @@ public interface FlowExecutionListener {
 	 * @param input a mutable input map - attributes placed in this map are eligible for input mapping by the flow
 	 * definition at startup
 	 */
-	void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input);
+	default void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
+	}
 
 	/**
 	 * Called after a new flow session has started. At this point the flow's start state has been entered and any other
@@ -89,21 +94,24 @@ public interface FlowExecutionListener {
 	 * @param context the current flow request context
 	 * @param session the session that was started
 	 */
-	void sessionStarted(RequestContext context, FlowSession session);
+	default void sessionStarted(RequestContext context, FlowSession session) {
+	}
 
 	/**
 	 * Called when an event is signaled in the current state, but prior to any state transition.
 	 * @param context the current flow request context
 	 * @param event the event that occurred
 	 */
-	void eventSignaled(RequestContext context, Event event);
+	default void eventSignaled(RequestContext context, Event event) {
+	}
 
 	/**
 	 * Called when a transition is matched but before the transition occurs.
 	 * @param context the current flow request context
 	 * @param transition the proposed transition
 	 */
-	void transitionExecuting(RequestContext context, TransitionDefinition transition);
+	default void transitionExecuting(RequestContext context, TransitionDefinition transition) {
+	}
 
 	/**
 	 * Called when a state transitions, after the transition is matched but before the transition occurs.
@@ -111,7 +119,8 @@ public interface FlowExecutionListener {
 	 * @param state the proposed state to transition to
 	 * @throws EnterStateVetoException when entering the state is not allowed
 	 */
-	void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException;
+	default void stateEntering(RequestContext context, StateDefinition state) throws EnterStateVetoException {
+	}
 
 	/**
 	 * Called when a state transitions, after the transition occurred.
@@ -119,7 +128,8 @@ public interface FlowExecutionListener {
 	 * @param previousState <i>from</i> state of the transition
 	 * @param state <i>to</i> state of the transition
 	 */
-	void stateEntered(RequestContext context, StateDefinition previousState, StateDefinition state);
+	default void stateEntered(RequestContext context, StateDefinition previousState, StateDefinition state) {
+	}
 
 	/**
 	 * Called when a view is about to render in a view-state, before any render actions are executed.
@@ -127,7 +137,8 @@ public interface FlowExecutionListener {
 	 * @param view the view that is about to render
 	 * @param viewState the current view state
 	 */
-	void viewRendering(RequestContext context, View view, StateDefinition viewState);
+	default void viewRendering(RequestContext context, View view, StateDefinition viewState) {
+	}
 
 	/**
 	 * Called after a view has completed rendering.
@@ -135,19 +146,22 @@ public interface FlowExecutionListener {
 	 * @param view the view that rendered
 	 * @param viewState the current view state
 	 */
-	void viewRendered(RequestContext context, View view, StateDefinition viewState);
+	default void viewRendered(RequestContext context, View view, StateDefinition viewState) {
+	}
 
 	/**
 	 * Called when a flow execution is paused, for instance when it is waiting for user input (after event processing).
 	 * @param context the current flow request context
 	 */
-	void paused(RequestContext context);
+	default void paused(RequestContext context) {
+	}
 
 	/**
 	 * Called after a flow execution is successfully reactivated after pause (but before event processing).
 	 * @param context the current flow request context
 	 */
-	void resuming(RequestContext context);
+	default void resuming(RequestContext context) {
+	}
 
 	/**
 	 * Called when the active flow execution session has been asked to end but before it has ended.
@@ -157,7 +171,8 @@ public interface FlowExecutionListener {
 	 * @param output the flow output produced by the ending session, this map may be modified by this listener to affect
 	 * the output returned
 	 */
-	void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap<?> output);
+	default void sessionEnding(RequestContext context, FlowSession session, String outcome, MutableAttributeMap<?> output) {
+	}
 
 	/**
 	 * Called when a flow execution session ends. If the ended session was the root session of the flow execution, the
@@ -167,7 +182,8 @@ public interface FlowExecutionListener {
 	 * @param outcome the outcome reached by the ended session, generally the id of the terminating end-state
 	 * @param output the flow output returned by the ending session
 	 */
-	void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap<?> output);
+	default void sessionEnded(RequestContext context, FlowSession session, String outcome, AttributeMap<?> output) {
+	}
 
 	/**
 	 * Called when an exception is thrown during a flow execution, before the exception is handled by any registered
@@ -175,6 +191,7 @@ public interface FlowExecutionListener {
 	 * @param context the current flow request context
 	 * @param exception the exception that occurred
 	 */
-	void exceptionThrown(RequestContext context, FlowExecutionException exception);
+	default void exceptionThrown(RequestContext context, FlowExecutionException exception) {
+	}
 
 }

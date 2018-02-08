@@ -28,6 +28,8 @@ import org.springframework.webflow.definition.TransitionDefinition;
  * @author Erwin Vervaet
  * @author Keith Donald
  * @author Scott Andrews
+ * @deprecated as of 5.0 {@link FlowExecutionListener} has default methods (made possible by a Java 8 baseline) and
+ * can be implemented directly without the need for this adapter.
  */
 public abstract class FlowExecutionListenerAdapter implements FlowExecutionListener {
 
