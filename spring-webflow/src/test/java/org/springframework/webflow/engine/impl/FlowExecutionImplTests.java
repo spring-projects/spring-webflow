@@ -31,7 +31,6 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.MockFlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
@@ -159,7 +158,7 @@ public class FlowExecutionImplTests extends TestCase {
 
 		});
 		new EndState(flow, "end");
-		FlowExecutionListener mockListener = new FlowExecutionListenerAdapter() {
+		FlowExecutionListener mockListener = new FlowExecutionListener() {
 			public void sessionCreating(RequestContext context, FlowDefinition definition) {
 				assertFalse(context.getFlowExecutionContext().isActive());
 				throw new IllegalStateException("Oops");

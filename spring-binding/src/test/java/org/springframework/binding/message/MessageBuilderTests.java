@@ -93,7 +93,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildCodesNull() {
-		MessageResolver resolver = builder.codes(null).build();
+		MessageResolver resolver = builder.codes().build();
 		try {
 			resolver.resolveMessage(messageSource, locale);
 			fail("Should have failed");
@@ -103,7 +103,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildArgsNull() {
-		MessageResolver resolver = builder.args(null).build();
+		MessageResolver resolver = builder.args().build();
 		try {
 			resolver.resolveMessage(messageSource, locale);
 			fail("Should have failed");

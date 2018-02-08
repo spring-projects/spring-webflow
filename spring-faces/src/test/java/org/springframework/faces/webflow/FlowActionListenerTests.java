@@ -32,7 +32,7 @@ public class FlowActionListenerTests extends TestCase {
 		LocalAttributeMap<Object> flash = new LocalAttributeMap<>();
 		EasyMock.expect(this.context.getFlashScope()).andStubReturn(flash);
 		EasyMock.expect(this.context.getCurrentState()).andStubReturn(new MockViewState());
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 	}
 
 	protected void tearDown() throws Exception {

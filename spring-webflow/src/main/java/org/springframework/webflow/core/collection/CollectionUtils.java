@@ -38,8 +38,7 @@ public class CollectionUtils {
 	/**
 	 * The shared, singleton empty attribute map instance.
 	 */
-	public static final AttributeMap<Object> EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap<>(
-			Collections.<String, Object> emptyMap());
+	public static final AttributeMap<Object> EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap<>(Collections.emptyMap());
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -78,6 +77,7 @@ public class CollectionUtils {
 	 * @param objects the objects to add
 	 * @return whether or not the target collection changed
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> boolean addAllNoDuplicates(List<T> target, T... objects) {
 		if (objects == null || objects.length == 0) {
 			return false;

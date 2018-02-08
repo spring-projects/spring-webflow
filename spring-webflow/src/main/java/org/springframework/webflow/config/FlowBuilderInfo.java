@@ -49,7 +49,7 @@ class FlowBuilderInfo {
 		Assert.hasText(className, "The fully-qualified FlowBuilder class name is required");
 		this.className = className;
 		setId(id);
-		this.attributes = (attributes != null ? attributes : Collections.<FlowElementAttribute> emptySet());
+		this.attributes = (attributes != null ? attributes : Collections.emptySet());
 	}
 
 	private void setId(String id) {

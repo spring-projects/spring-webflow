@@ -2,6 +2,7 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
+import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
@@ -22,7 +23,7 @@ public class RenderActionTests extends TestCase {
 
 	public void testIllegalNullArg() {
 		try {
-			new RenderAction(null);
+			new RenderAction((Expression[]) null);
 			fail("iae");
 		} catch (IllegalArgumentException e) {
 

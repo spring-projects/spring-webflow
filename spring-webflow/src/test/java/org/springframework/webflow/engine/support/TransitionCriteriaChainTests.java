@@ -71,7 +71,7 @@ public class TransitionCriteriaChainTests extends TestCase {
 	}
 
 	public void testCriteriaChainForNoActions() {
-		TransitionCriteria actionChain = TransitionCriteriaChain.criteriaChainFor(null);
+		TransitionCriteria actionChain = TransitionCriteriaChain.criteriaChainFor((Action[]) null);
 		assertTrue(actionChain.test(context));
 	}
 

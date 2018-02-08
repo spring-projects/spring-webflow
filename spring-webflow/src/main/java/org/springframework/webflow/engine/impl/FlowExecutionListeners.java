@@ -49,7 +49,7 @@ class FlowExecutionListeners {
 	 * Create a flow execution listener helper that wraps an empty listener array.
 	 */
 	public FlowExecutionListeners() {
-		this(null);
+		this((FlowExecutionListener[]) null);
 	}
 
 	/**

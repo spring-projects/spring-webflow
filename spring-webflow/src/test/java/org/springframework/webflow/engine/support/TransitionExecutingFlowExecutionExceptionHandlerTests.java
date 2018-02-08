@@ -36,7 +36,6 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecution;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
@@ -85,7 +84,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "end");
 		flow.getExceptionHandlerSet().add(handler);
-		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
+		FlowExecutionListener listener = new FlowExecutionListener() {
 			@SuppressWarnings("unused")
 			public void sessionEnding(RequestContext context, FlowSession session, MutableAttributeMap<?> output) {
 				assertTrue(context.getFlashScope().contains("flowExecutionException"));

@@ -39,13 +39,13 @@ public class FlowModelTests extends TestCase {
 	public void testMergeAttributes() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
-		child.setAttributes(asList(AttributeModel.class, new AttributeModel("name", "value")));
+		child.setAttributes(asList(new AttributeModel("name", "value")));
 
 		AttributeModel parentAttribute1 = new AttributeModel("name", "value");
 		parentAttribute1.setType("type");
 		AttributeModel parentAttribute2 = new AttributeModel("name2", "value2");
 		parentAttribute2.setType("type2");
-		parent.setAttributes(asList(AttributeModel.class, parentAttribute1, parentAttribute2));
+		parent.setAttributes(asList(parentAttribute1, parentAttribute2));
 
 		child.merge(parent);
 		assertEquals(2, child.getAttributes().size());
@@ -76,10 +76,10 @@ public class FlowModelTests extends TestCase {
 
 	public void testMergeVars() {
 		FlowModel parent = new FlowModel();
-		parent.setVars(asList(VarModel.class, new VarModel("name", "value")));
+		parent.setVars(asList(new VarModel("name", "value")));
 
 		FlowModel child = new FlowModel();
-		child.setVars(asList(VarModel.class, new VarModel("name", "value2")));
+		child.setVars(asList(new VarModel("name", "value2")));
 
 		child.merge(parent);
 		assertEquals(1, child.getVars().size());
@@ -102,12 +102,12 @@ public class FlowModelTests extends TestCase {
 		input2.setType("type3");
 		input2.setRequired("required3");
 
-		child.setInputs(asList(InputModel.class, input1, input2, input3));
+		child.setInputs(asList(input1, input2, input3));
 
 		InputModel parentInput = new InputModel("name3", "value3");
 		parentInput.setType("type3");
 		parentInput.setRequired("required3");
-		parent.setInputs(asList(InputModel.class, parentInput));
+		parent.setInputs(asList(parentInput));
 
 		child.merge(parent);
 		assertEquals(3, child.getInputs().size());
@@ -115,14 +115,14 @@ public class FlowModelTests extends TestCase {
 
 	public void testMergeOnStart() {
 		FlowModel child = new FlowModel();
-		child.setOnStartActions(asList(AbstractActionModel.class, new EvaluateModel("expression"), new RenderModel(
+		child.setOnStartActions(asList(new EvaluateModel("expression"), new RenderModel(
 				"expression"), new SetModel("expression", "value")));
 
 		FlowModel parent = new FlowModel();
 
 		EvaluateModel eval = new EvaluateModel("expression");
 		eval.setResult("result");
-		parent.setOnStartActions(asList(AbstractActionModel.class, eval, new RenderModel("expression"), new SetModel(
+		parent.setOnStartActions(asList(eval, new RenderModel("expression"), new SetModel(
 				"expression", "value")));
 
 		child.merge(parent);
@@ -132,12 +132,12 @@ public class FlowModelTests extends TestCase {
 
 	public void testMergeStates() {
 		FlowModel child = new FlowModel();
-		child.setStates(asList(AbstractStateModel.class, new ViewStateModel("view"), new EndStateModel("end")));
+		child.setStates(asList(new ViewStateModel("view"), new EndStateModel("end")));
 
 		FlowModel parent = new FlowModel();
 		ViewStateModel view = new ViewStateModel("view");
 		view.setView("jsp");
-		parent.setStates(asList(AbstractStateModel.class, view, new DecisionStateModel("decider"),
+		parent.setStates(asList(view, new DecisionStateModel("decider"),
 				new ActionStateModel("action")));
 
 		child.merge(parent);
@@ -151,7 +151,7 @@ public class FlowModelTests extends TestCase {
 		transition1.setOn("end");
 		TransitionModel transition2 = new TransitionModel();
 		transition2.setOn("start");
-		child.setGlobalTransitions(asList(TransitionModel.class, transition1, transition2));
+		child.setGlobalTransitions(asList(transition1, transition2));
 
 		FlowModel parent = new FlowModel();
 		transition1 = new TransitionModel();
@@ -159,7 +159,7 @@ public class FlowModelTests extends TestCase {
 		transition2 = new TransitionModel();
 		transition2.setOn("end");
 		transition2.setTo("theend");
-		parent.setGlobalTransitions(asList(TransitionModel.class, transition1, transition2));
+		parent.setGlobalTransitions(asList(transition1, transition2));
 
 		child.merge(parent);
 		assertEquals(3, child.getGlobalTransitions().size());
@@ -168,13 +168,13 @@ public class FlowModelTests extends TestCase {
 
 	public void testMergeOnEnd() {
 		FlowModel child = new FlowModel();
-		child.setOnEndActions(asList(AbstractActionModel.class, new EvaluateModel("expression"), new RenderModel(
-				"expression"), new SetModel("expression", "value")));
+		child.setOnEndActions(asList(new EvaluateModel("expression"), new RenderModel("expression"),
+				new SetModel("expression", "value")));
 
 		FlowModel parent = new FlowModel();
 		EvaluateModel eval = new EvaluateModel("expression");
 		eval.setResult("result");
-		parent.setOnEndActions(asList(AbstractActionModel.class, eval, new RenderModel("expression"), new SetModel(
+		parent.setOnEndActions(asList(eval, new RenderModel("expression"), new SetModel(
 				"expression", "value")));
 
 		child.merge(parent);
@@ -184,12 +184,11 @@ public class FlowModelTests extends TestCase {
 
 	public void testMergeExceptionHandlers() {
 		FlowModel child = new FlowModel();
-		child.setExceptionHandlers(asList(ExceptionHandlerModel.class, new ExceptionHandlerModel("bean1"),
+		child.setExceptionHandlers(asList(new ExceptionHandlerModel("bean1"),
 				new ExceptionHandlerModel("bean2")));
 
 		FlowModel parent = new FlowModel();
-		parent.setExceptionHandlers(asList(ExceptionHandlerModel.class, new ExceptionHandlerModel("bean2"),
-				new ExceptionHandlerModel("bean3")));
+		parent.setExceptionHandlers(asList(new ExceptionHandlerModel("bean2"), new ExceptionHandlerModel("bean3")));
 
 		child.merge(parent);
 		assertEquals(4, child.getExceptionHandlers().size());
@@ -197,16 +196,17 @@ public class FlowModelTests extends TestCase {
 
 	public void testMergeBeanImports() {
 		FlowModel child = new FlowModel();
-		child.setBeanImports(asList(BeanImportModel.class, new BeanImportModel("path1"), new BeanImportModel("path2")));
+		child.setBeanImports(asList(new BeanImportModel("path1"), new BeanImportModel("path2")));
 
 		FlowModel parent = new FlowModel();
-		parent.setBeanImports(asList(BeanImportModel.class, new BeanImportModel("path1"), new BeanImportModel("path2")));
+		parent.setBeanImports(asList(new BeanImportModel("path1"), new BeanImportModel("path2")));
 
 		child.merge(parent);
 		assertEquals(4, child.getBeanImports().size());
 	}
 
-	private <T> LinkedList<T> asList(Class<T> elementClass, T... a) {
+	@SuppressWarnings("unchecked")
+	private <T> LinkedList<T> asList(T... a) {
 		return new LinkedList<>(Arrays.asList(a));
 	}
 

@@ -22,7 +22,7 @@ import org.springframework.webflow.engine.model.builder.FlowModelBuilderExceptio
 import org.springframework.webflow.engine.model.registry.FlowModelRegistry;
 import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
 import org.springframework.webflow.execution.FlowExecution;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
@@ -301,7 +301,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		FlowAssembler assembler = new FlowAssembler(flowBuilder, new MockFlowBuilderContext("flow"));
 		Flow flow = assembler.assembleFlow();
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
-		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(new FlowExecutionListenerAdapter() {
+		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(new FlowExecutionListener() {
 			public void viewRendering(RequestContext context, View view, StateDefinition viewState) {
 				if (context.getCurrentEvent() != null && context.getCurrentEvent().getId().equals("submit")) {
 					BindingResult result = (BindingResult) context.getFlashScope().get(

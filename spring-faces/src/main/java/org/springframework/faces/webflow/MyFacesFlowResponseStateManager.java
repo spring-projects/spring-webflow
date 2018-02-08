@@ -49,7 +49,6 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * @see FlowResponseStateManager
  * @see FlowRenderKit
  */
-@SuppressWarnings("deprecation")
 public class MyFacesFlowResponseStateManager extends ResponseStateManager
 		implements FacesWrapper<ResponseStateManager> {
 

@@ -47,7 +47,7 @@ class FlowLocation {
 		Assert.hasText(path, "The path is required");
 		this.id = id;
 		this.path = path;
-		this.attributes = (attributes != null ? attributes : Collections.<FlowElementAttribute> emptySet());
+		this.attributes = (attributes != null ? attributes : Collections.emptySet());
 	}
 
 	public String getId() {

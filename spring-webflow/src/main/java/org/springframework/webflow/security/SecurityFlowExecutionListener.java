@@ -36,7 +36,7 @@ import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.definition.TransitionDefinition;
 import org.springframework.webflow.execution.EnterStateVetoException;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -44,7 +44,7 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Scott Andrews
  */
-public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter {
+public class SecurityFlowExecutionListener implements FlowExecutionListener {
 
 	private static final boolean SPRING_SECURITY_3_PRESENT = ClassUtils.hasConstructor(AffirmativeBased.class);
 

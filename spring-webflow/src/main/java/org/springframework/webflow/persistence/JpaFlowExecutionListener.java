@@ -29,7 +29,6 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -73,7 +72,7 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Keith Donald
  * @author Juergen Hoeller
  */
-public class JpaFlowExecutionListener extends FlowExecutionListenerAdapter {
+public class JpaFlowExecutionListener implements FlowExecutionListener {
 
 	/**
 	 * The name of the attribute the flow {@link EntityManager persistence context} is indexed under.

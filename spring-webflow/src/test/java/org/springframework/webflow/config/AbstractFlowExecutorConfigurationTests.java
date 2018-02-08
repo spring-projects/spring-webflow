@@ -10,7 +10,7 @@ import org.springframework.webflow.conversation.ConversationManager;
 import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
+import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
@@ -43,7 +43,7 @@ public abstract class AbstractFlowExecutorConfigurationTests extends TestCase {
 		}
 	}
 
-	public static class ConfigurationListener extends FlowExecutionListenerAdapter {
+	public static class ConfigurationListener implements FlowExecutionListener {
 
 		public void sessionCreating(RequestContext context, FlowDefinition definition) {
 			AttributeMap<Object> attributes = context.getFlowExecutionContext().getAttributes();

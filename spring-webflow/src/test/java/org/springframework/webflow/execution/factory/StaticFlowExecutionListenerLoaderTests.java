@@ -19,7 +19,6 @@ import junit.framework.TestCase;
 
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 
 /**
  * Unit tests for {@link StaticFlowExecutionListenerLoader}.
@@ -34,17 +33,14 @@ public class StaticFlowExecutionListenerLoaderTests extends TestCase {
 	}
 
 	public void testStaticListener() {
-		final FlowExecutionListener listener1 = new FlowExecutionListenerAdapter() {
-		};
+		final FlowExecutionListener listener1 = new FlowExecutionListener() {};
 		loader = new StaticFlowExecutionListenerLoader(listener1);
 		assertEquals(listener1, loader.getListeners(new Flow("foo"))[0]);
 	}
 
 	public void testStaticListeners() {
-		final FlowExecutionListener listener1 = new FlowExecutionListenerAdapter() {
-		};
-		final FlowExecutionListener listener2 = new FlowExecutionListenerAdapter() {
-		};
+		final FlowExecutionListener listener1 = new FlowExecutionListener() {};
+		final FlowExecutionListener listener2 = new FlowExecutionListener() {};
 
 		loader = new StaticFlowExecutionListenerLoader(listener1, listener2);
 		assertEquals(listener1, loader.getListeners(new Flow("foo"))[0]);

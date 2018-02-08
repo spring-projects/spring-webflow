@@ -18,7 +18,6 @@ package org.springframework.faces.webflow;
 import javax.faces.context.FacesContext;
 
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -28,7 +27,7 @@ import org.springframework.webflow.execution.RequestContext;
  *
  * @author Rossen Stoyanchev
  */
-public class FlowFacesContextLifecycleListener extends FlowExecutionListenerAdapter {
+public class FlowFacesContextLifecycleListener implements FlowExecutionListener {
 
 	public static final String DEFAULT_FACES_CONTEXT =
 			FlowFacesContextLifecycleListener.class.getName() + ".DEFAULT_FACES_CONTEXT";

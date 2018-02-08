@@ -29,7 +29,7 @@ import org.springframework.webflow.definition.TransitionDefinition;
  * @author Erwin Vervaet
  * @author Scott Andrews
  */
-public class MockFlowExecutionListener extends FlowExecutionListenerAdapter {
+public class MockFlowExecutionListener implements FlowExecutionListener {
 
 	private boolean sessionStarting;
 

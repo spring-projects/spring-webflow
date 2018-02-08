@@ -16,7 +16,6 @@ import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 
 public class FlowExecutorFactoryBeanTests extends TestCase {
@@ -57,9 +56,7 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 		Set<FlowElementAttribute> attributes = new HashSet<>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
 		factoryBean.setFlowExecutionAttributes(attributes);
-		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
-
-		};
+		FlowExecutionListener listener = new FlowExecutionListener() {};
 		factoryBean.setFlowExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
 		factoryBean.setMaxFlowExecutionSnapshots(2);
 		factoryBean.setMaxFlowExecutions(1);

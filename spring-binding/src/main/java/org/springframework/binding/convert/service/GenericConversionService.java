@@ -58,7 +58,7 @@ public class GenericConversionService implements ConversionService {
 	/**
 	 * Indexes classes by well-known aliases.
 	 */
-	private final Map<String, Class<?>> aliasMap = new HashMap<String, Class<?>>();
+	private final Map<String, Class<?>> aliasMap = new HashMap<>();
 
 	/**
 	 * An optional parent conversion service.
@@ -79,7 +79,7 @@ public class GenericConversionService implements ConversionService {
 	 * @param delegateConversionService the conversion service
 	 */
 	public GenericConversionService(org.springframework.core.convert.ConversionService delegateConversionService) {
-		Assert.notNull(delegateConversionService);
+		Assert.notNull(delegateConversionService, "Missing delegate ConversionService");
 		this.delegate = delegateConversionService;
 	}
 

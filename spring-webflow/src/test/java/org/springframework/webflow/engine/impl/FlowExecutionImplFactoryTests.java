@@ -32,7 +32,6 @@ import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.execution.FlowExecutionListener;
-import org.springframework.webflow.execution.FlowExecutionListenerAdapter;
 import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
@@ -89,7 +88,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 	}
 
 	public void testCreateWithExecutionListener() {
-		FlowExecutionListener listener1 = new FlowExecutionListenerAdapter() {
+		FlowExecutionListener listener1 = new FlowExecutionListener() {
 			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
 				starting = true;
 			}
@@ -125,7 +124,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		FlowExecutionImpl flowExecution = (FlowExecutionImpl) factory.createFlowExecution(flowDefinition);
 		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<>();
 		factory.setExecutionAttributes(executionAttributes);
-		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
+		FlowExecutionListener listener = new FlowExecutionListener() {
 		};
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
 		MockFlowExecutionKeyFactory keyFactory = new MockFlowExecutionKeyFactory();

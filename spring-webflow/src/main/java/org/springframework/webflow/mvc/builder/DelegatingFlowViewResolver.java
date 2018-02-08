@@ -39,7 +39,7 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 	 * @param viewResolvers the Spring MVC view resolver chain to delegate to
 	 */
 	public DelegatingFlowViewResolver(List<ViewResolver> viewResolvers) {
-		this.viewResolvers = viewResolvers != null ? viewResolvers : Collections.<ViewResolver> emptyList();
+		this.viewResolvers = viewResolvers != null ? viewResolvers : Collections.emptyList();
 	}
 
 	public View resolveView(String viewId, RequestContext context) {

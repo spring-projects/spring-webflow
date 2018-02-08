@@ -3,7 +3,6 @@ package org.springframework.faces.webflow;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIInput;
@@ -23,10 +22,10 @@ import javax.faces.event.SystemEvent;
 import javax.faces.lifecycle.Lifecycle;
 
 import junit.framework.TestCase;
-
+import org.apache.el.ExpressionFactoryImpl;
 import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
-import org.apache.el.ExpressionFactoryImpl;
+
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -60,8 +59,6 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private Lifecycle lifecycle;
 
-	private PhaseListener trackingListener;
-
 	private final ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
 	private final MockExternalContext extContext = new MockExternalContext();
@@ -94,8 +91,8 @@ public class JsfViewFactoryTests extends TestCase {
 		this.jsfMock.setUp();
 		ExceptionEventAwareMockApplication application = new ExceptionEventAwareMockApplication();
 		((MockBaseFacesContext) FlowFacesContext.getCurrentInstance()).setApplication(application);
-		this.trackingListener = new TrackingPhaseListener();
-		this.jsfMock.lifecycle().addPhaseListener(this.trackingListener);
+		PhaseListener trackingListener = new TrackingPhaseListener();
+		this.jsfMock.lifecycle().addPhaseListener(trackingListener);
 		this.jsfMock.facesContext().setViewRoot(null);
 		this.jsfMock.facesContext().getApplication().setViewHandler(this.viewHandler);
 	}
@@ -116,7 +113,7 @@ public class JsfViewFactoryTests extends TestCase {
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 
 		View newView = this.factory.getView(this.context);
 
@@ -147,7 +144,7 @@ public class JsfViewFactoryTests extends TestCase {
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 
 		View restoredView = this.factory.getView(this.context);
 
@@ -162,6 +159,7 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no flow event signaled
 	 */
+	@SuppressWarnings("deprecation")
 	public final void testGetView_RestoreWithBindings() {
 
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
@@ -174,8 +172,7 @@ public class JsfViewFactoryTests extends TestCase {
 		UIPanel panel = new UIPanel();
 		panel.setId("panel1");
 		UIOutput output = new UIOutput();
-		output.setValueBinding("binding", this.jsfMock.facesContext().getApplication()
-				.createValueBinding("#{myBean.output}"));
+		output.setValueBinding("binding", this.jsfMock.facesContext().getApplication().createValueBinding("#{myBean.output}"));
 		output.setId("output1");
 		UIInput input = new UIInput();
 		input.setValueBinding("binding", this.jsfMock.facesContext().getApplication().createValueBinding("#{myBean.input}"));
@@ -186,6 +183,7 @@ public class JsfViewFactoryTests extends TestCase {
 		panel.getChildren().add(input);
 
 		TestBean testBean = new TestBean();
+		//noinspection unchecked
 		this.jsfMock.externalContext().getRequestMap().put("myBean", testBean);
 
 		((MockViewHandler) this.viewHandler).setRestoreView(existingRoot);
@@ -193,7 +191,7 @@ public class JsfViewFactoryTests extends TestCase {
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 
 		View restoredView = this.factory.getView(this.context);
 
@@ -228,13 +226,13 @@ public class JsfViewFactoryTests extends TestCase {
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 
 		View restoredView = this.factory.getView(this.context);
 
 		assertNotNull("A View was not restored", restoredView);
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
-		assertTrue("An ViewRoot was not set", ((JsfView) restoredView).getViewRoot() instanceof UIViewRoot);
+		assertTrue("An ViewRoot was not set", ((JsfView) restoredView).getViewRoot() != null);
 		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
 		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
 		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
@@ -254,7 +252,7 @@ public class JsfViewFactoryTests extends TestCase {
 		this.jsfMock.facesContext().setViewRoot(newRoot);
 		this.jsfMock.facesContext().renderResponse();
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 
 		View newView = this.factory.getView(this.context);
 
@@ -266,7 +264,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("The PostRestoreViewEvent was not seen", newRoot.isPostRestoreStateEventSeen());
 	}
 
-	public void testGetView_ExceptionsOnPostRestoreStateEvent() throws Exception {
+	public void testGetView_ExceptionsOnPostRestoreStateEvent() {
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
 		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
@@ -280,7 +278,7 @@ public class JsfViewFactoryTests extends TestCase {
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 		this.factory.getView(this.context);
 		ExceptionEventAwareMockApplication application = (ExceptionEventAwareMockApplication) FlowFacesContext
 				.getCurrentInstance().getApplication();

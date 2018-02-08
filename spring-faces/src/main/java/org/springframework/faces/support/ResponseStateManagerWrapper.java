@@ -31,7 +31,6 @@ import javax.faces.render.ResponseStateManager;
  * 
  * @since 2.4
  */
-@SuppressWarnings("deprecation")
 public abstract class ResponseStateManagerWrapper extends ResponseStateManager implements
 		FacesWrapper<ResponseStateManager> {
 
