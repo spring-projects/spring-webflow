@@ -774,7 +774,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @see #initBinder(RequestContext, DataBinder)
 	 * @see #setMessageCodesResolver(MessageCodesResolver)
 	 */
-	protected DataBinder createBinder(RequestContext context, Object formObject) {
+	protected DataBinder createBinder(RequestContext context, Object formObject) throws Exception {
 		DataBinder binder = new WebDataBinder(formObject, getFormObjectName());
 		if (getMessageCodesResolver() != null) {
 			binder.setMessageCodesResolver(getMessageCodesResolver());
@@ -790,7 +790,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @param binder the data binder to use
 	 * @throws Exception when an unrecoverable exception occurs
 	 */
-	protected void doBind(RequestContext context, DataBinder binder) {
+	protected void doBind(RequestContext context, DataBinder binder) throws Exception {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Binding allowed request parameters in "
 					+ StylerUtils.style(context.getExternalContext().getRequestParameterMap())
