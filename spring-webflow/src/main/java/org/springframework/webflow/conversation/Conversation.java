@@ -53,13 +53,13 @@ public interface Conversation {
 	 * conversation. This method can be safely called without owning the lock of this conversation.
 	 * @return the conversation id
 	 */
-	public ConversationId getId();
+	ConversationId getId();
 
 	/**
 	 * Lock this conversation. May block until the lock is available, if someone else has acquired the lock.
 	 * @throws ConversationLockException if the lock could not be acquired
 	 */
-	public void lock() throws ConversationLockException;
+	void lock() throws ConversationLockException;
 
 	/**
 	 * Returns the conversation attribute with the specified name. You need to acquire the lock on this conversation
@@ -67,7 +67,7 @@ public interface Conversation {
 	 * @param name the attribute name
 	 * @return the attribute value
 	 */
-	public Object getAttribute(Object name);
+	Object getAttribute(Object name);
 
 	/**
 	 * Puts a conversation attribute into this context. You need to acquire the lock on this conversation before calling
@@ -75,23 +75,23 @@ public interface Conversation {
 	 * @param name the attribute name
 	 * @param value the attribute value
 	 */
-	public void putAttribute(Object name, Object value);
+	void putAttribute(Object name, Object value);
 
 	/**
 	 * Removes a conversation attribute. You need to acquire the lock on this conversation before calling this method.
 	 * @param name the attribute name
 	 */
-	public void removeAttribute(Object name);
+	void removeAttribute(Object name);
 
 	/**
 	 * Ends this conversation. This method should only be called once to terminate the conversation and cleanup any
 	 * allocated resources. You need to aquire the lock on this conversation before calling this method.
 	 */
-	public void end();
+	void end();
 
 	/**
 	 * Unlock this conversation, making it available to others for manipulation.
 	 */
-	public void unlock();
+	void unlock();
 
 }

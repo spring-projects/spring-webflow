@@ -28,11 +28,11 @@ public class StringToBigInteger extends StringToObject {
 		super(BigInteger.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return new BigInteger(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		BigInteger number = (BigInteger) object;
 		return number.toString();
 	}

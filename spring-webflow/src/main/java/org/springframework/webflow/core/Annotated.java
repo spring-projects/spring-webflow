@@ -29,19 +29,19 @@ public interface Annotated {
 	 * Returns a short summary of this object, suitable for display as an icon caption or tool tip.
 	 * @return the caption
 	 */
-	public String getCaption();
+	String getCaption();
 
 	/**
 	 * Returns a longer, more detailed description of this object.
 	 * @return the description
 	 */
-	public String getDescription();
+	String getDescription();
 
 	/**
 	 * Returns a attribute map containing the attributes annotating this object. These attributes provide descriptive
 	 * characteristics or properties that may affect object behavior.
 	 * @return the attribute map
 	 */
-	public MutableAttributeMap<Object> getAttributes();
+	MutableAttributeMap<Object> getAttributes();
 
 }

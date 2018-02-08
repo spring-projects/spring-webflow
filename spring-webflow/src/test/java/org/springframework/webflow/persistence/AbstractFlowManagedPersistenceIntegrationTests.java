@@ -109,7 +109,7 @@ public abstract class AbstractFlowManagedPersistenceIntegrationTests extends Tes
 		dataSource = dmds;
 	}
 
-	private void populateDataBase() throws Exception {
+	private void populateDataBase() {
 		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
 		databasePopulator.addScript(new ClassPathResource("test-data.sql", this.getClass()));
 		DataSourceInitializer initializer = new DataSourceInitializer();

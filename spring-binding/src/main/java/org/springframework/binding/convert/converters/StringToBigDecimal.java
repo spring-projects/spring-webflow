@@ -32,7 +32,7 @@ public class StringToBigDecimal extends StringToObject {
 		return new BigDecimal(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		BigDecimal number = (BigDecimal) object;
 		return number.toString();
 	}

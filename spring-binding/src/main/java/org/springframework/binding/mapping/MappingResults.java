@@ -28,32 +28,32 @@ public interface MappingResults extends Serializable {
 	/**
 	 * The source object that was mapped from.
 	 */
-	public Object getSource();
+	Object getSource();
 
 	/**
 	 * The target object that was mapped to.
 	 */
-	public Object getTarget();
+	Object getTarget();
 
 	/**
 	 * A list of all the mapping results between the source and target.
 	 */
-	public List<MappingResult> getAllResults();
+	List<MappingResult> getAllResults();
 
 	/**
 	 * Whether some results were errors. Returns true if mapping errors occurred.
 	 */
-	public boolean hasErrorResults();
+	boolean hasErrorResults();
 
 	/**
 	 * A list of all error results that occurred.
 	 */
-	public List<MappingResult> getErrorResults();
+	List<MappingResult> getErrorResults();
 
 	/**
 	 * Get all results that meet the given result criteria.
 	 * @param criteria the mapping result criteria
 	 */
-	public List<MappingResult> getResults(MappingResultsCriteria criteria);
+	List<MappingResult> getResults(MappingResultsCriteria criteria);
 
 }

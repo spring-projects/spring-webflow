@@ -31,24 +31,24 @@ public class ActionTransitionCriteriaTests extends TestCase {
 		criteria = new ActionTransitionCriteria(action);
 	}
 
-	public void testExecuteSuccessResult() throws Exception {
+	public void testExecuteSuccessResult() {
 		MockRequestContext context = new MockRequestContext();
 		assertTrue(criteria.test(context));
 	}
 
-	public void testExecuteTrueResult() throws Exception {
+	public void testExecuteTrueResult() {
 		action.setResultEventId("true");
 		MockRequestContext context = new MockRequestContext();
 		assertTrue(criteria.test(context));
 	}
 
-	public void testExecuteYesResult() throws Exception {
+	public void testExecuteYesResult() {
 		action.setResultEventId("yes");
 		MockRequestContext context = new MockRequestContext();
 		assertTrue(criteria.test(context));
 	}
 
-	public void testExecuteErrorResult() throws Exception {
+	public void testExecuteErrorResult() {
 		action.setResultEventId("whatever");
 		MockRequestContext context = new MockRequestContext();
 		assertFalse(criteria.test(context));

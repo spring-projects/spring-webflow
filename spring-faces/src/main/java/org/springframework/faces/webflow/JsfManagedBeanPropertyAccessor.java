@@ -56,19 +56,19 @@ public class JsfManagedBeanPropertyAccessor implements PropertyAccessor {
 		return null;
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return (getJsfManagedBean(name) != null);
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		return new TypedValue(getJsfManagedBean(name));
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return (getScopeForBean(name) != null);
 	}
 
-	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
+	public void write(EvaluationContext context, Object target, String name, Object newValue) {
 		MutableAttributeMap<Object> map = getScopeForBean(name);
 		if (map != null) {
 			map.put(name, newValue);

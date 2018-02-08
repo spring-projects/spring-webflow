@@ -34,26 +34,26 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @param attributeName the attribute name
 	 * @return the attribute value
 	 */
-	public V get(String attributeName);
+	V get(String attributeName);
 
 	/**
 	 * Returns the size of this map.
 	 * @return the number of entries in the map
 	 */
-	public int size();
+	int size();
 
 	/**
 	 * Is this attribute map empty with a size of 0?
 	 * @return true if empty, false if not
 	 */
-	public boolean isEmpty();
+	boolean isEmpty();
 
 	/**
 	 * Does the attribute with the provided name exist in this map?
 	 * @param attributeName the attribute name
 	 * @return true if so, false otherwise
 	 */
-	public boolean contains(String attributeName);
+	boolean contains(String attributeName);
 
 	/**
 	 * Does the attribute with the provided name exist in this map and is its value of the specified required type?
@@ -62,7 +62,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return true if so, false otherwise
 	 * @throws IllegalArgumentException when the value is not of the required type
 	 */
-	public boolean contains(String attributeName, Class<? extends V> requiredType) throws IllegalArgumentException;
+	boolean contains(String attributeName, Class<? extends V> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Get an attribute value, returning the default value if no value is found.
@@ -70,7 +70,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @param defaultValue the default value
 	 * @return the attribute value, falling back to the default if no such attribute exists
 	 */
-	public V get(String attributeName, V defaultValue);
+	V get(String attributeName, V defaultValue);
 
 	/**
 	 * Get an attribute value, asserting the value is of the required type.
@@ -79,7 +79,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the attribute value, or null if not found
 	 * @throws IllegalArgumentException when the value is not of the required type
 	 */
-	public <T extends V> T get(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
+	<T extends V> T get(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Get an attribute value, asserting the value is of the required type and returning the default value if not found.
@@ -89,7 +89,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the attribute value, or the default if not found
 	 * @throws IllegalArgumentException when the value (if found) is not of the required type
 	 */
-	public <T extends V> T get(String attributeName, Class<T> requiredType, T defaultValue)
+	<T extends V> T get(String attributeName, Class<T> requiredType, T defaultValue)
 			throws IllegalStateException;
 
 	/**
@@ -98,7 +98,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the attribute value
 	 * @throws IllegalArgumentException when the attribute is not found
 	 */
-	public V getRequired(String attributeName) throws IllegalArgumentException;
+	V getRequired(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Get the value of a required attribute and make sure it is of the required type.
@@ -107,7 +107,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the attribute value
 	 * @throws IllegalArgumentException when the attribute is not found or not of the required type
 	 */
-	public <T extends V> T getRequired(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
+	<T extends V> T getRequired(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Returns a string attribute value in the map, returning <code>null</code> if no value was found.
@@ -115,7 +115,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the string attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a string
 	 */
-	public String getString(String attributeName) throws IllegalArgumentException;
+	String getString(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a string attribute value in the map, returning the default value if no value was found.
@@ -124,7 +124,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the string attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a string
 	 */
-	public String getString(String attributeName, String defaultValue) throws IllegalArgumentException;
+	String getString(String attributeName, String defaultValue) throws IllegalArgumentException;
 
 	/**
 	 * Returns a string attribute value in the map, throwing an exception if the attribute is not present and of the
@@ -133,7 +133,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the string attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or present but not a string
 	 */
-	public String getRequiredString(String attributeName) throws IllegalArgumentException;
+	String getRequiredString(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a collection attribute value in the map.
@@ -141,7 +141,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the collection attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a collection
 	 */
-	public Collection<V> getCollection(String attributeName) throws IllegalArgumentException;
+	Collection<V> getCollection(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a collection attribute value in the map and make sure it is of the required type.
@@ -150,7 +150,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the collection attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a collection of the required type
 	 */
-	public <T extends Collection<V>> T getCollection(String attributeName, Class<T> requiredType)
+	<T extends Collection<V>> T getCollection(String attributeName, Class<T> requiredType)
 			throws IllegalArgumentException;
 
 	/**
@@ -160,7 +160,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the collection attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or is present but not a collection
 	 */
-	public Collection<V> getRequiredCollection(String attributeName) throws IllegalArgumentException;
+	Collection<V> getRequiredCollection(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a collection attribute value in the map, throwing an exception if the attribute is not present or not a
@@ -171,7 +171,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @throws IllegalArgumentException if the attribute is not present or is present but not a collection of the
 	 * required type
 	 */
-	public <T extends Collection<V>> T getRequiredCollection(String attributeName, Class<T> requiredType)
+	<T extends Collection<V>> T getRequiredCollection(String attributeName, Class<T> requiredType)
 			throws IllegalArgumentException;
 
 	/**
@@ -181,7 +181,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the array attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not an array of the required type
 	 */
-	public <T extends V> T[] getArray(String attributeName, Class<? extends T[]> requiredType)
+	<T extends V> T[] getArray(String attributeName, Class<? extends T[]> requiredType)
 			throws IllegalArgumentException;
 
 	/**
@@ -193,7 +193,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @throws IllegalArgumentException if the attribute is not present or is present but not a array of the required
 	 * type
 	 */
-	public <T extends V> T[] getRequiredArray(String attributeName, Class<? extends T[]> requiredType)
+	<T extends V> T[] getRequiredArray(String attributeName, Class<? extends T[]> requiredType)
 			throws IllegalArgumentException;
 
 	/**
@@ -204,7 +204,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the number attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a number of the required type
 	 */
-	public <T extends Number> T getNumber(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
+	<T extends Number> T getNumber(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Returns a number attribute value in the map of the specified type, returning the default value if no value was
@@ -214,7 +214,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the number attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a number of the required type
 	 */
-	public <T extends Number> T getNumber(String attributeName, Class<T> requiredType, T defaultValue)
+	<T extends Number> T getNumber(String attributeName, Class<T> requiredType, T defaultValue)
 			throws IllegalArgumentException;
 
 	/**
@@ -224,7 +224,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the number attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or present but not a number of the required type
 	 */
-	public <T extends Number> T getRequiredNumber(String attributeName, Class<T> requiredType)
+	<T extends Number> T getRequiredNumber(String attributeName, Class<T> requiredType)
 			throws IllegalArgumentException;
 
 	/**
@@ -233,7 +233,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the integer attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not an integer
 	 */
-	public Integer getInteger(String attributeName) throws IllegalArgumentException;
+	Integer getInteger(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns an integer attribute value in the map, returning the default value if no value was found.
@@ -242,7 +242,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the integer attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not an integer
 	 */
-	public Integer getInteger(String attributeName, Integer defaultValue) throws IllegalArgumentException;
+	Integer getInteger(String attributeName, Integer defaultValue) throws IllegalArgumentException;
 
 	/**
 	 * Returns an integer attribute value in the map, throwing an exception if the attribute is not present and of the
@@ -251,7 +251,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the integer attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or present but not an integer
 	 */
-	public Integer getRequiredInteger(String attributeName) throws IllegalArgumentException;
+	Integer getRequiredInteger(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a long attribute value in the map, returning <code>null</code> if no value was found.
@@ -259,7 +259,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the long attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a long
 	 */
-	public Long getLong(String attributeName) throws IllegalArgumentException;
+	Long getLong(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a long attribute value in the map, returning the default value if no value was found.
@@ -268,7 +268,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the long attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a long
 	 */
-	public Long getLong(String attributeName, Long defaultValue) throws IllegalArgumentException;
+	Long getLong(String attributeName, Long defaultValue) throws IllegalArgumentException;
 
 	/**
 	 * Returns a long attribute value in the map, throwing an exception if the attribute is not present and of the
@@ -277,7 +277,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the long attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or present but not a long
 	 */
-	public Long getRequiredLong(String attributeName) throws IllegalArgumentException;
+	Long getRequiredLong(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a boolean attribute value in the map, returning <code>null</code> if no value was found.
@@ -285,7 +285,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the long attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a boolean
 	 */
-	public Boolean getBoolean(String attributeName) throws IllegalArgumentException;
+	Boolean getBoolean(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a boolean attribute value in the map, returning the default value if no value was found.
@@ -294,7 +294,7 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the boolean attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a boolean
 	 */
-	public Boolean getBoolean(String attributeName, Boolean defaultValue) throws IllegalArgumentException;
+	Boolean getBoolean(String attributeName, Boolean defaultValue) throws IllegalArgumentException;
 
 	/**
 	 * Returns a boolean attribute value in the map, throwing an exception if the attribute is not present and of the
@@ -303,13 +303,13 @@ public interface AttributeMap<V> extends MapAdaptable<String, V> {
 	 * @return the boolean attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or present but is not a boolean
 	 */
-	public Boolean getRequiredBoolean(String attributeName) throws IllegalArgumentException;
+	Boolean getRequiredBoolean(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a new attribute map containing the union of this map with the provided map.
 	 * @param attributes the map to combine with this map
 	 * @return a new, combined map
 	 */
-	public AttributeMap<V> union(AttributeMap<? extends V> attributes);
+	AttributeMap<V> union(AttributeMap<? extends V> attributes);
 
 }

@@ -33,7 +33,8 @@ import org.w3c.dom.Element;
  */
 class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
-	private static final String FLOW_EXECUTION_LISTENER_LOADER_FACTORY_BEAN_CLASS_NAME = "org.springframework.webflow.config.FlowExecutionListenerLoaderFactoryBean";
+	private static final String FLOW_EXECUTION_LISTENER_LOADER_FACTORY_BEAN_CLASS_NAME =
+			"org.springframework.webflow.config.FlowExecutionListenerLoaderFactoryBean";
 
 	protected String getBeanClassName(Element element) {
 		return FLOW_EXECUTION_LISTENER_LOADER_FACTORY_BEAN_CLASS_NAME;

@@ -29,22 +29,22 @@ public class FlowAssemblerTests extends TestCase {
 		builder.buildOutputMapper();
 		builder.buildExceptionHandlers();
 		EasyMock.expect(builder.getFlow()).andReturn(new Flow("search"));
-		EasyMock.replay(new Object[] { builder });
+		EasyMock.replay(builder);
 		Flow flow = assembler.assembleFlow();
 		assertEquals("search", flow.getId());
-		EasyMock.verify(new Object[] { builder });
+		EasyMock.verify(builder);
 	}
 
 	public void testDisposeCalledOnException() {
 		builder.init(builderContext);
 		EasyMock.expectLastCall().andThrow(new IllegalArgumentException());
 		builder.dispose();
-		EasyMock.replay(new Object[] { builder });
+		EasyMock.replay(builder);
 		try {
 			assembler.assembleFlow();
 			fail("Should have failed");
 		} catch (IllegalArgumentException e) {
-			EasyMock.verify(new Object[] { builder });
+			EasyMock.verify(builder);
 		}
 	}
 }

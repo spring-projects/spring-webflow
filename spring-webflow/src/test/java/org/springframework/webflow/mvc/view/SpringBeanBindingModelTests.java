@@ -22,7 +22,7 @@ public class SpringBeanBindingModelTests extends AbstractBindingModelTests {
 	public void testGetFieldValueNonStringNoConversionService() {
 		model = new BindingModel("testBean", testBean, getExpressionParser(), null, messages);
 		testBean.datum2 = 3;
-		assertEquals(new Integer(3), model.getFieldValue("datum2"));
+		assertEquals(3, model.getFieldValue("datum2"));
 	}
 
 }

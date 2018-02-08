@@ -26,7 +26,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		FlowDefinition flow = registry.getFlowDefinition("flow");
 		assertEquals("flow", flow.getId());
 		assertEquals("bar", flow.getAttributes().get("foo"));
-		assertEquals(new Integer(2), flow.getAttributes().get("bar"));
+		assertEquals(2, flow.getAttributes().get("bar"));
 	}
 
 	public void testRegistryFlowLocationPatternsPopulated() {
@@ -50,7 +50,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		FlowDefinition foo3 = registry.getFlowDefinition("foo3");
 		assertEquals("foo3", foo3.getId());
 		assertEquals("bar", foo3.getAttributes().get("foo"));
-		assertEquals(new Integer(2), foo3.getAttributes().get("bar"));
+		assertEquals(2, foo3.getAttributes().get("bar"));
 	}
 
 	public void testNoSuchFlow() {

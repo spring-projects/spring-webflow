@@ -32,6 +32,6 @@ public interface MapAdaptable<K, V> {
 	 * calculated) be cached as appropriate.
 	 * @return the object's contents as a map
 	 */
-	public Map<K, V> asMap();
+	Map<K, V> asMap();
 
 }

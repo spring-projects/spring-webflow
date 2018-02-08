@@ -47,7 +47,7 @@ public class WebFlowSpringELExpressionParserTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
-	public void testResourceBundleRead() throws Exception {
+	public void testResourceBundleRead() {
 		MockExternalContext externalContext = (MockExternalContext) requestContext.getExternalContext();
 		externalContext.setLocale(Locale.ENGLISH);
 

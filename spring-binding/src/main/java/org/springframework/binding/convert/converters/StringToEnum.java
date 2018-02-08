@@ -27,11 +27,11 @@ public class StringToEnum extends StringToObject {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object toObject(String string, Class<?> targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) {
 		return Enum.valueOf((Class) targetClass, string);
 	}
 
-	protected String toString(Object object) throws Exception {
+	protected String toString(Object object) {
 		return object.toString();
 	}
 

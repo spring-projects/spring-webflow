@@ -32,34 +32,34 @@ public class MethodKeyTests extends TestCase {
 	private static final Method LIST_FILENAME_FILTER = safeGetMethod(File.class, "list",
 			new Class[] { FilenameFilter.class });
 
-	public void testGetMethodWithNoArgs() throws Exception {
-		MethodKey key = new MethodKey(File.class, "list", new Class[0]);
+	public void testGetMethodWithNoArgs() {
+		MethodKey key = new MethodKey(File.class, "list");
 		Method m = key.getMethod();
 		assertEquals(LIST_NO_ARGS, m);
 	}
 
-	public void testGetMoreGenericMethod() throws Exception {
-		MethodKey key = new MethodKey(Object.class, "equals", new Class[] { Long.class });
+	public void testGetMoreGenericMethod() {
+		MethodKey key = new MethodKey(Object.class, "equals", Long.class);
 		assertEquals(safeGetMethod(Object.class, "equals", new Class[] { Object.class }), key.getMethod());
 	}
 
-	public void testGetMethodWithSingleArg() throws Exception {
-		MethodKey key = new MethodKey(File.class, "list", new Class[] { FilenameFilter.class });
+	public void testGetMethodWithSingleArg() {
+		MethodKey key = new MethodKey(File.class, "list", FilenameFilter.class);
 		Method m = key.getMethod();
 		assertEquals(LIST_FILENAME_FILTER, m);
 	}
 
-	public void testGetMethodWithSingleNullArgAndValidMatch() throws Exception {
+	public void testGetMethodWithSingleNullArgAndValidMatch() {
 		MethodKey key = new MethodKey(File.class, "list", new Class[] { null });
 		Method m = key.getMethod();
 		assertEquals(LIST_FILENAME_FILTER, m);
 	}
 
-	public void testGetMethodWithSingleNullAndUnclearMatch() throws Exception {
+	public void testGetMethodWithSingleNullAndUnclearMatch() {
 		new MethodKey(File.class, "listFiles", new Class[] { null });
 	}
 
-	private static final Method safeGetMethod(Class<?> type, String name, Class<?>[] argTypes) {
+	private static Method safeGetMethod(Class<?> type, String name, Class<?>[] argTypes) {
 		try {
 			return type.getMethod(name, argTypes);
 		} catch (NoSuchMethodException e) {

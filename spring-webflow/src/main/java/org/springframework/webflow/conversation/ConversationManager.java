@@ -29,7 +29,7 @@ public interface ConversationManager {
 	 * @return a service interface allowing access to the conversation context
 	 * @throws ConversationException an exception occured
 	 */
-	public Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException;
+	Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException;
 
 	/**
 	 * Get the conversation with the provided id.
@@ -60,7 +60,7 @@ public interface ConversationManager {
 	 * @return the conversation
 	 * @throws NoSuchConversationException the id provided was invalid
 	 */
-	public Conversation getConversation(ConversationId id) throws ConversationException;
+	Conversation getConversation(ConversationId id) throws ConversationException;
 
 	/**
 	 * Parse the string-encoded conversationId into its object form. Essentially, the reverse of
@@ -69,5 +69,5 @@ public interface ConversationManager {
 	 * @return the parsed conversation id
 	 * @throws ConversationException an exception occured parsing the id
 	 */
-	public ConversationId parseConversationId(String encodedId) throws ConversationException;
+	ConversationId parseConversationId(String encodedId) throws ConversationException;
 }

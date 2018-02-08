@@ -1,5 +1,7 @@
 package org.springframework.faces.webflow;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
@@ -37,11 +39,11 @@ public class FlowResponseStateManagerTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
-	public void testname() throws Exception {
+	public void testname() {
 
 	}
 
-	public void testWriteFlowSerializedView() throws Exception {
+	public void testWriteFlowSerializedView() throws IOException {
 		EasyMock.expect(this.flowExecutionContext.getKey()).andReturn(new MockFlowExecutionKey("e1s1"));
 		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<>();
 		EasyMock.expect(this.requestContext.getViewScope()).andStubReturn(viewMap);
@@ -58,7 +60,7 @@ public class FlowResponseStateManagerTests extends TestCase {
 		EasyMock.verify(this.flowExecutionContext, this.requestContext);
 	}
 
-	public void testGetState() throws Exception {
+	public void testGetState() {
 		Object state = new Object();
 
 		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<>();

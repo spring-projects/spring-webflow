@@ -32,24 +32,24 @@ public interface FlowModelHolder {
 	/**
 	 * Returns the flow model held by this holder. Calling this method the first time may trigger flow model assembly.
 	 */
-	public FlowModel getFlowModel();
+	FlowModel getFlowModel();
 
 	/**
 	 * Has the underlying flow model changed since it was last accessed via a call to {@link #getFlowModel()}.
 	 * @return true if yes, false if not
 	 */
-	public boolean hasFlowModelChanged();
+	boolean hasFlowModelChanged();
 
 	/**
 	 * Returns the underlying resource defining the flow model.
 	 * @return the flow model resource
 	 */
-	public Resource getFlowModelResource();
+	Resource getFlowModelResource();
 
 	/**
 	 * Refresh the flow model held by this holder. Calling this method typically triggers flow re-assembly, which may
 	 * include a refresh from an externalized resource such as a file.
 	 */
-	public void refresh();
+	void refresh();
 
 }

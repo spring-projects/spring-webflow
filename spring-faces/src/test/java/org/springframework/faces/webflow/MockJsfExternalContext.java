@@ -147,7 +147,7 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public URL getResource(String arg0) throws MalformedURLException {
+	public URL getResource(String arg0) {
 		return null;
 	}
 

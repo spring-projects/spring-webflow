@@ -32,7 +32,7 @@ public interface ConversionService {
 	 * @return the converted object, an instance of the <code>targetClass</code>
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException;
+	Object executeConversion(Object source, Class<?> targetClass) throws ConversionException;
 
 	/**
 	 * Execute a conversion using the custom converter with the provided id.
@@ -43,7 +43,7 @@ public interface ConversionService {
 	 * @return the converted object, an instance of the <code>targetClass</code>
 	 * @throws ConversionException if an exception occurred during the conversion process
 	 */
-	public Object executeConversion(String converterId, Object source, Class<?> targetClass);
+	Object executeConversion(String converterId, Object source, Class<?> targetClass);
 
 	/**
 	 * Return the default conversion executor capable of converting source objects of the specified
@@ -55,7 +55,7 @@ public interface ConversionService {
 	 * @return the executor that can execute instance type conversion, never null
 	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */
-	public ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
+	ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
 			throws ConversionExecutorNotFoundException;
 
 	/**
@@ -69,7 +69,7 @@ public interface ConversionService {
 	 * @return the executor that can execute instance type conversion, never null
 	 * @throws ConversionExecutorNotFoundException when no suitable conversion executor could be found
 	 */
-	public ConversionExecutor getConversionExecutor(String id, Class<?> sourceClass, Class<?> targetClass)
+	ConversionExecutor getConversionExecutor(String id, Class<?> sourceClass, Class<?> targetClass)
 			throws ConversionExecutorNotFoundException;
 
 	/**
@@ -77,13 +77,13 @@ public interface ConversionService {
 	 * @param alias the class alias
 	 * @return the class, or <code>null</code> if no alias exists
 	 */
-	public Class<?> getClassForAlias(String alias);
+	Class<?> getClassForAlias(String alias);
 
 	/**
 	 * Return the underlying Spring ConversionService.
 	 * 
 	 * @return the conversion service
 	 */
-	public org.springframework.core.convert.ConversionService getDelegateConversionService();
+	org.springframework.core.convert.ConversionService getDelegateConversionService();
 
 }

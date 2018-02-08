@@ -50,7 +50,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 	}
 
 	public void testFlowCommitsInSingleRequest() {
-		assertEquals("Table should only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
@@ -61,7 +61,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		TestBean bean = new TestBean(1, "Keith Donald");
 		EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
 		em.persist(bean);
-		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should still only have one row", 1, getCount());
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
 		endState.getAttributes().put("commit", true);
@@ -69,12 +69,17 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 
 		jpaListener.sessionEnding(context, flowSession, "success", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
-		assertEquals("Table should only have two rows", 2, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have two rows", 2, getCount());
 		assertSessionNotBound();
 	}
 
+	@SuppressWarnings("ConstantConditions")
+	private int getCount() {
+		return jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class);
+	}
+
 	public void testFlowCommitsAfterMultipleRequests() {
-		assertEquals("Table should only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
@@ -85,7 +90,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		TestBean bean1 = new TestBean(1, "Keith Donald");
 		EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
 		em.persist(bean1);
-		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should still only have one row", 1, getCount());
 		jpaListener.paused(context);
 		assertSessionNotBound();
 
@@ -93,7 +98,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		TestBean bean2 = new TestBean(2, "Keith Donald");
 		em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
 		em.persist(bean2);
-		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should still only have one row", 1, getCount());
 		assertSessionBound();
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "success");
@@ -102,13 +107,13 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 
 		jpaListener.sessionEnding(context, flowSession, "success", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
-		assertEquals("Table should only have three rows", 3, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have three rows", 3, getCount());
 
 		assertSessionNotBound();
 	}
 
 	public void testCancelEndState() {
-		assertEquals("Table should only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
@@ -119,19 +124,19 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		TestBean bean = new TestBean(1, "Keith Donald");
 		EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
 		em.persist(bean);
-		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should still only have one row", 1, getCount());
 
 		EndState endState = new EndState(flowSession.getDefinitionInternal(), "cancel");
 		endState.getAttributes().put("commit", false);
 		flowSession.setState(endState);
 		jpaListener.sessionEnding(context, flowSession, "cancel", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
-		assertEquals("Table should only have two rows", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have two rows", 1, getCount());
 		assertSessionNotBound();
 	}
 
 	public void testNoCommitAttributeSetOnEndState() {
-		assertEquals("Table should only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
@@ -144,13 +149,13 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 
 		jpaListener.sessionEnding(context, flowSession, "cancel", null);
 		jpaListener.sessionEnded(context, flowSession, "success", null);
-		assertEquals("Table should only have three rows", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have three rows", 1, getCount());
 
 		assertSessionNotBound();
 	}
 
 	public void testExceptionThrown() {
-		assertEquals("Table should only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
@@ -161,15 +166,15 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		TestBean bean = new TestBean(1, "Keith Donald");
 		EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
 		em.persist(bean);
-		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should still only have one row", 1, getCount());
 		jpaListener.exceptionThrown(context, new FlowExecutionException("bla", "bla", "bla"));
-		assertEquals("Table should still only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should still only have one row", 1, getCount());
 		assertSessionNotBound();
 
 	}
 
 	public void testExceptionThrownWithNothingBound() {
-		assertEquals("Table should only have one row", 1, (int)jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class));
+		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
 		flowSession.getDefinition().getAttributes().put("persistenceContext", "true");
@@ -187,7 +192,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		return dataSource;
 	}
 
-	private void populateDataBase(DataSource dataSource) throws Exception {
+	private void populateDataBase(DataSource dataSource) {
 		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
 		databasePopulator.addScript(new ClassPathResource("test-data.sql", this.getClass()));
 		DataSourceInitializer initializer = new DataSourceInitializer();
@@ -196,7 +201,7 @@ public class JpaFlowExecutionListenerTests extends TestCase {
 		initializer.afterPropertiesSet();
 	}
 
-	private EntityManagerFactory getEntityManagerFactory(DataSource dataSource) throws Exception {
+	private EntityManagerFactory getEntityManagerFactory(DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/persistence/persistence.xml");

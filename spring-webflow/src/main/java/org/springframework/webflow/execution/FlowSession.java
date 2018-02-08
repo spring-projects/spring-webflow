@@ -41,18 +41,18 @@ public interface FlowSession {
 	/**
 	 * Returns the flow definition backing this session.
 	 */
-	public FlowDefinition getDefinition();
+	FlowDefinition getDefinition();
 
 	/**
 	 * Returns the current state of this flow session. This value changes as the flow executes.
 	 */
-	public StateDefinition getState();
+	StateDefinition getState();
 
 	/**
 	 * Return this session's local attributes; the basis for "flow scope" (flow session scope).
 	 * @return the flow scope attributes
 	 */
-	public MutableAttributeMap<Object> getScope();
+	MutableAttributeMap<Object> getScope();
 
 	/**
 	 * Returns a mutable map for data held in "view scope". Attributes in this map are cleared out when the current view
@@ -60,24 +60,24 @@ public interface FlowSession {
 	 * @return view scope
 	 * @throws IllegalStateException if this flow session is not currently in a view state
 	 */
-	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException;
+	MutableAttributeMap<Object> getViewScope() throws IllegalStateException;
 
 	/**
 	 * Returns true if the flow session was started in embedded page mode. An embedded flow can make different
 	 * assumptions with regards to whether redirect after post is necessary.
 	 */
-	public boolean isEmbeddedMode();
+	boolean isEmbeddedMode();
 
 	/**
 	 * Returns the parent flow session in the current flow execution, or <code>null</code> if there is no parent flow
 	 * session.
 	 */
-	public FlowSession getParent();
+	FlowSession getParent();
 
 	/**
 	 * Returns whether this flow session is the root flow session in the ongoing flow execution. The root flow session
 	 * does not have a parent flow session.
 	 */
-	public boolean isRoot();
+	boolean isRoot();
 
 }

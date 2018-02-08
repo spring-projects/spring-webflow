@@ -157,23 +157,19 @@ public class MessageContextErrors extends AbstractErrors {
 		return expressionParser.parseExpression(field, new FluentParserContext().evaluate(boundObject.getClass()));
 	}
 
-	private static MessageCriteria GLOBAL_ERROR = new MessageCriteria() {
-		public boolean test(Message message) {
-			if (message.getSeverity() == Severity.ERROR && message.getSource() == null) {
-				return true;
-			} else {
-				return false;
-			}
+	private static MessageCriteria GLOBAL_ERROR = message -> {
+		if (message.getSeverity() == Severity.ERROR && message.getSource() == null) {
+			return true;
+		} else {
+			return false;
 		}
 	};
 
-	private static MessageCriteria FIELD_ERROR = new MessageCriteria() {
-		public boolean test(Message message) {
-			if (message.getSeverity() == Severity.ERROR && message.getSource() instanceof String) {
-				return true;
-			} else {
-				return false;
-			}
+	private static MessageCriteria FIELD_ERROR = message -> {
+		if (message.getSeverity() == Severity.ERROR && message.getSource() instanceof String) {
+			return true;
+		} else {
+			return false;
 		}
 	};
 

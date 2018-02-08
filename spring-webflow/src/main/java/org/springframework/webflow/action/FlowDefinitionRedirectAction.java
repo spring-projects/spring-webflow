@@ -40,7 +40,7 @@ public class FlowDefinitionRedirectAction extends AbstractAction {
 		this.expression = expression;
 	}
 
-	protected Event doExecute(RequestContext context) throws Exception {
+	protected Event doExecute(RequestContext context) {
 		String encodedRedirect = (String) expression.getValue(context);
 		if (encodedRedirect == null) {
 			throw new IllegalStateException(

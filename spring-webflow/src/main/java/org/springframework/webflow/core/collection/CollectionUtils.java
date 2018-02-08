@@ -83,9 +83,9 @@ public class CollectionUtils {
 			return false;
 		} else {
 			boolean changed = false;
-			for (int i = 0; i < objects.length; i++) {
-				if (!target.contains(objects[i])) {
-					target.add(objects[i]);
+			for (T object : objects) {
+				if (!target.contains(object)) {
+					target.add(object);
 					changed = true;
 				}
 			}

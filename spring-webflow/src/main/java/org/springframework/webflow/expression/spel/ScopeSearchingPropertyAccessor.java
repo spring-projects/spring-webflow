@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import org.springframework.expression.AccessException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.TypedValue;
@@ -34,20 +33,20 @@ public class ScopeSearchingPropertyAccessor implements PropertyAccessor {
 		return new Class[] { RequestContext.class };
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return (findScopeForAttribute((RequestContext) target, name) != null);
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		MutableAttributeMap<Object> scope = findScopeForAttribute((RequestContext) target, name);
 		return new TypedValue(scope == null ? null : scope.get(name));
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return (findScopeForAttribute((RequestContext) target, name) != null);
 	}
 
-	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
+	public void write(EvaluationContext context, Object target, String name, Object newValue) {
 		MutableAttributeMap<Object> scope = findScopeForAttribute((RequestContext) target, name);
 		if (scope != null) {
 			scope.put(name, newValue);

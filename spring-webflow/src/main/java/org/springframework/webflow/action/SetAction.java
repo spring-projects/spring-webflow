@@ -51,7 +51,7 @@ public class SetAction extends AbstractAction {
 		this.valueExpression = valueExpression;
 	}
 
-	protected Event doExecute(RequestContext context) throws Exception {
+	protected Event doExecute(RequestContext context) {
 		Object value = valueExpression.getValue(context);
 		nameExpression.setValue(context, value);
 		return success();

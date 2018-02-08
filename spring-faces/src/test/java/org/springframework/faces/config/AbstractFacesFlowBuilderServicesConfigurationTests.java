@@ -16,8 +16,6 @@ import org.springframework.faces.webflow.FacesSpringELExpressionParser;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.JsfViewFactoryCreator;
 import org.springframework.validation.Validator;
-import org.springframework.faces.config.EmptySpringValidator;
-import org.springframework.faces.config.MyBeanValidationHintResolver;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.ViewFactoryCreator;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;

@@ -21,11 +21,11 @@ public class StringToCharacter extends StringToObject {
 		super(Character.class);
 	}
 
-	protected Object toObject(String string, Class<?> targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) {
 		return new Character(string.charAt(0));
 	}
 
-	protected String toString(Object object) throws Exception {
+	protected String toString(Object object) {
 		Character character = (Character) object;
 		return character.toString();
 	}

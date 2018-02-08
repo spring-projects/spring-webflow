@@ -30,11 +30,11 @@ public class StringToLocale extends StringToObject {
 		super(Locale.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return StringUtils.parseLocaleString(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Locale locale = (Locale) object;
 		return locale.toString();
 	}

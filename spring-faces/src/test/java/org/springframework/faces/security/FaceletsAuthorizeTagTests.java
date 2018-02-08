@@ -23,43 +23,43 @@ import junit.framework.TestCase;
  */
 public class FaceletsAuthorizeTagTests extends TestCase {
 
-	public void testIfAllGrantedWithOneRole() throws Exception {
+	public void testIfAllGrantedWithOneRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAllGranted("ROLE_A");
 		assertEquals("hasRole('ROLE_A')", tag.getAccess());
 	}
 
-	public void testIfAllGrantedWithMultipleRoles() throws Exception {
+	public void testIfAllGrantedWithMultipleRoles() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAllGranted("ROLE_A, ROLE_B, ROLE_C");
 		assertEquals("hasRole('ROLE_A') and hasRole('ROLE_B') and hasRole('ROLE_C')", tag.getAccess());
 	}
 
-	public void testIfAnyGrantedWithOneRole() throws Exception {
+	public void testIfAnyGrantedWithOneRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAnyGranted("ROLE_A");
 		assertEquals("hasAnyRole('ROLE_A')", tag.getAccess());
 	}
 
-	public void testIfAnyGrantedWithMultipleRole() throws Exception {
+	public void testIfAnyGrantedWithMultipleRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAnyGranted("ROLE_A, ROLE_B, ROLE_C");
 		assertEquals("hasAnyRole('ROLE_A','ROLE_B','ROLE_C')", tag.getAccess());
 	}
 
-	public void testIfNoneGrantedWithOneRole() throws Exception {
+	public void testIfNoneGrantedWithOneRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfNotGranted("ROLE_A");
 		assertEquals("!hasAnyRole('ROLE_A')", tag.getAccess());
 	}
 
-	public void testIfNoneGrantedWithMultipleRole() throws Exception {
+	public void testIfNoneGrantedWithMultipleRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfNotGranted("ROLE_A, ROLE_B, ROLE_C");
 		assertEquals("!hasAnyRole('ROLE_A','ROLE_B','ROLE_C')", tag.getAccess());
 	}
 
-	public void testIfAllAnyNotGranted() throws Exception {
+	public void testIfAllAnyNotGranted() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAllGranted("ROLE_A");
 		tag.setIfAnyGranted("ROLE_B");

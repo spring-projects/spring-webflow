@@ -51,31 +51,31 @@ public interface RequestControlContext extends RequestContext {
 	 * @param state the current state
 	 * @see State#enter(RequestControlContext)
 	 */
-	public void setCurrentState(State state);
+	void setCurrentState(State state);
 
 	/**
 	 * Assign the ongoing flow execution its flow execution key. This method will be called before a state is about to
 	 * render a view and pause the flow execution.
 	 */
-	public FlowExecutionKey assignFlowExecutionKey();
+	FlowExecutionKey assignFlowExecutionKey();
 
 	/**
 	 * Sets the current view.
 	 * @param view the current view, or null to mark the current view as <code>null</code>
 	 */
-	public void setCurrentView(View view);
+	void setCurrentView(View view);
 
 	/**
 	 * Called when the current view is about to be rendered in the current view state.
 	 * @param view the view to be rendered
 	 */
-	public void viewRendering(View view);
+	void viewRendering(View view);
 
 	/**
 	 * Called when the current view has completed rendering in the current view state.
 	 * @param view the view that rendered
 	 */
-	public void viewRendered(View view);
+	void viewRendered(View view);
 
 	/**
 	 * Signals the occurrence of an event in the current state of this flow execution request context. This method
@@ -87,7 +87,7 @@ public interface RequestControlContext extends RequestContext {
 	 * signalEvent operation
 	 * @see Flow#handleEvent(RequestControlContext)
 	 */
-	public boolean handleEvent(Event event) throws FlowExecutionException;
+	boolean handleEvent(Event event) throws FlowExecutionException;
 
 	/**
 	 * Execute this transition out of the current source state. Allows for privileged execution of an arbitrary
@@ -95,7 +95,7 @@ public interface RequestControlContext extends RequestContext {
 	 * @param transition the transition
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
-	public boolean execute(Transition transition);
+	boolean execute(Transition transition);
 
 	/**
 	 * Record the transition executing in the flow. This method will be called as part of executing a transition from
@@ -103,22 +103,22 @@ public interface RequestControlContext extends RequestContext {
 	 * @param transition the transition being executed
 	 * @see Transition#execute(State, RequestControlContext)
 	 */
-	public void setCurrentTransition(Transition transition);
+	void setCurrentTransition(Transition transition);
 
 	/**
 	 * Update the current flow execution snapshot to save the current state.
 	 */
-	public void updateCurrentFlowExecutionSnapshot();
+	void updateCurrentFlowExecutionSnapshot();
 
 	/**
 	 * Remove the current flow execution snapshot to invalidate the current state.
 	 */
-	public void removeCurrentFlowExecutionSnapshot();
+	void removeCurrentFlowExecutionSnapshot();
 
 	/**
 	 * Remove all flow execution snapshots associated with the ongoing conversation. Invalidates previous states.
 	 */
-	public void removeAllFlowExecutionSnapshots();
+	void removeAllFlowExecutionSnapshots();
 
 	/**
 	 * Spawn a new flow session and activate it in the currently executing flow. Also transitions the spawned flow to
@@ -131,7 +131,7 @@ public interface RequestControlContext extends RequestContext {
 	 * start operation
 	 * @see Flow#start(RequestControlContext, MutableAttributeMap)
 	 */
-	public void start(Flow flow, MutableAttributeMap<?> input) throws FlowExecutionException;
+	void start(Flow flow, MutableAttributeMap<?> input) throws FlowExecutionException;
 
 	/**
 	 * End the active flow session of the current flow execution. This method should be called by clients that terminate
@@ -142,25 +142,25 @@ public interface RequestControlContext extends RequestContext {
 	 * @throws IllegalStateException when the flow execution is not active
 	 * @see Flow#end(RequestControlContext, String, MutableAttributeMap)
 	 */
-	public void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output) throws IllegalStateException;
+	void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output) throws IllegalStateException;
 
 	/**
 	 * Returns true if the 'redirect on pause' flow execution attribute is set to true, false otherwise.
 	 * @return true or false
 	 */
-	public boolean getRedirectOnPause();
+	boolean getRedirectOnPause();
 
 	/**
 	 * Returns the value of the 'redirect in same state' flow execution attribute if set or otherwise it falls back on
 	 * the value returned by {@link #getRedirectOnPause()}.
 	 * @return true or false
 	 */
-	public boolean getRedirectInSameState();
+	boolean getRedirectInSameState();
 
 	/**
 	 * Returns true if the flow current flow execution was launched in embedded page mode. When a flow is embedded on a
 	 * page it can make different assumptions with regards to whether redirect after post is necessary.
 	 */
-	public boolean getEmbeddedMode();
+	boolean getEmbeddedMode();
 
 }

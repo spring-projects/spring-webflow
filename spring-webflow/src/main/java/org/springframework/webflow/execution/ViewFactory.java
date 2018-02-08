@@ -28,5 +28,5 @@ public interface ViewFactory {
 	 * @param context the flow execution request context.
 	 * @return the view to render
 	 */
-	public View getView(RequestContext context);
+	View getView(RequestContext context);
 }

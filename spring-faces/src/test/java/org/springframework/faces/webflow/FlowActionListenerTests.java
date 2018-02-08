@@ -8,15 +8,13 @@ import javax.faces.el.MethodNotFoundException;
 import javax.faces.event.ActionEvent;
 
 import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
-import org.springframework.webflow.execution.View;
-import org.springframework.webflow.execution.ViewFactory;
 
 public class FlowActionListenerTests extends TestCase {
 
@@ -85,7 +83,7 @@ public class FlowActionListenerTests extends TestCase {
 			return String.class;
 		}
 
-		public Object invoke(FacesContext context, Object... args) throws EvaluationException, MethodNotFoundException {
+		public Object invoke(FacesContext context, Object... args) throws EvaluationException {
 			return this.result;
 		}
 
@@ -94,11 +92,8 @@ public class FlowActionListenerTests extends TestCase {
 	private class MockViewState extends ViewState {
 
 		public MockViewState() {
-			super(new Flow("mockFlow"), "mockView", new ViewFactory() {
-
-				public View getView(RequestContext context) {
-					throw new UnsupportedOperationException();
-				}
+			super(new Flow("mockFlow"), "mockView", context -> {
+				throw new UnsupportedOperationException();
 			});
 		}
 	}

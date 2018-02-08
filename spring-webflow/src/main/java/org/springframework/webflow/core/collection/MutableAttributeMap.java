@@ -36,21 +36,21 @@ public interface MutableAttributeMap<V> extends AttributeMap<V> {
 	 * @param attributeValue the attribute value
 	 * @return the previous value of the attribute, or <code>null</code> of there was no previous value
 	 */
-	public V put(String attributeName, V attributeValue);
+	V put(String attributeName, V attributeValue);
 
 	/**
 	 * Put all the attributes into this map.
 	 * @param attributes the attributes to put into this map
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap<V> putAll(AttributeMap<? extends V> attributes);
+	MutableAttributeMap<V> putAll(AttributeMap<? extends V> attributes);
 
 	/**
 	 * Remove all attributes in the map provided from this map.
 	 * @param attributes the attributes to remove from this map
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap<V> removeAll(MutableAttributeMap<? extends V> attributes);
+	MutableAttributeMap<V> removeAll(MutableAttributeMap<? extends V> attributes);
 
 	/**
 	 * Remove an attribute from this map.
@@ -58,27 +58,27 @@ public interface MutableAttributeMap<V> extends AttributeMap<V> {
 	 * @return previous value associated with specified attribute name, or <tt>null</tt> if there was no mapping for the
 	 * name
 	 */
-	public Object remove(String attributeName);
+	Object remove(String attributeName);
 
 	/**
 	 * Extract an attribute from this map, getting it and removing it in a single operation.
 	 * @param attributeName the attribute name
 	 * @return the value of the attribute, or <code>null</code> of there was no value
 	 */
-	public Object extract(String attributeName);
+	Object extract(String attributeName);
 
 	/**
 	 * Remove all attributes in this map.
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap<V> clear();
+	MutableAttributeMap<V> clear();
 
 	/**
 	 * Replace the contents of this attribute map with the contents of the provided collection.
 	 * @param attributes the attribute collection
 	 * @return this, to support call chaining
 	 */
-	public MutableAttributeMap<V> replaceWith(AttributeMap<? extends V> attributes)
+	MutableAttributeMap<V> replaceWith(AttributeMap<? extends V> attributes)
 			throws UnsupportedOperationException;
 
 }

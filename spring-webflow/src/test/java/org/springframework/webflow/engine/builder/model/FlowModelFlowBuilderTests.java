@@ -102,7 +102,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		model.setStates(asList(AbstractStateModel.class, new EndStateModel("end")));
 		Flow flow = getFlow(model);
 		assertEquals("bar", flow.getAttributes().get("foo"));
-		assertEquals(new Integer(1), flow.getAttributes().get("number"));
+		assertEquals(1, flow.getAttributes().get("number"));
 	}
 
 	public void testPersistenceContextFlow() {
@@ -152,8 +152,8 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		assertEquals("end", outcome.getId());
 		assertEquals("bar", outcome.getOutput().get("foo"));
 		assertEquals("bar", outcome.getOutput().get("differentName"));
-		assertEquals(new Integer(3), outcome.getOutput().get("number"));
-		assertEquals(new Integer(3), outcome.getOutput().get("required"));
+		assertEquals(3, outcome.getOutput().get("number"));
+		assertEquals(3, outcome.getOutput().get("required"));
 		assertEquals("a literal", outcome.getOutput().get("literal"));
 		assertNull(outcome.getOutput().get("notReached"));
 	}

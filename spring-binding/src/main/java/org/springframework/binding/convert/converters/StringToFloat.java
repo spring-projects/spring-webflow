@@ -26,11 +26,11 @@ public class StringToFloat extends StringToObject {
 		super(Float.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return Float.valueOf(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Float number = (Float) object;
 		return number.toString();
 	}

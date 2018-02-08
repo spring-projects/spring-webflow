@@ -26,10 +26,10 @@ public interface FlowExecutionLock {
 	/**
 	 * Acquire the flow execution lock. This method will block until the lock becomes available for acquisition.
 	 */
-	public void lock();
+	void lock();
 
 	/**
 	 * Release the flow execution lock.
 	 */
-	public void unlock();
+	void unlock();
 }

@@ -33,59 +33,59 @@ public interface FlowBuilderContext {
 	 * Returns an externally configured flow definition identifier to assign to the flow being built.
 	 * @return the flow id
 	 */
-	public String getFlowId();
+	String getFlowId();
 
 	/**
 	 * Returns externally configured attributes to assign to the flow definition being built.
 	 * @return the flow attributes
 	 */
-	public AttributeMap<Object> getFlowAttributes();
+	AttributeMap<Object> getFlowAttributes();
 
 	/**
 	 * Returns the locator for locating dependent flows (subflows).
 	 * @return the flow definition locator
 	 */
-	public FlowDefinitionLocator getFlowDefinitionLocator();
+	FlowDefinitionLocator getFlowDefinitionLocator();
 
 	/**
 	 * Returns the factory for core flow artifacts such as Flow and State.
 	 * @return the flow artifact factory
 	 */
-	public FlowArtifactFactory getFlowArtifactFactory();
+	FlowArtifactFactory getFlowArtifactFactory();
 
 	/**
 	 * Returns a generic type conversion service for converting between types, typically from string to a rich value
 	 * object.
 	 * @return the generic conversion service
 	 */
-	public ConversionService getConversionService();
+	ConversionService getConversionService();
 
 	/**
 	 * Returns the view factory creator for configuring a ViewFactory per view state
 	 * @return the view factory creator
 	 */
-	public ViewFactoryCreator getViewFactoryCreator();
+	ViewFactoryCreator getViewFactoryCreator();
 
 	/**
 	 * Returns the expression parser for parsing expression strings.
 	 * @return the expression parser
 	 */
-	public ExpressionParser getExpressionParser();
+	ExpressionParser getExpressionParser();
 
 	/**
 	 * Returns the Validator instance to use for validating a model.
 	 * @return the validator
 	 */
-	public Validator getValidator();
+	Validator getValidator();
 
 	/**
 	 * Return the {@link ValidationHintResolver}.
 	 */
-	public ValidationHintResolver getValidationHintResolver();
+	ValidationHintResolver getValidationHintResolver();
 
 	/**
 	 * Returns the application context hosting the flow system.
 	 * @return the application context
 	 */
-	public ApplicationContext getApplicationContext();
+	ApplicationContext getApplicationContext();
 }

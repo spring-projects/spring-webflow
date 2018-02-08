@@ -41,7 +41,7 @@ public interface FlowHandler {
 	 * Returns the id of the flow handled by this handler. Used by a Controller to load the flow definition. Optional.
 	 * @return the flow id, or null if the flow id should be determined by the caller
 	 */
-	public String getFlowId();
+	String getFlowId();
 
 	/**
 	 * Creates the flow execution input map to pass to a new instance of the flow being started. Used by a Controller to
@@ -49,7 +49,7 @@ public interface FlowHandler {
 	 * @param request the current request
 	 * @return the input map, or null if the contents of the input map should be determined by the caller
 	 */
-	public MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request);
+	MutableAttributeMap<Object> createExecutionInputMap(HttpServletRequest request);
 
 	/**
 	 * Handles a specific flow execution outcome. Used by a Controller to get the location of the resource to redirect
@@ -72,7 +72,7 @@ public interface FlowHandler {
 	 * @return the location of the new resource to redirect to, or null if the execution outcome was not handled and
 	 * should be handled by the caller
 	 */
-	public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
+	String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
 			HttpServletResponse response);
 
 	/**
@@ -85,5 +85,5 @@ public interface FlowHandler {
 	 * @return the location of the error resource to redirect to, or null if the execution outcome was not handled and
 	 * should be handled by the caller
 	 */
-	public String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response);
+	String handleException(FlowException e, HttpServletRequest request, HttpServletResponse response);
 }

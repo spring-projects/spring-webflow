@@ -29,27 +29,27 @@ public interface FlowExecutionKeyFactory {
 	 * @param execution the flow execution
 	 * @return the key to assign to the flow execution
 	 */
-	public FlowExecutionKey getKey(FlowExecution execution);
+	FlowExecutionKey getKey(FlowExecution execution);
 
 	/**
 	 * Capture the current state of the flow execution by updating its snapshot in storage. Does nothing if the no key
 	 * has been assigned or no snapshot has already been taken.
 	 * @param execution the flow execution
 	 */
-	public void updateFlowExecutionSnapshot(FlowExecution execution);
+	void updateFlowExecutionSnapshot(FlowExecution execution);
 
 	/**
 	 * Remove the snapshot that was used to restore this flow execution, discarding it for future use. Does nothing if
 	 * the no key been assigned or no snapshot has been taken.
 	 * @param execution the flow execution
 	 */
-	public void removeFlowExecutionSnapshot(FlowExecution execution);
+	void removeFlowExecutionSnapshot(FlowExecution execution);
 
 	/**
 	 * Remove all snapshots associated with the flow execution from storage, invalidating all history. Does nothing if
 	 * no key has been assigned or no snapshots have been taken.
 	 * @param execution the flow execution
 	 */
-	public void removeAllFlowExecutionSnapshots(FlowExecution execution);
+	void removeAllFlowExecutionSnapshots(FlowExecution execution);
 
 }

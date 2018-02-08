@@ -21,7 +21,7 @@ public class FlowPartialViewContextTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
-	public void testReturnFragmentIds() throws Exception {
+	public void testReturnFragmentIds() {
 		String[] fragmentIds = new String[] { "foo", "bar" };
 
 		RequestContext requestContext = new MockRequestContext();
@@ -31,7 +31,7 @@ public class FlowPartialViewContextTests extends TestCase {
 		assertEquals(Arrays.asList(fragmentIds), new FlowPartialViewContext(null).getRenderIds());
 	}
 
-	public void testNoFragmentIds() throws Exception {
+	public void testNoFragmentIds() {
 		final List<String> renderIds = Arrays.asList("foo", "bar");
 		FlowPartialViewContext context = new FlowPartialViewContext(new PartialViewContextWrapper() {
 			public Collection<String> getRenderIds() {
@@ -51,7 +51,7 @@ public class FlowPartialViewContextTests extends TestCase {
 		assertEquals(renderIds, context.getRenderIds());
 	}
 
-	public void testReturnFragmentIdsMutable() throws Exception {
+	public void testReturnFragmentIdsMutable() {
 		String[] fragmentIds = new String[] { "foo", "bar" };
 
 		RequestContext requestContext = new MockRequestContext();

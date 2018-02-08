@@ -30,34 +30,34 @@ public interface SelectionAware<T> {
 	 * Checks whether the row pointed to by the model's current index is selected.
 	 * @return true if the current row data object is selected
 	 */
-	public boolean isCurrentRowSelected();
+	boolean isCurrentRowSelected();
 
 	/**
 	 * Sets whether the row pointed to by the model's current index is selected
 	 * @param rowSelected true to select the current row
 	 */
-	public void setCurrentRowSelected(boolean rowSelected);
+	void setCurrentRowSelected(boolean rowSelected);
 
 	/**
 	 * Sets the list of selected row data objects for the model.
 	 * @param selections the list of selected row data objects
 	 */
-	public void setSelections(List<T> selections);
+	void setSelections(List<T> selections);
 
 	/**
 	 * Returns the list of selected row data objects for the model.
 	 * @return the list of selected row data objects
 	 */
-	public List<T> getSelections();
+	List<T> getSelections();
 
 	/**
 	 * Selects all row data objects in the model.
 	 */
-	public void selectAll();
+	void selectAll();
 
 	/**
 	 * Selects the given row data object in the model.
 	 * @param rowData the row data object to select.
 	 */
-	public void select(T rowData);
+	void select(T rowData);
 }

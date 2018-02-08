@@ -35,7 +35,7 @@ public class StringToClass extends StringToObject {
 		return ClassUtils.forName(string, classLoader);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Class<?> clazz = (Class<?>) object;
 		return clazz.getName();
 	}

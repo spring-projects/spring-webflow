@@ -39,6 +39,6 @@ public interface FlowExecutionStateRestorer {
 	 * @param subflowDefinitionLocator for locating the definitions of any subflows started by the execution
 	 * @return the restored flow execution
 	 */
-	public FlowExecution restoreState(FlowExecution execution, FlowDefinition definition, FlowExecutionKey key,
+	FlowExecution restoreState(FlowExecution execution, FlowDefinition definition, FlowExecutionKey key,
 			MutableAttributeMap<Object> conversationScope, FlowDefinitionLocator subflowDefinitionLocator);
 }

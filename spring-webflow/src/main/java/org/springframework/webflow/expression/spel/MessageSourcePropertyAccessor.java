@@ -47,15 +47,15 @@ public class MessageSourcePropertyAccessor implements PropertyAccessor {
 		return new Class[] { MessageSource.class };
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return (getMessage(target, name) != null);
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		return new TypedValue(getMessage(target, name));
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return false;
 	}
 

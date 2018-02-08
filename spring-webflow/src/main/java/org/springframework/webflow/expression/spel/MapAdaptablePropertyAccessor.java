@@ -16,7 +16,6 @@
 package org.springframework.webflow.expression.spel;
 
 import org.springframework.binding.collection.MapAdaptable;
-import org.springframework.expression.AccessException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.TypedValue;
@@ -34,21 +33,21 @@ public class MapAdaptablePropertyAccessor implements PropertyAccessor {
 		return new Class[] { MapAdaptable.class };
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return true;
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		MapAdaptable<?, ?> map = (MapAdaptable<?, ?>) target;
 		return new TypedValue(map.asMap().get(name));
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return (target instanceof MutableAttributeMap);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
+	public void write(EvaluationContext context, Object target, String name, Object newValue) {
 		MutableAttributeMap map = (MutableAttributeMap) target;
 		map.put(name, newValue);
 	}

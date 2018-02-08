@@ -71,16 +71,16 @@ public class FlowVariablePropertyAccessor implements PropertyAccessor {
 		return null;
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return variables.containsKey(name);
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		FlowVariableAccessor var = variables.get(name);
 		return new TypedValue(var.getVariable());
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return false;
 	}
 

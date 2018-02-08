@@ -380,7 +380,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 		public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
 			if (event instanceof PostRestoreStateEvent) {
-				assertSame("Component did not match", this, ((PostRestoreStateEvent) event).getComponent());
+				assertSame("Component did not match", this, event.getComponent());
 				this.postRestoreStateEventSeen = true;
 				if (this.throwOnPostRestoreStateEvent) {
 					this.abortProcessingException = new AbortProcessingException();

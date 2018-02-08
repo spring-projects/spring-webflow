@@ -99,7 +99,7 @@ public class JsfViewTests extends TestCase {
 	}
 
 	public final void testSaveState() {
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 		this.view.saveState();
 	}
 
@@ -108,17 +108,17 @@ public class JsfViewTests extends TestCase {
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
 		this.view.render();
 	}
 
-	public final void testRenderException() throws IOException {
+	public final void testRenderException() {
 
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
 		this.jsfMock.application().setViewHandler(new ExceptionalViewHandler());
 
@@ -143,7 +143,7 @@ public class JsfViewTests extends TestCase {
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, this.context);
 
@@ -168,7 +168,7 @@ public class JsfViewTests extends TestCase {
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
 		JsfView restoredView = new JsfView(existingRoot, lifecycle, this.context);
 
@@ -185,7 +185,7 @@ public class JsfViewTests extends TestCase {
 		requestParameterMap.put("execution", "e1s1");
 
 		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(requestParameterMap);
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
@@ -197,7 +197,7 @@ public class JsfViewTests extends TestCase {
 		this.jsfMock.request().addParameter("execution", "e1s1");
 		this.jsfMock.request().addParameter("javax.faces.ViewState", "e1s1");
 
-		EasyMock.replay(new Object[] { this.context, this.flowExecutionContext, this.flowMap, this.flashScope });
+		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 

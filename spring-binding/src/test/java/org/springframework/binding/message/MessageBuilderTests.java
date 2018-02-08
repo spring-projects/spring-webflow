@@ -69,7 +69,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildCodes() {
-		MessageResolver resolver = builder.error().codes(new String[] { "foo" }).build();
+		MessageResolver resolver = builder.error().codes("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
 		assertEquals("bar", message.getText());
 		assertEquals(Severity.ERROR, message.getSeverity());
@@ -85,7 +85,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildArgs() {
-		MessageResolver resolver = builder.error().codes(new String[] { "bar" }).args(new Object[] { "baz" }).build();
+		MessageResolver resolver = builder.error().codes("bar").args("baz").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
 		assertEquals("baz", message.getText());
 		assertEquals(Severity.ERROR, message.getSeverity());
@@ -113,7 +113,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildArgsWithNullCodes() {
-		MessageResolver resolver = builder.error().args(new Object[] { "baz" }).build();
+		MessageResolver resolver = builder.error().args("baz").build();
 		try {
 			resolver.resolveMessage(messageSource, locale);
 			fail("Should have failed");
@@ -122,7 +122,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildArgsWithNullCodesDefaultText() {
-		MessageResolver resolver = builder.error().args(new Object[] { "baz" }).defaultText("foo").build();
+		MessageResolver resolver = builder.error().args("baz").defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
 		assertEquals("foo", message.getText());
 	}
@@ -144,7 +144,7 @@ public class MessageBuilderTests extends TestCase {
 	}
 
 	public void testBuildResolvableArgs() {
-		MessageResolver resolver = builder.error().codes(new String[] { "bar" }).resolvableArgs(new Object[] { "baz" })
+		MessageResolver resolver = builder.error().codes("bar").resolvableArgs("baz")
 				.build();
 		Message message = resolver.resolveMessage(messageSource, locale);
 		assertEquals("boop", message.getText());

@@ -31,14 +31,14 @@ public interface FlowUrlHandler {
 	 * @param request the request
 	 * @return the flow execution key, or null if no flow execution key is present
 	 */
-	public String getFlowExecutionKey(HttpServletRequest request);
+	String getFlowExecutionKey(HttpServletRequest request);
 
 	/**
 	 * Extract the flow id from the request.
 	 * @param request the request
 	 * @return the flow id, or null if no flow id is present
 	 */
-	public String getFlowId(HttpServletRequest request);
+	String getFlowId(HttpServletRequest request);
 
 	/**
 	 * Create a URL that when addressed will launch a new execution of a flow.
@@ -47,7 +47,7 @@ public interface FlowUrlHandler {
 	 * @param request the current request
 	 * @return the flow definition url
 	 */
-	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request);
+	String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request);
 
 	/**
 	 * Create a URL that when addressed will resume an existing execution of a flow.
@@ -55,5 +55,5 @@ public interface FlowUrlHandler {
 	 * @param request the current request
 	 * @return the flow execution url
 	 */
-	public String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request);
+	String createFlowExecutionUrl(String flowId, String flowExecutionKey, HttpServletRequest request);
 }

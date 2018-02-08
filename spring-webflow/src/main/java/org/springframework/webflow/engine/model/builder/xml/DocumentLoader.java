@@ -38,5 +38,5 @@ public interface DocumentLoader {
 	 * @throws ParserConfigurationException an exception occured building the document parser
 	 * @throws SAXException a error occured during document parsing
 	 */
-	public Document loadDocument(Resource resource) throws IOException, ParserConfigurationException, SAXException;
+	Document loadDocument(Resource resource) throws IOException, ParserConfigurationException, SAXException;
 }

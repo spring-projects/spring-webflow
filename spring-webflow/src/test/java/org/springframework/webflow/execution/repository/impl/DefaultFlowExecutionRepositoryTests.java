@@ -45,12 +45,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		new ViewState(flow, "state2", new StubViewFactory());
 
 		conversationManager = new StubConversationManager();
-		FlowDefinitionLocator locator = new FlowDefinitionLocator() {
-			public FlowDefinition getFlowDefinition(String flowId) throws NoSuchFlowDefinitionException,
-					FlowDefinitionConstructionException {
-				return flow;
-			}
-		};
+		FlowDefinitionLocator locator = flowId -> flow;
 		SerializedFlowExecutionSnapshotFactory snapshotFactory = new SerializedFlowExecutionSnapshotFactory(
 				executionFactory, locator);
 		repository = new DefaultFlowExecutionRepository(conversationManager, snapshotFactory);

@@ -85,7 +85,7 @@ public class FormattedStringToNumber extends StringToObject {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Object toObject(String string, Class<?> targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) {
 		ParsePosition parsePosition = new ParsePosition(0);
 		NumberFormat format = numberFormatFactory.getNumberFormat();
 		Number number = format.parse(string, parsePosition);
@@ -102,7 +102,7 @@ public class FormattedStringToNumber extends StringToObject {
 		return convertToNumberClass(number, (Class<? extends Number>) targetClass);
 	}
 
-	protected String toString(Object object) throws Exception {
+	protected String toString(Object object) {
 		Number number = (Number) object;
 		return numberFormatFactory.getNumberFormat().format(number);
 	}

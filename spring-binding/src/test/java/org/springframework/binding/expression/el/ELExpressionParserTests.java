@@ -29,7 +29,7 @@ public class ELExpressionParserTests extends TestCase {
 	public void testParseSimpleEvalExpressionNoParserContext() {
 		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, null);
-		assertEquals(new Long(7), exp.getValue(null));
+		assertEquals(7L, exp.getValue(null));
 	}
 
 	public void testParseNullExpressionString() {
@@ -61,7 +61,7 @@ public class ELExpressionParserTests extends TestCase {
 		String expressionString = "3 + 4";
 		Expression exp = parser
 				.parseExpression(expressionString, new FluentParserContext().expectResult(Integer.class));
-		assertEquals(new Integer(7), exp.getValue(null));
+		assertEquals(7, exp.getValue(null));
 	}
 
 	public void testParseBeanEvalExpressionNoParserContext() {
@@ -73,7 +73,7 @@ public class ELExpressionParserTests extends TestCase {
 	public void testParseEvalExpressionWithContextTypeCoersion() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(Long.class));
-		assertEquals(new Long(2), exp.getValue(new TestBean()));
+		assertEquals(2L, exp.getValue(new TestBean()));
 	}
 
 	public void testParseEvalExpressionWithContextCustomELVariableResolver() {
@@ -119,7 +119,7 @@ public class ELExpressionParserTests extends TestCase {
 		Expression exp = parser.parseExpression("max", new FluentParserContext().variable(new ExpressionVariable("max",
 				"maximum", new FluentParserContext().expectResult(Long.class))));
 		TestBean target = new TestBean();
-		assertEquals(new Long(2), exp.getValue(target));
+		assertEquals(2L, exp.getValue(target));
 	}
 
 	public void testTemplateNestedVariables() {

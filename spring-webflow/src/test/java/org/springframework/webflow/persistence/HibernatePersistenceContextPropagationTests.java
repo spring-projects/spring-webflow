@@ -41,12 +41,15 @@ public class HibernatePersistenceContextPropagationTests extends AbstractPersist
 			hibernate.templateSave(new TestBean(rowCount++, "Keith Donald"));
 		}
 		if (!isCommited) {
-			assertEquals("Nothing should be committed yet", 1,
-					(int)getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class));
+			assertEquals("Nothing should be committed yet", 1, getCount());
 		} else {
-			assertEquals("All rows should be committed", rowCount,
-					(int)getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class));
+			assertEquals("All rows should be committed", rowCount, getCount());
 		}
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	private int getCount() {
+		return getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class);
 	}
 
 }

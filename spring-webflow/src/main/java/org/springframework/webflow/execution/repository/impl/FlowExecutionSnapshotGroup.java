@@ -20,42 +20,42 @@ public interface FlowExecutionSnapshotGroup {
 	 * @return the continuation
 	 * @throws SnapshotNotFoundException if the id does not match a continuation in this group
 	 */
-	public FlowExecutionSnapshot getSnapshot(Serializable snapshotId) throws SnapshotNotFoundException;
+	FlowExecutionSnapshot getSnapshot(Serializable snapshotId) throws SnapshotNotFoundException;
 
 	/**
 	 * Add a flow execution snapshot with given id to this group.
 	 * @param snapshotId the snapshot id
 	 * @param snapshot the snapshot
 	 */
-	public void addSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot);
+	void addSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot);
 
 	/**
 	 * Update the snapshot with the given id. Does nothing if no snapshot has been added with the id provided.
 	 * @param snapshotId the snapshot id
 	 * @param snapshot the new snapshot
 	 */
-	public void updateSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot);
+	void updateSnapshot(Serializable snapshotId, FlowExecutionSnapshot snapshot);
 
 	/**
 	 * Remove the snapshot with the given id. Does nothing if no snapshot has been added with the id provided.
 	 * @param snapshotId the continuation id
 	 */
-	public void removeSnapshot(Serializable snapshotId);
+	void removeSnapshot(Serializable snapshotId);
 
 	/**
 	 * Remove all snapshots in this group. Does nothing if no snapshots have been added to this group.
 	 */
-	public void removeAllSnapshots();
+	void removeAllSnapshots();
 
 	/**
 	 * Returns the count of snapshots in this group.
 	 */
-	public int getSnapshotCount();
+	int getSnapshotCount();
 
 	/**
 	 * Gets the next snapshot id for new snapshot to add to this group.
 	 * @return the next snapshot id
 	 */
-	public Serializable nextSnapshotId();
+	Serializable nextSnapshotId();
 
 }

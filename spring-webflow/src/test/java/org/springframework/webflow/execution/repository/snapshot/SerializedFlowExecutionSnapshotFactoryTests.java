@@ -2,23 +2,18 @@ package org.springframework.webflow.execution.repository.snapshot;
 
 import junit.framework.TestCase;
 
-import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
-import org.springframework.webflow.definition.registry.NoSuchFlowDefinitionException;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
 import org.springframework.webflow.engine.State;
 import org.springframework.webflow.engine.impl.FlowExecutionImpl;
 import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.FlowExecutionKeyFactory;
 import org.springframework.webflow.test.MockExternalContext;
 
 public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 	private Flow flow;
 	private SerializedFlowExecutionSnapshotFactory factory;
-	private FlowExecutionKeyFactory executionKeyFactory;
 	private FlowExecutionImplFactory executionFactory;
 
 	public void setUp() {
@@ -27,14 +22,9 @@ public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-		FlowDefinitionLocator locator = new FlowDefinitionLocator() {
-			public FlowDefinition getFlowDefinition(String flowId) throws NoSuchFlowDefinitionException,
-					FlowDefinitionConstructionException {
-				return flow;
-			}
-		};
+		FlowDefinitionLocator locator = flowId -> flow;
 		executionFactory = new FlowExecutionImplFactory();
-		executionFactory.setExecutionKeyFactory(executionKeyFactory);
+		executionFactory.setExecutionKeyFactory(null);
 		factory = new SerializedFlowExecutionSnapshotFactory(executionFactory, locator);
 	}
 
@@ -44,7 +34,7 @@ public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 		flowExecution.getActiveSession().getScope().put("foo", "bar");
 		FlowExecutionSnapshot snapshot = factory.createSnapshot(flowExecution);
 		FlowExecutionImpl flowExecution2 = (FlowExecutionImpl) factory.restoreExecution(snapshot, "myFlow", null,
-				flowExecution.getConversationScope(), executionKeyFactory);
+				flowExecution.getConversationScope(), null);
 		assertNotSame(flowExecution, flowExecution2);
 		assertEquals(flowExecution.getDefinition().getId(), flowExecution2.getDefinition().getId());
 		assertEquals(flowExecution.getActiveSession().getScope().get("foo"), flowExecution2.getActiveSession()

@@ -264,7 +264,7 @@ public class FlowDefinitionRegistryBuilder {
 	}
 
 	private void registerFlow(FlowDefinitionResource resource, DefaultFlowRegistry flowRegistry) {
-		FlowModelBuilder flowModelBuilder = null;
+		FlowModelBuilder flowModelBuilder;
 		if (resource.getPath().getFilename().endsWith(".xml")) {
 			flowModelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowRegistry.getFlowModelRegistry());
 		} else {

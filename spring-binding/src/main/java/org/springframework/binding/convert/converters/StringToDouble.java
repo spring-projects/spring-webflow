@@ -26,11 +26,11 @@ public class StringToDouble extends StringToObject {
 		super(Double.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return Double.valueOf(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Double number = (Double) object;
 		return number.toString();
 	}

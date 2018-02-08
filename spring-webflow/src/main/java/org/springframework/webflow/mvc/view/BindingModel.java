@@ -315,23 +315,14 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		}
 	}
 
-	private static final MessageCriteria ERRORS_ANY_SOURCE = new MessageCriteria() {
-		public boolean test(Message message) {
-			return message.getSeverity() == Severity.ERROR;
-		}
-	};
+	private static final MessageCriteria ERRORS_ANY_SOURCE =
+			message -> message.getSeverity() == Severity.ERROR;
 
-	private static final MessageCriteria ERRORS_WITHOUT_FIELD_SOURCE = new MessageCriteria() {
-		public boolean test(Message message) {
-			return (!message.hasField() && message.getSeverity() == Severity.ERROR);
-		}
-	};
+	private static final MessageCriteria ERRORS_WITHOUT_FIELD_SOURCE =
+			message -> (!message.hasField() && message.getSeverity() == Severity.ERROR);
 
-	private static final MessageCriteria ERRORS_FIELD_SOURCE = new MessageCriteria() {
-		public boolean test(Message message) {
-			return (message.hasField() && message.getSeverity() == Severity.ERROR);
-		}
-	};
+	private static final MessageCriteria ERRORS_FIELD_SOURCE =
+			message -> (message.hasField() && message.getSeverity() == Severity.ERROR);
 
 	private static class FieldErrorMessage implements MessageCriteria {
 		private String field;
@@ -360,7 +351,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		}
 	}
 
-	private static interface ObjectErrorFactory<T extends ObjectError> {
+	private interface ObjectErrorFactory<T extends ObjectError> {
 		T get(String objectName, Message message);
 	}
 
@@ -375,14 +366,11 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		}
 	};
 
-	private static final ObjectErrorFactory<FieldError> FIELD_ERRORS = new ObjectErrorFactory<FieldError>() {
-
-		public FieldError get(String objectName, Message message) {
-			if (message.getSource() != null) {
-				return new FieldError(objectName, (String) message.getSource(), message.getText());
-			}
-			return null;
+	private static final ObjectErrorFactory<FieldError> FIELD_ERRORS = (objectName, message) -> {
+		if (message.getSource() != null) {
+			return new FieldError(objectName, (String) message.getSource(), message.getText());
 		}
+		return null;
 	};
 
 }

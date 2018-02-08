@@ -15,7 +15,7 @@ public class ExternalRedirectActionTests extends TestCase {
 		assertEquals("/wherever", context.getMockExternalContext().getExternalRedirectUrl());
 	}
 
-	public void testExecuteWithNullResourceUri() throws Exception {
+	public void testExecuteWithNullResourceUri() {
 		try {
 			action = new ExternalRedirectAction(null);
 			fail("Should have failed");

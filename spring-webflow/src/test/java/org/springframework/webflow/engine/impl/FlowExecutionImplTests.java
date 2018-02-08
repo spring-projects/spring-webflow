@@ -49,6 +49,7 @@ import org.springframework.webflow.test.MockFlowExecutionKeyFactory;
  */
 public class FlowExecutionImplTests extends TestCase {
 
+
 	public void testStartAndEnd() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");

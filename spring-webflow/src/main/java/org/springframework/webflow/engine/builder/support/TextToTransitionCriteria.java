@@ -67,7 +67,7 @@ class TextToTransitionCriteria implements Converter {
 		return TransitionCriteria.class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) {
 		String encodedCriteria = (String) source;
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
 		if (!StringUtils.hasText(encodedCriteria)

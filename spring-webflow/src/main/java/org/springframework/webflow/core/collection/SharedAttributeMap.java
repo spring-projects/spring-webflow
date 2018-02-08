@@ -25,5 +25,5 @@ public interface SharedAttributeMap<V> extends MutableAttributeMap<V> {
 	/**
 	 * Returns the shared map's mutex, which may be synchronized on to block access to the map by other threads.
 	 */
-	public Object getMutex();
+	Object getMutex();
 }

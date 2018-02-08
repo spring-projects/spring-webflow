@@ -94,11 +94,11 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		uiRepeat.getChildren().add(commandButton);
 		this.viewToTest.getChildren().add(uiRepeat);
 
-		Method indexMutator = ReflectionUtils.findMethod(UIRepeat.class, "setIndex", new Class[] { FacesContext.class,
-				int.class });
+		Method indexMutator = ReflectionUtils.findMethod(UIRepeat.class, "setIndex", FacesContext.class,
+				int.class);
 		indexMutator.setAccessible(true);
 
-		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), 1 });
+		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new MockFacesContext(), 1);
 
 		ActionEvent event = new ActionEvent(commandButton);
 
@@ -108,7 +108,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		assertSame(this.dataModel.getSelectedRow(), this.dataModel.getRowData());
 		assertTrue(this.delegateListener.processedEvent);
 
-		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new Object[] { new MockFacesContext(), 2 });
+		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new MockFacesContext(), 2);
 		assertFalse(this.dataModel.isCurrentRowSelected());
 		assertTrue(this.dataModel.getSelectedRow() != this.dataModel.getRowData());
 	}

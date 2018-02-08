@@ -65,8 +65,8 @@ public class ResultObjectEventFactoryTests extends TestCase {
 		assertEquals("hello", result.getId());
 	}
 
-	private static enum MyEnum {
-		FOO;
+	private enum MyEnum {
+		FOO
 	}
 
 }

@@ -26,27 +26,27 @@ public class DispatchMethodInvokerTests extends TestCase {
 	}
 
 	public void testInvokeWithExplicitParameters() throws Exception {
-		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, new Class[] { Object.class });
-		invoker.invoke("argumentMethod", new Object[] { "testValue" });
+		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, Object.class);
+		invoker.invoke("argumentMethod", "testValue");
 		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
 	}
 
 	public void testInvokeWithAssignableParameters() throws Exception {
-		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, new Class[] { String.class });
-		invoker.invoke("argumentMethod", new Object[] { "testValue" });
+		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, String.class);
+		invoker.invoke("argumentMethod", "testValue");
 		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
 	}
 
 	public void testInvokeWithNoParameters() throws Exception {
-		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, new Class[0]);
-		invoker.invoke("noArgumentMethod", new Object[0]);
+		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass);
+		invoker.invoke("noArgumentMethod");
 		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
 	}
 
 	public void testInvokeWithException() {
-		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, new Class[] { Object.class });
+		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, Object.class);
 		try {
-			invoker.invoke("exceptionMethod", new Object[] { "testValue" });
+			invoker.invoke("exceptionMethod", "testValue");
 			fail("Should have thrown an exception");
 		} catch (Exception e) {
 		}

@@ -97,5 +97,5 @@ public interface Action {
 	 * <i>recoverable</i> exceptions should be caught within this method and an appropriate result outcome returned
 	 * <i>or</i> be handled by the current state of the calling flow execution.
 	 */
-	public Event execute(RequestContext context) throws Exception;
+	Event execute(RequestContext context) throws Exception;
 }

@@ -44,7 +44,7 @@ public class DataModelConverter implements Converter {
 		if (targetClass.equals(DataModel.class)) {
 			targetClass = OneSelectionTrackingListDataModel.class;
 		}
-		Constructor<?> emptyConstructor = ClassUtils.getConstructorIfAvailable(targetClass, new Class[] {});
+		Constructor<?> emptyConstructor = ClassUtils.getConstructorIfAvailable(targetClass);
 		DataModel<?> model = (DataModel<?>) emptyConstructor.newInstance(new Object[] {});
 		model.setWrappedData(source);
 		return model;

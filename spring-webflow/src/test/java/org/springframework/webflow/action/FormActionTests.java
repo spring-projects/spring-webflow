@@ -327,7 +327,7 @@ public class FormActionTests extends TestCase {
 		Object formObject = getFormObject(context);
 		BindingResult errors = (BindingResult) getErrors(context);
 
-		assertTrue(formObject instanceof TestBean);
+		assertTrue(formObject != null);
 		assertTrue(errors.getTarget() instanceof TestBean);
 		assertSame(formObject, errors.getTarget());
 

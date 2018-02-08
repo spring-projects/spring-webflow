@@ -41,10 +41,7 @@ public class SimpleConversationId extends ConversationId {
 	}
 
 	public boolean equals(Object o) {
-		if (!(o instanceof SimpleConversationId)) {
-			return false;
-		}
-		return id.equals(((SimpleConversationId) o).id);
+		return o instanceof SimpleConversationId && id.equals(((SimpleConversationId) o).id);
 	}
 
 	public int hashCode() {

@@ -131,7 +131,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		this.classLoader = classLoader;
 	}
 
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		flowResourceFactory = new FlowDefinitionResourceFactory(flowBuilderServices.getApplicationContext());
 		if (basePath != null) {
 			flowResourceFactory.setBasePath(basePath);
@@ -143,7 +143,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		registerFlowBuilders();
 	}
 
-	public FlowDefinitionRegistry getObject() throws Exception {
+	public FlowDefinitionRegistry getObject() {
 		return flowRegistry;
 	}
 
@@ -157,7 +157,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 
 	// implement DisposableBean
 
-	public void destroy() throws Exception {
+	public void destroy() {
 		flowRegistry.destroy();
 	}
 
@@ -173,7 +173,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		if (flowLocationPatterns != null) {
 			for (String pattern : flowLocationPatterns) {
 				FlowDefinitionResource[] resources;
-				AttributeMap<Object> attributes = getFlowAttributes(Collections.<FlowElementAttribute> emptySet());
+				AttributeMap<Object> attributes = getFlowAttributes(Collections.emptySet());
 				try {
 					resources = flowResourceFactory.createResources(pattern, attributes);
 				} catch (IOException e) {

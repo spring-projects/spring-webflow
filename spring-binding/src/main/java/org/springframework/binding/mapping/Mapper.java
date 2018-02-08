@@ -28,5 +28,5 @@ public interface Mapper {
 	 * @param target the target
 	 * @return results of the mapping transaction
 	 */
-	public MappingResults map(Object source, Object target);
+	MappingResults map(Object source, Object target);
 }

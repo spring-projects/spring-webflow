@@ -34,13 +34,11 @@ public class DefaultMapperTests extends TestCase {
 		assertEquals(0, results.getErrorResults().size());
 		assertEquals("a", bean2.bar);
 		assertEquals("a", bean2.baz);
-		assertEquals(1, results.getResults(new MappingResultsCriteria() {
-			public boolean test(MappingResult result) {
-				if (result.getMapping().getTargetExpression().getExpressionString().equals("baz")) {
-					return true;
-				} else {
-					return false;
-				}
+		assertEquals(1, results.getResults(result -> {
+			if (result.getMapping().getTargetExpression().getExpressionString().equals("baz")) {
+				return true;
+			} else {
+				return false;
 			}
 		}).size());
 	}

@@ -33,5 +33,5 @@ public interface FlowModelLocator {
 	 * @return the flow mode
 	 * @throws NoSuchFlowModelException when the flow model with the specified id does not exist
 	 */
-	public FlowModel getFlowModel(String id) throws NoSuchFlowModelException;
+	FlowModel getFlowModel(String id) throws NoSuchFlowModelException;
 }

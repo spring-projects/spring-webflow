@@ -86,13 +86,9 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 		Flow mockDetailFlow = new Flow("detail-flow");
-		mockDetailFlow.setInputMapper(new Mapper() {
-			@SuppressWarnings("unchecked")
-			public MappingResults map(Object source, Object target) {
-				assertEquals("id of value 1 not provided as input by calling search flow", new Long(1),
-						((AttributeMap<Object>) source).get("id"));
-				return null;
-			}
+		mockDetailFlow.setInputMapper((source, target) -> {
+			assertEquals("id of value 1 not provided as input by calling search flow", 1L, ((AttributeMap<?>) source).get("id"));
+			return null;
 		});
 		// test responding to finish result
 		new EndState(mockDetailFlow, "finish");

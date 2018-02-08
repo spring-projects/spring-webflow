@@ -32,7 +32,7 @@ public interface FlowDefinitionHolder {
 	 * callers may call to obtain the id of the flow without triggering full flow definition assembly (which may be an
 	 * expensive operation).
 	 */
-	public String getFlowDefinitionId();
+	String getFlowDefinitionId();
 
 	/**
 	 * Returns a descriptive string that identifies the source of this FlowDefinition. This is also a lightweight method
@@ -40,27 +40,27 @@ public interface FlowDefinitionHolder {
 	 * definition assembly. Used for informational purposes.
 	 * @return the flow definition resource string
 	 */
-	public String getFlowDefinitionResourceString();
+	String getFlowDefinitionResourceString();
 
 	/**
 	 * Returns the flow definition held by this holder. Calling this method the first time may trigger flow assembly
 	 * (which may be expensive).
 	 * @throws FlowDefinitionConstructionException if there is a problem constructing the target flow definition
 	 */
-	public FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException;
+	FlowDefinition getFlowDefinition() throws FlowDefinitionConstructionException;
 
 	/**
 	 * Refresh the flow definition held by this holder. Calling this method typically triggers flow re-assembly, which
 	 * may include a refresh from an externalized resource such as a file.
 	 * @throws FlowDefinitionConstructionException if there is a problem constructing the target flow definition
 	 */
-	public void refresh() throws FlowDefinitionConstructionException;
+	void refresh() throws FlowDefinitionConstructionException;
 
 	/**
 	 * Indicates that the system is being shutdown and any resources flow resources should be released. After this
 	 * method is called, calls to {@link #getFlowDefinition()} are undefined. Should only be called once. May be a no-op
 	 * if the held flow was never constructed to begin with.
 	 */
-	public void destroy();
+	void destroy();
 
 }

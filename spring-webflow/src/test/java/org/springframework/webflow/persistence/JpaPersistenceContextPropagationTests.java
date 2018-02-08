@@ -50,10 +50,10 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 		}
 		if (!isCommited) {
 			assertEquals("Nothing should be committed yet", 1,
-					(int)getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class));
+					getCount());
 		} else {
 			assertEquals("All rows should be committed", rowCount,
-					(int)getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class));
+					getCount());
 		}
 	}
 
@@ -64,6 +64,11 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 		factory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		factory.afterPropertiesSet();
 		return factory.getObject();
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	private int getCount() {
+		return getJdbcTemplate().queryForObject("select count(*) from T_BEAN", Integer.class);
 	}
 
 }

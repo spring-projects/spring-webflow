@@ -39,15 +39,15 @@ public class BeanFactoryPropertyAccessor implements PropertyAccessor {
 		return null;
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return getBeanFactory().containsBean(name);
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		return new TypedValue(getBeanFactory().getBean(name));
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return false;
 	}
 

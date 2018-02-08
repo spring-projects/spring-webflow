@@ -3,8 +3,8 @@ package org.springframework.faces.webflow;
 import javax.el.ELContext;
 
 import junit.framework.TestCase;
-
 import org.apache.myfaces.test.el.MockELContext;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -26,29 +26,29 @@ public class FlowELResolverTests extends TestCase {
 
 	private final ELContext elContext = new MockELContext();
 
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
-	protected void tearDown() throws Exception {
+	protected void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}
 
-	public void testRequestContextResolve() throws Exception {
+	public void testRequestContextResolve() {
 		Object actual = this.resolver.getValue(this.elContext, null, "flowRequestContext");
 		assertTrue(this.elContext.isPropertyResolved());
 		assertNotNull(actual);
 		assertSame(this.requestContext, actual);
 	}
 
-	public void testImplicitFlowResolve() throws Exception {
+	public void testImplicitFlowResolve() {
 		Object actual = this.resolver.getValue(this.elContext, null, "flowScope");
 		assertTrue(this.elContext.isPropertyResolved());
 		assertNotNull(actual);
 		assertSame(this.requestContext.getFlowScope(), actual);
 	}
 
-	public void testFlowResourceResolve() throws Exception {
+	public void testFlowResourceResolve() {
 		ApplicationContext applicationContext = new StaticWebApplicationContext();
 		((Flow) this.requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		Object actual = this.resolver.getValue(this.elContext, null, "resourceBundle");
@@ -57,14 +57,14 @@ public class FlowELResolverTests extends TestCase {
 		assertSame(applicationContext, actual);
 	}
 
-	public void testScopeResolve() throws Exception {
+	public void testScopeResolve() {
 		this.requestContext.getFlowScope().put("test", "test");
 		Object actual = this.resolver.getValue(this.elContext, null, "test");
 		assertTrue(this.elContext.isPropertyResolved());
 		assertEquals("test", actual);
 	}
 
-	public void testMapAdaptableResolve() throws Exception {
+	public void testMapAdaptableResolve() {
 		LocalAttributeMap<String> base = new LocalAttributeMap<>();
 		base.put("test", "test");
 		Object actual = this.resolver.getValue(this.elContext, base, "test");
@@ -72,7 +72,7 @@ public class FlowELResolverTests extends TestCase {
 		assertEquals("test", actual);
 	}
 
-	public void testBeanResolveWithRequestContext() throws Exception {
+	public void testBeanResolveWithRequestContext() {
 		StaticWebApplicationContext applicationContext = new StaticWebApplicationContext();
 		((Flow) this.requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		applicationContext.registerSingleton("test", Bean.class);
@@ -82,7 +82,7 @@ public class FlowELResolverTests extends TestCase {
 		assertTrue(actual instanceof Bean);
 	}
 
-	public void testBeanResolveWithoutRequestContext() throws Exception {
+	public void testBeanResolveWithoutRequestContext() {
 		RequestContextHolder.setRequestContext(null);
 		Object actual = this.resolver.getValue(this.elContext, null, "test");
 		assertFalse(this.elContext.isPropertyResolved());

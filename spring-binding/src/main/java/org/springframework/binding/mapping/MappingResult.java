@@ -28,33 +28,33 @@ public interface MappingResult extends Serializable {
 	/**
 	 * The mapping that executed for which this result pertains to.
 	 */
-	public Mapping getMapping();
+	Mapping getMapping();
 
 	/**
 	 * The mapping result code; for example, "success" , "typeMismatch", "propertyNotFound", or "evaluationException".
 	 */
-	public String getCode();
+	String getCode();
 
 	/**
 	 * Indicates if this result is an error result.
 	 */
-	public boolean isError();
+	boolean isError();
 
 	/**
 	 * Get the cause of the error result
 	 * @return the underyling cause, or null if this is not an error or there was no root cause.
 	 */
-	public Throwable getErrorCause();
+	Throwable getErrorCause();
 
 	/**
 	 * The original value of the source object that was to be mapped. May be null if this result is an error on the
 	 * source object.
 	 */
-	public Object getOriginalValue();
+	Object getOriginalValue();
 
 	/**
 	 * The actual value that was mapped to the target object. Null if this result is an error.
 	 */
-	public Object getMappedValue();
+	Object getMappedValue();
 
 }

@@ -30,6 +30,6 @@ public interface TwoWayConverter extends Converter {
 	 * @return the converted object, which must be an instance of the <code>sourceClass</code>
 	 * @throws Exception an exception occurred performing the conversion
 	 */
-	public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) throws Exception;
+	Object convertTargetToSourceClass(Object target, Class<?> sourceClass) throws Exception;
 
 }

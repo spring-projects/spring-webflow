@@ -33,5 +33,5 @@ public interface ResultEventFactory {
 	 * @param context a flow execution request context
 	 * @return the event
 	 */
-	public Event createResultEvent(Object source, Object resultObject, RequestContext context);
+	Event createResultEvent(Object source, Object resultObject, RequestContext context);
 }

@@ -32,14 +32,14 @@ public interface StateManageableMessageContext extends MessageContext {
 	 * Create a serializable memento, or token representing a snapshot of the internal state of this message context.
 	 * @return the messages memento
 	 */
-	public Serializable createMessagesMemento();
+	Serializable createMessagesMemento();
 
 	/**
 	 * Set the state of this context from the memento provided. After this call, the messages in this context will match
 	 * what is encapsulated inside the memento. Any previous state will be overridden.
 	 * @param messagesMemento the messages memento
 	 */
-	public void restoreMessages(Serializable messagesMemento);
+	void restoreMessages(Serializable messagesMemento);
 
 	/**
 	 * Configure the message source used to resolve messages added to this context. May be set at any time to change how
@@ -47,5 +47,5 @@ public interface StateManageableMessageContext extends MessageContext {
 	 * @param messageSource the message source
 	 * @see MessageContext#addMessage(MessageResolver)
 	 */
-	public void setMessageSource(MessageSource messageSource);
+	void setMessageSource(MessageSource messageSource);
 }

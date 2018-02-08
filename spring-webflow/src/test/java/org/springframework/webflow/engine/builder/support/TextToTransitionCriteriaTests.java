@@ -37,7 +37,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	private TextToTransitionCriteria converter = new TextToTransitionCriteria(serviceLocator);
 
 	@Override
-	protected void tearDown() throws Exception {
+	protected void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}
 
@@ -98,11 +98,8 @@ public class TextToTransitionCriteriaTests extends TestCase {
 	}
 
 	public void testNullExpressionEvaluation() throws Exception {
-		serviceLocator.getFlowBuilderServices().setExpressionParser(new ExpressionParser() {
-			public Expression parseExpression(String expressionString, ParserContext context) throws ParserException {
-				return new StaticExpression(null);
-			}
-		});
+		serviceLocator.getFlowBuilderServices()
+				.setExpressionParser((expressionString, context) -> new StaticExpression(null));
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass("doesnt matter",
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();

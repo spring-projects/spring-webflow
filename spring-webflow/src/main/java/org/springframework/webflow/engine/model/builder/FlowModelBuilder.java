@@ -45,13 +45,13 @@ public interface FlowModelBuilder {
 	 * the flow definition, for example.
 	 * @throws FlowModelBuilderException an exception occurred building the flow
 	 */
-	public void init() throws FlowModelBuilderException;
+	void init() throws FlowModelBuilderException;
 
 	/**
 	 * Builds any variables initialized by the flow when it starts.
 	 * @throws FlowModelBuilderException an exception occurred building the flow
 	 */
-	public void build() throws FlowModelBuilderException;
+	void build() throws FlowModelBuilderException;
 
 	/**
 	 * Get the fully constructed flow model. Called by the builder's assembler (director) after assembly. When this
@@ -59,27 +59,27 @@ public interface FlowModelBuilder {
 	 * ready for use.
 	 * @throws FlowModelBuilderException an exception occurred building this flow
 	 */
-	public FlowModel getFlowModel() throws FlowModelBuilderException;
+	FlowModel getFlowModel() throws FlowModelBuilderException;
 
 	/**
 	 * Shutdown the builder, releasing any resources it holds. A new flow construction process should start with another
 	 * call to the {@link #init()} method.
 	 * @throws FlowModelBuilderException an exception occurred disposing this flow
 	 */
-	public void dispose() throws FlowModelBuilderException;
+	void dispose() throws FlowModelBuilderException;
 
 	/**
 	 * Get the underlying flow model resource accessed to build this flow model. Returns null if this builder does not
 	 * construct the flow model from a resource.
 	 * @return the flow model resource
 	 */
-	public Resource getFlowModelResource();
+	Resource getFlowModelResource();
 
 	/**
 	 * Returns true if the underlying flow model resource has changed since the last call to {@link #init()}. Always
 	 * returns false if the flow model is not build from a resource.
 	 * @return true if the resource backing the flow model has changed
 	 */
-	public boolean hasFlowModelResourceChanged();
+	boolean hasFlowModelResourceChanged();
 
 }

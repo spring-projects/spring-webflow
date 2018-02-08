@@ -19,17 +19,17 @@ public class AbstractAjaxHandlerTests extends TestCase {
 		response = new MockHttpServletResponse();
 	}
 
-	public void testIsAjaxRequest() throws Exception {
+	public void testIsAjaxRequest() {
 		TestAjaxHandler handler = new TestAjaxHandler(null, true);
 		assertTrue(handler.isAjaxRequest(request, response));
 	}
 
-	public void testIsNotAjaxRequest() throws Exception {
+	public void testIsNotAjaxRequest() {
 		TestAjaxHandler handler = new TestAjaxHandler(null, false);
 		assertFalse(handler.isAjaxRequest(request, response));
 	}
 
-	public void testIsAjaxRequestViaDelegate() throws Exception {
+	public void testIsAjaxRequestViaDelegate() {
 		TestAjaxHandler handler = new TestAjaxHandler(new TestAjaxHandler(null, true), false);
 		assertTrue(handler.isAjaxRequest(request, response));
 	}
@@ -69,7 +69,7 @@ public class AbstractAjaxHandlerTests extends TestCase {
 		}
 
 		protected void sendAjaxRedirectInternal(String targetUrl, HttpServletRequest request,
-				HttpServletResponse response, boolean popup) throws IOException {
+				HttpServletResponse response, boolean popup) {
 			wasAjaxRedirectInternalCalled = true;
 		}
 
@@ -78,11 +78,8 @@ public class AbstractAjaxHandlerTests extends TestCase {
 		}
 
 		public boolean wasAjaxRedirectInternalCalled() {
-			if (wasAjaxRedirectInternalCalled) {
-				return true;
-			} else {
-				return (getDelegate() != null) ? delegate.wasAjaxRedirectInternalCalled() : false;
-			}
+			return wasAjaxRedirectInternalCalled ||
+					(getDelegate() != null) && delegate.wasAjaxRedirectInternalCalled();
 		}
 	}
 

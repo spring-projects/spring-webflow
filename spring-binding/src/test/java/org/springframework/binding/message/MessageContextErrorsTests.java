@@ -17,7 +17,7 @@ public class MessageContextErrorsTests extends TestCase {
 	private MessageContextErrors errors;
 
 	@Override
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		StaticMessageSource messageSource = new StaticMessageSource();
 		messageSource.addMessage("foo", Locale.getDefault(), "bar");
 		messageSource.addMessage("bar", Locale.getDefault(), "{0}");

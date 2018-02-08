@@ -16,10 +16,8 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
-
 import javax.faces.application.ResourceHandler;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +36,7 @@ import org.springframework.web.context.support.WebApplicationObjectSupport;
 public class JsfResourceRequestHandler extends WebApplicationObjectSupport implements HttpRequestHandler {
 
 	public void handleRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws IOException {
 
 		FacesContextHelper helper = new FacesContextHelper();
 		try {

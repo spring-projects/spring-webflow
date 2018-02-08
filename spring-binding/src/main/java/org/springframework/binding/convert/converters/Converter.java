@@ -31,14 +31,14 @@ public interface Converter {
 	 * convert specific subclasses as well.
 	 * @return the source type
 	 */
-	public Class<?> getSourceClass();
+	Class<?> getSourceClass();
 
 	/**
 	 * The target class this converter can convert to. May be an interface or abstract type to allow this converter to
 	 * convert specific subclasses as well.
 	 * @return the target type
 	 */
-	public Class<?> getTargetClass();
+	Class<?> getTargetClass();
 
 	/**
 	 * Convert the provided source object argument to an instance of the specified target class.
@@ -48,6 +48,6 @@ public interface Converter {
 	 * @return the converted object, which must be an instance of the <code>targetClass</code>
 	 * @throws Exception an exception occurred performing the conversion
 	 */
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception;
+	Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception;
 
 }

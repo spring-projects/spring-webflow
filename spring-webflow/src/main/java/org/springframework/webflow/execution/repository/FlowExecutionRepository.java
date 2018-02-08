@@ -42,7 +42,7 @@ public interface FlowExecutionRepository {
 	 * @param encodedKey the string encoded key
 	 * @return the parsed flow execution key, the persistent identifier for exactly one flow execution
 	 */
-	public FlowExecutionKey parseFlowExecutionKey(String encodedKey) throws FlowExecutionRepositoryException;
+	FlowExecutionKey parseFlowExecutionKey(String encodedKey) throws FlowExecutionRepositoryException;
 
 	/**
 	 * Return the lock for the flow execution, allowing for the lock to be acquired or released. Caution: care should be
@@ -64,7 +64,7 @@ public interface FlowExecutionRepository {
 	 * @return the lock
 	 * @throws FlowExecutionRepositoryException a problem occurred accessing the lock object
 	 */
-	public FlowExecutionLock getLock(FlowExecutionKey key) throws FlowExecutionRepositoryException;
+	FlowExecutionLock getLock(FlowExecutionKey key) throws FlowExecutionRepositoryException;
 
 	/**
 	 * Return the <code>FlowExecution</code> indexed by the provided key. The returned flow execution represents the
@@ -74,7 +74,7 @@ public interface FlowExecutionRepository {
 	 * @return the flow execution, fully hydrated and ready to resume
 	 * @throws FlowExecutionRepositoryException if no flow execution was indexed with the key provided
 	 */
-	public FlowExecution getFlowExecution(FlowExecutionKey key) throws FlowExecutionRepositoryException;
+	FlowExecution getFlowExecution(FlowExecutionKey key) throws FlowExecutionRepositoryException;
 
 	/**
 	 * Place the <code>FlowExecution</code> in this repository under the provided key. This should be called to save or
@@ -83,7 +83,7 @@ public interface FlowExecutionRepository {
 	 * @param flowExecution the flow execution
 	 * @throws FlowExecutionRepositoryException the flow execution could not be stored
 	 */
-	public void putFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
+	void putFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
 
 	/**
 	 * Remove the flow execution from the repository. This should be called when the flow execution ends (is no longer
@@ -91,6 +91,6 @@ public interface FlowExecutionRepository {
 	 * @param flowExecution the flow execution
 	 * @throws FlowExecutionRepositoryException the flow execution could not be removed.
 	 */
-	public void removeFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
+	void removeFlowExecution(FlowExecution flowExecution) throws FlowExecutionRepositoryException;
 
 }

@@ -144,13 +144,11 @@ public class MockRequestControlContext extends MockRequestContext implements Req
 	// implementation specific accessors for testing
 
 	public void setAlwaysRedirectOnPause(boolean alwaysRedirectOnPause) {
-		getMockFlowExecutionContext().getAttributeMap().put("alwaysRedirectOnPause",
-				Boolean.valueOf(alwaysRedirectOnPause));
+		getMockFlowExecutionContext().getAttributeMap().put("alwaysRedirectOnPause", alwaysRedirectOnPause);
 	}
 
 	public void setRedirectInSameState(boolean redirectInSameState) {
-		getMockFlowExecutionContext().getAttributeMap()
-				.put("redirectInSameState", Boolean.valueOf(redirectInSameState));
+		getMockFlowExecutionContext().getAttributeMap().put("redirectInSameState", redirectInSameState);
 	}
 
 	public void setEmbeddedMode() {

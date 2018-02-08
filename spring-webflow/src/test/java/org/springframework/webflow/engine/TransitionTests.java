@@ -40,11 +40,9 @@ public class TransitionTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-		TargetStateResolver targetResolver = new TargetStateResolver() {
-			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-				assertSame(source, sourceState);
-				return target;
-			}
+		TargetStateResolver targetResolver = (transition, sourceState, context) -> {
+			assertSame(source, sourceState);
+			return target;
 		};
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(source);
@@ -61,11 +59,9 @@ public class TransitionTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-		TargetStateResolver targetResolver = new TargetStateResolver() {
-			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-				assertNull(sourceState);
-				return target;
-			}
+		TargetStateResolver targetResolver = (transition, sourceState, context) -> {
+			assertNull(sourceState);
+			return target;
 		};
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		Transition t = new Transition(targetResolver);
@@ -84,11 +80,7 @@ public class TransitionTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-		TargetStateResolver targetResolver = new TargetStateResolver() {
-			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-				return null;
-			}
-		};
+		TargetStateResolver targetResolver = (transition, sourceState, context) -> null;
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(source);
 		Transition t = new Transition(targetResolver);
@@ -131,20 +123,14 @@ public class TransitionTests extends TestCase {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
 			}
 		};
-		TargetStateResolver targetResolver = new TargetStateResolver() {
-			public State resolveTargetState(Transition transition, State sourceState, RequestContext context) {
-				assertSame(source, sourceState);
-				return target;
-			}
+		TargetStateResolver targetResolver = (transition, sourceState, context) -> {
+			assertSame(source, sourceState);
+			return target;
 		};
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(source);
 		Transition t = new Transition(targetResolver);
-		t.setExecutionCriteria(new TransitionCriteria() {
-			public boolean test(RequestContext context) {
-				return false;
-			}
-		});
+		t.setExecutionCriteria(context1 -> false);
 		boolean stateExited = t.execute(source, context);
 		assertFalse(stateExited);
 		assertFalse(exitCalled);

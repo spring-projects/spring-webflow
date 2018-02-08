@@ -81,7 +81,7 @@ public class FaceletsAuthorizeTagHandler extends TagHandler {
 		}
 
 		if (this.var != null) {
-			faceletContext.setAttribute(this.var.getValue(faceletContext), Boolean.valueOf(isAuthorized));
+			faceletContext.setAttribute(this.var.getValue(faceletContext), isAuthorized);
 		}
 	}
 

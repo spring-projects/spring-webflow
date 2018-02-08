@@ -57,7 +57,7 @@ public class ObjectToArray implements Converter {
 		return Object[].class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) {
 		if (source == null) {
 			return null;
 		}

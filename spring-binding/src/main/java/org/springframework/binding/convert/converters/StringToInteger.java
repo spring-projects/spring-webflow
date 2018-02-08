@@ -26,11 +26,11 @@ public class StringToInteger extends StringToObject {
 		super(Integer.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return Integer.valueOf(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Integer number = (Integer) object;
 		return number.toString();
 	}

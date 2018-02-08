@@ -67,6 +67,7 @@ public class SubflowStateTests extends TestCase {
 		assertEquals("child", context.getActiveFlow().getId());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testEnterWithInput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
@@ -76,13 +77,10 @@ public class SubflowStateTests extends TestCase {
 			public void mapSubflowOutput(AttributeMap<?> flowOutput, RequestContext context) {
 			}
 		});
-		subflow.setInputMapper(new Mapper() {
-			@SuppressWarnings("unchecked")
-			public MappingResults map(Object source, Object target) {
-				MutableAttributeMap<Object> map = (MutableAttributeMap<Object>) source;
-				assertEquals("bar", map.get("foo"));
-				return new DefaultMappingResults(source, target, Collections.<MappingResult> emptyList());
-			}
+		subflow.setInputMapper((source, target) -> {
+			MutableAttributeMap<Object> map = (MutableAttributeMap<Object>) source;
+			assertEquals("bar", map.get("foo"));
+			return new DefaultMappingResults(source, target, Collections.emptyList());
 		});
 		new State(subflow, "whatev") {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
@@ -92,6 +90,7 @@ public class SubflowStateTests extends TestCase {
 		assertEquals("child", context.getActiveFlow().getId());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testReturnWithOutput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
@@ -108,13 +107,10 @@ public class SubflowStateTests extends TestCase {
 			}
 		};
 		new EndState(subflow, "end");
-		subflow.setOutputMapper(new Mapper() {
-			@SuppressWarnings("unchecked")
-			public MappingResults map(Object source, Object target) {
-				MutableAttributeMap<Object> map = (MutableAttributeMap<Object>) target;
-				map.put("foo", "bar");
-				return new DefaultMappingResults(source, target, Collections.<MappingResult> emptyList());
-			}
+		subflow.setOutputMapper((source, target) -> {
+			MutableAttributeMap<Object> map = (MutableAttributeMap<Object>) target;
+			map.put("foo", "bar");
+			return new DefaultMappingResults(source, target, Collections.emptyList());
 		});
 		subflowState.enter(context);
 		assertEquals("parent", context.getActiveFlow().getId());

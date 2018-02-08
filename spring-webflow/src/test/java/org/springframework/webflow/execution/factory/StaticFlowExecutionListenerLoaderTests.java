@@ -46,7 +46,7 @@ public class StaticFlowExecutionListenerLoaderTests extends TestCase {
 		final FlowExecutionListener listener2 = new FlowExecutionListenerAdapter() {
 		};
 
-		loader = new StaticFlowExecutionListenerLoader(new FlowExecutionListener[] { listener1, listener2 });
+		loader = new StaticFlowExecutionListenerLoader(listener1, listener2);
 		assertEquals(listener1, loader.getListeners(new Flow("foo"))[0]);
 		assertEquals(listener2, loader.getListeners(new Flow("foo"))[1]);
 	}

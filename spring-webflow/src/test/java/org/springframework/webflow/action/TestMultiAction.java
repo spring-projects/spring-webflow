@@ -27,12 +27,12 @@ public class TestMultiAction extends MultiAction {
 
 	int counter = 0;
 
-	public Event increment(RequestContext context) throws Exception {
+	public Event increment(RequestContext context) {
 		counter++;
 		return success();
 	}
 
-	public Event decrement(RequestContext context) throws Exception {
+	public Event decrement(RequestContext context) {
 		counter--;
 		return success();
 	}

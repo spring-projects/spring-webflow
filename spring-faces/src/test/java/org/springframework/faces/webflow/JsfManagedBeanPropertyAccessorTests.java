@@ -41,18 +41,18 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
-	public void testCanRead() throws Exception {
+	public void testCanRead() {
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
 		assertTrue(this.accessor.canRead(null, null, "myJsfBean"));
 	}
 
-	public void testRead() throws Exception {
+	public void testRead() {
 		Object jsfBean = new Object();
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", jsfBean);
 		assertEquals(jsfBean, this.accessor.read(null, null, "myJsfBean").getValue());
 	}
 
-	public void testCanWrite() throws Exception {
+	public void testCanWrite() {
 		assertFalse(this.accessor.canWrite(null, null, "myJsfBean"));
 
 		MutableAttributeMap<Object> map = this.requestContext.getExternalContext().getRequestMap();
@@ -71,7 +71,7 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 		map.clear();
 	}
 
-	public void testWrite() throws Exception {
+	public void testWrite() {
 		Object jsfBean1 = new Object();
 		Object jsfBean2 = new Object();
 

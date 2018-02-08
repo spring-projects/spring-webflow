@@ -51,7 +51,7 @@ public abstract class AbstractFlowExecutorConfigurationTests extends TestCase {
 			assertEquals(Boolean.FALSE, attributes.getBoolean("alwaysRedirectOnPause"));
 			assertEquals(Boolean.TRUE, attributes.getBoolean("redirectInSameState"));
 			assertEquals("bar", attributes.get("foo"));
-			assertEquals(new Integer(2), attributes.get("bar"));
+			assertEquals(2, attributes.get("bar"));
 		}
 	}
 

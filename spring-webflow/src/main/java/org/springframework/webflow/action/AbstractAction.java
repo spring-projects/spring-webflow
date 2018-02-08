@@ -52,7 +52,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 		return new EventFactorySupport();
 	}
 
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		try {
 			initAction();
 		} catch (Exception ex) {
@@ -66,7 +66,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * Keep in mind that this hook will only be invoked when this action is deployed in a Spring application context
 	 * since it uses the Spring {@link InitializingBean} mechanism to trigger action initialisation.
 	 */
-	protected void initAction() throws Exception {
+	protected void initAction() {
 	}
 
 	/**
@@ -217,7 +217,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * or <code>null</code> if the <code>doExecute()</code> method should be called to obtain the action result
 	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
-	protected Event doPreExecute(RequestContext context) throws Exception {
+	protected Event doPreExecute(RequestContext context) {
 		return null;
 	}
 
@@ -225,7 +225,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * Template hook method subclasses should override to encapsulate their specific action execution logic.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return the action result event
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
 	protected abstract Event doExecute(RequestContext context) throws Exception;
 
@@ -237,6 +237,6 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
 	 */
-	protected void doPostExecute(RequestContext context) throws Exception {
+	protected void doPostExecute(RequestContext context) {
 	}
 }

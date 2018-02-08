@@ -30,7 +30,7 @@ public interface Expression {
 	 * @return the evaluation result
 	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
-	public Object getValue(Object context) throws EvaluationException;
+	Object getValue(Object context) throws EvaluationException;
 
 	/**
 	 * Set this expression in the provided context to the value provided.
@@ -38,7 +38,7 @@ public interface Expression {
 	 * @param value the new value to set
 	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
-	public void setValue(Object context, Object value) throws EvaluationException;
+	void setValue(Object context, Object value) throws EvaluationException;
 
 	/**
 	 * Returns the most general type that can be passed to the {@link #setValue(Object, Object)} method for the given
@@ -48,12 +48,12 @@ public interface Expression {
 	 * information cannot be determined
 	 * @throws EvaluationException an exception occurred during expression evaluation
 	 */
-	public Class<?> getValueType(Object context) throws EvaluationException;
+	Class<?> getValueType(Object context) throws EvaluationException;
 
 	/**
 	 * Returns the original string used to create this expression, unmodified.
 	 * @return the original expression string
 	 */
-	public String getExpressionString();
+	String getExpressionString();
 
 }

@@ -47,13 +47,13 @@ public interface FlowDefinition extends Annotated {
 	 * Returns the unique id of this flow.
 	 * @return the flow id
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * Return this flow's starting point.
 	 * @return the start state
 	 */
-	public StateDefinition getStartState();
+	StateDefinition getStartState();
 
 	/**
 	 * Returns the state definition with the specified id.
@@ -61,35 +61,35 @@ public interface FlowDefinition extends Annotated {
 	 * @return the state definition
 	 * @throws IllegalArgumentException if a state with this id does not exist
 	 */
-	public StateDefinition getState(String id) throws IllegalArgumentException;
+	StateDefinition getState(String id) throws IllegalArgumentException;
 
 	/**
 	 * Returns the outcomes that are possible for this flow to reach.
 	 * @return the possible outcomes
 	 */
-	public String[] getPossibleOutcomes();
+	String[] getPossibleOutcomes();
 
 	/**
 	 * Returns the class loader used by this flow definition to load classes.
 	 * @return the class loader
 	 */
-	public ClassLoader getClassLoader();
+	ClassLoader getClassLoader();
 
 	/**
 	 * Returns a reference to application context hosting application objects and services used by this flow definition.
 	 * @return the application context
 	 */
-	public ApplicationContext getApplicationContext();
+	ApplicationContext getApplicationContext();
 
 	/**
 	 * Returns true if this flow definition is currently in development (running in development mode).
 	 * @return the development flag
 	 */
-	public boolean inDevelopment();
+	boolean inDevelopment();
 
 	/**
 	 * Destroy this flow definition, releasing any resources. After the flow is destroyed it cannot be started again.
 	 */
-	public void destroy();
+	void destroy();
 
 }

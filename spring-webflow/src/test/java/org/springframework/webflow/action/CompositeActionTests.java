@@ -47,9 +47,9 @@ public class CompositeActionTests extends TestCase {
 		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
 		attributes.put("some key", "some value");
 		EasyMock.expect(actionMock.execute(mockRequestContext)).andReturn(new Event(this, "some event", attributes));
-		EasyMock.replay(new Object[] { actionMock });
+		EasyMock.replay(actionMock);
 		Event result = tested.doExecute(mockRequestContext);
-		EasyMock.verify(new Object[] { actionMock });
+		EasyMock.verify(actionMock);
 		assertEquals("some event", result.getId());
 		assertEquals(1, result.getAttributes().size());
 	}
@@ -58,9 +58,9 @@ public class CompositeActionTests extends TestCase {
 		tested.setStopOnError(true);
 		MockRequestContext mockRequestContext = new MockRequestContext();
 		EasyMock.expect(actionMock.execute(mockRequestContext)).andReturn(new Event(this, "error"));
-		EasyMock.replay(new Object[] { actionMock });
+		EasyMock.replay(actionMock);
 		Event result = tested.doExecute(mockRequestContext);
-		EasyMock.verify(new Object[] { actionMock });
+		EasyMock.verify(actionMock);
 		assertEquals("error", result.getId());
 	}
 
@@ -68,22 +68,24 @@ public class CompositeActionTests extends TestCase {
 		tested.setStopOnError(true);
 		MockRequestContext mockRequestContext = new MockRequestContext();
 		EasyMock.expect(actionMock.execute(mockRequestContext)).andReturn(null);
-		EasyMock.replay(new Object[] { actionMock });
+		EasyMock.replay(actionMock);
 		Event result = tested.doExecute(mockRequestContext);
-		EasyMock.verify(new Object[] { actionMock });
+		EasyMock.verify(actionMock);
 		assertEquals("Expecting success since no check is performed if null result,", "success", result.getId());
 	}
 
 	public void testMultipleActions() throws Exception {
-		CompositeAction ca = new CompositeAction(new Action[] { new Action() {
-			public Event execute(RequestContext context) throws Exception {
-				return new Event(this, "foo");
-			}
-		}, new Action() {
-			public Event execute(RequestContext context) throws Exception {
-				return new Event(this, "bar");
-			}
-		} });
+		CompositeAction ca = new CompositeAction(
+				new Action() {
+					public Event execute(RequestContext context) {
+						return new Event(this, "foo");
+					}
+				},
+				new Action() {
+					public Event execute(RequestContext context) {
+						return new Event(this, "bar");
+					}
+				});
 		assertEquals("Result of last executed action should be returned", "bar", ca.execute(new MockRequestContext())
 				.getId());
 	}

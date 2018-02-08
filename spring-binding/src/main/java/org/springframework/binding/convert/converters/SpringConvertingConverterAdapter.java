@@ -50,7 +50,7 @@ public class SpringConvertingConverterAdapter implements Converter {
 		this.conversionService = conversionService;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) {
 		return conversionService.convert(source, targetClass);
 	}
 

@@ -108,7 +108,7 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	}
 
 	public Serializable nextSnapshotId() {
-		Integer nextSnapshotId = Integer.valueOf(snapshotIdSequence);
+		Integer nextSnapshotId = snapshotIdSequence;
 		snapshotIdSequence++;
 		return nextSnapshotId;
 	}

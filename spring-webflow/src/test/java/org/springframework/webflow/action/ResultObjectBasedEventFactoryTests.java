@@ -49,7 +49,7 @@ public class ResultObjectBasedEventFactoryTests extends TestCase {
 		assertSame(MyLabeledEnum.A, event.getAttributes().get("result"));
 	}
 
-	public static enum MyLabeledEnum {
+	public enum MyLabeledEnum {
 		A, B;
 	}
 

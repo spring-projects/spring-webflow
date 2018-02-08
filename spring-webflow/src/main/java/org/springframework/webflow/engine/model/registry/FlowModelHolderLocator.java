@@ -31,6 +31,6 @@ public interface FlowModelHolderLocator {
 	 * @throws NoSuchFlowModelException when the flow model with the specified
 	 * id does not exist
 	 */
-	public FlowModelHolder getFlowModelHolder(String id) throws NoSuchFlowModelException;
+	FlowModelHolder getFlowModelHolder(String id) throws NoSuchFlowModelException;
 
 }

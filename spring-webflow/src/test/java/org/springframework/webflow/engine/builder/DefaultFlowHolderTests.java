@@ -32,7 +32,6 @@ public class DefaultFlowHolderTests extends TestCase {
 		assembler = new FlowAssembler(new ChangeDetectableFlowBuilder(), new MockFlowBuilderContext("flowId"));
 		holder = new DefaultFlowHolder(assembler);
 		FlowDefinition flow = holder.getFlowDefinition();
-		flow = holder.getFlowDefinition();
 		assertEquals("flowId", flow.getId());
 		assertEquals("end", flow.getStartState().getId());
 	}

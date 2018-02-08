@@ -26,11 +26,11 @@ public class StringToLong extends StringToObject {
 		super(Long.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return Long.valueOf(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Long number = (Long) object;
 		return number.toString();
 	}

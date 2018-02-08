@@ -80,6 +80,6 @@ public class MockViewHandler extends ViewHandler {
 		return this.restoreViewRoot;
 	}
 
-	public void writeState(FacesContext context) throws IOException {
+	public void writeState(FacesContext context) {
 	}
 }

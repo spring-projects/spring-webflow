@@ -62,7 +62,7 @@ public class ObjectToCollection implements Converter {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) {
 		if (source == null) {
 			return null;
 		}

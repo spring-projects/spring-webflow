@@ -22,7 +22,6 @@ import org.springframework.webflow.action.MultiAction.MethodResolver;
 import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.AnnotatedAction;
-import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -78,11 +77,7 @@ public class MultiActionTests extends TestCase {
 	}
 
 	public void testCustomMethodResolver() throws Exception {
-		MethodResolver methodResolver = new MethodResolver() {
-			public String resolveMethod(RequestContext context) {
-				return "increment";
-			}
-		};
+		MethodResolver methodResolver = context -> "increment";
 		action.setMethodResolver(methodResolver);
 		action.execute(context);
 		assertEquals(1, action.counter);

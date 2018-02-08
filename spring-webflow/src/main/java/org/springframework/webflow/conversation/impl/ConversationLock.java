@@ -30,10 +30,10 @@ public interface ConversationLock extends Serializable {
 	 * Acquire the conversation lock.
 	 * @throws ConversationLockException if an exception is thrown attempting to acquire this lock
 	 */
-	public void lock() throws ConversationLockException;
+	void lock() throws ConversationLockException;
 
 	/**
 	 * Release the conversation lock.
 	 */
-	public void unlock();
+	void unlock();
 }

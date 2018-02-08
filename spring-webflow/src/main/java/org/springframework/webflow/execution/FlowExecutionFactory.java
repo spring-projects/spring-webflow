@@ -42,7 +42,7 @@ public interface FlowExecutionFactory {
 	 * @param flowDefinition the flow definition
 	 * @return the new flow execution, fully initialized and awaiting to be started
 	 */
-	public FlowExecution createFlowExecution(FlowDefinition flowDefinition);
+	FlowExecution createFlowExecution(FlowDefinition flowDefinition);
 
 	/**
 	 * Restore the transient state of the flow execution.
@@ -55,7 +55,7 @@ public interface FlowExecutionFactory {
 	 * @param subflowDefinitionLocator for locating the definitions of any subflows started by the execution
 	 * @return the restored flow execution
 	 */
-	public FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
+	FlowExecution restoreFlowExecution(FlowExecution flowExecution, FlowDefinition flowDefinition,
 			FlowExecutionKey flowExecutionKey, MutableAttributeMap<Object> conversationScope,
 			FlowDefinitionLocator subflowDefinitionLocator);
 }

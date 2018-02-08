@@ -74,7 +74,7 @@ public class FormActionBindingTests extends TestCase {
 
 	public void testFieldBinding() throws Exception {
 		FormAction formAction = new FormAction() {
-			protected Object createFormObject(RequestContext context) throws Exception {
+			protected Object createFormObject(RequestContext context) {
 				TestBean res = new TestBean();
 				res.setProp(-1L);
 				res.otherProp = "initialValue";
@@ -93,7 +93,7 @@ public class FormActionBindingTests extends TestCase {
 		formAction.execute(context);
 		Errors errors = new FormObjectAccessor(context).getFormErrors("formObject", ScopeType.FLASH);
 		assertNotNull(errors);
-		assertEquals(new Long(-1), errors.getFieldValue("prop"));
+		assertEquals((long) -1, errors.getFieldValue("prop"));
 
 		// this fails because of SWF-193
 		assertEquals("initialValue", errors.getFieldValue("otherProp"));
@@ -107,7 +107,7 @@ public class FormActionBindingTests extends TestCase {
 		errors = new FormObjectAccessor(context).getFormErrors("formObject", ScopeType.FLASH);
 		assertNotNull(formObject);
 		assertEquals(new Long(1), formObject.getProp());
-		assertEquals(new Long(1), errors.getFieldValue("prop"));
+		assertEquals(1L, errors.getFieldValue("prop"));
 		assertEquals("value", formObject.otherProp);
 		assertEquals("value", errors.getFieldValue("otherProp"));
 	}

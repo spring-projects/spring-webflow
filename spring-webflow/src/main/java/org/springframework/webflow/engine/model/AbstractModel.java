@@ -47,6 +47,7 @@ public abstract class AbstractModel implements Model {
 	 * @param parent the parent string to merge
 	 * @return the merged string
 	 */
+	@SuppressWarnings("RedundantCast")
 	protected String merge(String child, String parent) {
 		return (String) merge((Object) child, (Object) parent);
 	}

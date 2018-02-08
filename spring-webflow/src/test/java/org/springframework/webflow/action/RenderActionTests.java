@@ -2,7 +2,6 @@ package org.springframework.webflow.action;
 
 import junit.framework.TestCase;
 
-import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
@@ -12,7 +11,7 @@ public class RenderActionTests extends TestCase {
 	public void testRenderAction() throws Exception {
 		StaticExpression name = new StaticExpression("frag1");
 		StaticExpression name2 = new StaticExpression("frag2");
-		RenderAction action = new RenderAction(new Expression[] { name, name2 });
+		RenderAction action = new RenderAction(name, name2);
 		MockRequestContext context = new MockRequestContext();
 		Event result = action.execute(context);
 		assertEquals("success", result.getId());
@@ -32,7 +31,7 @@ public class RenderActionTests extends TestCase {
 
 	public void testIllegalEmptyArg() {
 		try {
-			new RenderAction(new Expression[0]);
+			new RenderAction();
 			fail("iae");
 		} catch (IllegalArgumentException e) {
 

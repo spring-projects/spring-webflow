@@ -3,6 +3,7 @@ package org.springframework.webflow.mvc.view;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Principal;
@@ -136,7 +137,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals("2008-01-01", bm.getFieldValue("dateProperty"));
 	}
 
-	public void testResumeNoEvent() throws Exception {
+	public void testResumeNoEvent() {
 		MockRequestContext context = new MockRequestContext();
 		context.getMockExternalContext().setNativeContext(new MockServletContext());
 		context.getMockExternalContext().setNativeRequest(new MockHttpServletRequest());
@@ -150,7 +151,7 @@ public class MvcViewTests extends TestCase {
 		assertNull(view.getFlowEvent());
 	}
 
-	public void testResumeEventNoModelBinding() throws Exception {
+	public void testResumeEventNoModelBinding() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.getMockExternalContext().setNativeContext(new MockServletContext());
@@ -165,7 +166,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals("submit", view.getFlowEvent().getId());
 	}
 
-	public void testResumeEventModelBinding() throws Exception {
+	public void testResumeEventModelBinding() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -220,7 +221,7 @@ public class MvcViewTests extends TestCase {
 		assertFalse(bindBean.validationMethodInvoked);
 	}
 
-	public void testResumeEventBindingErrors() throws Exception {
+	public void testResumeEventBindingErrors() throws IOException {
 		MockRequestControlContext context = new MockRequestControlContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("integerProperty", "bogus 1");
@@ -249,7 +250,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals("bogus 2", bm.getFieldValue("dateProperty"));
 	}
 
-	public void testResumeEventNoModelInScope() throws Exception {
+	public void testResumeEventNoModelInScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -416,7 +417,7 @@ public class MvcViewTests extends TestCase {
 		return restoredState;
 	}
 
-	public void testResumeEventModelBindingAllowedFields() throws Exception {
+	public void testResumeEventModelBindingAllowedFields() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -450,7 +451,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals(null, bindBean.getBeanProperty().getName());
 	}
 
-	public void testResumeEventModelBindingCustomConverter() throws Exception {
+	public void testResumeEventModelBindingCustomConverter() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("dateProperty", "01-01-2007");
@@ -483,7 +484,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals(cal.getTime(), bindBean.getDateProperty());
 	}
 
-	public void testResumeEventModelBindingFieldMarker() throws Exception {
+	public void testResumeEventModelBindingFieldMarker() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("_booleanProperty", "whatever");
@@ -504,7 +505,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals(false, bindBean.getBooleanProperty());
 	}
 
-	public void testResumeEventModelBindingFieldMarkerFieldPresent() throws Exception {
+	public void testResumeEventModelBindingFieldMarkerFieldPresent() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("booleanProperty", "true");
@@ -527,7 +528,7 @@ public class MvcViewTests extends TestCase {
 		assertEquals(true, bindBean.getBooleanProperty());
 	}
 
-	public void testResumeEventModelBindAndValidate() throws Exception {
+	public void testResumeEventModelBindAndValidate() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -553,7 +554,7 @@ public class MvcViewTests extends TestCase {
 		assertTrue(bindBean.validationMethodInvoked);
 	}
 
-	public void testResumeEventModelBindAndValidateDefaultValidatorFallback() throws Exception {
+	public void testResumeEventModelBindAndValidateDefaultValidatorFallback() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -579,7 +580,7 @@ public class MvcViewTests extends TestCase {
 		assertTrue(bindBean.validationMethodInvoked);
 	}
 
-	public void testResumeEventModelValidateOnBindingErrors() throws Exception {
+	public void testResumeEventModelValidateOnBindingErrors() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -603,7 +604,7 @@ public class MvcViewTests extends TestCase {
 		assertTrue(bindBean.validationMethodInvoked);
 	}
 
-	public void testResumeEventModelNoValidateOnBindingErrors() throws Exception {
+	public void testResumeEventModelNoValidateOnBindingErrors() {
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
 		context.putRequestParameter("stringProperty", "foo");
@@ -628,7 +629,7 @@ public class MvcViewTests extends TestCase {
 		assertFalse(bindBean.validationMethodInvoked);
 	}
 
-	public void testResumeEventStringValidationHint() throws Exception {
+	public void testResumeEventStringValidationHint() {
 		StubSmartValidator validator = new StubSmartValidator();
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
@@ -658,7 +659,7 @@ public class MvcViewTests extends TestCase {
 		assertTrue(validator.invoked);
 	}
 
-	public void testResumeEventObjectArrayValidationHint() throws Exception {
+	public void testResumeEventObjectArrayValidationHint() {
 		StubSmartValidator validator = new StubSmartValidator();
 		MockRequestContext context = new MockRequestContext();
 		context.putRequestParameter("_eventId", "submit");
@@ -716,8 +717,7 @@ public class MvcViewTests extends TestCase {
 			return "text/html";
 		}
 
-		public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
-				throws Exception {
+		public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) {
 			renderCalled = true;
 			MvcViewTests.this.model = model;
 		}

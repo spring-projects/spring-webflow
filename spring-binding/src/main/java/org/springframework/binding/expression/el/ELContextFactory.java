@@ -37,6 +37,6 @@ public interface ELContextFactory {
 	 * @param target The base object for the expression evaluation
 	 * @return ELContext The configured ELContext instance for evaluating expressions.
 	 */
-	public ELContext getELContext(Object target);
+	ELContext getELContext(Object target);
 
 }

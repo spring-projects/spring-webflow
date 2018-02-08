@@ -27,5 +27,5 @@ public interface MessageCriteria {
 	 * @param message the message
 	 * @return true if this criteria is met for the message, false if not
 	 */
-	public boolean test(Message message);
+	boolean test(Message message);
 }

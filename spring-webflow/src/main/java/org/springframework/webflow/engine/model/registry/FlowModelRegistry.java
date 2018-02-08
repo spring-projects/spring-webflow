@@ -32,7 +32,7 @@ public interface FlowModelRegistry extends FlowModelLocator {
 	 * parent if it cannot fulfill the lookup request itself.
 	 * @param parent the parent flow model registry, may be null
 	 */
-	public void setParent(FlowModelRegistry parent);
+	void setParent(FlowModelRegistry parent);
 
 	/**
 	 * Register a flow model in this registry. Registers a "holder", not the Flow model itself. This allows the actual
@@ -41,6 +41,6 @@ public interface FlowModelRegistry extends FlowModelLocator {
 	 * @param id the id to register the flow model under
 	 * @param modelHolder a holder holding the flow model to register
 	 */
-	public void registerFlowModel(String id, FlowModelHolder modelHolder);
+	void registerFlowModel(String id, FlowModelHolder modelHolder);
 
 }

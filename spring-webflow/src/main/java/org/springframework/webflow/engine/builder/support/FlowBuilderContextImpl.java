@@ -121,8 +121,8 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * @return the flow builder conversion service
 	 */
 	protected ConversionService createConversionService() {
-		GenericConversionService service = new GenericConversionService(getFlowBuilderServices().getConversionService()
-				.getDelegateConversionService());
+		GenericConversionService service = new GenericConversionService(
+				getFlowBuilderServices().getConversionService().getDelegateConversionService());
 		service.addConverter(new TextToTransitionCriteria(this));
 		service.addConverter(new TextToTargetStateResolver(this));
 		service.setParent(new ParentConversionServiceProxy());

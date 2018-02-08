@@ -426,8 +426,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 						+ "] does not support form object class [" + getFormObjectClass() + "]");
 			}
 			// signature: public void ${validateMethodName}(${formObjectClass}, Errors)
-			validateMethodInvoker = new DispatchMethodInvoker(getValidator(), new Class[] { getFormObjectClass(),
-					Errors.class });
+			validateMethodInvoker = new DispatchMethodInvoker(getValidator(), getFormObjectClass(), Errors.class);
 		}
 	}
 
@@ -713,7 +712,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 			logger.debug("Invoking piecemeal validator method '" + validatorMethod + "(" + getFormObjectClass()
 					+ ", Errors)'");
 		}
-		getValidateMethodInvoker().invoke(validatorMethod, new Object[] { formObject, errors });
+		getValidateMethodInvoker().invoke(validatorMethod, formObject, errors);
 	}
 
 	// accessible helpers (subclasses could override if necessary)
@@ -775,7 +774,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @see #initBinder(RequestContext, DataBinder)
 	 * @see #setMessageCodesResolver(MessageCodesResolver)
 	 */
-	protected DataBinder createBinder(RequestContext context, Object formObject) throws Exception {
+	protected DataBinder createBinder(RequestContext context, Object formObject) {
 		DataBinder binder = new WebDataBinder(formObject, getFormObjectName());
 		if (getMessageCodesResolver() != null) {
 			binder.setMessageCodesResolver(getMessageCodesResolver());
@@ -791,7 +790,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * @param binder the data binder to use
 	 * @throws Exception when an unrecoverable exception occurs
 	 */
-	protected void doBind(RequestContext context, DataBinder binder) throws Exception {
+	protected void doBind(RequestContext context, DataBinder binder) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Binding allowed request parameters in "
 					+ StylerUtils.style(context.getExternalContext().getRequestParameterMap())

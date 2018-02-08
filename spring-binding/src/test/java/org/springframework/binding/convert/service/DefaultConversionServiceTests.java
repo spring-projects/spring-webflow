@@ -220,16 +220,8 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Principal[].class, List.class);
-		final Principal princy1 = new Principal() {
-			public String getName() {
-				return "princy1";
-			}
-		};
-		final Principal princy2 = new Principal() {
-			public String getName() {
-				return "princy2";
-			}
-		};
+		final Principal princy1 = () -> "princy1";
+		final Principal princy2 = () -> "princy2";
 		List<String> p = (List<String>) executor.execute(new Principal[] { princy1, princy2 });
 		assertEquals("princy1", p.get(0));
 		assertEquals("princy2", p.get(1));
@@ -262,16 +254,8 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, String[].class);
-		final Principal princy1 = new Principal() {
-			public String getName() {
-				return "princy1";
-			}
-		};
-		final Principal princy2 = new Principal() {
-			public String getName() {
-				return "princy2";
-			}
-		};
+		final Principal princy1 = () -> "princy1";
+		final Principal princy2 = () -> "princy2";
 		List<Principal> princyList = new ArrayList<>();
 		princyList.add(princy1);
 		princyList.add(princy2);
@@ -303,11 +287,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Principal.class, String[].class);
-		final Principal princy1 = new Principal() {
-			public String getName() {
-				return "princy1";
-			}
-		};
+		final Principal princy1 = () -> "princy1";
 		String[] p = (String[]) executor.execute(princy1);
 		assertEquals("princy1", p[0]);
 	}
@@ -359,11 +339,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Principal.class, List.class);
-		final Principal princy1 = new Principal() {
-			public String getName() {
-				return "princy1";
-			}
-		};
+		final Principal princy1 = () -> "princy1";
 		List<String> list = (List<String>) executor.execute(princy1);
 		assertEquals("princy1", list.get(0));
 	}
@@ -386,16 +362,8 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
-		final Principal princy1 = new Principal() {
-			public String getName() {
-				return "princy1";
-			}
-		};
-		final Principal princy2 = new Principal() {
-			public String getName() {
-				return "princy2";
-			}
-		};
+		final Principal princy1 = () -> "princy1";
+		final Principal princy2 = () -> "princy2";
 		List<Principal> princyList = new ArrayList<>();
 		princyList.add(princy1);
 		princyList.add(princy2);
@@ -598,21 +566,17 @@ public class DefaultConversionServiceTests extends TestCase {
 			super(List.class);
 		}
 
-		protected Object toObject(String string, Class<?> targetClass) throws Exception {
+		protected Object toObject(String string, Class<?> targetClass) {
 			List<Principal> principals = new ArrayList<>();
 			StringTokenizer tokenizer = new StringTokenizer(string, ",");
 			while (tokenizer.hasMoreTokens()) {
 				final String name = tokenizer.nextToken();
-				principals.add(new Principal() {
-					public String getName() {
-						return name;
-					}
-				});
+				principals.add(() -> name);
 			}
 			return principals;
 		}
 
-		protected String toString(Object object) throws Exception {
+		protected String toString(Object object) {
 			throw new UnsupportedOperationException("No implemented");
 		}
 

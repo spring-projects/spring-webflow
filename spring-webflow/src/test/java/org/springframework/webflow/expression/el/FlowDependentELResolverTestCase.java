@@ -1,7 +1,6 @@
 package org.springframework.webflow.expression.el;
 
 import java.util.List;
-
 import javax.el.ELContext;
 import javax.el.ELResolver;
 
@@ -10,10 +9,7 @@ import junit.framework.TestCase;
 import org.springframework.binding.expression.el.DefaultELContext;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.webflow.engine.ViewState;
-import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
-import org.springframework.webflow.execution.View;
-import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -54,10 +50,8 @@ public abstract class FlowDependentELResolverTestCase extends TestCase {
 
 	protected void initView(MockRequestContext requestContext) {
 		((MockFlowSession) requestContext.getFlowExecutionContext().getActiveSession()).setState(new ViewState(
-				requestContext.getRootFlow(), "view", new ViewFactory() {
-					public View getView(RequestContext context) {
-						throw new UnsupportedOperationException("Auto-generated method stub");
-					}
+				requestContext.getRootFlow(), "view", context -> {
+					throw new UnsupportedOperationException("Auto-generated method stub");
 				}));
 	}
 

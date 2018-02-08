@@ -93,7 +93,7 @@ public class ArrayToCollection implements TwoWayConverter {
 		return collection;
 	}
 
-	public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) throws Exception {
+	public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) {
 		if (target == null) {
 			return null;
 		}

@@ -100,7 +100,7 @@ public class MultiAction extends AbstractAction {
 	 * @param target the target
 	 */
 	protected final void setTarget(Object target) {
-		methodInvoker = new DispatchMethodInvoker(target, new Class[] { RequestContext.class });
+		methodInvoker = new DispatchMethodInvoker(target, RequestContext.class);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class MultiAction extends AbstractAction {
 
 	protected final Event doExecute(RequestContext context) throws Exception {
 		String method = getMethodResolver().resolveMethod(context);
-		Object obj = methodInvoker.invoke(method, new Object[] { context });
+		Object obj = methodInvoker.invoke(method, context);
 		if (obj != null) {
 			Assert.isInstanceOf(Event.class, obj, "The '" + method + "' action execution method on target object '"
 					+ methodInvoker.getTarget() + "' did not return an Event object but '" + obj + "' of type "
@@ -144,6 +144,6 @@ public class MultiAction extends AbstractAction {
 		 * @param context the flow execution request context
 		 * @return the name of the method that should handle action execution
 		 */
-		public String resolveMethod(RequestContext context);
+		String resolveMethod(RequestContext context);
 	}
 }

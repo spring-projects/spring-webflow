@@ -29,7 +29,7 @@ public interface TransitionDefinition extends Annotated {
 	 * The identifier of this transition. This id value should be unique among all other transitions in a set.
 	 * @return the transition identifier
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * Returns an identification of the target state of this transition. This could be an actual static state id or
@@ -37,5 +37,5 @@ public interface TransitionDefinition extends Annotated {
 	 * execution time.
 	 * @return the target state identifier
 	 */
-	public String getTargetStateId();
+	String getTargetStateId();
 }

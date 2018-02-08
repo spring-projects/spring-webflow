@@ -232,7 +232,7 @@ public class MethodKey implements Serializable {
 	 * Map with primitive wrapper type as key and corresponding primitive type as value, for example: Integer.class ->
 	 * int.class.
 	 */
-	private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_TYPE_MAP = new HashMap<Class<?>, Class<?>>(8);
+	private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_TYPE_MAP = new HashMap<>(8);
 	static {
 		PRIMITIVE_WRAPPER_TYPE_MAP.put(Boolean.class, boolean.class);
 		PRIMITIVE_WRAPPER_TYPE_MAP.put(Byte.class, byte.class);

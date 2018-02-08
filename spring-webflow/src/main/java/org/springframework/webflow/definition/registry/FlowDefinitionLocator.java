@@ -33,6 +33,6 @@ public interface FlowDefinitionLocator {
 	 * @throws NoSuchFlowDefinitionException when the flow definition with the specified id does not exist
 	 * @throws FlowDefinitionConstructionException if there is a problem constructing the identified flow definition
 	 */
-	public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
+	FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
 			FlowDefinitionConstructionException;
 }

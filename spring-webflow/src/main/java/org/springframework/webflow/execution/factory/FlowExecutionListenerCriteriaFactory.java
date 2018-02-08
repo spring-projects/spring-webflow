@@ -57,7 +57,7 @@ public class FlowExecutionListenerCriteriaFactory {
 	 * @param flowId the flow id to match
 	 */
 	public FlowExecutionListenerCriteria flow(String flowId) {
-		return new FlowIdFlowExecutionListenerCriteria(new String[] { flowId });
+		return new FlowIdFlowExecutionListenerCriteria(flowId);
 	}
 
 	/**

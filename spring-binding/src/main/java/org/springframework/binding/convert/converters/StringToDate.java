@@ -81,7 +81,7 @@ public class StringToDate extends StringToObject {
 		this.locale = locale;
 	}
 
-	public Object toObject(String string, Class<?> targetClass) throws Exception {
+	public Object toObject(String string, Class<?> targetClass) {
 		if (!StringUtils.hasText(string)) {
 			return null;
 		}
@@ -93,7 +93,7 @@ public class StringToDate extends StringToObject {
 		}
 	}
 
-	public String toString(Object target) throws Exception {
+	public String toString(Object target) {
 		Date date = (Date) target;
 		if (date == null) {
 			return "";

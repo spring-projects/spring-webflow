@@ -55,7 +55,7 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 		} else {
 			String header = request.getHeader("Faces-Request");
 			String param = request.getParameter("javax.faces.partial.ajax");
-			return ("partial/ajax".equals(header) || "true".equals(param)) ? true : false;
+			return "partial/ajax".equals(header) || "true".equals(param);
 		}
 	}
 

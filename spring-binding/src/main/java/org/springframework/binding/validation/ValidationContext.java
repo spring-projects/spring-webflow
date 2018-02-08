@@ -31,23 +31,23 @@ public interface ValidationContext {
 	/**
 	 * A context for adding failure messages to display to the user directly.
 	 */
-	public MessageContext getMessageContext();
+	MessageContext getMessageContext();
 
 	/**
 	 * The current user.
 	 */
-	public Principal getUserPrincipal();
+	Principal getUserPrincipal();
 
 	/**
 	 * The current user event that triggered validation.
 	 */
-	public String getUserEvent();
+	String getUserEvent();
 
 	/**
 	 * Obtain the value entered by the current user in the UI field bound to the property provided.
 	 * @param property the name of a bound property
 	 * @return the value the user entered in the field bound to the property
 	 */
-	public Object getUserValue(String property);
+	Object getUserValue(String property);
 
 }

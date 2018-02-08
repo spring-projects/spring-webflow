@@ -63,7 +63,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if the flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public FlowDefinition getActiveFlow() throws IllegalStateException;
+	FlowDefinition getActiveFlow() throws IllegalStateException;
 
 	/**
 	 * Returns the current state of the executing flow. Returns <code>null</code> if the active flow's start state has
@@ -72,7 +72,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if this flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public StateDefinition getCurrentState() throws IllegalStateException;
+	StateDefinition getCurrentState() throws IllegalStateException;
 
 	/**
 	 * Returns the transition that would execute on the occurrence of the given event.
@@ -81,7 +81,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if this flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException;
+	TransitionDefinition getMatchingTransition(String eventId) throws IllegalStateException;
 
 	/**
 	 * Returns true if the flow is currently active and in a view state. When in a view state {@link #getViewScope()},
@@ -89,21 +89,21 @@ public interface RequestContext {
 	 * @see #getViewScope()
 	 * @return true if in a view state, false if not
 	 */
-	public boolean inViewState();
+	boolean inViewState();
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in request scope. <b>Request scoped attributes
 	 * exist for the duration of this request only.</b>
 	 * @return the request scope
 	 */
-	public MutableAttributeMap<Object> getRequestScope();
+	MutableAttributeMap<Object> getRequestScope();
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flash scope. <b>Flash scoped attributes exist
 	 * until the next event is signaled in the flow execution.</b>
 	 * @return the flash scope
 	 */
-	public MutableAttributeMap<Object> getFlashScope();
+	MutableAttributeMap<Object> getFlashScope();
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in view scope. <b>View scoped attributes exist for
@@ -113,7 +113,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if this flow is not in a view-state or the flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException;
+	MutableAttributeMap<Object> getViewScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable map for accessing and/or setting attributes in flow scope. <b>Flow scoped attributes exist for
@@ -123,7 +123,7 @@ public interface RequestContext {
 	 * @throws IllegalStateException if the flow execution is not active
 	 * @see FlowExecutionContext#isActive()
 	 */
-	public MutableAttributeMap<Object> getFlowScope() throws IllegalStateException;
+	MutableAttributeMap<Object> getFlowScope() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable accessor for accessing and/or setting attributes in conversation scope. <b>Conversation scoped
@@ -131,7 +131,7 @@ public interface RequestContext {
 	 * @return the conversation scope
 	 * @see FlowExecutionContext
 	 */
-	public MutableAttributeMap<Object> getConversationScope();
+	MutableAttributeMap<Object> getConversationScope();
 
 	/**
 	 * Returns the immutable input parameters associated with this request into Spring Web Flow. The map returned is
@@ -141,7 +141,7 @@ public interface RequestContext {
 	 * directly.
 	 * @see #getExternalContext()
 	 */
-	public ParameterMap getRequestParameters();
+	ParameterMap getRequestParameters();
 
 	/**
 	 * Returns the external client context that originated (or triggered) this request.
@@ -156,34 +156,34 @@ public interface RequestContext {
 	 * environment when possible.
 	 * @return the originating external context, the one that triggered the current execution request
 	 */
-	public ExternalContext getExternalContext();
+	ExternalContext getExternalContext();
 
 	/**
 	 * Returns the message context of this request. Useful for recording messages during the course of flow execution
 	 * for display to the client.
 	 * @return the message context
 	 */
-	public MessageContext getMessageContext();
+	MessageContext getMessageContext();
 
 	/**
 	 * Returns contextual information about the flow execution itself. Information in this context typically spans more
 	 * than one request.
 	 * @return the flow execution context
 	 */
-	public FlowExecutionContext getFlowExecutionContext();
+	FlowExecutionContext getFlowExecutionContext();
 
 	/**
 	 * Returns the current event being processed by this flow. The event may or may not have caused a state transition
 	 * to happen.
 	 * @return the current event, or null if no event has been signaled yet
 	 */
-	public Event getCurrentEvent();
+	Event getCurrentEvent();
 
 	/**
 	 * Returns the current transition executing in this request.
 	 * @return the current transition, or <code>null</code> if no transition has occurred yet
 	 */
-	public TransitionDefinition getCurrentTransition();
+	TransitionDefinition getCurrentTransition();
 
 	/**
 	 * Returns the current view in use; if not null, the view returned is about to be rendered, is rendering, is
@@ -191,14 +191,14 @@ public interface RequestContext {
 	 * state transition. Returns <code>null</code> if the flow is not in a view state.
 	 * @return the current view, or <code>null</code> if the flow is not in a view state
 	 */
-	public View getCurrentView();
+	View getCurrentView();
 
 	/**
 	 * Returns a context map for accessing attributes about the state of the current request. These attributes may be
 	 * used to influence flow execution behavior.
 	 * @return the current attributes of this request, or empty if none are set
 	 */
-	public MutableAttributeMap<Object> getAttributes();
+	MutableAttributeMap<Object> getAttributes();
 
 	/**
 	 * Returns the URL of this flow execution. Needed by response writers that write out the URL of this flow execution
@@ -206,6 +206,6 @@ public interface RequestContext {
 	 * @throws IllegalStateException if the flow execution has not yet had its key assigned
 	 * @return the flow execution URL
 	 */
-	public String getFlowExecutionUrl() throws IllegalStateException;
+	String getFlowExecutionUrl() throws IllegalStateException;
 
 }

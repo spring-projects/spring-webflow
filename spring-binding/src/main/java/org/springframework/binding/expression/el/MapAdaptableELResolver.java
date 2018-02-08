@@ -18,11 +18,9 @@ package org.springframework.binding.expression.el;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ELResolver;
-import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 
 import org.springframework.binding.collection.MapAdaptable;
@@ -45,7 +43,7 @@ public class MapAdaptableELResolver extends ELResolver {
 	}
 
 	public Class<?> getType(ELContext context, Object base, Object property) throws NullPointerException,
-			PropertyNotFoundException, ELException {
+			ELException {
 		if (context == null) {
 			throw new NullPointerException("The ELContext is null.");
 		}
@@ -60,7 +58,7 @@ public class MapAdaptableELResolver extends ELResolver {
 	}
 
 	public Object getValue(ELContext context, Object base, Object property) throws NullPointerException,
-			PropertyNotFoundException, ELException {
+			ELException {
 		if (context == null) {
 			throw new NullPointerException("The ELContext is null.");
 		}
@@ -74,7 +72,7 @@ public class MapAdaptableELResolver extends ELResolver {
 	}
 
 	public boolean isReadOnly(ELContext context, Object base, Object property) throws NullPointerException,
-			PropertyNotFoundException, ELException {
+			ELException {
 		if (context == null) {
 			throw new NullPointerException("The ELContext is null.");
 		}
@@ -87,7 +85,7 @@ public class MapAdaptableELResolver extends ELResolver {
 	}
 
 	public void setValue(ELContext context, Object base, Object property, Object value) throws NullPointerException,
-			PropertyNotFoundException, PropertyNotWritableException, ELException {
+			ELException {
 		if (context == null) {
 			throw new NullPointerException("The ELContext is null.");
 		}

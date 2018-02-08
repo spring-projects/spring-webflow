@@ -46,7 +46,7 @@ public interface FlowExecutionContext {
 	 * identity.
 	 * @return the flow execution key; may be <code>null</code> if a key has not yet been assigned.
 	 */
-	public FlowExecutionKey getKey();
+	FlowExecutionKey getKey();
 
 	/**
 	 * Returns the root flow definition associated with this executing flow.
@@ -55,7 +55,7 @@ public interface FlowExecutionContext {
 	 * actually be active (for example, if subflows have been spawned).
 	 * @return the root flow definition
 	 */
-	public FlowDefinition getDefinition();
+	FlowDefinition getDefinition();
 
 	/**
 	 * Returns a flag indicating if this execution has been started. A flow execution that has started and is active is
@@ -63,14 +63,14 @@ public interface FlowExecutionContext {
 	 * @see #isActive()
 	 * @return true if started, false if not started
 	 */
-	public boolean hasStarted();
+	boolean hasStarted();
 
 	/**
 	 * Is the flow execution active? A flow execution is active once it has an {@link #getActiveSession() active
 	 * session} and remains active until it has ended.
 	 * @return true if active, false if the flow execution has terminated or has not yet been started
 	 */
-	public boolean isActive();
+	boolean isActive();
 
 	/**
 	 * Returns a flag indicating if this execution has ended. A flow execution that has ended has been started but is no
@@ -79,13 +79,13 @@ public interface FlowExecutionContext {
 	 * @see #isActive()
 	 * @return true if ended, false if not started or still active
 	 */
-	public boolean hasEnded();
+	boolean hasEnded();
 
 	/**
 	 * Returns the outcome reached by this execution, or null if this execution has not yet ended.
 	 * @return the outcome, or <code>null</code> if this execution has not yet ended
 	 */
-	public FlowExecutionOutcome getOutcome();
+	FlowExecutionOutcome getOutcome();
 
 	/**
 	 * Returns the active flow session of this flow execution. The active flow session is the currently executing
@@ -95,26 +95,26 @@ public interface FlowExecutionContext {
 	 * @throws IllegalStateException if this flow execution is not active
 	 * @see #isActive()
 	 */
-	public FlowSession getActiveSession() throws IllegalStateException;
+	FlowSession getActiveSession() throws IllegalStateException;
 
 	/**
 	 * Returns a mutable map for data held in "flash scope". Attributes in this map are cleared out on the next view
 	 * rendering. Flash attributes survive flow execution refresh operations.
 	 * @return flash scope
 	 */
-	public MutableAttributeMap<Object> getFlashScope();
+	MutableAttributeMap<Object> getFlashScope();
 
 	/**
 	 * Returns a mutable map for data held in "conversation scope". Conversation scope is a data structure that exists
 	 * for the life of this flow execution and is accessible to all flow sessions.
 	 * @return conversation scope
 	 */
-	public MutableAttributeMap<Object> getConversationScope();
+	MutableAttributeMap<Object> getConversationScope();
 
 	/**
 	 * Returns runtime execution attributes that may influence the behavior of flow artifacts, such as states and
 	 * actions.
 	 * @return execution attributes
 	 */
-	public AttributeMap<Object> getAttributes();
+	AttributeMap<Object> getAttributes();
 }

@@ -37,7 +37,7 @@ public interface FlowExecutor {
 	 * @param input input to pass to the new execution on startup (optional)
 	 * @param context access to the calling environment (required)
 	 */
-	public FlowExecutionResult launchExecution(String flowId, MutableAttributeMap<?> input, ExternalContext context)
+	FlowExecutionResult launchExecution(String flowId, MutableAttributeMap<?> input, ExternalContext context)
 			throws FlowException;
 
 	/**
@@ -45,6 +45,6 @@ public interface FlowExecutor {
 	 * @param flowExecutionKey the key of a paused execution of the flow definition
 	 * @param context access to the calling environment
 	 */
-	public FlowExecutionResult resumeExecution(String flowExecutionKey, ExternalContext context) throws FlowException;
+	FlowExecutionResult resumeExecution(String flowExecutionKey, ExternalContext context) throws FlowException;
 
 }

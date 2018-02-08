@@ -26,7 +26,7 @@ public class StaticConversionExecutorImplTests extends TestCase {
 
 	private StaticConversionExecutor conversionExecutor;
 
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		StringToDate stringToDate = new StringToDate();
 		conversionExecutor = new StaticConversionExecutor(String.class, Date.class, stringToDate);
 	}

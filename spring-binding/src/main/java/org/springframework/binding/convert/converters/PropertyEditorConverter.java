@@ -35,14 +35,14 @@ public class PropertyEditorConverter extends StringToObject {
 		this.propertyEditor = propertyEditor;
 	}
 
-	protected Object toObject(String string, Class<?> targetClass) throws Exception {
+	protected Object toObject(String string, Class<?> targetClass) {
 		synchronized (propertyEditor) {
 			propertyEditor.setAsText(string);
 			return propertyEditor.getValue();
 		}
 	}
 
-	protected String toString(Object object) throws Exception {
+	protected String toString(Object object) {
 		synchronized (propertyEditor) {
 			propertyEditor.setValue(object);
 			return propertyEditor.getAsText();

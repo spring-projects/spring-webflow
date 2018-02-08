@@ -4,8 +4,8 @@ import javax.sql.DataSource;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -28,10 +28,10 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends AbstractFlo
 	@Override
 	protected Action incrementCountAction() {
 		return new Action() {
-			public Event execute(RequestContext context) throws Exception {
+			public Event execute(RequestContext context) {
 				assertSessionBound();
 				Session session = (Session) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) session.get(TestBean.class, new Long(0));
+				TestBean bean = session.get(TestBean.class, 0L);
 				bean.incrementCount();
 				return new Event(this, "success");
 			}
@@ -42,10 +42,10 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends AbstractFlo
 	protected Object assertCountAction() {
 		return new Object() {
 			@SuppressWarnings("unused")
-			public void execute(RequestContext context, int expected) throws Exception {
+			public void execute(RequestContext context, int expected) {
 				assertSessionBound();
 				Session session = (Session) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) session.get(TestBean.class, new Long(0));
+				TestBean bean = session.get(TestBean.class, 0L);
 				assertEquals(expected, bean.getCount());
 			}
 		};
@@ -58,15 +58,14 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends AbstractFlo
 
 	/* private helper methods */
 
-	@SuppressWarnings("cast")
 	private SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
 		LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 		factory.setDataSource(dataSource);
-		factory.setMappingLocations(new Resource[] {
+		factory.setMappingLocations(
 				new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),
-				new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
+				new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml"));
 		factory.afterPropertiesSet();
-		return (SessionFactory) factory.getObject();
+		return factory.getObject();
 	}
 
 }

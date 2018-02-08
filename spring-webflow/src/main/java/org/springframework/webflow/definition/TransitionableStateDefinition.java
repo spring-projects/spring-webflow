@@ -27,12 +27,12 @@ public interface TransitionableStateDefinition extends StateDefinition {
 	 * Returns the available transitions out of this state.
 	 * @return the available state transitions
 	 */
-	public TransitionDefinition[] getTransitions();
+	TransitionDefinition[] getTransitions();
 
 	/**
 	 * Returns the transition that matches the event with the provided id.
 	 * @param eventId the event id
 	 * @return the transition that matches, or null if no match is found.
 	 */
-	public TransitionDefinition getTransition(String eventId);
+	TransitionDefinition getTransition(String eventId);
 }

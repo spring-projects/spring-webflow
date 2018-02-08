@@ -43,7 +43,7 @@ public interface FlowExecutionExceptionHandler {
 	 * @param exception the exception that occurred
 	 * @return true if yes, false if no
 	 */
-	public boolean canHandle(FlowExecutionException exception);
+	boolean canHandle(FlowExecutionException exception);
 
 	/**
 	 * Handle the exception in the context of the current request. An implementation is expected to transition the flow
@@ -51,5 +51,5 @@ public interface FlowExecutionExceptionHandler {
 	 * @param exception the exception that occurred
 	 * @param context the execution control context for this request
 	 */
-	public void handle(FlowExecutionException exception, RequestControlContext context);
+	void handle(FlowExecutionException exception, RequestControlContext context);
 }

@@ -40,17 +40,17 @@ public class ActionPropertyAccessor implements PropertyAccessor {
 		return new Class[] { Action.class };
 	}
 
-	public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return true;
 	}
 
-	public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+	public TypedValue read(EvaluationContext context, Object target, String name) {
 		AnnotatedAction annotated = new AnnotatedAction((Action) target);
 		annotated.setMethod(name);
 		return new TypedValue(annotated);
 	}
 
-	public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return false;
 	}
 

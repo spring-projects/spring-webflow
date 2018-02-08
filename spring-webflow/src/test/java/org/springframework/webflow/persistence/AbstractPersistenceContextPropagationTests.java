@@ -139,7 +139,7 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 		return dataSource;
 	}
 
-	private void populateDataBase(DataSource dataSource) throws Exception {
+	private void populateDataBase(DataSource dataSource) {
 		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
 		databasePopulator.addScript(new ClassPathResource("test-data.sql", this.getClass()));
 		DataSourceInitializer initializer = new DataSourceInitializer();

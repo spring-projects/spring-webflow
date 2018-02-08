@@ -60,55 +60,55 @@ public interface FlowBuilder {
 	 * @param context the flow builder context
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void init(FlowBuilderContext context) throws FlowBuilderException;
+	void init(FlowBuilderContext context) throws FlowBuilderException;
 
 	/**
 	 * Builds any variables initialized by the flow when it starts.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildVariables() throws FlowBuilderException;
+	void buildVariables() throws FlowBuilderException;
 
 	/**
 	 * Builds the input mapper responsible for mapping flow input on start.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildInputMapper() throws FlowBuilderException;
+	void buildInputMapper() throws FlowBuilderException;
 
 	/**
 	 * Builds any start actions to execute when the flow starts.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildStartActions() throws FlowBuilderException;
+	void buildStartActions() throws FlowBuilderException;
 
 	/**
 	 * Builds the states of the flow.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildStates() throws FlowBuilderException;
+	void buildStates() throws FlowBuilderException;
 
 	/**
 	 * Builds any transitions shared by all states of the flow.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildGlobalTransitions() throws FlowBuilderException;
+	void buildGlobalTransitions() throws FlowBuilderException;
 
 	/**
 	 * Builds any end actions to execute when the flow ends.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildEndActions() throws FlowBuilderException;
+	void buildEndActions() throws FlowBuilderException;
 
 	/**
 	 * Builds the output mapper responsible for mapping flow output on end.
 	 * @throws FlowBuilderException an exception occurred building the flow
 	 */
-	public void buildOutputMapper() throws FlowBuilderException;
+	void buildOutputMapper() throws FlowBuilderException;
 
 	/**
 	 * Creates and adds all exception handlers to the flow built by this builder.
 	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
-	public void buildExceptionHandlers() throws FlowBuilderException;
+	void buildExceptionHandlers() throws FlowBuilderException;
 
 	/**
 	 * Get the fully constructed and configured Flow object. Called by the builder's assembler (director) after
@@ -116,26 +116,26 @@ public interface FlowBuilder {
 	 * returned flow is fully configured and ready for use.
 	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
-	public Flow getFlow() throws FlowBuilderException;
+	Flow getFlow() throws FlowBuilderException;
 
 	/**
 	 * Shutdown the builder, releasing any resources it holds. A new flow construction process should start with another
 	 * call to the {@link #init(FlowBuilderContext)} method.
 	 * @throws FlowBuilderException an exception occurred building this flow
 	 */
-	public void dispose() throws FlowBuilderException;
+	void dispose() throws FlowBuilderException;
 
 	/**
 	 * As the underlying flow managed by this builder changed since the last build occurred?
 	 * @return true if changed, false if not
 	 */
-	public boolean hasFlowChanged();
+	boolean hasFlowChanged();
 
 	/**
 	 * Returns a string describing the location of the flow resource; the logical location where the source code can be
 	 * found. Used for informational purposes.
 	 * @return the flow resource string
 	 */
-	public String getFlowResourceString();
+	String getFlowResourceString();
 
 }

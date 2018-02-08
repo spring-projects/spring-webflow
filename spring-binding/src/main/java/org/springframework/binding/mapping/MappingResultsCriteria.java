@@ -27,5 +27,5 @@ public interface MappingResultsCriteria {
 	 * @param result the result
 	 * @return true if so, false if not
 	 */
-	public boolean test(MappingResult result);
+	boolean test(MappingResult result);
 }

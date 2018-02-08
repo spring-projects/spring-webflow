@@ -15,6 +15,6 @@ public interface NumberFormatFactory {
 	 * display.
 	 * @return the number format
 	 */
-	public NumberFormat getNumberFormat();
+	NumberFormat getNumberFormat();
 
 }

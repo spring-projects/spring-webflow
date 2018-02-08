@@ -36,6 +36,6 @@ public interface ExpressionParser {
 	 * @return an evaluator for the parsed expression
 	 * @throws ParserException an exception occurred during parsing
 	 */
-	public Expression parseExpression(String expressionString, ParserContext context) throws ParserException;
+	Expression parseExpression(String expressionString, ParserContext context) throws ParserException;
 
 }

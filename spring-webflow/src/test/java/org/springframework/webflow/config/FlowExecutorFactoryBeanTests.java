@@ -35,30 +35,24 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 	}
 
 	public void testGetFlowExecutorBasicConfig() throws Exception {
-		factoryBean.setFlowDefinitionLocator(new FlowDefinitionLocator() {
-			public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
-					FlowDefinitionConstructionException {
-				Flow flow = new Flow(id);
-				ViewState view = new ViewState(flow, "view", new StubViewFactory());
-				view.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("end")));
-				new EndState(flow, "end");
-				return flow;
-			}
+		factoryBean.setFlowDefinitionLocator(id -> {
+			Flow flow = new Flow(id);
+			ViewState view = new ViewState(flow, "view", new StubViewFactory());
+			view.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("end")));
+			new EndState(flow, "end");
+			return flow;
 		});
 		factoryBean.afterPropertiesSet();
 		factoryBean.getObject();
 	}
 
 	public void testGetFlowExecutorOptionsSpecified() throws Exception {
-		factoryBean.setFlowDefinitionLocator(new FlowDefinitionLocator() {
-			public FlowDefinition getFlowDefinition(String id) throws NoSuchFlowDefinitionException,
-					FlowDefinitionConstructionException {
-				Flow flow = new Flow(id);
-				ViewState view = new ViewState(flow, "view", new StubViewFactory());
-				view.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("end")));
-				new EndState(flow, "end");
-				return flow;
-			}
+		factoryBean.setFlowDefinitionLocator(id -> {
+			Flow flow = new Flow(id);
+			ViewState view = new ViewState(flow, "view", new StubViewFactory());
+			view.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("end")));
+			new EndState(flow, "end");
+			return flow;
 		});
 		Set<FlowElementAttribute> attributes = new HashSet<>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));

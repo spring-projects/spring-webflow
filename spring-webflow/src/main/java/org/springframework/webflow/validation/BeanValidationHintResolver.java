@@ -52,7 +52,7 @@ public class BeanValidationHintResolver implements ValidationHintResolver {
 			return null;
 		}
 
-		List<Class<?>> result = new ArrayList<Class<?>>();
+		List<Class<?>> result = new ArrayList<>();
 		for (String hint : hints) {
 			if (hint.equalsIgnoreCase("Default")) {
 				hint = "javax.validation.groups.Default";

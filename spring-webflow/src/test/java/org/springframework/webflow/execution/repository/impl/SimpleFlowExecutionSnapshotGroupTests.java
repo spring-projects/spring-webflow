@@ -26,7 +26,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 	public void testInitialState() {
 		assertEquals(0, group.getSnapshotCount());
 		assertEquals(-1, group.getMaxSnapshots());
-		assertEquals(new Integer(1), group.nextSnapshotId());
+		assertEquals(1, group.nextSnapshotId());
 	}
 
 	public void testGetSnapshot() {
@@ -45,8 +45,8 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 	}
 
 	public void testNextSnapshotId() {
-		assertEquals(new Integer(1), group.nextSnapshotId());
-		assertEquals(new Integer(2), group.nextSnapshotId());
+		assertEquals(1, group.nextSnapshotId());
+		assertEquals(2, group.nextSnapshotId());
 	}
 
 	public void testAddMaximumReached() {

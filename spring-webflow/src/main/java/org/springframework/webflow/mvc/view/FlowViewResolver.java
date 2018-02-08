@@ -34,13 +34,13 @@ public interface FlowViewResolver {
 	 * @param context the current flow request
 	 * @return the resolved Spring MVC view
 	 */
-	public View resolveView(String viewId, RequestContext context);
+	View resolveView(String viewId, RequestContext context);
 
 	/**
 	 * Get the default id of the view to render in the provided view state by convention.
 	 * @param viewStateId the view state id
 	 * @return the default view id
 	 */
-	public String getViewIdByConvention(String viewStateId);
+	String getViewIdByConvention(String viewStateId);
 
 }

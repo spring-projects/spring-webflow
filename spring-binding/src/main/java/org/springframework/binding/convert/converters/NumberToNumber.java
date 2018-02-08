@@ -31,7 +31,7 @@ public class NumberToNumber implements Converter {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) {
 		return NumberUtils.convertNumberToTargetClass((Number) source, (Class<? extends Number>) targetClass);
 	}
 }

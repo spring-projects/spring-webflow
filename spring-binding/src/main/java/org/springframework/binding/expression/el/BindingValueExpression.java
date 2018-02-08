@@ -3,8 +3,6 @@ package org.springframework.binding.expression.el;
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
-import javax.el.PropertyNotFoundException;
-import javax.el.PropertyNotWritableException;
 import javax.el.ValueExpression;
 
 import org.springframework.binding.convert.ConversionException;
@@ -45,22 +43,21 @@ class BindingValueExpression extends ValueExpression {
 		return targetExpression.getExpectedType();
 	}
 
-	public Class<?> getType(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
+	public Class<?> getType(ELContext context) throws NullPointerException, ELException {
 		return targetExpression.getType(context);
 	}
 
-	public Object getValue(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException,
+	public Object getValue(ELContext context) throws NullPointerException, ELException,
 			ValueCoercionException {
 		Object value = targetExpression.getValue(context);
 		return convertValueIfNecessary(value, expectedType, context);
 	}
 
-	public boolean isReadOnly(ELContext context) throws NullPointerException, PropertyNotFoundException, ELException {
+	public boolean isReadOnly(ELContext context) throws NullPointerException, ELException {
 		return targetExpression.isReadOnly(context);
 	}
 
-	public void setValue(ELContext context, Object value) throws NullPointerException, PropertyNotFoundException,
-			PropertyNotWritableException, ELException, ValueCoercionException {
+	public void setValue(ELContext context, Object value) throws NullPointerException, ELException, ValueCoercionException {
 		value = convertValueIfNecessary(value, targetExpression.getType(context), context);
 		targetExpression.setValue(context, value);
 	}

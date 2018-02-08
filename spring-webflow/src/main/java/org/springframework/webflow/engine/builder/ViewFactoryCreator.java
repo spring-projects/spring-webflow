@@ -40,7 +40,7 @@ public interface ViewFactoryCreator {
 	 * @param validationHintResolver a custom ValidationHintResolver to use
 	 * @return the view factory
 	 */
-	public ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
+	ViewFactory createViewFactory(Expression viewId, ExpressionParser expressionParser,
 			ConversionService conversionService, BinderConfiguration binderConfiguration,
 			Validator validator, ValidationHintResolver validationHintResolver);
 
@@ -49,6 +49,6 @@ public interface ViewFactoryCreator {
 	 * @param viewStateId the view state id
 	 * @return the default view id
 	 */
-	public String getViewIdByConvention(String viewStateId);
+	String getViewIdByConvention(String viewStateId);
 
 }

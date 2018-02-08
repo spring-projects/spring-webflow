@@ -29,7 +29,7 @@ public class MethodInvokerTests extends TestCase {
 
 	private MethodInvoker methodInvoker;
 
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		this.methodInvoker = new MethodInvoker();
 	}
 

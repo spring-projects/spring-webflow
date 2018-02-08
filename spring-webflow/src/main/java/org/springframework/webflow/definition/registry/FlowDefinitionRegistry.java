@@ -32,19 +32,19 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	 * Returns the number of flow definitions registered in this registry.
 	 * @return the flow definition count
 	 */
-	public int getFlowDefinitionCount();
+	int getFlowDefinitionCount();
 
 	/**
 	 * Returns the ids of the flows registered in this registry.
 	 * @return the flow definition ids
 	 */
-	public String[] getFlowDefinitionIds();
+	String[] getFlowDefinitionIds();
 
 	/**
 	 * Returns this registry's parent registry.
 	 * @return the parent flow definition registry, or null if no parent is set
 	 */
-	public FlowDefinitionRegistry getParent();
+	FlowDefinitionRegistry getParent();
 
 	/**
 	 * Does this registry contain a flow with the given id? More specifically, is {@link #getFlowDefinition(String)}
@@ -53,14 +53,14 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	 * @param flowId the id of the flow to query
 	 * @return whether a flow definition with the given id is registered
 	 */
-	public boolean containsFlowDefinition(String flowId);
+	boolean containsFlowDefinition(String flowId);
 
 	/**
 	 * Sets this registry's parent registry. When asked by a client to locate a flow definition this registry will query
 	 * it's parent if it cannot fulfill the lookup request itself.
 	 * @param parent the parent flow definition registry, may be null
 	 */
-	public void setParent(FlowDefinitionRegistry parent);
+	void setParent(FlowDefinitionRegistry parent);
 
 	/**
 	 * Register a flow definition in this registry. Registers a "holder", not the Flow definition itself. This allows
@@ -68,12 +68,12 @@ public interface FlowDefinitionRegistry extends FlowDefinitionLocator {
 	 * resource changes without re-deploy.
 	 * @param definitionHolder a holder holding the flow definition to register
 	 */
-	public void registerFlowDefinition(FlowDefinitionHolder definitionHolder);
+	void registerFlowDefinition(FlowDefinitionHolder definitionHolder);
 
 	/**
 	 * Register a flow definition in this registry.
 	 * @param definition the actual flow definition
 	 */
-	public void registerFlowDefinition(FlowDefinition definition);
+	void registerFlowDefinition(FlowDefinition definition);
 
 }

@@ -45,28 +45,28 @@ public interface ExternalContext {
 	 * Returns the logical path to the application hosting this external context.
 	 * @return the context path
 	 */
-	public String getContextPath();
+	String getContextPath();
 
 	/**
 	 * Provides access to the parameters associated with the user request that led to SWF being called. This map is
 	 * expected to be immutable and cannot be changed.
 	 * @return the immutable request parameter map
 	 */
-	public ParameterMap getRequestParameterMap();
+	ParameterMap getRequestParameterMap();
 
 	/**
 	 * Provides access to the external request attribute map, providing a storage for data local to the current user
 	 * request and accessible to both internal and external SWF artifacts.
 	 * @return the mutable request attribute map
 	 */
-	public MutableAttributeMap<Object> getRequestMap();
+	MutableAttributeMap<Object> getRequestMap();
 
 	/**
 	 * Provides access to the external session map, providing a storage for data local to the current user session and
 	 * accessible to both internal and external SWF artifacts.
 	 * @return the mutable session attribute map
 	 */
-	public SharedAttributeMap<Object> getSessionMap();
+	SharedAttributeMap<Object> getSessionMap();
 
 	/**
 	 * Provides access to the <i>global</i> external session map, providing a storage for data globally accross the user
@@ -76,20 +76,20 @@ public interface ExternalContext {
 	 * scope and a "global" session scope. Otherwise this method returns the same map as calling {@link #getSessionMap()}.
 	 * @return the mutable global session attribute map
 	 */
-	public SharedAttributeMap<Object> getGlobalSessionMap();
+	SharedAttributeMap<Object> getGlobalSessionMap();
 
 	/**
 	 * Provides access to the external application map, providing a storage for data local to the current user
 	 * application and accessible to both internal and external SWF artifacts.
 	 * @return the mutable application attribute map
 	 */
-	public SharedAttributeMap<Object> getApplicationMap();
+	SharedAttributeMap<Object> getApplicationMap();
 
 	/**
 	 * Returns true if the current request is an asynchronous Ajax request.
 	 * @return true if the current request is an Ajax request
 	 */
-	public boolean isAjaxRequest();
+	boolean isAjaxRequest();
 
 	/**
 	 * Get a flow execution URL for the execution with the provided key. Typically used by response writers that write
@@ -98,51 +98,51 @@ public interface ExternalContext {
 	 * @param flowExecutionKey the flow execution key
 	 * @return the flow execution URL
 	 */
-	public String getFlowExecutionUrl(String flowId, String flowExecutionKey);
+	String getFlowExecutionUrl(String flowId, String flowExecutionKey);
 
 	/**
 	 * Provides access to the user's principal security object.
 	 * @return the user principal
 	 */
-	public Principal getCurrentUser();
+	Principal getCurrentUser();
 
 	/**
 	 * Returns the client locale.
 	 * @return the locale
 	 */
-	public Locale getLocale();
+	Locale getLocale();
 
 	/**
 	 * Provides access to the context object for the current environment.
 	 * @return the environment specific context object
 	 */
-	public Object getNativeContext();
+	Object getNativeContext();
 
 	/**
 	 * Provides access to the request object for the current environment.
 	 * @return the environment specific request object.
 	 */
-	public Object getNativeRequest();
+	Object getNativeRequest();
 
 	/**
 	 * Provides access to the response object for the current environment.
 	 * @return the environment specific response object.
 	 */
-	public Object getNativeResponse();
+	Object getNativeResponse();
 
 	/**
 	 * Get a writer for writing out a response.
 	 * @return the writer
 	 * @throws IllegalStateException if the response has completed or is not allowed
 	 */
-	public Writer getResponseWriter() throws IllegalStateException;
+	Writer getResponseWriter() throws IllegalStateException;
 
 	/**
 	 * Is a <i>render</i> response allowed to be written for this request? Always return false after a response has been
 	 * completed. May return false before that to indicate a response is not allowed to be completed.
 	 * @return true if yes, false otherwise
 	 */
-	public boolean isResponseAllowed();
+	boolean isResponseAllowed();
 
 	/**
 	 * Request that a flow execution redirect be performed by the calling environment. Typically called from within a
@@ -151,7 +151,7 @@ public interface ExternalContext {
 	 * @see #isResponseComplete()
 	 * @throws IllegalStateException if the response has completed
 	 */
-	public void requestFlowExecutionRedirect() throws IllegalStateException;
+	void requestFlowExecutionRedirect() throws IllegalStateException;
 
 	/**
 	 * Request that a flow definition redirect be performed by the calling environment. Typically called from within a
@@ -162,7 +162,7 @@ public interface ExternalContext {
 	 * @param input input to pass the flow; this input is generally encoded the url to launch the flow
 	 * @throws IllegalStateException if the response has completed
 	 */
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException;
+	void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException;
 
 	/**
 	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
@@ -171,7 +171,7 @@ public interface ExternalContext {
 	 * @param location the location of the resource to redirect to
 	 * @throws IllegalStateException if the response has completed
 	 */
-	public void requestExternalRedirect(String location) throws IllegalStateException;
+	void requestExternalRedirect(String location) throws IllegalStateException;
 
 	/**
 	 * Request that the current redirect requested be sent to the client in a manner that causes the client to issue the
@@ -181,14 +181,14 @@ public interface ExternalContext {
 	 * @see #requestExternalRedirect(String)
 	 * @throws IllegalStateException if a redirect has not been requested
 	 */
-	public void requestRedirectInPopup() throws IllegalStateException;
+	void requestRedirectInPopup() throws IllegalStateException;
 
 	/**
 	 * Called by flow artifacts such as View states and end states to indicate they handled the response, typically by
 	 * writing out content to the response stream. Setting this flag allows this external context to know the response
 	 * was handled, and that it not need to take additional response handling action itself.
 	 */
-	public void recordResponseComplete();
+	void recordResponseComplete();
 
 	/**
 	 * Has the response been completed? Response complete status can be achieved by:
@@ -203,7 +203,7 @@ public interface ExternalContext {
 	 * @see #requestExternalRedirect(String)
 	 * @return true if yes, false otherwise
 	 */
-	public boolean isResponseComplete();
+	boolean isResponseComplete();
 
 	/**
 	 * Returns true if the response has been completed with flow execution redirect request.
@@ -211,6 +211,6 @@ public interface ExternalContext {
 	 * @see #isResponseComplete()
 	 * @see #requestFlowExecutionRedirect()
 	 */
-	public boolean isResponseCompleteFlowExecutionRedirect();
+	boolean isResponseCompleteFlowExecutionRedirect();
 
 }

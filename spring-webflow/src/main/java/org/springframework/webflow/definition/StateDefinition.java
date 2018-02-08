@@ -32,17 +32,17 @@ public interface StateDefinition extends Annotated {
 	 * Returns the flow definition this state belongs to.
 	 * @return the owning flow definition
 	 */
-	public FlowDefinition getOwner();
+	FlowDefinition getOwner();
 
 	/**
 	 * Returns this state's identifier, locally unique to is containing flow definition.
 	 * @return the state identifier
 	 */
-	public String getId();
+	String getId();
 
 	/**
 	 * Returns true if this state is a view state.
 	 * @return true if a view state, false otherwise
 	 */
-	public boolean isViewState();
+	boolean isViewState();
 }

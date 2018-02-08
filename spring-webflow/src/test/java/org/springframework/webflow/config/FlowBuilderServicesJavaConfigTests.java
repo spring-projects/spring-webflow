@@ -1,13 +1,9 @@
 package org.springframework.webflow.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 

@@ -86,7 +86,7 @@ public class LocalParameterMapTests extends TestCase {
 
 	public void testGetWithDefaultAndConversion() {
 		Object value = parameterMap.get("bogus", Integer.class, 1);
-		assertEquals(new Integer(1), value);
+		assertEquals(1, value);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -181,7 +181,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetNumberWithDefault() {
-		Integer value = parameterMap.getNumber("bogus", Integer.class, new Integer(12345));
+		Integer value = parameterMap.getNumber("bogus", Integer.class, 12345);
 		assertEquals(new Integer(12345), value);
 	}
 
@@ -196,7 +196,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetIntegerWithDefault() {
-		Integer value = parameterMap.getInteger("bogus", new Integer(12345));
+		Integer value = parameterMap.getInteger("bogus", 12345);
 		assertEquals(new Integer(12345), value);
 	}
 
@@ -211,7 +211,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetLongWithDefault() {
-		Long value = parameterMap.getLong("bogus", new Long(12345));
+		Long value = parameterMap.getLong("bogus", 12345L);
 		assertEquals(new Long(12345), value);
 	}
 

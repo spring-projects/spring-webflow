@@ -26,11 +26,11 @@ public class StringToByte extends StringToObject {
 		super(Byte.class);
 	}
 
-	public Object toObject(String string, Class<?> objectClass) throws Exception {
+	public Object toObject(String string, Class<?> objectClass) {
 		return Byte.valueOf(string);
 	}
 
-	public String toString(Object object) throws Exception {
+	public String toString(Object object) {
 		Byte number = (Byte) object;
 		return number.toString();
 	}

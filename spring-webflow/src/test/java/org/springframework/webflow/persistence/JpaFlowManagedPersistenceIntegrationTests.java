@@ -18,7 +18,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 	private EntityManagerFactory entityManagerFactory;
 
 	@Override
-	protected FlowExecutionListener createFlowExecutionListener() throws Exception {
+	protected FlowExecutionListener createFlowExecutionListener() {
 		entityManagerFactory = getEntityManagerFactory(getDataSource());
 		JpaTransactionManager tm = new JpaTransactionManager(entityManagerFactory);
 		return new JpaFlowExecutionListener(entityManagerFactory, tm);
@@ -27,11 +27,10 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 	@Override
 	protected Action incrementCountAction() {
 		return new Action() {
-			@SuppressWarnings("cast")
-			public Event execute(RequestContext context) throws Exception {
+			public Event execute(RequestContext context) {
 				assertSessionBound();
 				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) em.getReference(TestBean.class, new Long(0));
+				TestBean bean = em.getReference(TestBean.class, 0L);
 				bean.incrementCount();
 				assertNotNull(bean);
 				return new Event(this, "success");
@@ -42,11 +41,11 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 	@Override
 	protected Object assertCountAction() {
 		return new Object() {
-			@SuppressWarnings({ "unused", "cast" })
-			public void execute(RequestContext context, int expected) throws Exception {
+			@SuppressWarnings("unused")
+			public void execute(RequestContext context, int expected) {
 				assertSessionBound();
 				EntityManager em = (EntityManager) context.getFlowScope().get("persistenceContext");
-				TestBean bean = (TestBean) em.getReference(TestBean.class, new Long(0));
+				TestBean bean = em.getReference(TestBean.class, 0L);
 				assertEquals(expected, bean.getCount());
 			}
 		};
@@ -59,7 +58,7 @@ public class JpaFlowManagedPersistenceIntegrationTests extends AbstractFlowManag
 
 	/* private helper methods */
 
-	private EntityManagerFactory getEntityManagerFactory(DataSource dataSource) throws Exception {
+	private EntityManagerFactory getEntityManagerFactory(DataSource dataSource) {
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setPersistenceXmlLocation("classpath:org/springframework/webflow/persistence/persistence.xml");

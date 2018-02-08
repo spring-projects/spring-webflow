@@ -99,7 +99,7 @@ public class JsfUtils {
 	private static final Map<Class<?>, String> FACTORY_NAMES;
 
 	static {
-		FACTORY_NAMES = new HashMap<Class<?>, String>();
+		FACTORY_NAMES = new HashMap<>();
 		FACTORY_NAMES.put(ApplicationFactory.class, FactoryFinder.APPLICATION_FACTORY);
 		FACTORY_NAMES.put(ExceptionHandlerFactory.class, FactoryFinder.EXCEPTION_HANDLER_FACTORY);
 		FACTORY_NAMES.put(ExternalContextFactory.class, FactoryFinder.EXTERNAL_CONTEXT_FACTORY);

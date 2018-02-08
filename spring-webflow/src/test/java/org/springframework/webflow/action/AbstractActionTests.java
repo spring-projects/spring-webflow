@@ -51,7 +51,7 @@ public class AbstractActionTests extends TestCase {
 
 	public void testNormalExecute() throws Exception {
 		action = new TestAbstractAction() {
-			protected Event doExecute(RequestContext context) throws Exception {
+			protected Event doExecute(RequestContext context) {
 				return success();
 			}
 		};
@@ -71,7 +71,7 @@ public class AbstractActionTests extends TestCase {
 
 	public void testPreExecuteShortCircuit() throws Exception {
 		action = new TestAbstractAction() {
-			protected Event doPreExecute(RequestContext context) throws Exception {
+			protected Event doPreExecute(RequestContext context) {
 				return success();
 			}
 		};

@@ -34,6 +34,6 @@ public interface TransitionCriteria {
 	 * @param context the flow execution request context
 	 * @return true if the transition should fire, false otherwise
 	 */
-	public boolean test(RequestContext context);
+	boolean test(RequestContext context);
 
 }

@@ -44,7 +44,7 @@ class NoOpConverter implements Converter {
 		return targetClass;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) {
 		return source;
 	}
 
@@ -52,8 +52,7 @@ class NoOpConverter implements Converter {
 		return true;
 	}
 
-	public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) throws Exception,
-			UnsupportedOperationException {
+	public Object convertTargetToSourceClass(Object target, Class<?> sourceClass) {
 		return target;
 	}
 }

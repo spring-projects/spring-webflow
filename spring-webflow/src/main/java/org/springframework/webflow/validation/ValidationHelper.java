@@ -192,31 +192,29 @@ public class ValidationHelper {
 	private boolean invokeValidateMethodForCurrentState(Object model) {
 		String methodName = "validate" + StringUtils.capitalize(requestContext.getCurrentState().getId());
 		// preferred
-		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName,
-				new Class[] { ValidationContext.class });
+		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, ValidationContext.class);
 		if (validateMethod != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking current state model validation method '" + methodName + "(ValidationContext)'");
 			}
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
-					requestContext, eventId, mappingResults) });
+			ReflectionUtils.invokeMethod(validateMethod, model, new DefaultValidationContext(requestContext, eventId, mappingResults));
 			return true;
 		}
 		// web flow 2.0.3 or < compatibility only
-		validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, new Class[] { MessageContext.class });
+		validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, MessageContext.class);
 		if (validateMethod != null) {
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { requestContext.getMessageContext() });
+			ReflectionUtils.invokeMethod(validateMethod, model, requestContext.getMessageContext());
 			return true;
 		}
 		// mvc 2 compatibility only
-		validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, new Class[] { Errors.class });
+		validateMethod = ReflectionUtils.findMethod(model.getClass(), methodName, Errors.class);
 		if (validateMethod != null) {
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 					model, expressionParser, messageCodesResolver, mappingResults);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking current state model validation method '" + methodName + "(Errors)'");
 			}
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { errors });
+			ReflectionUtils.invokeMethod(validateMethod, model, errors);
 			return true;
 		}
 		return false;
@@ -224,25 +222,23 @@ public class ValidationHelper {
 
 	private boolean invokeDefaultValidateMethod(Object model) {
 		// preferred
-		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), "validate",
-				new Class[] { ValidationContext.class });
+		Method validateMethod = ReflectionUtils.findMethod(model.getClass(), "validate", ValidationContext.class);
 		if (validateMethod != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking default model validation method 'validate(ValidationContext)'");
 			}
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { new DefaultValidationContext(
-					requestContext, eventId, mappingResults) });
+			ReflectionUtils.invokeMethod(validateMethod, model, new DefaultValidationContext(requestContext, eventId, mappingResults));
 			return true;
 		}
 		// mvc 2 compatibility only
-		validateMethod = ReflectionUtils.findMethod(model.getClass(), "validate", new Class[] { Errors.class });
+		validateMethod = ReflectionUtils.findMethod(model.getClass(), "validate", Errors.class);
 		if (validateMethod != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Invoking default model validation method 'validate(Errors)'");
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 					model, expressionParser, messageCodesResolver, mappingResults);
-			ReflectionUtils.invokeMethod(validateMethod, model, new Object[] { errors });
+			ReflectionUtils.invokeMethod(validateMethod, model, errors);
 			return true;
 		}
 		return false;
@@ -274,8 +270,8 @@ public class ValidationHelper {
 						+ ClassUtils.getShortName(validator.getClass()) + "." + methodName + "("
 						+ ClassUtils.getShortName(model.getClass()) + ", ValidationContext)'");
 			}
-			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-					new DefaultValidationContext(requestContext, eventId, mappingResults) });
+			ReflectionUtils.invokeMethod(validateMethod, validator, model,
+					new DefaultValidationContext(requestContext, eventId, mappingResults));
 			return true;
 		}
 		// mvc 2 compatibility only
@@ -288,14 +284,14 @@ public class ValidationHelper {
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 					model, expressionParser, messageCodesResolver, mappingResults);
-			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
+			ReflectionUtils.invokeMethod(validateMethod, validator, model, errors);
 			return true;
 		}
 		// web flow 2.0.0 to 2.0.3 compatibility only [to remove in web flow 3]
 		validateMethod = findValidationMethod(model, validator, methodName, MessageContext.class);
 		if (validateMethod != null) {
 			ReflectionUtils.invokeMethod(validateMethod, validator,
-					new Object[] { model, requestContext.getMessageContext() });
+					model, requestContext.getMessageContext());
 			return true;
 		}
 		return false;
@@ -339,8 +335,8 @@ public class ValidationHelper {
 				logger.debug("Invoking default validator method '" + ClassUtils.getShortName(validator.getClass())
 						+ ".validate(" + ClassUtils.getShortName(model.getClass()) + ", ValidationContext)'");
 			}
-			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model,
-					new DefaultValidationContext(requestContext, eventId, mappingResults) });
+			ReflectionUtils.invokeMethod(validateMethod, validator, model,
+					new DefaultValidationContext(requestContext, eventId, mappingResults));
 			return true;
 		}
 		// mvc 2 compatibility only
@@ -352,7 +348,7 @@ public class ValidationHelper {
 			}
 			MessageContextErrors errors = new MessageContextErrors(requestContext.getMessageContext(), modelName,
 					model, expressionParser, messageCodesResolver, mappingResults);
-			ReflectionUtils.invokeMethod(validateMethod, validator, new Object[] { model, errors });
+			ReflectionUtils.invokeMethod(validateMethod, validator, model, errors);
 			return true;
 		}
 		return false;
@@ -367,8 +363,7 @@ public class ValidationHelper {
 			modelClass = modelClass.getSuperclass();
 		}
 		for (Class<?> searchClass : modelSearchClasses) {
-			Method method = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] { searchClass,
-					context });
+			Method method = ReflectionUtils.findMethod(validator.getClass(), methodName, searchClass, context);
 			if (method != null) {
 				return method;
 			}

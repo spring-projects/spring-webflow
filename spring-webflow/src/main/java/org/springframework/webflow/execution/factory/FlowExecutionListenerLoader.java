@@ -32,5 +32,5 @@ public interface FlowExecutionListenerLoader {
 	 * @param flowDefinition the flow definition
 	 * @return the listeners that apply
 	 */
-	public FlowExecutionListener[] getListeners(FlowDefinition flowDefinition);
+	FlowExecutionListener[] getListeners(FlowDefinition flowDefinition);
 }

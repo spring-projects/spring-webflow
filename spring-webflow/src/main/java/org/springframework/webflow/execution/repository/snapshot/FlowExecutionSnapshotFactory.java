@@ -35,7 +35,7 @@ public interface FlowExecutionSnapshotFactory {
 	 * @return the new snapshot
 	 * @throws SnapshotCreationException if the snapshot could not be created
 	 */
-	public FlowExecutionSnapshot createSnapshot(FlowExecution flowExecution) throws SnapshotCreationException;
+	FlowExecutionSnapshot createSnapshot(FlowExecution flowExecution) throws SnapshotCreationException;
 
 	/**
 	 * Restores a flow execution from a previously taken snapshot.
@@ -47,7 +47,7 @@ public interface FlowExecutionSnapshotFactory {
 	 * @return the restored flow execution
 	 * @throws FlowExecutionRestorationFailureException if flow execution restoration fails
 	 */
-	public FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
+	FlowExecution restoreExecution(FlowExecutionSnapshot snapshot, String flowId, FlowExecutionKey key,
 			MutableAttributeMap<Object> conversationScope, FlowExecutionKeyFactory keyFactory)
 			throws FlowExecutionRestorationFailureException;
 }

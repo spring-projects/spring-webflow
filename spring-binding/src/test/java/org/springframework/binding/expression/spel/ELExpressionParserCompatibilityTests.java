@@ -44,7 +44,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 
 	private SpringELExpressionParser parser = new SpringELExpressionParser(new SpelExpressionParser());
 
-	protected void setUp() throws Exception {
+	protected void setUp() {
 		parser.addPropertyAccessor(new SpecialPropertyAccessor());
 	}
 
@@ -82,7 +82,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
 		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(Long.class));
-		assertEquals(new Long(7), exp.getValue(null));
+		assertEquals(7L, exp.getValue(null));
 	}
 
 	public void testParseBeanEvalExpressionNoParserContext() {
@@ -95,7 +95,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		String expressionString = "maximum";
 		Expression exp = parser
 				.parseExpression(expressionString, new FluentParserContext().expectResult(Integer.class));
-		assertEquals(new Integer(2), exp.getValue(new TestBean()));
+		assertEquals(2, exp.getValue(new TestBean()));
 	}
 
 	public void testParseEvalExpressionWithContextCustomELVariableResolver() {
@@ -198,11 +198,10 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 	}
 
 	private final class SpecialPropertyAccessor implements PropertyAccessor {
-		public void write(EvaluationContext context, Object target, String name, Object newValue)
-				throws AccessException {
+		public void write(EvaluationContext context, Object target, String name, Object newValue) {
 		}
 
-		public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
+		public TypedValue read(EvaluationContext context, Object target, String name) {
 			return new TypedValue("Custom resolver resolved this special property!",
 					TypeDescriptor.valueOf(String.class));
 		}
@@ -211,11 +210,11 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 			return null;
 		}
 
-		public boolean canWrite(EvaluationContext context, Object target, String name) throws AccessException {
+		public boolean canWrite(EvaluationContext context, Object target, String name) {
 			return false;
 		}
 
-		public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
+		public boolean canRead(EvaluationContext context, Object target, String name) {
 			return "specialProperty".equals(name);
 		}
 	}

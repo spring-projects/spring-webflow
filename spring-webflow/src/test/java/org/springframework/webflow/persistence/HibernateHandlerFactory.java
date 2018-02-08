@@ -18,12 +18,10 @@ package org.springframework.webflow.persistence;
 import java.io.Serializable;
 import javax.sql.DataSource;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.orm.hibernate5.HibernateCallback;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class HibernateHandlerFactory {
@@ -56,13 +54,9 @@ public class HibernateHandlerFactory {
 		}
 
 		public void templateExecuteWithNativeSession(final SessionCallback callback) {
-			template.executeWithNativeSession(new org.springframework.orm.hibernate5.HibernateCallback<Void>() {
-
-				@Override
-				public Void doInHibernate(Session session) throws HibernateException {
-					callback.doWithSession(session);
-					return null;
-				}
+			template.executeWithNativeSession((HibernateCallback<Void>) session -> {
+				callback.doWithSession(session);
+				return null;
 			});
 		}
 
@@ -75,11 +69,12 @@ public class HibernateHandlerFactory {
 		}
 
 		private SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-			org.springframework.orm.hibernate5.LocalSessionFactoryBean factory = new org.springframework.orm.hibernate5.LocalSessionFactoryBean();
+			org.springframework.orm.hibernate5.LocalSessionFactoryBean factory =
+					new org.springframework.orm.hibernate5.LocalSessionFactoryBean();
 			factory.setDataSource(dataSource);
-			factory.setMappingLocations(new Resource[] {
+			factory.setMappingLocations(
 					new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),
-					new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml") });
+					new ClassPathResource("org/springframework/webflow/persistence/TestAddress.hbm.xml"));
 			factory.afterPropertiesSet();
 			return factory.getObject();
 		}

@@ -41,5 +41,5 @@ public interface SharedMap<K, V> extends Map<K, V> {
 	 * 
 	 * @return the mutex
 	 */
-	public Object getMutex();
+	Object getMutex();
 }

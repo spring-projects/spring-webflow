@@ -29,20 +29,20 @@ public interface Model {
 	 * 
 	 * @return true if able to merge
 	 */
-	public boolean isMergeableWith(Model model);
+	boolean isMergeableWith(Model model);
 
 	/**
 	 * Merge the model into the current model
 	 * 
 	 * @param model the model to merge with
 	 */
-	public void merge(Model model);
+	void merge(Model model);
 
 	/**
 	 * Create a deep copy of this model. Needed when merging models and collections.
 	 * 
 	 * @return a deep copy of this model
 	 */
-	public Model createCopy();
+	Model createCopy();
 
 }
