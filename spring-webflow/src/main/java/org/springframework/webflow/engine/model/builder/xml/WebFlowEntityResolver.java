@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,16 +41,18 @@ import org.xml.sax.SAXException;
  */
 class WebFlowEntityResolver implements EntityResolver {
 
+	private static final String SPRING_WEBFLOW_XSD = "spring-webflow.xsd";
+
 	private static final String[] WEBFLOW_VERSIONS = new String[] { "spring-webflow-2.4", "spring-webflow-2.0" };
 
-	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-		if (systemId != null && systemId.indexOf("spring-webflow.xsd") > -1) {
-			return createInputSource(publicId, systemId, WEBFLOW_VERSIONS[0] + ".xsd");
+
+	public InputSource resolveEntity(String publicId, String systemId) {
+		if (systemId != null && systemId.contains(SPRING_WEBFLOW_XSD)) {
+			return createInputSource(publicId, systemId, SPRING_WEBFLOW_XSD);
 		}
 		for (String element : WEBFLOW_VERSIONS) {
 			if (systemId != null && systemId.indexOf(element) > systemId.lastIndexOf("/")) {
-				String fileName = systemId.substring(systemId.indexOf(element));
-				return createInputSource(publicId, systemId, fileName);
+				return createInputSource(publicId, systemId, SPRING_WEBFLOW_XSD);
 			}
 		}
 		// let the parser handle it

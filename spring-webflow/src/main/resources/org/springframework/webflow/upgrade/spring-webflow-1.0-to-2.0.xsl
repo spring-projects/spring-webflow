@@ -33,7 +33,7 @@
 				namespace="http://www.w3.org/2001/XMLSchema-instance">
                 <xsl:text>http://www.springframework.org/schema/webflow</xsl:text>
                 <xsl:text> </xsl:text>
-                <xsl:text>http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd</xsl:text>
+                <xsl:text>http://www.springframework.org/schema/webflow/spring-webflow.xsd</xsl:text>
             </xsl:attribute>
 			<xsl:if test="webflow:start-state">
 				<xsl:attribute name="start-state">

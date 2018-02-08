@@ -3,22 +3,23 @@
 	xmlns="http://www.springframework.org/schema/webflow-config"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:tool="http://www.springframework.org/schema/tool"
 	targetNamespace="http://www.springframework.org/schema/webflow-config"
-	elementFormDefault="qualified" attributeFormDefault="unqualified"
-	version="2.0">
-	
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
 	<xsd:annotation>
 		<xsd:documentation>
 			<![CDATA[
 Spring Web Flow Configuration Schema
-Authors: Keith Donald, Jeremy Grelle, Scott Andrews
+Authors: Keith Donald, Jeremy Grelle, Scott Andrews, Rossen Stoyanchev
 <br>
 A XML-based DSL for configuring the Spring Web Flow 2.0 system.
 ]]>
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" schemaLocation="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd" />
 
 	<xsd:element name="flow-registry">
 		<xsd:annotation>
@@ -223,6 +224,27 @@ The custom ViewFactoryCreator implementation to use produce ViewFactories capabl
 							</xsd:documentation>
 						</xsd:annotation>
 					</xsd:attribute>
+					<xsd:attribute name="validator">
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.validation.Validator">
+								<![CDATA[
+The bean name of the Validator that is to be used for validating a model declared on a view state.
+This attribute is not required, and only needs to be specified explicitly if a custom Validator needs to be configured.
+If not specified, JSR-303 validation will be installed if a JSR-303 provider is present on the classpath.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="validation-hint-resolver">
+						<xsd:annotation>
+							<xsd:documentation source="java:org.springframework.webflow.validation.ValidationHintResolver">
+								<![CDATA[
+The bean name of a ValidationHintResolver used to resolve String-based validation hints.
+This attribute is not required. The default implementation used is BeanValidationHintResolver.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
 					<xsd:attribute name="development" type="xsd:boolean">
 						<xsd:annotation>
 							<xsd:documentation>
@@ -312,11 +334,27 @@ The maximum number of persistent flow executions allowed per user session.  The 
 				<xsd:documentation>
 				<![CDATA[
 The maximum number of history snapshots allowed per flow execution.  The default is 30. 
-Setting this value to 0 disables the creation of snapshot copies altogether.  
+Setting the value to 0 disables the creation of snapshot copies altogether.
+Note that this attribute is meaningless when a custom ConversationManager is provided.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+		<xsd:attribute name="conversation-manager" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation source="java:org.springframework.webflow.conversation.ConversationManager"><![CDATA[
+The bean name of the ConversationManager to use to manage conversations.
+The default implementation stores conversations in the session.
+Note that when this attribute is provided, the "max-execution-snapshots" attribute is meaningless. 
+				]]></xsd:documentation>
+				<xsd:appinfo>
+					<tool:annotation kind="ref">
+						<tool:expected-type type="java:org.springframework.webflow.conversation.ConversationManager" />
+					</tool:annotation>
+				</xsd:appinfo>
+			</xsd:annotation>
+		</xsd:attribute>
+		
 	</xsd:complexType>
 
 	<xsd:complexType name="flowExecutionListenersType">
@@ -367,6 +405,16 @@ Determines if flow executions always redirect after they pause.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="redirect-in-same-state" type="redirectInSameStateType" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Determines if flow executions redirect after they pause for transitions that remain in the same view state.
+This attribute effectively overrides the value of the "always-redirect-on-pause" attribute in same state transitions.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 			<xsd:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded">
 				<xsd:annotation>
 					<xsd:documentation>
@@ -385,6 +433,19 @@ A single flow execution meta attribute.
 				<xsd:documentation>
 					<![CDATA[
 true = always redirect on pause; false = do not, only redirect when explicitly instructed by the flow definition.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="redirectInSameStateType">
+		<xsd:attribute name="value" type="xsd:boolean" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+true = redirect on pause for transitions that remain in the same view state; 
+false = do not redirect for transitions that remain in the same view state.
 ]]>
 				</xsd:documentation>
 			</xsd:annotation>

@@ -18,7 +18,7 @@
  * Defines the XmlFlowModelBuilder, for building FlowModels from XML-based resources.
  *
  * <p>This package also contains the definition of the XML-based flow definition language, defined within
- * {@code spring-webflow-2.4.xsd}.  See this schema for a detailed description of language elements.
+ * {@code spring-webflow.xsd}.  See this schema for a detailed description of language elements.
  */
 package org.springframework.webflow.engine.model.builder.xml;
 
