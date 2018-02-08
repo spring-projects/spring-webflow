@@ -23,7 +23,7 @@ public class TestBean {
 	private String value = "foo";
 	private int maximum = 2;
 	private TestBean bean;
-	private List<String> list = new ArrayList<String>();
+	private List<String> list = new ArrayList<>();
 
 	public TestBean() {
 		initList();

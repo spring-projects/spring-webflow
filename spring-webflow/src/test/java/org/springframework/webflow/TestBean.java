@@ -53,7 +53,7 @@ public class TestBean implements Serializable {
 
 	public Map<String, Object> getEmptyMap() {
 		if (emptyMap == null) {
-			emptyMap = new HashMap<String, Object>();
+			emptyMap = new HashMap<>();
 			emptyMap.put("foo", null);
 		}
 		return emptyMap;

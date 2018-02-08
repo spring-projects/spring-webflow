@@ -55,7 +55,7 @@ public class ContainedConversation implements Conversation, Serializable {
 		this.container = container;
 		this.id = id;
 		this.lock = lock;
-		this.attributes = new HashMap<Object, Object>();
+		this.attributes = new HashMap<>();
 	}
 
 	protected void setContainer(ConversationContainer container) {

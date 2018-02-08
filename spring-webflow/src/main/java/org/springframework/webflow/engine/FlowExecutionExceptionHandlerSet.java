@@ -37,7 +37,7 @@ public class FlowExecutionExceptionHandlerSet {
 	/**
 	 * The set of exception handlers.
 	 */
-	private List<FlowExecutionExceptionHandler> exceptionHandlers = new LinkedList<FlowExecutionExceptionHandler>();
+	private List<FlowExecutionExceptionHandler> exceptionHandlers = new LinkedList<>();
 
 	/**
 	 * Add a state exception handler to this set.

@@ -56,7 +56,7 @@ public class FlowPartialViewContext extends PartialViewContextWrapper {
 			RequestContext requestContext = RequestContextHolder.getRequestContext();
 			String[] fragmentIds = (String[]) requestContext.getFlashScope().get(View.RENDER_FRAGMENTS_ATTRIBUTE);
 			if (fragmentIds != null && fragmentIds.length > 0) {
-				return new ArrayList<String>(Arrays.asList(fragmentIds));
+				return new ArrayList<>(Arrays.asList(fragmentIds));
 			}
 		}
 		return getWrapped().getRenderIds();

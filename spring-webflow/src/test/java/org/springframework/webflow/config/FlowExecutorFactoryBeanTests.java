@@ -60,7 +60,7 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 				return flow;
 			}
 		});
-		Set<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>();
+		Set<FlowElementAttribute> attributes = new HashSet<>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
 		factoryBean.setFlowExecutionAttributes(attributes);
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {

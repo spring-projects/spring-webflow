@@ -32,11 +32,11 @@ import javax.faces.context.ExternalContext;
 
 public class MockJsfExternalContext extends ExternalContext {
 
-	private final Map<String, Object> applicationMap = new HashMap<String, Object>();
+	private final Map<String, Object> applicationMap = new HashMap<>();
 
-	private final Map<String, Object> sessionMap = new HashMap<String, Object>();
+	private final Map<String, Object> sessionMap = new HashMap<>();
 
-	private Map<String, Object> requestMap = new HashMap<String, Object>();
+	private Map<String, Object> requestMap = new HashMap<>();
 
 	private Map<String, String> requestParameterMap = Collections.emptyMap();
 

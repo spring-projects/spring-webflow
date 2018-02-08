@@ -31,7 +31,7 @@ public class LocalParameterMapTests extends TestCase {
 	private LocalParameterMap parameterMap;
 
 	public void setUp() {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("string", "A string");
 		map.put("integer", "12345");
 		map.put("boolean", "true");
@@ -241,7 +241,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testEquality() {
-		LocalParameterMap map1 = new LocalParameterMap(new HashMap<String, Object>(parameterMap.asMap()));
+		LocalParameterMap map1 = new LocalParameterMap(new HashMap<>(parameterMap.asMap()));
 		assertEquals(parameterMap, map1);
 	}
 

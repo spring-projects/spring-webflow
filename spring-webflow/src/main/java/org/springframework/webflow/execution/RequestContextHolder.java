@@ -30,7 +30,7 @@ import org.springframework.core.NamedThreadLocal;
  */
 public class RequestContextHolder {
 
-	private static final ThreadLocal<RequestContext> requestContextHolder = new NamedThreadLocal<RequestContext>(
+	private static final ThreadLocal<RequestContext> requestContextHolder = new NamedThreadLocal<>(
 			"Flow RequestContext");
 
 	/**

@@ -68,7 +68,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 
 	private static final Map<Severity, FacesMessage.Severity> SPRING_SEVERITY_TO_FACES;
 	static {
-		SPRING_SEVERITY_TO_FACES = new HashMap<Severity, FacesMessage.Severity>();
+		SPRING_SEVERITY_TO_FACES = new HashMap<>();
 		SPRING_SEVERITY_TO_FACES.put(Severity.INFO, FacesMessage.SEVERITY_INFO);
 		SPRING_SEVERITY_TO_FACES.put(Severity.WARNING, FacesMessage.SEVERITY_WARN);
 		SPRING_SEVERITY_TO_FACES.put(Severity.ERROR, FacesMessage.SEVERITY_ERROR);
@@ -77,7 +77,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 
 	private static final Map<FacesMessage.Severity, Severity> FACES_SEVERITY_TO_SPRING;
 	static {
-		FACES_SEVERITY_TO_SPRING = new HashMap<FacesMessage.Severity, Severity>();
+		FACES_SEVERITY_TO_SPRING = new HashMap<>();
 		for (Map.Entry<Severity, FacesMessage.Severity> entry : SPRING_SEVERITY_TO_FACES.entrySet()) {
 			FACES_SEVERITY_TO_SPRING.put(entry.getValue(), entry.getKey());
 		}
@@ -167,7 +167,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * Returns an Iterator for all component clientId's for which messages have been added.
 	 */
 	public Iterator<String> getClientIdsWithMessages() {
-		Set<String> clientIds = new LinkedHashSet<String>();
+		Set<String> clientIds = new LinkedHashSet<>();
 		for (Message message : this.context.getMessageContext().getAllMessages()) {
 			Object source = message.getSource();
 			if (source != null && source instanceof String) {
@@ -243,7 +243,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 		if (messages == null || messages.length == 0) {
 			return Collections.emptyList();
 		}
-		List<FacesMessage> facesMessages = new ArrayList<FacesMessage>();
+		List<FacesMessage> facesMessages = new ArrayList<>();
 		for (Message message : messages) {
 			facesMessages.add(asFacesMessage(message));
 		}

@@ -27,7 +27,7 @@ public class TestBean {
 
 	private Date date;
 
-	private List<Object> list = new ArrayList<Object>();
+	private List<Object> list = new ArrayList<>();
 
 	public boolean isFlag() {
 		return flag;

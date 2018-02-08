@@ -50,7 +50,7 @@ public class DefaultMappingContext {
 	public DefaultMappingContext(Object source, Object target) {
 		this.source = source;
 		this.target = target;
-		this.mappingResults = new ArrayList<MappingResult>();
+		this.mappingResults = new ArrayList<>();
 	}
 
 	/**

@@ -82,7 +82,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private FlowModel flowModel;
 
-	private final List<FlowModelHolder> parentHolders = new ArrayList<FlowModelHolder>(4);
+	private final List<FlowModelHolder> parentHolders = new ArrayList<>(4);
 
 	/**
 	 * Create a new XML flow model builder that will parse the XML document at the specified resource location and use
@@ -228,7 +228,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (attributeElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<AttributeModel> attributes = new LinkedList<AttributeModel>();
+		LinkedList<AttributeModel> attributes = new LinkedList<>();
 		for (Element element2 : attributeElements) {
 			attributes.add(parseAttribute(element2));
 		}
@@ -240,7 +240,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (varElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<VarModel> vars = new LinkedList<VarModel>();
+		LinkedList<VarModel> vars = new LinkedList<>();
 		for (Element element2 : varElements) {
 			vars.add(parseVar(element2));
 		}
@@ -252,7 +252,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (inputElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<InputModel> inputs = new LinkedList<InputModel>();
+		LinkedList<InputModel> inputs = new LinkedList<>();
 		for (Element element2 : inputElements) {
 			inputs.add(parseInput(element2));
 		}
@@ -264,7 +264,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (outputElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<OutputModel> outputs = new LinkedList<OutputModel>();
+		LinkedList<OutputModel> outputs = new LinkedList<>();
 		for (Element element2 : outputElements) {
 			outputs.add(parseOutput(element2));
 		}
@@ -277,7 +277,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (actionElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<AbstractActionModel> actions = new LinkedList<AbstractActionModel>();
+		LinkedList<AbstractActionModel> actions = new LinkedList<>();
 		for (Element element2 : actionElements) {
 			actions.add(parseAction(element2));
 		}
@@ -290,7 +290,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (stateElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<AbstractStateModel> states = new LinkedList<AbstractStateModel>();
+		LinkedList<AbstractStateModel> states = new LinkedList<>();
 		for (Element element2 : stateElements) {
 			states.add(parseState(element2));
 		}
@@ -302,7 +302,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (transitionElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<TransitionModel> transitions = new LinkedList<TransitionModel>();
+		LinkedList<TransitionModel> transitions = new LinkedList<>();
 		for (Element element2 : transitionElements) {
 			transitions.add(parseTransition(element2));
 		}
@@ -314,7 +314,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (exceptionHandlerElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<ExceptionHandlerModel> exceptionHandlers = new LinkedList<ExceptionHandlerModel>();
+		LinkedList<ExceptionHandlerModel> exceptionHandlers = new LinkedList<>();
 		for (Element element2 : exceptionHandlerElements) {
 			exceptionHandlers.add(parseExceptionHandler(element2));
 		}
@@ -326,7 +326,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (importElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<BeanImportModel> beanImports = new LinkedList<BeanImportModel>();
+		LinkedList<BeanImportModel> beanImports = new LinkedList<>();
 		for (Element element2 : importElements) {
 			beanImports.add(parseBeanImport(element2));
 		}
@@ -338,7 +338,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (ifElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<IfModel> ifs = new LinkedList<IfModel>();
+		LinkedList<IfModel> ifs = new LinkedList<>();
 		for (Element element2 : ifElements) {
 			ifs.add(parseIf(element2));
 		}
@@ -511,7 +511,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (bindingElements.isEmpty()) {
 			return null;
 		}
-		LinkedList<BindingModel> bindings = new LinkedList<BindingModel>();
+		LinkedList<BindingModel> bindings = new LinkedList<>();
 		for (Element element2 : bindingElements) {
 			bindings.add(parseBinding(element2));
 		}

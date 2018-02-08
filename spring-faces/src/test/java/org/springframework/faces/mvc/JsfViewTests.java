@@ -47,7 +47,7 @@ public class JsfViewTests extends TestCase {
 		JsfView view = (JsfView) this.resolver.resolveViewName("intro", new Locale("EN"));
 		view.setApplicationContext(new StaticWebApplicationContext());
 		view.setServletContext(new MockServletContext());
-		view.render(new HashMap<String, Object>(), new MockHttpServletRequest(), new MockHttpServletResponse());
+		view.render(new HashMap<>(), new MockHttpServletRequest(), new MockHttpServletResponse());
 	}
 
 	private class ResourceCheckingViewHandler extends MockViewHandler {

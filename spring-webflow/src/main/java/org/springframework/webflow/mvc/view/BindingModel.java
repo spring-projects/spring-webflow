@@ -288,7 +288,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		if (messages == null || messages.length == 0) {
 			return Collections.emptyList();
 		}
-		ArrayList<T> errors = new ArrayList<T>(messages.length);
+		ArrayList<T> errors = new ArrayList<>(messages.length);
 		for (Message message : messages) {
 			T error = errorFactory.get(objectName, message);
 			if (error != null) {

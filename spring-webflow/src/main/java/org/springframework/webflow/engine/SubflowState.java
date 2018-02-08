@@ -92,7 +92,7 @@ public class SubflowState extends TransitionableState {
 		if (subflowAttributeMapper != null) {
 			flowInput = subflowAttributeMapper.createSubflowInput(context);
 		} else {
-			flowInput = new LocalAttributeMap<Object>();
+			flowInput = new LocalAttributeMap<>();
 		}
 		Flow subflow = (Flow) this.subflow.getValue(context);
 		if (logger.isDebugEnabled()) {

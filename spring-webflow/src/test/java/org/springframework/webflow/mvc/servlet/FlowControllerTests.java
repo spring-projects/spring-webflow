@@ -80,7 +80,7 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
 		executor.launchExecution("foo", null, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -99,7 +99,7 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("POST");
 		request.addParameter("execution", "12345");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		executor.resumeExecution("12345", context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "123456");
@@ -117,10 +117,10 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("POST");
 		request.addParameter("execution", "12345");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		executor.resumeExecution("12345", context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -181,7 +181,7 @@ public class FlowControllerTests extends TestCase {
 		request.addParameter("ajaxSource", "this");
 		context.setAjaxRequest(true);
 		context.requestFlowExecutionRedirect();
-		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<>();
 		inputMap.put("ajaxSource", "this");
 		executor.launchExecution("foo", inputMap, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
@@ -202,11 +202,11 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		input.put("baz", "boop");
 		context.requestFlowDefinitionRedirect("bar", input);
 		executor.launchExecution("foo", null, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -275,7 +275,7 @@ public class FlowControllerTests extends TestCase {
 	}
 
 	public void testLaunchFlowWithCustomFlowHandler() throws Exception {
-		final LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
+		final LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		input.put("bar", "boop");
 		controller.registerFlowHandler(new FlowHandler() {
 			public String getFlowId() {
@@ -310,7 +310,7 @@ public class FlowControllerTests extends TestCase {
 	}
 
 	public void testHandleFlowOutcomeCustomFlowHandler() throws Exception {
-		final LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
+		final LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		input.put("bar", "boop");
 		controller.registerFlowHandler(new FlowHandler() {
 			public String getFlowId() {
@@ -340,7 +340,7 @@ public class FlowControllerTests extends TestCase {
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
 		executor.launchExecution("foo", input, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);

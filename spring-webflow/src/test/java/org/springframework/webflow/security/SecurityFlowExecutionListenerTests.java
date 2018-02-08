@@ -118,7 +118,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection<String> attributes = new HashSet<String>();
+		Collection<String> attributes = new HashSet<>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_A");
 		rule.setAttributes(attributes);
@@ -128,7 +128,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAnyDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ANY);
-		Collection<String> attributes = new HashSet<String>();
+		Collection<String> attributes = new HashSet<>();
 		attributes.add("ROLE_A");
 		attributes.add("ROLE_B");
 		rule.setAttributes(attributes);
@@ -138,7 +138,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAllAuthorized() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection<String> attributes = new HashSet<String>();
+		Collection<String> attributes = new HashSet<>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_3");
 		rule.setAttributes(attributes);
@@ -148,7 +148,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 	private SecurityRule getSecurityRuleAllDenied() {
 		SecurityRule rule = new SecurityRule();
 		rule.setComparisonType(SecurityRule.COMPARISON_ALL);
-		Collection<String> attributes = new HashSet<String>();
+		Collection<String> attributes = new HashSet<>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_A");
 		rule.setAttributes(attributes);

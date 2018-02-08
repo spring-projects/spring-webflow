@@ -98,7 +98,7 @@ public class AjaxTiles3View extends TilesView {
 
 			Definition compositeDefinition = container.getDefinitionsFactory().getDefinition(getUrl(), tilesRequest);
 
-			Map<String, Attribute> flattenedAttributeMap = new HashMap<String, Attribute>();
+			Map<String, Attribute> flattenedAttributeMap = new HashMap<>();
 			flattenAttributeMap(container, tilesRequest, flattenedAttributeMap, compositeDefinition);
 			addRuntimeAttributes(container, tilesRequest, flattenedAttributeMap);
 
@@ -143,7 +143,7 @@ public class AjaxTiles3View extends TilesView {
 	protected void flattenAttributeMap(BasicTilesContainer container, Request tilesRequest,
 			Map<String, Attribute> resultMap, Definition definition) {
 
-		Set<String> attributeNames = new HashSet<String>();
+		Set<String> attributeNames = new HashSet<>();
 		if (definition.getLocalAttributeNames() != null) {
 			attributeNames.addAll(definition.getLocalAttributeNames());
 		}
@@ -179,7 +179,7 @@ public class AjaxTiles3View extends TilesView {
 			Request tilesRequest, Map<String, Attribute> resultMap) {
 
 		AttributeContext attributeContext = container.getAttributeContext(tilesRequest);
-		Set<String> attributeNames = new HashSet<String>();
+		Set<String> attributeNames = new HashSet<>();
 		if (attributeContext.getLocalAttributeNames() != null) {
 			attributeNames.addAll(attributeContext.getLocalAttributeNames());
 		}

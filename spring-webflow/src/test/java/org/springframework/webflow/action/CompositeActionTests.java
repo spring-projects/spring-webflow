@@ -44,7 +44,7 @@ public class CompositeActionTests extends TestCase {
 
 	public void testDoExecute() throws Exception {
 		MockRequestContext mockRequestContext = new MockRequestContext();
-		LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
 		attributes.put("some key", "some value");
 		EasyMock.expect(actionMock.execute(mockRequestContext)).andReturn(new Event(this, "some event", attributes));
 		EasyMock.replay(new Object[] { actionMock });

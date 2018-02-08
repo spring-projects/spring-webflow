@@ -69,7 +69,7 @@ public class DefaultMappingResults implements MappingResults {
 	}
 
 	public List<MappingResult> getErrorResults() {
-		List<MappingResult> errorResults = new ArrayList<MappingResult>();
+		List<MappingResult> errorResults = new ArrayList<>();
 		for (MappingResult result : mappingResults) {
 			if (result.isError()) {
 				errorResults.add(result);
@@ -79,7 +79,7 @@ public class DefaultMappingResults implements MappingResults {
 	}
 
 	public List<MappingResult> getResults(MappingResultsCriteria criteria) {
-		List<MappingResult> results = new ArrayList<MappingResult>();
+		List<MappingResult> results = new ArrayList<>();
 		for (MappingResult result : mappingResults) {
 			if (criteria.test(result)) {
 				results.add(result);

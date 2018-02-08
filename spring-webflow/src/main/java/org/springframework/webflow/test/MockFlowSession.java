@@ -44,7 +44,7 @@ public class MockFlowSession implements FlowSession {
 
 	private State state;
 
-	private MutableAttributeMap<Object> scope = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> scope = new LocalAttributeMap<>();
 
 	private FlowSession parent;
 
@@ -181,7 +181,7 @@ public class MockFlowSession implements FlowSession {
 	// internal helpers
 
 	private void initViewScope() {
-		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap<Object>());
+		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap<>());
 	}
 
 	private void destroyViewScope() {

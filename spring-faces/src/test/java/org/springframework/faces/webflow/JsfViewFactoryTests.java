@@ -54,7 +54,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private final RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	private final LocalAttributeMap<Object> flashMap = new LocalAttributeMap<Object>();
+	private final LocalAttributeMap<Object> flashMap = new LocalAttributeMap<>();
 
 	private final ViewHandler viewHandler = new MockViewHandler();
 
@@ -81,7 +81,7 @@ public class JsfViewFactoryTests extends TestCase {
 		EasyMock.expect(this.context.getFlashScope()).andStubReturn(this.flashMap);
 		EasyMock.expect(this.context.getExternalContext()).andStubReturn(this.extContext);
 		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(
-				new LocalParameterMap(new HashMap<String, Object>()));
+				new LocalParameterMap(new HashMap<>()));
 	}
 
 	protected void tearDown() throws Exception {
@@ -302,7 +302,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private final List<String> phaseCallbacks = new ArrayList<String>();
+		private final List<String> phaseCallbacks = new ArrayList<>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();

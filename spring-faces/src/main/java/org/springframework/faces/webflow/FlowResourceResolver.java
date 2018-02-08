@@ -48,7 +48,7 @@ public class FlowResourceResolver extends ResourceResolver {
 	 */
 	private static final List<String> RESOLVERS_CLASSES;
 	static {
-		List<String> resolvers = new ArrayList<String>();
+		List<String> resolvers = new ArrayList<>();
 		resolvers.add("com.sun.faces.facelets.impl.DefaultResourceResolver");
 		resolvers.add("org.apache.myfaces.view.facelets.impl.DefaultResourceResolver");
 		RESOLVERS_CLASSES = Collections.unmodifiableList(resolvers);

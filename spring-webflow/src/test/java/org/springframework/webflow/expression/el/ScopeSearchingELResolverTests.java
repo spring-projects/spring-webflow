@@ -229,7 +229,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 	}
 
 	protected List<ELResolver> getCustomResolvers() {
-		List<ELResolver> resolvers = new ArrayList<ELResolver>();
+		List<ELResolver> resolvers = new ArrayList<>();
 		resolvers.add(new ScopeSearchingELResolver());
 		return resolvers;
 	}

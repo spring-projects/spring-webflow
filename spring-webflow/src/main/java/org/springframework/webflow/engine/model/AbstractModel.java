@@ -101,7 +101,7 @@ public abstract class AbstractModel implements Model {
 			return child;
 		}
 		if (!addAtEnd) {
-			parent = new LinkedList<T>(parent);
+			parent = new LinkedList<>(parent);
 			Collections.reverse(parent);
 		}
 		for (T parentModel : parent) {
@@ -138,7 +138,7 @@ public abstract class AbstractModel implements Model {
 		if (list == null) {
 			return null;
 		}
-		LinkedList<T> copy = new LinkedList<T>();
+		LinkedList<T> copy = new LinkedList<>();
 		for (T model : list) {
 			copy.add((T) model.createCopy());
 		}

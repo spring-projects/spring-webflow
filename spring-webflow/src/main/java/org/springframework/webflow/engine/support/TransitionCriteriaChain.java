@@ -36,7 +36,7 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 	/**
 	 * The ordered chain of TransitionCriteria objects.
 	 */
-	private List<TransitionCriteria> criteriaChain = new LinkedList<TransitionCriteria>();
+	private List<TransitionCriteria> criteriaChain = new LinkedList<>();
 
 	/**
 	 * Creates an initially empty transition criteria chain.

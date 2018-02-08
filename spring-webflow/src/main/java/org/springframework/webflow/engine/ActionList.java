@@ -43,7 +43,7 @@ public class ActionList implements Iterable<Action> {
 	/**
 	 * The lists of actions.
 	 */
-	private List<Action> actions = new LinkedList<Action>();
+	private List<Action> actions = new LinkedList<>();
 
 	/**
 	 * Add an action to this list.

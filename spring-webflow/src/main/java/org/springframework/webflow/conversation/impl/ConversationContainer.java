@@ -65,7 +65,7 @@ public class ConversationContainer implements Serializable {
 	public ConversationContainer(int maxConversations, String sessionKey) {
 		this.maxConversations = maxConversations;
 		this.sessionKey = sessionKey;
-		this.conversations = new CopyOnWriteArrayList<ContainedConversation>();
+		this.conversations = new CopyOnWriteArrayList<>();
 	}
 
 	/**

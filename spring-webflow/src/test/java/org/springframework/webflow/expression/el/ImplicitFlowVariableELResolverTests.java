@@ -23,7 +23,7 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolverTestCase {
 
-	private static final List<String> vars = new ArrayList<String>();
+	private static final List<String> vars = new ArrayList<>();
 	{
 		vars.add("requestParameters");
 		vars.add("requestScope");
@@ -256,7 +256,7 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 	}
 
 	protected List<ELResolver> getCustomResolvers() {
-		List<ELResolver> resolvers = new ArrayList<ELResolver>();
+		List<ELResolver> resolvers = new ArrayList<>();
 		resolvers.add(new ImplicitFlowVariableELResolver());
 		return resolvers;
 	}

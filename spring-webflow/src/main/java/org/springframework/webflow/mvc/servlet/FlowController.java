@@ -44,7 +44,7 @@ public class FlowController implements Controller, ApplicationContextAware, Init
 
 	private FlowHandlerAdapter flowHandlerAdapter;
 
-	private Map<String, FlowHandler> flowHandlers = new HashMap<String, FlowHandler>();
+	private Map<String, FlowHandler> flowHandlers = new HashMap<>();
 
 	private boolean customFlowHandlerAdapterSet;
 

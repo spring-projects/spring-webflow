@@ -27,7 +27,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 	private WebFlowELExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
 	public void testResolveMap() {
-		LocalAttributeMap<Object> map = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
 		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(AttributeMap.class));
 		Expression exp2 = parser.parseExpression("bogus", new FluentParserContext().evaluate(AttributeMap.class));
@@ -36,7 +36,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 	}
 
 	public void testSetMap() {
-		LocalAttributeMap<Object> map = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
 		Expression exp = parser.parseExpression("foo", new FluentParserContext().evaluate(MutableAttributeMap.class));
 		Expression exp2 = parser
@@ -173,7 +173,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 
 	public void testResolveEventAttributes() {
 		MockRequestContext context = new MockRequestContext();
-		LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
 		attributes.put("foo", "bar");
 		context.setCurrentEvent(new Event(this, "event", attributes));
 		Expression exp = parser.parseExpression("currentEvent.attributes.foo",

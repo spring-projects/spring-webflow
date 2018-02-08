@@ -38,7 +38,7 @@ public class CollectionUtils {
 	/**
 	 * The shared, singleton empty attribute map instance.
 	 */
-	public static final AttributeMap<Object> EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap<Object>(
+	public static final AttributeMap<Object> EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap<>(
 			Collections.<String, Object> emptyMap());
 
 	/**
@@ -58,7 +58,7 @@ public class CollectionUtils {
 	 * @return the iterator
 	 */
 	public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
-		return new EnumerationIterator<E>(enumeration);
+		return new EnumerationIterator<>(enumeration);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class CollectionUtils {
 	 * @return the unmodifiable map with a single element
 	 */
 	public static <V> AttributeMap<V> singleEntryMap(String attributeName, V attributeValue) {
-		return new LocalAttributeMap<V>(attributeName, attributeValue);
+		return new LocalAttributeMap<>(attributeName, attributeValue);
 	}
 
 	/**

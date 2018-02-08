@@ -49,7 +49,7 @@ public class DefaultMapperTests extends TestCase {
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("beep", null), parser.parseExpression(
 				"beep", null));
 		mapper.addMapping(mapping1);
-		Map<String, String> bean1 = new HashMap<String, String>();
+		Map<String, String> bean1 = new HashMap<>();
 		bean1.put("beep", "en");
 		TestBean2 bean2 = new TestBean2();
 		MappingResults results = mapper.map(bean1, bean2);
@@ -61,7 +61,7 @@ public class DefaultMapperTests extends TestCase {
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("boop", null), parser.parseExpression(
 				"boop", null));
 		mapper.addMapping(mapping1);
-		Map<String, String> bean1 = new HashMap<String, String>();
+		Map<String, String> bean1 = new HashMap<>();
 		bean1.put("boop", "bogus");
 		TestBean2 bean2 = new TestBean2();
 		MappingResults results = mapper.map(bean1, bean2);

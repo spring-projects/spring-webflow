@@ -80,7 +80,7 @@ public class MessageContextErrorsTests extends TestCase {
 	}
 
 	public void testAddAllErrors() {
-		MapBindingResult result = new MapBindingResult(new HashMap<Object, Object>(), "object");
+		MapBindingResult result = new MapBindingResult(new HashMap<>(), "object");
 		result.reject("bar", new Object[] { "boop" }, null);
 		result.rejectValue("field", "bar", new Object[] { "boop" }, null);
 		errors.addAllErrors(result);

@@ -308,7 +308,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (parameterMap.size() == 0) {
 			return null;
 		}
-		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>(parameterMap.size(), 1);
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<>(parameterMap.size(), 1);
 		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 			String[] values = entry.getValue();
 			inputMap.put(entry.getKey(), values.length == 1 ? values[0] : values);

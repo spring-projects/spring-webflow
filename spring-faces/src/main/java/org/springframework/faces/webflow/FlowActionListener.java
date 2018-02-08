@@ -107,7 +107,7 @@ public class FlowActionListener implements ActionListener {
 			if (requestContext.getMessageContext().hasErrorMessages()) {
 				isValid = false;
 				if (requestContext.getExternalContext().isAjaxRequest()) {
-					List<String> fragments = new ArrayList<String>();
+					List<String> fragments = new ArrayList<>();
 					String formId = getModelExpression(requestContext).getExpressionString();
 					if (facesContext.getViewRoot().findComponent(formId) != null) {
 						fragments.add(formId);

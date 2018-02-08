@@ -68,7 +68,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 	}
 
 	private <T> LinkedList<T> asList(Class<T> elementClass, T... a) {
-		return new LinkedList<T>(Arrays.asList(a));
+		return new LinkedList<>(Arrays.asList(a));
 	}
 
 	public void testBuildFlowWithEndState() {
@@ -143,7 +143,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 		FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 		FlowExecution execution = factory.createFlowExecution(flow);
 		MockExternalContext context = new MockExternalContext();
-		MutableAttributeMap<Object> map = new LocalAttributeMap<Object>();
+		MutableAttributeMap<Object> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
 		map.put("number", "3");
 		map.put("required", "9");

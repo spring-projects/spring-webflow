@@ -36,7 +36,7 @@ public class TransitionSet implements Iterable<Transition> {
 	/**
 	 * The set of transitions.
 	 */
-	private List<Transition> transitions = new LinkedList<Transition>();
+	private List<Transition> transitions = new LinkedList<>();
 
 	/**
 	 * Add a transition to this set.

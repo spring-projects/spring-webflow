@@ -72,6 +72,6 @@ public class HttpSessionMapBindingListener implements HttpSessionBindingListener
 	 * Create a attribute map binding event for given HTTP session binding event.
 	 */
 	private AttributeMapBindingEvent getContextBindingEvent(HttpSessionBindingEvent event) {
-		return new AttributeMapBindingEvent(new LocalAttributeMap<Object>(sessionMap), event.getName(), listener);
+		return new AttributeMapBindingEvent(new LocalAttributeMap<>(sessionMap), event.getName(), listener);
 	}
 }

@@ -119,7 +119,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	}
 
 	private AbstractAccessDecisionManager createManagerWithSpringSecurity3(SecurityRule rule) {
-		List<AccessDecisionVoter> voters = new ArrayList<AccessDecisionVoter>();
+		List<AccessDecisionVoter> voters = new ArrayList<>();
 		voters.add(new RoleVoter());
 		Class<?> managerType;
 		if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
@@ -146,7 +146,7 @@ public class SecurityFlowExecutionListener extends FlowExecutionListenerAdapter 
 	 * @return list of ConfigAttributes for Spring Security
 	 */
 	protected Collection<ConfigAttribute> getConfigAttributes(SecurityRule rule) {
-		List<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
+		List<ConfigAttribute> configAttributes = new ArrayList<>();
 		for (String attribute : rule.getAttributes()) {
 			configAttributes.add(new SecurityConfig(attribute));
 		}

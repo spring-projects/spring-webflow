@@ -241,7 +241,7 @@ public class ServletExternalContext implements ExternalContext {
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException {
 		assertResponseAllowed();
 		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = new LocalAttributeMap<Object>();
+		flowDefinitionRedirectFlowInput = new LocalAttributeMap<>();
 		if (input != null) {
 			flowDefinitionRedirectFlowInput.putAll(input);
 		}
@@ -354,9 +354,9 @@ public class ServletExternalContext implements ExternalContext {
 		this.request = request;
 		this.response = response;
 		this.requestParameterMap = new LocalParameterMap(new HttpServletRequestParameterMap(request));
-		this.requestMap = new LocalAttributeMap<Object>(new HttpServletRequestMap(request));
-		this.sessionMap = new LocalSharedAttributeMap<Object>(new HttpSessionMap(request));
-		this.applicationMap = new LocalSharedAttributeMap<Object>(new HttpServletContextMap(context));
+		this.requestMap = new LocalAttributeMap<>(new HttpServletRequestMap(request));
+		this.sessionMap = new LocalSharedAttributeMap<>(new HttpSessionMap(request));
+		this.applicationMap = new LocalSharedAttributeMap<>(new HttpServletContextMap(context));
 		this.flowUrlHandler = flowUrlHandler;
 	}
 

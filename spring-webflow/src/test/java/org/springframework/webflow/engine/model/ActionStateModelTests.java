@@ -44,7 +44,7 @@ public class ActionStateModelTests extends TestCase {
 		ActionStateModel child = new ActionStateModel("child");
 		ActionStateModel parent = new ActionStateModel("parent");
 
-		LinkedList<AbstractActionModel> actions = new LinkedList<AbstractActionModel>();
+		LinkedList<AbstractActionModel> actions = new LinkedList<>();
 		EvaluateModel eval = new EvaluateModel("foo.bar");
 		actions.add(eval);
 		parent.setActions(actions);

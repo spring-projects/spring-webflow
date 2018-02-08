@@ -51,7 +51,7 @@ class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBean
 	 * criteria
 	 */
 	private Map<RuntimeBeanReference, String> parseListenersWithCriteria(List<Element> listeners) {
-		Map<RuntimeBeanReference, String> listenersWithCriteria = new ManagedMap<RuntimeBeanReference, String>(
+		Map<RuntimeBeanReference, String> listenersWithCriteria = new ManagedMap<>(
 				listeners.size());
 		for (Element listenerElement : listeners) {
 			RuntimeBeanReference ref = new RuntimeBeanReference(listenerElement.getAttribute("ref"));

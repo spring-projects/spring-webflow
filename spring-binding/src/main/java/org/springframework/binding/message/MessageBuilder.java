@@ -44,11 +44,11 @@ public class MessageBuilder {
 
 	private Object source;
 
-	private Set<String> codes = new LinkedHashSet<String>();
+	private Set<String> codes = new LinkedHashSet<>();
 
 	private Severity severity;
 
-	private List<Object> args = new ArrayList<Object>();
+	private List<Object> args = new ArrayList<>();
 
 	private String defaultText;
 

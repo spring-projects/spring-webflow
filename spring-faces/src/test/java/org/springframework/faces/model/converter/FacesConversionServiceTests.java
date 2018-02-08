@@ -18,7 +18,7 @@ public class FacesConversionServiceTests extends TestCase {
 
 	public void testGetAbstractType() {
 		ConversionExecutor executor = this.service.getConversionExecutor(List.class, DataModel.class);
-		ArrayList<Object> list = new ArrayList<Object>();
+		ArrayList<Object> list = new ArrayList<>();
 		list.add("foo");
 		executor.execute(list);
 	}

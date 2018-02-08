@@ -76,10 +76,10 @@ public class JsfFinalResponseActionTests extends TestCase {
 		ext.setNativeRequest(new MockHttpServletRequest());
 		ext.setNativeResponse(new MockHttpServletResponse());
 		EasyMock.expect(this.context.getExternalContext()).andStubReturn(ext);
-		LocalAttributeMap<Object> requestMap = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> requestMap = new LocalAttributeMap<>();
 		EasyMock.expect(this.context.getFlashScope()).andStubReturn(requestMap);
 		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(
-				new LocalParameterMap(new HashMap<String, Object>()));
+				new LocalParameterMap(new HashMap<>()));
 	}
 
 	public void testRender() throws Exception {
@@ -119,7 +119,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private final List<String> phaseCallbacks = new ArrayList<String>();
+		private final List<String> phaseCallbacks = new ArrayList<>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();

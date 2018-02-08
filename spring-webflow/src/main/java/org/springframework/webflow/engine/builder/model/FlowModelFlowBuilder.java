@@ -314,7 +314,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private Resource[] parseContextResources(List<BeanImportModel> beanImports) {
 		if (beanImports != null && !beanImports.isEmpty()) {
 			Resource flowResource = flowModelHolder.getFlowModelResource();
-			List<Resource> resources = new ArrayList<Resource>(beanImports.size());
+			List<Resource> resources = new ArrayList<>(beanImports.size());
 			for (BeanImportModel beanImport : getFlowModel().getBeanImports()) {
 				try {
 					resources.add(flowResource.createRelative(beanImport.getResource()));
@@ -669,7 +669,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private ViewVariable[] parseViewVariables(List<VarModel> vars) {
 		if (vars != null && !vars.isEmpty()) {
-			List<ViewVariable> variables = new ArrayList<ViewVariable>(vars.size());
+			List<ViewVariable> variables = new ArrayList<>(vars.size());
 			for (VarModel varModel : vars) {
 				variables.add(parseViewVariable(varModel));
 			}
@@ -688,7 +688,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Transition[] parseIfs(List<IfModel> ifModels) {
 		if (ifModels != null && !ifModels.isEmpty()) {
-			List<Transition> transitions = new ArrayList<Transition>(ifModels.size());
+			List<Transition> transitions = new ArrayList<>(ifModels.size());
 			for (IfModel ifModel : ifModels) {
 				transitions.addAll(Arrays.asList(parseIf(ifModel)));
 			}
@@ -756,7 +756,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private FlowExecutionExceptionHandler[] parseTransitionExecutingExceptionHandlers(
 			List<TransitionModel> transitionModels) {
 		if (transitionModels != null && !transitionModels.isEmpty()) {
-			List<FlowExecutionExceptionHandler> exceptionHandlers = new ArrayList<FlowExecutionExceptionHandler>(
+			List<FlowExecutionExceptionHandler> exceptionHandlers = new ArrayList<>(
 					transitionModels.size());
 			for (TransitionModel model : transitionModels) {
 				if (StringUtils.hasText(model.getOnException())) {
@@ -785,7 +785,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	private FlowExecutionExceptionHandler[] parseCustomExceptionHandlers(
 			List<ExceptionHandlerModel> exceptionHandlerModels) {
 		if (exceptionHandlerModels != null && !exceptionHandlerModels.isEmpty()) {
-			List<FlowExecutionExceptionHandler> exceptionHandlers = new ArrayList<FlowExecutionExceptionHandler>(
+			List<FlowExecutionExceptionHandler> exceptionHandlers = new ArrayList<>(
 					exceptionHandlerModels.size());
 			for (ExceptionHandlerModel exceptionHandlerModel : exceptionHandlerModels) {
 				exceptionHandlers.add(parseCustomExceptionHandler(exceptionHandlerModel));
@@ -803,7 +803,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Transition[] parseTransitions(List<TransitionModel> transitionModels) {
 		if (transitionModels != null && !transitionModels.isEmpty()) {
-			List<Transition> transitions = new ArrayList<Transition>(transitionModels.size());
+			List<Transition> transitions = new ArrayList<>(transitionModels.size());
 			if (transitionModels != null) {
 				for (TransitionModel transition : transitionModels) {
 					if (!StringUtils.hasText(transition.getOnException())) {
@@ -846,7 +846,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private Action[] parseActions(List<AbstractActionModel> actionModels) {
 		if (actionModels != null && !actionModels.isEmpty()) {
-			List<AnnotatedAction> actions = new ArrayList<AnnotatedAction>(actionModels.size());
+			List<AnnotatedAction> actions = new ArrayList<>(actionModels.size());
 			for (AbstractActionModel actionModel : actionModels) {
 				Action action;
 				if (actionModel instanceof EvaluateModel) {
@@ -912,13 +912,13 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private MutableAttributeMap<Object> parseMetaAttributes(List<AttributeModel> attributeModels) {
 		if (attributeModels != null && !attributeModels.isEmpty()) {
-			LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+			LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
 			for (AttributeModel attributeModel : attributeModels) {
 				parseAndPutMetaAttribute(attributeModel, attributes);
 			}
 			return attributes;
 		} else {
-			return new LocalAttributeMap<Object>();
+			return new LocalAttributeMap<>();
 		}
 	}
 

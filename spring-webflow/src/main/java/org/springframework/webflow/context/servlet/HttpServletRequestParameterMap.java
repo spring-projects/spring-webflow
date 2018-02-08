@@ -81,7 +81,7 @@ public class HttpServletRequestParameterMap extends StringKeyedMapAdapter<Object
 	protected Iterator<String> getAttributeNames() {
 		if (request instanceof MultipartHttpServletRequest) {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-			CompositeIterator<String> iterator = new CompositeIterator<String>();
+			CompositeIterator<String> iterator = new CompositeIterator<>();
 			iterator.add(multipartRequest.getFileMap().keySet().iterator());
 			iterator.add(getRequestParameterNames());
 			return iterator;

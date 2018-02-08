@@ -50,11 +50,11 @@ import org.springframework.webflow.engine.model.registry.FlowModelHolder;
  */
 public class FlowDefinitionRegistryBuilder {
 
-	private final List<FlowLocation> flowLocations = new ArrayList<FlowLocation>();
+	private final List<FlowLocation> flowLocations = new ArrayList<>();
 
-	private final List<String> flowLocationPatterns = new ArrayList<String>();
+	private final List<String> flowLocationPatterns = new ArrayList<>();
 
-	private final List<FlowBuilderInfo> flowBuilderInfos = new ArrayList<FlowBuilderInfo>();
+	private final List<FlowBuilderInfo> flowBuilderInfos = new ArrayList<>();
 
 	private FlowBuilderServices flowBuilderServices;
 
@@ -246,7 +246,7 @@ public class FlowDefinitionRegistryBuilder {
 
 	private void registerFlowLocationPatterns(DefaultFlowRegistry flowRegistry) {
 		for (String pattern : this.flowLocationPatterns) {
-			AttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+			AttributeMap<Object> attributes = new LocalAttributeMap<>();
 			updateFlowAttributes(attributes);
 			FlowDefinitionResource[] resources;
 			try {
@@ -313,8 +313,8 @@ public class FlowDefinitionRegistryBuilder {
 			this.path = path;
 			this.id = id;
 			this.attributes = (attributes != null) ?
-					new LocalAttributeMap<Object>(attributes) :
-					new LocalAttributeMap<Object>(new HashMap<String, Object>());
+					new LocalAttributeMap<>(attributes) :
+					new LocalAttributeMap<>(new HashMap<>());
 		}
 
 		public String getPath() {
@@ -342,8 +342,8 @@ public class FlowDefinitionRegistryBuilder {
 			this.builder = builder;
 			this.id = id;
 			this.attributes = (attributes != null) ?
-					new LocalAttributeMap<Object>(attributes) :
-					new LocalAttributeMap<Object>(new HashMap<String, Object>());
+					new LocalAttributeMap<>(attributes) :
+					new LocalAttributeMap<>(new HashMap<>());
 		}
 
 		public FlowBuilder getBuilder() {

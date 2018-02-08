@@ -65,7 +65,7 @@ public class FlowELResolverTests extends TestCase {
 	}
 
 	public void testMapAdaptableResolve() throws Exception {
-		LocalAttributeMap<String> base = new LocalAttributeMap<String>();
+		LocalAttributeMap<String> base = new LocalAttributeMap<>();
 		base.put("test", "test");
 		Object actual = this.resolver.getValue(this.elContext, base, "test");
 		assertTrue(this.elContext.isPropertyResolved());

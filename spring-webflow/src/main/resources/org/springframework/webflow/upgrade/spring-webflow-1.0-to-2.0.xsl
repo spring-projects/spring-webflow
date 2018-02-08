@@ -134,7 +134,7 @@
                 <xsl:text>.</xsl:text>
                 <xsl:value-of select="@method"/>
                 <xsl:if test="webflow:method-arguments">
-                    <xsl:text>(</xsl:text>
+                    <>(</xsl:text>
                     <xsl:for-each select="webflow:method-arguments/webflow:argument">
                         <xsl:variable name="stripElParam">
                             <xsl:value-of select="@expression"/>

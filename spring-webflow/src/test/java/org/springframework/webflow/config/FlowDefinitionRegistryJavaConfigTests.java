@@ -20,7 +20,7 @@ public class FlowDefinitionRegistryJavaConfigTests extends AbstractFlowRegistryC
 		@Bean
 		public FlowDefinitionRegistry flowRegistry() {
 
-			Map<String, Object> flowAttributes = new HashMap<String, Object>();
+			Map<String, Object> flowAttributes = new HashMap<>();
 			flowAttributes.put("foo", "bar");
 			flowAttributes.put("bar", 2);
 

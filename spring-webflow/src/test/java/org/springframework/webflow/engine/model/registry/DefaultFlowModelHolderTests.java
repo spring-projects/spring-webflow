@@ -40,7 +40,7 @@ public class DefaultFlowModelHolderTests extends TestCase {
 
 		public FlowModel getFlowModel() throws FlowModelBuilderException {
 			FlowModel flow = new FlowModel();
-			flow.setStates(new LinkedList<AbstractStateModel>(Collections.singletonList(new EndStateModel("end"))));
+			flow.setStates(new LinkedList<>(Collections.singletonList(new EndStateModel("end"))));
 			return flow;
 		}
 

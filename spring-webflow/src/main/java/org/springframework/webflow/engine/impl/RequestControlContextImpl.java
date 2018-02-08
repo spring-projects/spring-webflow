@@ -64,12 +64,12 @@ class RequestControlContextImpl implements RequestControlContext {
 	/**
 	 * The request scope data map. Never null, initially empty.
 	 */
-	private LocalAttributeMap<Object> requestScope = new LocalAttributeMap<Object>();
+	private LocalAttributeMap<Object> requestScope = new LocalAttributeMap<>();
 
 	/**
 	 * Holder for contextual properties describing the currently executing request; never null, initially empty.
 	 */
-	private LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+	private LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
 
 	/**
 	 * The current event being processed by this flow; initially null.

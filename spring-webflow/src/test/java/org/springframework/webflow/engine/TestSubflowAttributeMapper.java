@@ -22,7 +22,7 @@ import org.springframework.webflow.execution.RequestContext;
 
 class TestSubflowAttributeMapper implements SubflowAttributeMapper {
 	public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
-		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<>();
 		inputMap.put("childInputAttribute", context.getFlowScope().get("parentInputAttribute"));
 		return inputMap;
 	}

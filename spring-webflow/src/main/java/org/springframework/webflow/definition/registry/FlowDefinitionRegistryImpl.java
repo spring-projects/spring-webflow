@@ -45,7 +45,7 @@ public class FlowDefinitionRegistryImpl implements FlowDefinitionRegistry {
 	private FlowDefinitionRegistry parent;
 
 	public FlowDefinitionRegistryImpl() {
-		flowDefinitions = new TreeMap<String, FlowDefinitionHolder>();
+		flowDefinitions = new TreeMap<>();
 	}
 
 	// implementing FlowDefinitionLocator

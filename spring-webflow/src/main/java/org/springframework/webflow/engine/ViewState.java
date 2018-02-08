@@ -53,7 +53,7 @@ public class ViewState extends TransitionableState {
 	/**
 	 * The set of view variables created by this view state.
 	 */
-	private Map<String, ViewVariable> variables = new LinkedHashMap<String, ViewVariable>();
+	private Map<String, ViewVariable> variables = new LinkedHashMap<>();
 
 	/**
 	 * Whether or not a redirect should occur before the view is rendered.

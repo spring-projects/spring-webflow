@@ -114,6 +114,6 @@ public class FluentParserContext implements ParserContext {
 	}
 
 	private void init() {
-		expressionVariables = new ArrayList<ExpressionVariable>();
+		expressionVariables = new ArrayList<>();
 	}
 }

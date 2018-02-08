@@ -207,7 +207,7 @@ public class FlowModelTests extends TestCase {
 	}
 
 	private <T> LinkedList<T> asList(Class<T> elementClass, T... a) {
-		return new LinkedList<T>(Arrays.asList(a));
+		return new LinkedList<>(Arrays.asList(a));
 	}
 
 }

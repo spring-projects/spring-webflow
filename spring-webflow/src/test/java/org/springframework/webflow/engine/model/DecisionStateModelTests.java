@@ -45,7 +45,7 @@ public class DecisionStateModelTests extends TestCase {
 		DecisionStateModel parent = new DecisionStateModel("child");
 		parent.setSecured(new SecuredModel("secured"));
 
-		LinkedList<IfModel> ifs = new LinkedList<IfModel>();
+		LinkedList<IfModel> ifs = new LinkedList<>();
 		ifs.add(new IfModel("test", "foo"));
 		parent.setIfs(ifs);
 

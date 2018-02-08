@@ -33,7 +33,7 @@ public class OneSelectionTrackingListDataModel<T> extends SerializableListDataMo
 	/**
 	 * The list of currently selected row data objects.
 	 */
-	private List<T> selections = new ArrayList<T>();
+	private List<T> selections = new ArrayList<>();
 
 	public OneSelectionTrackingListDataModel() {
 		super();

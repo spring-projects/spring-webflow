@@ -190,7 +190,7 @@ public class ELExpressionParser implements ExpressionParser {
 	}
 
 	private static class VariableMapperImpl extends VariableMapper {
-		private Map<String, ValueExpression> variables = new HashMap<String, ValueExpression>();
+		private Map<String, ValueExpression> variables = new HashMap<>();
 
 		public ValueExpression resolveVariable(String name) {
 			return variables.get(name);

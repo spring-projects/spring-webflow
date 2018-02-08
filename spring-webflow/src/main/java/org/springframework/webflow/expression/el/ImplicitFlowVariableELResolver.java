@@ -129,7 +129,7 @@ public class ImplicitFlowVariableELResolver extends ELResolver {
 	}
 
 	private static final class ImplicitVariables {
-		private static final Map<String, PropertyResolver> vars = new HashMap<String, PropertyResolver>();
+		private static final Map<String, PropertyResolver> vars = new HashMap<>();
 
 		private static final PropertyResolver requestContextResolver = new PropertyResolver() {
 			protected Object doResolve(ELContext elContext, RequestContext requestContext, Object property) {

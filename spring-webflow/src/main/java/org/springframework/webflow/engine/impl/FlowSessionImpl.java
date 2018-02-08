@@ -61,7 +61,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	/**
 	 * The session data model ("flow scope").
 	 */
-	private MutableAttributeMap<Object> scope = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> scope = new LocalAttributeMap<>();
 
 	/**
 	 * The parent session of this session (may be <code>null</code> if this is a root session.)
@@ -246,7 +246,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	 * Initialize the view scope data structure.
 	 */
 	private void initViewScope() {
-		scope.put(VIEW_SCOPE_ATTRIBUTE, new LocalAttributeMap<Object>());
+		scope.put(VIEW_SCOPE_ATTRIBUTE, new LocalAttributeMap<>());
 	}
 
 	/**

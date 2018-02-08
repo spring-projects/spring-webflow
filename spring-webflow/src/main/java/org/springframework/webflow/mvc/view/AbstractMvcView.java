@@ -188,7 +188,7 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	public void render() throws IOException {
-		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<>();
 		model.putAll(flowScopes());
 		exposeBindingModel(model);
 		model.put("flowRequestContext", requestContext);
@@ -530,7 +530,7 @@ public abstract class AbstractMvcView implements View {
 	 * Check if the remaining nested properties are valid Java identifiers.
 	 */
 	private boolean checkModelProperty(String expression, Object model) {
-		List<String> propertyNames = new ArrayList<String>();
+		List<String> propertyNames = new ArrayList<>();
 		while (true) {
 			int index = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(expression);
 			String nestedProperty = index != -1 ? expression.substring(0, index) : expression;

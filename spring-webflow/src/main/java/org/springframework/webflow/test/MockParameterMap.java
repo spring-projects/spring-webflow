@@ -36,7 +36,7 @@ public class MockParameterMap extends LocalParameterMap {
 	 * Creates a new parameter map, initially empty.
 	 */
 	public MockParameterMap() {
-		super(new HashMap<String, Object>());
+		super(new HashMap<>());
 	}
 
 	/**

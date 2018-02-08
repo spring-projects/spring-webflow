@@ -42,7 +42,7 @@ public class FlowModelRegistryImpl implements FlowModelRegistry, FlowModelHolder
 	private FlowModelRegistry parent;
 
 	public FlowModelRegistryImpl() {
-		flowModels = new TreeMap<String, FlowModelHolder>();
+		flowModels = new TreeMap<>();
 	}
 
 	// implementing FlowModelLocator

@@ -111,7 +111,7 @@ public class ServletExternalContextTests extends TestCase {
 	}
 
 	public void testCommitFlowRedirectWithInput() {
-		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		context.requestFlowDefinitionRedirect("foo", input);
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());

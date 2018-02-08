@@ -113,7 +113,7 @@ public class EndState extends State {
 	 * execution request context into a newly created empty map.
 	 */
 	protected LocalAttributeMap<Object> createSessionOutput(RequestContext context) {
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		if (outputMapper != null) {
 			MappingResults results = outputMapper.map(context, output);
 			if (results != null && results.hasErrorResults()) {

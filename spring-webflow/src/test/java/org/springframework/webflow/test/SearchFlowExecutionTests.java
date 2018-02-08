@@ -102,7 +102,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 
 	public static class TestPhoneBook {
 		public List<Object> search(Object criteria) {
-			ArrayList<Object> res = new ArrayList<Object>();
+			ArrayList<Object> res = new ArrayList<>();
 			res.add(new Object());
 			return res;
 		}

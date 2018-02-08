@@ -121,7 +121,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 	}
 
 	protected List<ELResolver> getCustomResolvers() {
-		List<ELResolver> resolvers = new ArrayList<ELResolver>();
+		List<ELResolver> resolvers = new ArrayList<>();
 		resolvers.add(new FlowResourceELResolver());
 		return resolvers;
 	}

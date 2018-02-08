@@ -42,11 +42,11 @@ public class MockFlowExecutionContext implements FlowExecutionContext {
 
 	private FlowSession activeSession;
 
-	private MutableAttributeMap<Object> flashScope = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> flashScope = new LocalAttributeMap<>();
 
-	private MutableAttributeMap<Object> conversationScope = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> conversationScope = new LocalAttributeMap<>();
 
-	private MutableAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> attributes = new LocalAttributeMap<>();
 
 	private FlowExecutionOutcome outcome;
 

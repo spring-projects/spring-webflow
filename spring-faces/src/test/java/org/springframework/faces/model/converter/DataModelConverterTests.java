@@ -18,7 +18,7 @@ public class DataModelConverterTests extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testConvertListToDataModel() throws Exception {
-		List<Object> sourceList = new ArrayList<Object>();
+		List<Object> sourceList = new ArrayList<>();
 
 		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				DataModel.class);
@@ -29,7 +29,7 @@ public class DataModelConverterTests extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testConvertListToListDataModel() throws Exception {
-		List<Object> sourceList = new ArrayList<Object>();
+		List<Object> sourceList = new ArrayList<>();
 
 		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				ListDataModel.class);
@@ -40,7 +40,7 @@ public class DataModelConverterTests extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testConvertListToSerializableListDataModel() throws Exception {
-		List<Object> sourceList = new ArrayList<Object>();
+		List<Object> sourceList = new ArrayList<>();
 
 		DataModel<Object> resultModel = (DataModel<Object>) this.converter.convertSourceToTargetClass(sourceList,
 				SerializableListDataModel.class);

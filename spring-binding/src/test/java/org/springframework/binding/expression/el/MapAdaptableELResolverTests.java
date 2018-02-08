@@ -56,7 +56,7 @@ public class MapAdaptableELResolverTests extends TestCase {
 	}
 
 	private class TestMapAdaptable implements MapAdaptable<String, String> {
-		private Map<String, String> map = new HashMap<String, String>();
+		private Map<String, String> map = new HashMap<>();
 
 		public TestMapAdaptable() {
 			map.put("bar", "bar");

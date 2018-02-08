@@ -49,7 +49,7 @@ public class DefaultConversionServiceTests extends TestCase {
 
 	public void testConvertCompatibleTypes() {
 		DefaultConversionService service = new DefaultConversionService();
-		List<Object> lst = new ArrayList<Object>();
+		List<Object> lst = new ArrayList<>();
 		assertSame(lst, service.getConversionExecutor(ArrayList.class, List.class).execute(lst));
 	}
 
@@ -250,7 +250,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, Principal[].class);
-		List<String> princyList = new ArrayList<String>();
+		List<String> princyList = new ArrayList<>();
 		princyList.add("princy1");
 		princyList.add("princy2");
 		Principal[] p = (Principal[]) executor.execute(princyList);
@@ -272,7 +272,7 @@ public class DefaultConversionServiceTests extends TestCase {
 				return "princy2";
 			}
 		};
-		List<Principal> princyList = new ArrayList<Principal>();
+		List<Principal> princyList = new ArrayList<>();
 		princyList.add(princy1);
 		princyList.add(princy2);
 		String[] p = (String[]) executor.execute(princyList);
@@ -373,7 +373,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
-		List<String> princyList = new ArrayList<String>();
+		List<String> princyList = new ArrayList<>();
 		princyList.add("princy1");
 		princyList.add("princy2");
 		List<Principal> list = (List<Principal>) executor.execute(princyList);
@@ -396,7 +396,7 @@ public class DefaultConversionServiceTests extends TestCase {
 				return "princy2";
 			}
 		};
-		List<Principal> princyList = new ArrayList<Principal>();
+		List<Principal> princyList = new ArrayList<>();
 		princyList.add(princy1);
 		princyList.add(princy2);
 		List<String> list = (List<String>) executor.execute(princyList);
@@ -408,7 +408,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", List.class, List.class);
-		List<Integer> princyList = new ArrayList<Integer>();
+		List<Integer> princyList = new ArrayList<>();
 		princyList.add(1);
 		try {
 			executor.execute(princyList);
@@ -456,7 +456,7 @@ public class DefaultConversionServiceTests extends TestCase {
 	public void testListToArrayConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(Collection.class, String[].class);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add("1");
 		list.add("2");
 		list.add("3");
@@ -470,7 +470,7 @@ public class DefaultConversionServiceTests extends TestCase {
 	public void testSetToListConversion() {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(Set.class, List.class);
-		Set<String> set = new LinkedHashSet<String>();
+		Set<String> set = new LinkedHashSet<>();
 		set.add("1");
 		set.add("2");
 		set.add("3");
@@ -599,7 +599,7 @@ public class DefaultConversionServiceTests extends TestCase {
 		}
 
 		protected Object toObject(String string, Class<?> targetClass) throws Exception {
-			List<Principal> principals = new ArrayList<Principal>();
+			List<Principal> principals = new ArrayList<>();
 			StringTokenizer tokenizer = new StringTokenizer(string, ",");
 			while (tokenizer.hasMoreTokens()) {
 				final String name = tokenizer.nextToken();

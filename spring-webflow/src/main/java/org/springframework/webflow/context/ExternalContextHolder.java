@@ -30,7 +30,7 @@ import org.springframework.core.NamedThreadLocal;
  */
 public final class ExternalContextHolder {
 
-	private static final ThreadLocal<ExternalContext> externalContextHolder = new NamedThreadLocal<ExternalContext>(
+	private static final ThreadLocal<ExternalContext> externalContextHolder = new NamedThreadLocal<>(
 			"Flow ExternalContext");
 
 	/**

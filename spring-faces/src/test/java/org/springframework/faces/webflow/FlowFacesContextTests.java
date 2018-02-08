@@ -193,7 +193,7 @@ public class FlowFacesContextTests extends TestCase {
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
 		EasyMock.replay(new Object[] { this.requestContext });
 
-		List<String> expectedOrderedIds = new ArrayList<String>();
+		List<String> expectedOrderedIds = new ArrayList<>();
 		expectedOrderedIds.add(null);
 		expectedOrderedIds.add("componentId");
 		expectedOrderedIds.add("userMessage");

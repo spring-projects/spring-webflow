@@ -34,13 +34,13 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	/**
 	 * The snapshot map; the key is a snapshot id, and the value is a {@link FlowExecutionSnapshot} object.
 	 */
-	private Map<Serializable, FlowExecutionSnapshot> snapshots = new HashMap<Serializable, FlowExecutionSnapshot>();
+	private Map<Serializable, FlowExecutionSnapshot> snapshots = new HashMap<>();
 
 	/**
 	 * An ordered list of snapshot ids. Each snapshot id represents an pointer to a {@link FlowExecutionSnapshot} in the
 	 * map. The first element is the oldest snapshot and the last is the youngest.
 	 */
-	private LinkedList<Serializable> snapshotIds = new LinkedList<Serializable>();
+	private LinkedList<Serializable> snapshotIds = new LinkedList<>();
 
 	/**
 	 * The maximum number of snapshots allowed in this group. -1 indicates no max limit.

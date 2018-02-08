@@ -55,9 +55,9 @@ public class MockRequestContext implements RequestContext {
 
 	private MessageContext messageContext;
 
-	private MutableAttributeMap<Object> requestScope = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> requestScope = new LocalAttributeMap<>();
 
-	private MutableAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> attributes = new LocalAttributeMap<>();
 
 	private Event currentEvent;
 

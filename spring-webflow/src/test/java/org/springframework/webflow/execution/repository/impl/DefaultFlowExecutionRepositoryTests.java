@@ -270,7 +270,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 
 			private boolean ended;
 
-			private Map<Object, Object> attributes = new HashMap<Object, Object>();
+			private Map<Object, Object> attributes = new HashMap<>();
 
 			public boolean hasEnded() {
 				return ended;

@@ -147,9 +147,9 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		status = FlowExecutionStatus.NOT_STARTED;
 		listeners = new FlowExecutionListeners();
 		attributes = CollectionUtils.EMPTY_ATTRIBUTE_MAP;
-		flowSessions = new LinkedList<FlowSessionImpl>();
-		conversationScope = new LocalAttributeMap<Object>();
-		conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap<Object>());
+		flowSessions = new LinkedList<>();
+		conversationScope = new LocalAttributeMap<>();
+		conversationScope.put(FLASH_SCOPE_ATTRIBUTE, new LocalAttributeMap<>());
 	}
 
 	public String getCaption() {
@@ -357,7 +357,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 			status = FlowExecutionStatus.ACTIVE;
 		}
 		if (input == null) {
-			input = new LocalAttributeMap<Object>();
+			input = new LocalAttributeMap<>();
 		}
 		if (hasEmbeddedModeAttribute(input)) {
 			session.setEmbeddedMode();

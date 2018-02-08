@@ -215,12 +215,12 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 
 	public AttributeMap<V> union(AttributeMap<? extends V> attributes) {
 		if (attributes == null) {
-			return new LocalAttributeMap<V>(getMapInternal());
+			return new LocalAttributeMap<>(getMapInternal());
 		} else {
 			Map<String, V> map = createTargetMap();
 			map.putAll(getMapInternal());
 			map.putAll(attributes.asMap());
-			return new LocalAttributeMap<V>(map);
+			return new LocalAttributeMap<>(map);
 		}
 	}
 
@@ -284,7 +284,7 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 	 */
 	protected void initAttributes(Map<String, V> attributes) {
 		this.attributes = attributes;
-		attributeAccessor = new MapAccessor<String, V>(this.attributes);
+		attributeAccessor = new MapAccessor<>(this.attributes);
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 	 * @return the target map
 	 */
 	protected Map<String, V> createTargetMap() {
-		return new HashMap<String, V>();
+		return new HashMap<>();
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 	 * @return the target map
 	 */
 	protected Map<String, V> createTargetMap(int size, int loadFactor) {
-		return new HashMap<String, V>(size, loadFactor);
+		return new HashMap<>(size, loadFactor);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -335,7 +335,7 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		attributeAccessor = new MapAccessor<String, V>(attributes);
+		attributeAccessor = new MapAccessor<>(attributes);
 	}
 
 	public String toString() {

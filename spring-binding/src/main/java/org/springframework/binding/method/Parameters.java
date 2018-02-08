@@ -49,7 +49,7 @@ public class Parameters {
 	 * @param size the size
 	 */
 	public Parameters(int size) {
-		this.parameters = new ArrayList<Parameter>(size);
+		this.parameters = new ArrayList<>(size);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Parameters {
 	 * @param parameter the single parameter
 	 */
 	public Parameters(Parameter parameter) {
-		this.parameters = new ArrayList<Parameter>(1);
+		this.parameters = new ArrayList<>(1);
 		add(parameter);
 	}
 
@@ -66,7 +66,7 @@ public class Parameters {
 	 * @param parameters the parameters
 	 */
 	public Parameters(Parameter... parameters) {
-		this.parameters = new ArrayList<Parameter>(parameters.length);
+		this.parameters = new ArrayList<>(parameters.length);
 		addAll(parameters);
 	}
 

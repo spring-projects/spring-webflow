@@ -37,7 +37,7 @@ public class SerializableListDataModel<T> extends ListDataModel<T> implements Se
 
 
 	public SerializableListDataModel() {
-		this(new ArrayList<T>());
+		this(new ArrayList<>());
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class SerializableListDataModel<T> extends ListDataModel<T> implements Se
 	 */
 	public SerializableListDataModel(List<T> list) {
 		if (list == null) {
-			list = new ArrayList<T>();
+			list = new ArrayList<>();
 		}
 		setWrappedData(list);
 	}
@@ -58,7 +58,7 @@ public class SerializableListDataModel<T> extends ListDataModel<T> implements Se
 
 	public void setWrappedData(Object data) {
 		if (data == null) {
-			data = new ArrayList<T>();
+			data = new ArrayList<>();
 		}
 		Assert.isInstanceOf(List.class, data, "The data object for " + getClass() + " must be a List");
 		super.setWrappedData(data);

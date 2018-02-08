@@ -27,7 +27,7 @@ import junit.framework.TestCase;
  */
 public class LocalAttributeMapTests extends TestCase {
 
-	private LocalAttributeMap<Object> attributeMap = new LocalAttributeMap<Object>();
+	private LocalAttributeMap<Object> attributeMap = new LocalAttributeMap<>();
 
 	public void setUp() {
 		attributeMap.put("string", "A string");
@@ -39,7 +39,7 @@ public class LocalAttributeMapTests extends TestCase {
 		attributeMap.put("bigDecimal", new BigDecimal("12345.67"));
 		attributeMap.put("bean", new TestBean());
 		attributeMap.put("stringArray", new String[] { "1", "2", "3" });
-		attributeMap.put("collection", new LinkedList<Object>());
+		attributeMap.put("collection", new LinkedList<>());
 	}
 
 	public void testGet() {
@@ -303,11 +303,11 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testUnion() {
-		LocalAttributeMap<Object> one = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> one = new LocalAttributeMap<>();
 		one.put("foo", "bar");
 		one.put("bar", "baz");
 
-		LocalAttributeMap<Object> two = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> two = new LocalAttributeMap<>();
 		two.put("cat", "coz");
 		two.put("bar", "boo");
 
@@ -319,10 +319,10 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	public void testEquality() {
-		LocalAttributeMap<String> map = new LocalAttributeMap<String>();
+		LocalAttributeMap<String> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
 
-		LocalAttributeMap<Object> map2 = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> map2 = new LocalAttributeMap<>();
 		map2.put("foo", "bar");
 
 		assertEquals(map, map2);

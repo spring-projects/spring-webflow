@@ -35,7 +35,7 @@ public class DefaultMapper implements Mapper {
 
 	private static final Log logger = LogFactory.getLog(DefaultMapper.class);
 
-	private List<DefaultMapping> mappings = new ArrayList<DefaultMapping>();
+	private List<DefaultMapping> mappings = new ArrayList<>();
 
 	/**
 	 * Add a mapping to this mapper.

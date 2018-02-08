@@ -254,7 +254,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	}
 
 	public AttributeMap<Object> asAttributeMap() {
-		return new LocalAttributeMap<Object>(getMapInternal());
+		return new LocalAttributeMap<>(getMapInternal());
 	}
 
 	/**
@@ -263,7 +263,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 */
 	protected void initParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
-		parameterAccessor = new MapAccessor<String, Object>(this.parameters);
+		parameterAccessor = new MapAccessor<>(this.parameters);
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	@SuppressWarnings("unchecked")
 	private <T> T[] convert(String[] parameters, Class<? extends T> targetElementType)
 			throws ConversionExecutionException {
-		List<T> list = new ArrayList<T>(parameters.length);
+		List<T> list = new ArrayList<>(parameters.length);
 		ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetElementType);
 		for (String parameter : parameters) {
 			list.add((T) converter.execute(parameter));
@@ -313,7 +313,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		parameterAccessor = new MapAccessor<String, Object>(parameters);
+		parameterAccessor = new MapAccessor<>(parameters);
 		conversionService = DEFAULT_CONVERSION_SERVICE;
 	}
 

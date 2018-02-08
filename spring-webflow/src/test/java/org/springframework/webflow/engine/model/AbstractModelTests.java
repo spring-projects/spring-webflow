@@ -70,10 +70,10 @@ public class AbstractModelTests extends TestCase {
 	}
 
 	public void testListMergeAddAtEndFalse() {
-		LinkedList<SecuredModel> child = new LinkedList<SecuredModel>();
+		LinkedList<SecuredModel> child = new LinkedList<>();
 		child.add(new SecuredModel("1"));
 		child.add(new SecuredModel("3"));
-		LinkedList<SecuredModel> parent = new LinkedList<SecuredModel>();
+		LinkedList<SecuredModel> parent = new LinkedList<>();
 		parent.add(new SecuredModel("2"));
 		SecuredModel match = new SecuredModel("3");
 		match.setMatch("foo");
@@ -89,10 +89,10 @@ public class AbstractModelTests extends TestCase {
 	}
 
 	public void testListMergeAddAtEndTrue() {
-		LinkedList<SecuredModel> child = new LinkedList<SecuredModel>();
+		LinkedList<SecuredModel> child = new LinkedList<>();
 		child.add(new SecuredModel("1"));
 		child.add(new SecuredModel("3"));
-		LinkedList<SecuredModel> parent = new LinkedList<SecuredModel>();
+		LinkedList<SecuredModel> parent = new LinkedList<>();
 		parent.add(new SecuredModel("2"));
 		SecuredModel match = new SecuredModel("3");
 		match.setMatch("foo");
@@ -109,7 +109,7 @@ public class AbstractModelTests extends TestCase {
 
 	public void testListMergeNullParent() {
 		AbstractModel obj = new PersistenceContextModel();
-		LinkedList<SecuredModel> child = new LinkedList<SecuredModel>();
+		LinkedList<SecuredModel> child = new LinkedList<>();
 		child.add(new SecuredModel("1"));
 		LinkedList<SecuredModel> parent = null;
 		LinkedList<SecuredModel> result = obj.merge(child, parent);
@@ -119,7 +119,7 @@ public class AbstractModelTests extends TestCase {
 
 	public void testListMergeNullChild() {
 		LinkedList<SecuredModel> child = null;
-		LinkedList<SecuredModel> parent = new LinkedList<SecuredModel>();
+		LinkedList<SecuredModel> parent = new LinkedList<>();
 		parent.add(new SecuredModel("2"));
 		AbstractModel obj = new PersistenceContextModel();
 		LinkedList<SecuredModel> result = obj.merge(child, parent);

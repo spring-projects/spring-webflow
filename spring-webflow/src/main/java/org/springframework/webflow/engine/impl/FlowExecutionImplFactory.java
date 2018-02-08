@@ -107,7 +107,7 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 		}
 		execution.setKey(flowExecutionKey);
 		if (conversationScope == null) {
-			conversationScope = new LocalAttributeMap<Object>();
+			conversationScope = new LocalAttributeMap<>();
 		}
 		execution.setConversationScope(conversationScope);
 		execution.setAttributes(executionAttributes);

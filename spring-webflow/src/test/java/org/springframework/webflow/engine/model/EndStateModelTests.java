@@ -46,7 +46,7 @@ public class EndStateModelTests extends TestCase {
 		parent.setCommit("true");
 		parent.setView("view");
 
-		LinkedList<OutputModel> outputs = new LinkedList<OutputModel>();
+		LinkedList<OutputModel> outputs = new LinkedList<>();
 		outputs.add(new OutputModel("foo", "bar"));
 		parent.setOutputs(outputs);
 

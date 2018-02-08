@@ -34,7 +34,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private MockHttpServletResponse response;
 	private ServletExternalContext context;
 	private FlowHandler flowHandler;
-	private LocalAttributeMap<Object> flowInput = new LocalAttributeMap<Object>();
+	private LocalAttributeMap<Object> flowInput = new LocalAttributeMap<>();
 	private boolean handleException;
 	private boolean handleExecutionOutcome;
 	private MockFlashMapManager flashMapManager = new MockFlashMapManager();
@@ -99,10 +99,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testLaunchFlowRequestEndsAfterProcessing() throws Exception {
 		setupRequest("/springtravel", "/app", "/whatever", "GET");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		flowExecutor.launchExecution("foo", flowInput, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -115,11 +115,11 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testLaunchFlowRequestEndsAfterProcessingAjaxRequest() throws Exception {
 		setupRequest("/springtravel", "/app", "/whatever", "GET");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		context.setAjaxRequest(true);
 		flowExecutor.launchExecution("foo", flowInput, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -145,10 +145,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 	public void testResumeFlowRequestEndsAfterProcessing() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		flowExecutor.resumeExecution("12345", context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -163,10 +163,10 @@ public class FlowHandlerAdapterTests extends TestCase {
 	public void testResumeFlowRequestEndsAfterProcessingFlowCommittedResponse() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		flowExecutor.resumeExecution("12345", context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		context.recordResponseComplete();
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
@@ -194,13 +194,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testLaunchFlowWithDefinitionRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
-		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		input.put("baz", "boop");
 		context.requestFlowDefinitionRedirect("bar", input);
 		flowExecutor.launchExecution("foo", flowInput, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);
@@ -402,7 +402,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testDefaultHandleFlowException() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
-		Map<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<>();
 		request.setParameters(parameters);
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowException flowException = new FlowException("Error") {
@@ -477,7 +477,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		handleExecutionOutcome = true;
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		flowExecutor.launchExecution("foo", flowInput, context);
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("bar", "baz");
 		FlowExecutionOutcome outcome = new FlowExecutionOutcome("finish", output);
 		FlowExecutionResult result = FlowExecutionResult.createEndedResult("foo", outcome);

@@ -80,7 +80,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 	}
 
 	public void testCreateWithExecutionAttributes() {
-		MutableAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+		MutableAttributeMap<Object> attributes = new LocalAttributeMap<>();
 		attributes.put("foo", "bar");
 		factory.setExecutionAttributes(attributes);
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
@@ -123,7 +123,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 
 	public void testRestoreExecutionState() {
 		FlowExecutionImpl flowExecution = (FlowExecutionImpl) factory.createFlowExecution(flowDefinition);
-		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<>();
 		factory.setExecutionAttributes(executionAttributes);
 		FlowExecutionListener listener = new FlowExecutionListenerAdapter() {
 		};
@@ -131,7 +131,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		MockFlowExecutionKeyFactory keyFactory = new MockFlowExecutionKeyFactory();
 		factory.setExecutionKeyFactory(keyFactory);
 		FlowExecutionKey flowExecutionKey = new MockFlowExecutionKey("e1s1");
-		LocalAttributeMap<Object> conversationScope = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> conversationScope = new LocalAttributeMap<>();
 		SimpleFlowDefinitionLocator locator = new SimpleFlowDefinitionLocator();
 		FlowSessionImpl session1 = new FlowSessionImpl();
 		session1.setFlowId("flow");

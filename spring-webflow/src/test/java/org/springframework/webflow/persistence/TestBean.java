@@ -24,7 +24,7 @@ public class TestBean {
 
 	private String name;
 
-	private Set<TestAddress> addresses = new HashSet<TestAddress>();
+	private Set<TestAddress> addresses = new HashSet<>();
 
 	private int count;
 

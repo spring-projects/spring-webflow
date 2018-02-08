@@ -55,7 +55,7 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 	 * @param weak whether to use weak references for keys and values
 	 */
 	public AbstractCachingMapDecorator(boolean weak) {
-		Map<K, Object> internalMap = (weak ? new WeakHashMap<K, Object>() : new HashMap<K, Object>());
+		Map<K, Object> internalMap = (weak ? new WeakHashMap<>() : new HashMap<>());
 		this.targetMap = Collections.synchronizedMap(internalMap);
 		this.synchronize = true;
 		this.weak = weak;
@@ -68,7 +68,7 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 	 * @param size the initial cache size
 	 */
 	public AbstractCachingMapDecorator(boolean weak, int size) {
-		Map<K, Object> internalMap = weak ? new WeakHashMap<K, Object> (size) : new HashMap<K, Object>(size);
+		Map<K, Object> internalMap = weak ? new WeakHashMap<K, Object> (size) : new HashMap<>(size);
 		this.targetMap = Collections.synchronizedMap(internalMap);
 		this.synchronize = true;
 		this.weak = weak;
@@ -161,11 +161,11 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 	public Set<K> keySet() {
 		if (this.synchronize) {
 			synchronized (this.targetMap) {
-				return new LinkedHashSet<K>(this.targetMap.keySet());
+				return new LinkedHashSet<>(this.targetMap.keySet());
 			}
 		}
 		else {
-			return new LinkedHashSet<K>(this.targetMap.keySet());
+			return new LinkedHashSet<>(this.targetMap.keySet());
 		}
 	}
 
@@ -182,7 +182,7 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 
 	@SuppressWarnings("unchecked")
 	private Collection<V> valuesCopy() {
-		LinkedList<V> values = new LinkedList<V>();
+		LinkedList<V> values = new LinkedList<>();
 		for (Iterator<Object> it = this.targetMap.values().iterator(); it.hasNext();) {
 			Object value = it.next();
 			if (value instanceof Reference) {
@@ -210,7 +210,7 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 
 	@SuppressWarnings("unchecked")
 	private Set<Map.Entry<K, V>> entryCopy() {
-		Map<K,V> entries = new LinkedHashMap<K, V>();
+		Map<K,V> entries = new LinkedHashMap<>();
 		for (Iterator<Entry<K, Object>> it = this.targetMap.entrySet().iterator(); it.hasNext();) {
 			Entry<K, Object> entry = it.next();
 			Object value = entry.getValue();
@@ -238,7 +238,7 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 			newValue = NULL_VALUE;
 		}
 		else if (useWeakValue(key, value)) {
-			newValue = new WeakReference<Object>(newValue);
+			newValue = new WeakReference<>(newValue);
 		}
 		return unwrapReturnValue(this.targetMap.put(key, newValue));
 	}

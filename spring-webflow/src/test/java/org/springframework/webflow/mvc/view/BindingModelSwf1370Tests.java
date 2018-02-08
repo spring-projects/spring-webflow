@@ -57,7 +57,7 @@ public class BindingModelSwf1370Tests extends TestCase {
 	}
 
 	public static class TestBeanWithQuestionResponseMap {
-		private Map<Question, Response> responses = new HashMap<Question, Response>();
+		private Map<Question, Response> responses = new HashMap<>();
 
 		public TestBeanWithQuestionResponseMap(Question question) {
 			responses.put(question, new Response(111));
@@ -75,7 +75,7 @@ public class BindingModelSwf1370Tests extends TestCase {
 	public static class QuestionConverter implements
 			org.springframework.core.convert.converter.Converter<Integer, Question> {
 
-		private Map<Integer, Question> map = new HashMap<Integer, Question>();
+		private Map<Integer, Question> map = new HashMap<>();
 
 		public QuestionConverter(Question... questions) {
 			for (int i = 0; i < questions.length; i++) {

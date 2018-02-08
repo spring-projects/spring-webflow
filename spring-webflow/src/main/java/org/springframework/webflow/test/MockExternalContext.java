@@ -42,15 +42,15 @@ public class MockExternalContext implements ExternalContext {
 
 	private ParameterMap requestParameterMap = new MockParameterMap();
 
-	private MutableAttributeMap<Object> requestMap = new LocalAttributeMap<Object>();
+	private MutableAttributeMap<Object> requestMap = new LocalAttributeMap<>();
 
-	private SharedAttributeMap<Object> sessionMap = new LocalSharedAttributeMap<Object>(
-			new SharedMapDecorator<String, Object>(new HashMap<String, Object>()));
+	private SharedAttributeMap<Object> sessionMap = new LocalSharedAttributeMap<>(
+			new SharedMapDecorator<>(new HashMap<>()));
 
 	private SharedAttributeMap<Object> globalSessionMap = sessionMap;
 
-	private SharedAttributeMap<Object> applicationMap = new LocalSharedAttributeMap<Object>(
-			new SharedMapDecorator<String, Object>(new HashMap<String, Object>()));
+	private SharedAttributeMap<Object> applicationMap = new LocalSharedAttributeMap<>(
+			new SharedMapDecorator<>(new HashMap<>()));
 
 	private Object nativeContext = new Object();
 
@@ -183,7 +183,7 @@ public class MockExternalContext implements ExternalContext {
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException {
 		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = new LocalAttributeMap<Object>();
+		flowDefinitionRedirectFlowInput = new LocalAttributeMap<>();
 		if (input != null) {
 			flowDefinitionRedirectFlowInput.putAll(input);
 		}

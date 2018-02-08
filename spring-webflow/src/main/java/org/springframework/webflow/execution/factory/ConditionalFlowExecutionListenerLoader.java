@@ -43,7 +43,7 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 * The list of flow execution listeners containing {@link ConditionalFlowExecutionListenerHolder} objects. The list
 	 * determines the conditions in which a single flow execution listener applies.
 	 */
-	private List<ConditionalFlowExecutionListenerHolder> listeners = new LinkedList<ConditionalFlowExecutionListenerHolder>();
+	private List<ConditionalFlowExecutionListenerHolder> listeners = new LinkedList<>();
 
 	/**
 	 * Add a listener that will listen to executions to flows matching the specified criteria.
@@ -75,7 +75,7 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	 */
 	public FlowExecutionListener[] getListeners(FlowDefinition flowDefinition) {
 		Assert.notNull(flowDefinition, "The Flow to load listeners for cannot be null");
-		List<FlowExecutionListener> listenersToAttach = new LinkedList<FlowExecutionListener>();
+		List<FlowExecutionListener> listenersToAttach = new LinkedList<>();
 		for (ConditionalFlowExecutionListenerHolder listenerHolder : listeners) {
 			if (listenerHolder.listenerAppliesTo(flowDefinition)) {
 				listenersToAttach.add(listenerHolder.getListener());

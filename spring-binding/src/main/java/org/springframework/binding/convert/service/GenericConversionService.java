@@ -53,7 +53,7 @@ public class GenericConversionService implements ConversionService {
 	 * A map of custom converters. Custom converters are assigned a unique identifier that can be used to lookup the
 	 * converter. This allows multiple converters for the same source->target class to be registered.
 	 */
-	private final Map<String, Converter> customConverters = new HashMap<String, Converter>();
+	private final Map<String, Converter> customConverters = new HashMap<>();
 
 	/**
 	 * Indexes classes by well-known aliases.

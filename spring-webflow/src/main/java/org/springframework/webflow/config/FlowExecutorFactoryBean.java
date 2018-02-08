@@ -161,7 +161,7 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, BeanClassLoa
 	}
 
 	private MutableAttributeMap<Object> createFlowExecutionAttributes() {
-		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<>();
 		if (flowExecutionAttributes != null) {
 			for (FlowElementAttribute attribute : flowExecutionAttributes) {
 				executionAttributes.put(attribute.getName(), getConvertedValue(attribute));

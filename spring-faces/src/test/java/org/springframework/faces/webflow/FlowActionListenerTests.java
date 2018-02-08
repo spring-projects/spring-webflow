@@ -31,7 +31,7 @@ public class FlowActionListenerTests extends TestCase {
 
 		this.listener = new FlowActionListener(this.jsfMock.application().getActionListener());
 		RequestContextHolder.setRequestContext(this.context);
-		LocalAttributeMap<Object> flash = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> flash = new LocalAttributeMap<>();
 		EasyMock.expect(this.context.getFlashScope()).andStubReturn(flash);
 		EasyMock.expect(this.context.getCurrentState()).andStubReturn(new MockViewState());
 		EasyMock.replay(new Object[] { this.context });

@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  */
 public class ManySelectionTrackingListDataModel<T> extends SerializableListDataModel<T> implements SelectionAware<T> {
 
-	private List<T> selections = new ArrayList<T>();
+	private List<T> selections = new ArrayList<>();
 
 	public ManySelectionTrackingListDataModel() {
 		super();

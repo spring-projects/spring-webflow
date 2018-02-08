@@ -42,7 +42,7 @@ public abstract class AnnotatedObject implements Annotated {
 	/**
 	 * Additional properties further describing this object. The properties set in this map may be arbitrary.
 	 */
-	private LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>();
+	private LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
 
 	// implementing Annotated
 

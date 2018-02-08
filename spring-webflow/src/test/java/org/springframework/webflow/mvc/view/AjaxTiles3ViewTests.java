@@ -127,7 +127,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		BasicTilesContainer container = (BasicTilesContainer) TilesAccess.getContainer(tilesAppContext);
 		AttributeContext attributeContext = container.startContext(tilesRequest);
 		attributeContext.putAttribute("body", new Attribute("/WEB-INF/dynamicTemplate.jsp"));
-		Map<String, Attribute> resultMap = new HashMap<String, Attribute>();
+		Map<String, Attribute> resultMap = new HashMap<>();
 		ajaxTilesView.addRuntimeAttributes(container, tilesRequest, resultMap);
 		assertNotNull(resultMap.get("body"));
 		assertEquals("/WEB-INF/dynamicTemplate.jsp", resultMap.get("body").toString());
@@ -151,7 +151,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		Request tilesRequest = new ServletRequest(tilesAppContext, request, response);
 		BasicTilesContainer container = (BasicTilesContainer) TilesAccess.getContainer(tilesAppContext);
 		Definition compositeDefinition = container.getDefinitionsFactory().getDefinition("search", tilesRequest);
-		Map<String, Attribute> resultMap = new HashMap<String, Attribute>();
+		Map<String, Attribute> resultMap = new HashMap<>();
 		ajaxTilesView.flattenAttributeMap(container, tilesRequest, resultMap, compositeDefinition);
 		assertNotNull(resultMap.get("body"));
 		assertNotNull(resultMap.get("searchForm"));

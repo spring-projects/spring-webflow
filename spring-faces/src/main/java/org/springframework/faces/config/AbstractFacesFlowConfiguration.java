@@ -106,7 +106,7 @@ public class AbstractFacesFlowConfiguration implements ApplicationContextAware {
 	@Bean
 	public SimpleUrlHandlerMapping jsrResourceHandlerMapping() {
 
-		Map<String, Object> urlMap = new HashMap<String, Object>();
+		Map<String, Object> urlMap = new HashMap<>();
 		urlMap.put("/javax.faces.resource/**", jsfResourceRequestHandler());
 		if (isRichFacesPresent) {
 			urlMap.put("/rfRes/**", jsfResourceRequestHandler());

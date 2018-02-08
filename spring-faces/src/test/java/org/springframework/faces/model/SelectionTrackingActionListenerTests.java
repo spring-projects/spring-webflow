@@ -51,11 +51,11 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	public void setUp() throws Exception {
 		this.jsfMockHelper.setUp();
 		this.viewToTest = new UIViewRoot();
-		List<Object> rows = new ArrayList<Object>();
+		List<Object> rows = new ArrayList<>();
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
 		rows.add(new TestRowData());
-		this.dataModel = new OneSelectionTrackingListDataModel<Object>(rows);
+		this.dataModel = new OneSelectionTrackingListDataModel<>(rows);
 	}
 
 	protected void tearDown() throws Exception {

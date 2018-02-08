@@ -81,7 +81,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		if (locationElements.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<FlowLocation> locations = new ArrayList<FlowLocation>(locationElements.size());
+		List<FlowLocation> locations = new ArrayList<>(locationElements.size());
 		for (Element locationElement : locationElements) {
 			String id = locationElement.getAttribute("id");
 			String path = locationElement.getAttribute("path");
@@ -95,7 +95,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		if (locationPatternElements.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<String> locationPatterns = new ArrayList<String>(locationPatternElements.size());
+		List<String> locationPatterns = new ArrayList<>(locationPatternElements.size());
 		for (Element locationPatternElement : locationPatternElements) {
 			String value = locationPatternElement.getAttribute("value");
 			locationPatterns.add(value);
@@ -108,7 +108,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		if (definitionAttributesElement != null) {
 			List<Element> attributeElements = DomUtils.getChildElementsByTagName(definitionAttributesElement,
 					"attribute");
-			Set<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>(attributeElements.size());
+			Set<FlowElementAttribute> attributes = new HashSet<>(attributeElements.size());
 			for (Element attributeElement : attributeElements) {
 				String name = attributeElement.getAttribute("name");
 				String value = attributeElement.getAttribute("value");
@@ -126,7 +126,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 		if (builderElements.isEmpty()) {
 			return Collections.emptyList();
 		}
-		List<FlowBuilderInfo> builders = new ArrayList<FlowBuilderInfo>(builderElements.size());
+		List<FlowBuilderInfo> builders = new ArrayList<>(builderElements.size());
 		for (Element builderElement : builderElements) {
 			String id = builderElement.getAttribute("id");
 			String className = builderElement.getAttribute("class");

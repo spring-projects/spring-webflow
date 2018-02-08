@@ -44,12 +44,12 @@ public class ViewStateModelTests extends TestCase {
 		ViewStateModel child = new ViewStateModel("child");
 		ViewStateModel parent = new ViewStateModel("parent");
 
-		LinkedList<AttributeModel> attributes = new LinkedList<AttributeModel>();
+		LinkedList<AttributeModel> attributes = new LinkedList<>();
 		attributes.add(new AttributeModel("foo", "bar"));
 		parent.setAttributes(attributes);
 
 		BinderModel binder = new BinderModel();
-		LinkedList<BindingModel> bindings = new LinkedList<BindingModel>();
+		LinkedList<BindingModel> bindings = new LinkedList<>();
 		bindings.add(new BindingModel("foo", "fooConverter", "true"));
 		binder.setBindings(bindings);
 		parent.setBinder(binder);
@@ -62,7 +62,7 @@ public class ViewStateModelTests extends TestCase {
 		parent.setValidationHints("foo");
 		parent.setView("fooView");
 
-		LinkedList<TransitionModel> transitions = new LinkedList<TransitionModel>();
+		LinkedList<TransitionModel> transitions = new LinkedList<>();
 		TransitionModel tx = new TransitionModel();
 		tx.setOn("submit");
 		tx.setTo("bar");
@@ -70,17 +70,17 @@ public class ViewStateModelTests extends TestCase {
 		parent.setTransitions(transitions);
 
 		EvaluateModel eval = new EvaluateModel("foo.bar");
-		LinkedList<AbstractActionModel> actions = new LinkedList<AbstractActionModel>();
+		LinkedList<AbstractActionModel> actions = new LinkedList<>();
 		actions.add(eval);
 		parent.setOnEntryActions(actions);
 		parent.setOnExitActions(actions);
 		parent.setOnRenderActions(actions);
 
-		LinkedList<VarModel> vars = new LinkedList<VarModel>();
+		LinkedList<VarModel> vars = new LinkedList<>();
 		vars.add(new VarModel("foo", "class"));
 		parent.setVars(vars);
 
-		LinkedList<ExceptionHandlerModel> eh = new LinkedList<ExceptionHandlerModel>();
+		LinkedList<ExceptionHandlerModel> eh = new LinkedList<>();
 		eh.add(new ExceptionHandlerModel("foo"));
 		parent.setExceptionHandlers(eh);
 

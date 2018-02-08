@@ -7,7 +7,7 @@ public class JSFManagedBean {
 
 	String prop1;
 	JSFModel model;
-	List<String> values = new ArrayList<String>();
+	List<String> values = new ArrayList<>();
 
 	public JSFModel getModel() {
 		return this.model;

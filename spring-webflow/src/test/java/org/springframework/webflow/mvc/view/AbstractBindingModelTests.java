@@ -85,9 +85,9 @@ public abstract class AbstractBindingModelTests extends TestCase {
 	}
 
 	public void testGetFieldValueError() {
-		Map<String, String> source = new HashMap<String, String>();
+		Map<String, String> source = new HashMap<>();
 		source.put("datum2", "bogus");
-		List<MappingResult> mappingResults = new ArrayList<MappingResult>();
+		List<MappingResult> mappingResults = new ArrayList<>();
 		Mapping mapping = new Mapping() {
 			public Expression getSourceExpression() {
 				return expressionParser.parseExpression("datum2", null);

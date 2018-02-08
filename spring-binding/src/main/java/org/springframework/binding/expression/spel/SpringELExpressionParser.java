@@ -47,7 +47,7 @@ public class SpringELExpressionParser implements ExpressionParser {
 
 	private final ConversionService conversionService;
 
-	private final List<PropertyAccessor> propertyAccessors = new ArrayList<PropertyAccessor>();
+	private final List<PropertyAccessor> propertyAccessors = new ArrayList<>();
 
 	public SpringELExpressionParser(SpelExpressionParser expressionParser) {
 		this(expressionParser, new DefaultConversionService());
@@ -116,7 +116,7 @@ public class SpringELExpressionParser implements ExpressionParser {
 		if (expressionVars == null || expressionVars.length == 0) {
 			return null;
 		}
-		Map<String, Expression> result = new HashMap<String, Expression>(expressionVars.length);
+		Map<String, Expression> result = new HashMap<>(expressionVars.length);
 		for (ExpressionVariable var : expressionVars) {
 			result.put(var.getName(), parseExpression(var.getValueExpression(), var.getParserContext()));
 		}

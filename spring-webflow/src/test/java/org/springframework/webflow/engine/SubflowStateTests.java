@@ -70,7 +70,7 @@ public class SubflowStateTests extends TestCase {
 	public void testEnterWithInput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
-				return new LocalAttributeMap<Object>("foo", "bar");
+				return new LocalAttributeMap<>("foo", "bar");
 			}
 
 			public void mapSubflowOutput(AttributeMap<?> flowOutput, RequestContext context) {
@@ -95,7 +95,7 @@ public class SubflowStateTests extends TestCase {
 	public void testReturnWithOutput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
-				return new LocalAttributeMap<Object>();
+				return new LocalAttributeMap<>();
 			}
 
 			public void mapSubflowOutput(AttributeMap<?> flowOutput, RequestContext context) {

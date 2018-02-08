@@ -9,11 +9,11 @@ public class MapAccessorTests extends TestCase {
 	private MapAccessor<String, Object> accessor;
 
 	protected void setUp() throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("string", "hello");
 		map.put("integer", 9);
 		map.put("null", null);
-		this.accessor = new MapAccessor<String, Object>(map);
+		this.accessor = new MapAccessor<>(map);
 	}
 
 	public void testAccessNullAttribute() {

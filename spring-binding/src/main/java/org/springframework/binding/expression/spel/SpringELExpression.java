@@ -155,7 +155,7 @@ public class SpringELExpression implements Expression {
 		if (expressionVariables == null) {
 			return Collections.emptyMap();
 		}
-		Map<String, Object> variableValues = new HashMap<String, Object>(expressionVariables.size());
+		Map<String, Object> variableValues = new HashMap<>(expressionVariables.size());
 		for (Map.Entry<String, Expression> var : expressionVariables.entrySet()) {
 			variableValues.put(var.getKey(), var.getValue().getValue(rootObject));
 		}

@@ -170,7 +170,7 @@ public class FlowTests extends TestCase {
 
 	public void testStart() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		flow.start(context, new LocalAttributeMap<Object>());
+		flow.start(context, new LocalAttributeMap<>());
 		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
 	}
 
@@ -189,7 +189,7 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		TestAction action = new TestAction();
 		flow.getStartActionList().add(action);
-		flow.start(context, new LocalAttributeMap<Object>());
+		flow.start(context, new LocalAttributeMap<>());
 		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
 		assertEquals(1, action.getExecutionCount());
 	}
@@ -198,13 +198,13 @@ public class FlowTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		flow.addVariable(new FlowVariable("var1", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {
-				return new ArrayList<Object>();
+				return new ArrayList<>();
 			}
 
 			public void restoreReferences(Object value, RequestContext context) {
 			}
 		}));
-		flow.start(context, new LocalAttributeMap<Object>());
+		flow.start(context, new LocalAttributeMap<>());
 		context.getFlowScope().getRequired("var1", ArrayList.class);
 	}
 
@@ -217,7 +217,7 @@ public class FlowTests extends TestCase {
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		LocalAttributeMap<Object> sessionInput = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> sessionInput = new LocalAttributeMap<>();
 		sessionInput.put("attr", "foo");
 		flow.start(context, sessionInput);
 		assertEquals("foo", context.getFlowScope().get("attr"));
@@ -232,7 +232,7 @@ public class FlowTests extends TestCase {
 		attributeMapper.addMapping(new DefaultMapping(x, y));
 		flow.setInputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		LocalAttributeMap<Object> sessionInput = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> sessionInput = new LocalAttributeMap<>();
 		flow.start(context, sessionInput);
 		assertTrue(context.getFlowScope().contains("attr"));
 		assertNull(context.getFlowScope().get("attr"));
@@ -308,7 +308,7 @@ public class FlowTests extends TestCase {
 		TestAction action = new TestAction();
 		flow.getEndActionList().add(action);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
-		LocalAttributeMap<Object> sessionOutput = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> sessionOutput = new LocalAttributeMap<>();
 		flow.end(context, "finish", sessionOutput);
 		assertEquals(1, action.getExecutionCount());
 	}
@@ -323,7 +323,7 @@ public class FlowTests extends TestCase {
 		flow.setOutputMapper(attributeMapper);
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.getFlowScope().put("attr", "foo");
-		LocalAttributeMap<Object> sessionOutput = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> sessionOutput = new LocalAttributeMap<>();
 		flow.end(context, "finish", sessionOutput);
 		assertEquals("foo", sessionOutput.get("attr"));
 	}

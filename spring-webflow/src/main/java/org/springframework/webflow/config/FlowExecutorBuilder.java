@@ -49,7 +49,7 @@ public class FlowExecutorBuilder {
 
 	private Integer maxFlowExecutionSnapshots;
 
-	private LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
+	private LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<>();
 
 	private ConditionalFlowExecutionListenerLoader listenerLoader;
 
@@ -214,7 +214,7 @@ public class FlowExecutorBuilder {
 	}
 
 	private LocalAttributeMap<Object> getExecutionAttributes() {
-		LocalAttributeMap<Object> attributes = new LocalAttributeMap<Object>(this.executionAttributes.asMap());
+		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>(this.executionAttributes.asMap());
 		if (!attributes.contains("alwaysRedirectOnPause")) {
 			attributes.put("alwaysRedirectOnPause", true);
 		}

@@ -123,7 +123,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of state definitions for this flow.
 	 */
-	private Set<State> states = new LinkedHashSet<State>(9);
+	private Set<State> states = new LinkedHashSet<>(9);
 
 	/**
 	 * The default start state for this flow.
@@ -133,7 +133,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	/**
 	 * The set of flow variables created by this flow.
 	 */
-	private Map<String, FlowVariable> variables = new LinkedHashMap<String, FlowVariable>();
+	private Map<String, FlowVariable> variables = new LinkedHashMap<>();
 
 	/**
 	 * The mapper to map flow input attributes.
@@ -215,7 +215,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	}
 
 	public String[] getPossibleOutcomes() {
-		List<String> possibleOutcomes = new ArrayList<String>();
+		List<String> possibleOutcomes = new ArrayList<>();
 		for (State state : states) {
 			if (state instanceof EndState) {
 				possibleOutcomes.add(state.getId());

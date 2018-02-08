@@ -27,7 +27,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 	}
 
 	public void testBeforeListenersCalledInForwardOrder() throws Exception {
-		List<OrderVerifyingPhaseListener> list = new ArrayList<OrderVerifyingPhaseListener>();
+		List<OrderVerifyingPhaseListener> list = new ArrayList<>();
 		MockLifecycle lifecycle = new MockLifecycle();
 		PhaseListener listener1 = new OrderVerifyingPhaseListener(null, list);
 		lifecycle.addPhaseListener(listener1);
@@ -42,7 +42,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 	}
 
 	public void testAfterListenersCalledInReverseOrder() throws Exception {
-		List<OrderVerifyingPhaseListener> list = new ArrayList<OrderVerifyingPhaseListener>();
+		List<OrderVerifyingPhaseListener> list = new ArrayList<>();
 		MockLifecycle lifecycle = new MockLifecycle();
 		PhaseListener listener1 = new OrderVerifyingPhaseListener(list, null);
 		lifecycle.addPhaseListener(listener1);

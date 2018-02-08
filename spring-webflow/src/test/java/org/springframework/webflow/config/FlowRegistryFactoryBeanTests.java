@@ -20,7 +20,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 	}
 
 	public void testGetFlowRegistry() throws Exception {
-		HashSet<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>();
+		HashSet<FlowElementAttribute> attributes = new HashSet<>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
 		attributes.add(new FlowElementAttribute("bar", "2", "integer"));
 		FlowLocation location1 = new FlowLocation("flow1", "org/springframework/webflow/config/flow.xml", attributes);

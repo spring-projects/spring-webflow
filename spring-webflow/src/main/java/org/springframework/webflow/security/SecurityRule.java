@@ -61,7 +61,7 @@ public class SecurityRule {
 	 * @return comma parsed Collection
 	 */
 	public static Collection<String> commaDelimitedListToSecurityAttributes(String attributes) {
-		Collection<String> attrs = new HashSet<String>();
+		Collection<String> attrs = new HashSet<>();
 		for (String attribute : attributes.split(",")) {
 			attribute = attribute.trim();
 			if (!"".equals(attribute)) {

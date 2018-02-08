@@ -213,12 +213,12 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	private AttributeMap<Object> getFlowAttributes(Set<FlowElementAttribute> attributes) {
 		MutableAttributeMap<Object> flowAttributes = null;
 		if (flowBuilderServices.getDevelopment()) {
-			flowAttributes = new LocalAttributeMap<Object>(1 + attributes.size(), 1);
+			flowAttributes = new LocalAttributeMap<>(1 + attributes.size(), 1);
 			flowAttributes.put("development", true);
 		}
 		if (!attributes.isEmpty()) {
 			if (flowAttributes == null) {
-				flowAttributes = new LocalAttributeMap<Object>(attributes.size(), 1);
+				flowAttributes = new LocalAttributeMap<>(attributes.size(), 1);
 			}
 			for (FlowElementAttribute attribute : attributes) {
 				flowAttributes.put(attribute.getName(), getConvertedValue(attribute));

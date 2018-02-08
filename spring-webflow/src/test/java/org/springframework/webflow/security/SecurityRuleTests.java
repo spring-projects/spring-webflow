@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 public class SecurityRuleTests extends TestCase {
 
 	public void testConvertAttributesToCommaSeparatedString() {
-		Collection<String> attributes = new ArrayList<String>();
+		Collection<String> attributes = new ArrayList<>();
 		attributes.add("ROLE_1");
 		attributes.add("ROLE_2");
 		Assert.assertEquals("ROLE_1, ROLE_2", SecurityRule.securityAttributesToCommaDelimitedList(attributes));

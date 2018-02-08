@@ -163,7 +163,7 @@ public class FlowExecutorImplTests extends TestCase {
 		EasyMock.expect(execution.getDefinition()).andReturn(definition);
 		EasyMock.expect(definition.getId()).andReturn("foo");
 
-		LocalAttributeMap<Object> output = new LocalAttributeMap<Object>();
+		LocalAttributeMap<Object> output = new LocalAttributeMap<>();
 		output.put("foo", "bar");
 		EasyMock.expect(execution.getOutcome()).andReturn(new FlowExecutionOutcome("finish", output));
 

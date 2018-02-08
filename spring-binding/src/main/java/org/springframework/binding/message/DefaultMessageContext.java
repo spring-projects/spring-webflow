@@ -48,7 +48,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 			new LinkedHashMap<Object, List<Message>>()) {
 
 		protected List<Message> create(Object source) {
-			return new ArrayList<Message>();
+			return new ArrayList<>();
 		}
 	};
 
@@ -75,7 +75,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	// implementing message context
 
 	public Message[] getAllMessages() {
-		List<Message> messages = new ArrayList<Message>();
+		List<Message> messages = new ArrayList<>();
 		for (List<Message> list : sourceMessages.values()) {
 			messages.addAll(list);
 		}
@@ -88,7 +88,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	}
 
 	public Message[] getMessagesByCriteria(MessageCriteria criteria) {
-		List<Message> messages = new ArrayList<Message>();
+		List<Message> messages = new ArrayList<>();
 		for (List<Message> sourceMessages : this.sourceMessages.values()) {
 			for (Message message : sourceMessages) {
 				if (criteria.test(message)) {

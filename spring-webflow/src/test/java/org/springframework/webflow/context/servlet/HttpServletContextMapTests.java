@@ -92,7 +92,7 @@ public class HttpServletContextMapTests extends TestCase {
 	}
 
 	public void testPutAll() {
-		Map<String, Object> otherMap = new HashMap<String, Object>();
+		Map<String, Object> otherMap = new HashMap<>();
 		otherMap.put("SomeOtherKey", "SomeOtherValue");
 		otherMap.put("SomeKey", "SomeUpdatedValue");
 		tested.putAll(otherMap);

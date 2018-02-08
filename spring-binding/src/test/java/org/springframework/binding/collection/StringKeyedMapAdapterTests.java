@@ -28,7 +28,7 @@ import junit.framework.TestCase;
  */
 public class StringKeyedMapAdapterTests extends TestCase {
 
-	private Map<String, String> contents = new HashMap<String, String>();
+	private Map<String, String> contents = new HashMap<>();
 
 	private StringKeyedMapAdapter<String> map = new StringKeyedMapAdapter<String>() {
 
@@ -67,7 +67,7 @@ public class StringKeyedMapAdapterTests extends TestCase {
 	}
 
 	public void testPutAll() {
-		Map<String, String> all = new HashMap<String, String>();
+		Map<String, String> all = new HashMap<>();
 		all.put("foo", "bar");
 		all.put("bar", "baz");
 		map.putAll(all);

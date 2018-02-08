@@ -82,8 +82,8 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 	 * @return the list of codes
 	 */
 	public String[] resolveMessageCodes(String errorCode, String objectName, String field, Class<?> fieldType) {
-		List<String> codeList = new ArrayList<String>();
-		List<String> fieldList = new ArrayList<String>();
+		List<String> codeList = new ArrayList<>();
+		List<String> fieldList = new ArrayList<>();
 		buildFieldList(field, fieldList);
 		for (String fieldInList : fieldList) {
 			codeList.add(postProcessMessageCode(objectName + CODE_SEPARATOR + fieldInList + CODE_SEPARATOR + errorCode));

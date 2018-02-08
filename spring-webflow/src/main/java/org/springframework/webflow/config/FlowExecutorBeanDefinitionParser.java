@@ -91,7 +91,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 	private Set<Object> parseFlowExecutionAttributes(Element element) {
 		Element executionAttributesElement = DomUtils.getChildElementByTagName(element, "flow-execution-attributes");
 		if (executionAttributesElement != null) {
-			HashSet<Object> attributes = new HashSet<Object>();
+			HashSet<Object> attributes = new HashSet<>();
 			Element redirectElement = DomUtils.getChildElementByTagName(executionAttributesElement,
 					"always-redirect-on-pause");
 			if (redirectElement != null) {
