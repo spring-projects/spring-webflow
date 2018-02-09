@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,22 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javax.faces.FacesException;
 import javax.faces.application.ResourceHandler;
 import javax.faces.application.ResourceHandlerWrapper;
+import javax.faces.application.ViewResource;
 import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.ResourceResolver;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ClassUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Resolves Facelets resources using Spring Resource paths such as "classpath:foo.xhtml".
+ * <p>This handler is auto-configured in the faces-config.xml bundled with the
+ * "spring-faces" module.
+ * @since 2.5
  */
 public class FlowResourceHandler extends ResourceHandlerWrapper {
 
@@ -49,6 +47,35 @@ public class FlowResourceHandler extends ResourceHandlerWrapper {
 		return this.wrapped;
 	}
 
-	// FIXME will need to copy logic from FlowResourceResolver
+	@Override
+	public ViewResource createViewResource(FacesContext facesContext, String resourceName) {
+		if (!JsfUtils.isFlowRequest()) {
+			return this.wrapped.createViewResource(facesContext, resourceName);
+		}
+
+		try {
+			RequestContext context = RequestContextHolder.getRequestContext();
+			ApplicationContext flowContext = context.getActiveFlow().getApplicationContext();
+			if (flowContext == null) {
+				throw new IllegalStateException(
+						"A Flow ApplicationContext is required to resolve Flow View Resources");
+			}
+			ApplicationContext appContext = flowContext.getParent();
+			Resource viewResource = appContext.getResource(resourceName);
+			URL url = viewResource.getURL();
+			if (viewResource.exists()) {
+				return new ViewResource() {
+					@Override
+					public URL getURL() {
+						return url;
+					}
+				};
+			} else {
+				return this.wrapped.createViewResource(facesContext, resourceName);
+			}
+		} catch (IOException ex) {
+			throw new FacesException(ex);
+		}
+	}
 
 }

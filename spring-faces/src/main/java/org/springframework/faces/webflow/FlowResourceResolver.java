@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.faces.FacesException;
-import javax.faces.view.facelets.ResourceResolver;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -31,20 +30,22 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml". Configure it via a context
- * parameter in web.xml:
- * 
+ * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml".
+ * Configure it via a context parameter in web.xml:
  * <pre>
  * &lt;context-param/&gt; 
  * 	&lt;param-name&gt;facelets.RESOURCE_RESOLVER&lt;/param-name&gt;
  * 	&lt;param-value&gt;org.springframework.faces.webflow.FlowResourceResolver&lt;/param-value&gt; 
  * &lt;/context-param&gt;
  * </pre>
+ * @deprecated as of 2.5 in favor of {@link FlowResourceHandler}.
  */
-public class FlowResourceResolver extends ResourceResolver {
+@Deprecated
+@SuppressWarnings("deprecation")
+public class FlowResourceResolver extends javax.faces.view.facelets.ResourceResolver {
 
 	/**
-	 * All known {@link ResourceResolver} implementations in the priority order
+	 * All known {@code ResourceResolver} implementations in the priority order
 	 */
 	private static final List<String> RESOLVERS_CLASSES;
 	static {
@@ -54,18 +55,19 @@ public class FlowResourceResolver extends ResourceResolver {
 		RESOLVERS_CLASSES = Collections.unmodifiableList(resolvers);
 	}
 
-	private final ResourceResolver delegateResolver;
+	private final javax.faces.view.facelets.ResourceResolver delegateResolver;
 
 	public FlowResourceResolver() {
 		this.delegateResolver = createDelegateResolver();
 	}
 
-	private ResourceResolver createDelegateResolver() {
+	private javax.faces.view.facelets.ResourceResolver createDelegateResolver() {
 		try {
 			ClassLoader classLoader = getClass().getClassLoader();
 			for (String resolverClass : RESOLVERS_CLASSES) {
 				if (ClassUtils.isPresent(resolverClass, classLoader)) {
-					return (ResourceResolver) ClassUtils.forName(resolverClass, classLoader).newInstance();
+					return (javax.faces.view.facelets.ResourceResolver)
+							ClassUtils.forName(resolverClass, classLoader).newInstance();
 				}
 			}
 		} catch (Exception e) {
