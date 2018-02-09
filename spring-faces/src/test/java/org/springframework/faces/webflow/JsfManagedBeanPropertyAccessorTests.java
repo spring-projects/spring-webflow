@@ -41,11 +41,13 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testCanRead() {
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
 		assertTrue(this.accessor.canRead(null, null, "myJsfBean"));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testRead() {
 		Object jsfBean = new Object();
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", jsfBean);

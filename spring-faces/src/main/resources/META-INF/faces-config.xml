@@ -9,6 +9,7 @@
 		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
 		<action-listener>org.springframework.faces.model.SelectionTrackingActionListener</action-listener>
         <el-resolver>org.springframework.faces.webflow.FlowELResolver</el-resolver>
+        <resource-handler>org.springframework.faces.webflow.FlowResourceHandler</resource-handler>
 	</application>
 
 	<factory>

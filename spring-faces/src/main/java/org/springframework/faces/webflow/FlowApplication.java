@@ -94,12 +94,10 @@ public class FlowApplication extends ApplicationWrapper {
 		return (delegateViewHandler != null) && (!(delegateViewHandler instanceof FlowViewHandler));
 	}
 
-	private boolean wrapAndSetViewHandler(ViewHandler target) {
+	private void wrapAndSetViewHandler(ViewHandler target) {
 		if ((target != null) && (!(target instanceof FlowViewHandler))) {
 			ViewHandler handler = new FlowViewHandler(target);
 			super.setViewHandler(handler);
-			return true;
 		}
-		return false;
 	}
 }

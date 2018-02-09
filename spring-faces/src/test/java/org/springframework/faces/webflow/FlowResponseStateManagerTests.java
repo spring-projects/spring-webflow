@@ -16,15 +16,18 @@ public class FlowResponseStateManagerTests extends TestCase {
 
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
+	private StaticWebApplicationContext webappContext;
+
 	private FlowResponseStateManager responseStateManager;
 
 	private RequestContext requestContext;
 	private FlowExecutionContext flowExecutionContext;
 
+
 	protected void setUp() throws Exception {
 		this.jsfMock.setUp();
-		StaticWebApplicationContext webappContext = new StaticWebApplicationContext();
-		webappContext.setServletContext(this.jsfMock.servletContext());
+		this.webappContext = new StaticWebApplicationContext();
+		this.webappContext.setServletContext(this.jsfMock.servletContext());
 
 		this.requestContext = EasyMock.createMock(RequestContext.class);
 		RequestContextHolder.setRequestContext(this.requestContext);
@@ -35,6 +38,7 @@ public class FlowResponseStateManagerTests extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		this.webappContext.close();
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}

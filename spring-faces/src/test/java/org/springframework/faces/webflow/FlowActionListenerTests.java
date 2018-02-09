@@ -1,10 +1,9 @@
 package org.springframework.faces.webflow;
 
+import javax.el.ELContext;
+import javax.el.MethodExpression;
+import javax.el.MethodInfo;
 import javax.faces.component.UICommand;
-import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.MethodNotFoundException;
 import javax.faces.event.ActionEvent;
 
 import junit.framework.TestCase;
@@ -44,9 +43,9 @@ public class FlowActionListenerTests extends TestCase {
 	public final void testProcessAction() {
 
 		String outcome = "foo";
-		MethodBinding binding = new MethodBindingStub(outcome);
+		MethodExpression expression = new MethodExpressionStub(outcome);
 		UICommand commandButton = new UICommand();
-		commandButton.setAction(binding);
+		commandButton.setActionExpression(expression);
 		ActionEvent event = new ActionEvent(commandButton);
 
 		this.listener.processAction(event);
@@ -60,9 +59,9 @@ public class FlowActionListenerTests extends TestCase {
 	public final void testProcessAction_NullOutcome() {
 
 		String outcome = null;
-		MethodBinding binding = new MethodBindingStub(outcome);
+		MethodExpression expression = new MethodExpressionStub(outcome);
 		UICommand commandButton = new UICommand();
-		commandButton.setAction(binding);
+		commandButton.setActionExpression(expression);
 		ActionEvent event = new ActionEvent(commandButton);
 
 		this.listener.processAction(event);
@@ -71,22 +70,43 @@ public class FlowActionListenerTests extends TestCase {
 				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
 	}
 
-	private class MethodBindingStub extends MethodBinding {
+	private class MethodExpressionStub extends MethodExpression {
 
 		String result;
 
-		public MethodBindingStub(String result) {
+		public MethodExpressionStub(String result) {
 			this.result = result;
 		}
 
-		public Class<?> getType(FacesContext context) throws MethodNotFoundException {
-			return String.class;
+		@Override
+		public MethodInfo getMethodInfo(ELContext context) {
+			return null;
 		}
 
-		public Object invoke(FacesContext context, Object... args) throws EvaluationException {
+		@Override
+		public Object invoke(ELContext context, Object[] params) {
 			return this.result;
 		}
 
+		@Override
+		public String getExpressionString() {
+			return null;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return 0;
+		}
+
+		@Override
+		public boolean isLiteralText() {
+			return false;
+		}
 	}
 
 	private class MockViewState extends ViewState {

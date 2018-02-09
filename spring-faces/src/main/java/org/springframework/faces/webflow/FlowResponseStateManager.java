@@ -18,6 +18,7 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.faces.FacesWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKitFactory;
@@ -25,7 +26,7 @@ import javax.faces.render.ResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.faces.support.ResponseStateManagerWrapper;
+
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -38,7 +39,8 @@ import org.springframework.webflow.execution.RequestContextHolder;
  *
  * @since 2.2.0
  */
-public class FlowResponseStateManager extends ResponseStateManagerWrapper {
+public class FlowResponseStateManager extends ResponseStateManager
+		implements FacesWrapper<ResponseStateManager>  {
 
 	private static final Log logger = LogFactory.getLog(FlowResponseStateManager.class);
 
@@ -59,6 +61,11 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 	@Override
 	public ResponseStateManager getWrapped() {
 		return this.wrapped;
+	}
+
+	@Override
+	public boolean isStateless(FacesContext context, String viewId) {
+		return false;
 	}
 
 	@Override
@@ -142,4 +149,15 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 			writer.endElement("input");
 		}
 	}
+
+	@Override
+	public boolean isPostback(FacesContext context) {
+		return getWrapped().isPostback(context);
+	}
+
+	@Override
+	public String getCryptographicallyStrongTokenFromSession(FacesContext context) {
+		return getWrapped().getCryptographicallyStrongTokenFromSession(context);
+	}
+
 }

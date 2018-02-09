@@ -21,6 +21,8 @@ import java.io.Serializable;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
+import javax.faces.view.StateManagementStrategy;
+import javax.faces.view.ViewDeclarationLanguage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,7 +121,13 @@ public class JsfView implements View {
 	public void saveState() {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
 		facesContext.setViewRoot(this.viewRoot);
-		facesContext.getApplication().getStateManager().saveView(facesContext);
+		ViewDeclarationLanguage viewDeclarationLanguage = facesContext.getApplication().getViewHandler()
+				.getViewDeclarationLanguage(facesContext, this.viewId);
+		StateManagementStrategy stateManagementStrategy = (viewDeclarationLanguage == null ? null
+				: viewDeclarationLanguage.getStateManagementStrategy(facesContext, this.viewId));
+		if (stateManagementStrategy != null) {
+			stateManagementStrategy.saveView(facesContext);
+		}
 	}
 
 	public Serializable getUserEventState() {

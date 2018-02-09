@@ -2,7 +2,6 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 import java.io.StringWriter;
-
 import javax.faces.FacesException;
 import javax.faces.component.UIForm;
 import javax.faces.component.UIInput;
@@ -13,10 +12,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 
 import junit.framework.TestCase;
-
 import org.apache.myfaces.test.mock.MockResponseWriter;
-import org.apache.myfaces.test.mock.MockStateManager;
 import org.easymock.EasyMock;
+
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
@@ -65,7 +63,6 @@ public class JsfViewTests extends TestCase {
 
 		this.jsfMock.setUp();
 		this.jsfMock.facesContext().getApplication().setViewHandler(new MockViewHandler());
-		this.jsfMock.facesContext().getApplication().setStateManager(new TestStateManager());
 		this.jsfMock.facesContext().setResponseWriter(new MockResponseWriter(this.output, null, null));
 
 		UIViewRoot viewToRender = new UIViewRoot();
@@ -207,13 +204,6 @@ public class JsfViewTests extends TestCase {
 	private class ExceptionalViewHandler extends MockViewHandler {
 		public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
 			throw new IOException("Rendering blew up");
-		}
-	}
-
-	private class TestStateManager extends MockStateManager {
-		public SerializedView saveSerializedView(FacesContext context) {
-			SerializedView state = new SerializedView(new Object[] { "tree_state" }, new Object[] { "component_state" });
-			return state;
 		}
 	}
 

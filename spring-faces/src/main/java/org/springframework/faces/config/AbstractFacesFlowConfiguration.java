@@ -75,7 +75,7 @@ public class AbstractFacesFlowConfiguration implements ApplicationContextAware {
 	 * @return the created builder
 	 */
 	protected FlowExecutorBuilder getFlowExecutorBuilder(FlowDefinitionLocator flowRegistry) {
-		return new FlowExecutorBuilder(flowRegistry, this.applicationContext);
+		return new FlowExecutorBuilder(flowRegistry);
 	}
 
 	/**

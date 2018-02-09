@@ -15,6 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitWrapper;
+import javax.faces.render.ResponseStateManager;
+
 /**
  * A render kit implementation that ensures use of Web Flow's FlowViewResponseStateManager, which takes over reading and
  * writing JSF state and manages that in Web Flow's view scope.
@@ -23,15 +27,6 @@ package org.springframework.faces.webflow;
  * @author Phillip Webb
  * @since 2.2.0
  */
-import java.lang.reflect.Constructor;
-
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitWrapper;
-import javax.faces.render.ResponseStateManager;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.util.ClassUtils;
-
 public class FlowRenderKit extends RenderKitWrapper {
 
 	private final RenderKit wrapped;
@@ -40,24 +35,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 
 	public FlowRenderKit(RenderKit wrapped) {
 		this.wrapped = wrapped;
-		this.flowViewResponseStateManager = initResponseStateManager(wrapped.getResponseStateManager());
-	}
-
-	private ResponseStateManager initResponseStateManager(ResponseStateManager wrapped) {
-		if (JsfRuntimeInformation.isMojarraPresent() && !JsfRuntimeInformation.isMyFacesInUse()) {
-			return new FlowResponseStateManager(wrapped);
-		}
-		Constructor<?> constructor;
-		try {
-			String className = "org.springframework.faces.webflow.MyFacesFlowResponseStateManager";
-			Class<?> clazz = ClassUtils.forName(className, FlowRenderKit.class.getClassLoader());
-			constructor = ClassUtils.getConstructorIfAvailable(clazz, FlowResponseStateManager.class);
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Could not initialize MyFacesFlowResponseStateManager", e);
-		} catch (LinkageError e) {
-			throw new IllegalStateException("Could not initialize MyFacesFlowResponseStateManager", e);
-		}
-		return (ResponseStateManager) BeanUtils.instantiateClass(constructor, new FlowResponseStateManager(wrapped));
+		this.flowViewResponseStateManager = new FlowResponseStateManager(wrapped.getResponseStateManager());
 	}
 
 	public RenderKit getWrapped() {
@@ -74,4 +52,5 @@ public class FlowRenderKit extends RenderKitWrapper {
 		}
 		return this.wrapped.getResponseStateManager();
 	}
+
 }
