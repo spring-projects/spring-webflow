@@ -15,13 +15,11 @@
  */
 package org.springframework.faces.webflow;
 
-import java.io.IOException;
-
 import javax.faces.FacesWrapper;
-import javax.faces.application.StateManager.SerializedView;
 import javax.faces.context.FacesContext;
 import javax.faces.render.ResponseStateManager;
 
+import org.springframework.faces.support.ResponseStateManagerWrapper;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -49,7 +47,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * @see FlowResponseStateManager
  * @see FlowRenderKit
  */
-public class MyFacesFlowResponseStateManager extends ResponseStateManager
+public class MyFacesFlowResponseStateManager extends ResponseStateManagerWrapper
 		implements FacesWrapper<ResponseStateManager> {
 
 	private final ResponseStateManager wrapped;
@@ -67,32 +65,4 @@ public class MyFacesFlowResponseStateManager extends ResponseStateManager
 		requestContext.getViewScope().put(FlowResponseStateManager.FACES_VIEW_STATE, state);
 	}
 
-	public Object getComponentStateToRestore(FacesContext context) {
-		return getWrapped().getComponentStateToRestore(context);
-	}
-
-	public Object getState(FacesContext context, String viewId) {
-		return getWrapped().getState(context, viewId);
-	}
-
-	public Object getTreeStructureToRestore(FacesContext context, String viewId) {
-		return getWrapped().getTreeStructureToRestore(context, viewId);
-	}
-
-	public String getViewState(FacesContext context, Object state) {
-		return getWrapped().getViewState(context, state);
-	}
-
-	public boolean isPostback(FacesContext context) {
-		return getWrapped().isPostback(context);
-	}
-
-	public void writeState(FacesContext context, Object state) throws IOException {
-		getWrapped().writeState(context, state);
-	}
-
-	@Deprecated
-	public void writeState(FacesContext context, SerializedView state) throws IOException {
-		getWrapped().writeState(context, state);
-	}
 }
