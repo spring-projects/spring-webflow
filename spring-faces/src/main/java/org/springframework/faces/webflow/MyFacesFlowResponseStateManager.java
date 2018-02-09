@@ -60,6 +60,11 @@ public class MyFacesFlowResponseStateManager extends ResponseStateManagerWrapper
 		return this.wrapped;
 	}
 
+	@Override
+	public boolean isStateless(FacesContext context, String viewId) {
+		return false;
+	}
+
 	public void saveState(FacesContext facesContext, Object state) {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		requestContext.getViewScope().put(FlowResponseStateManager.FACES_VIEW_STATE, state);

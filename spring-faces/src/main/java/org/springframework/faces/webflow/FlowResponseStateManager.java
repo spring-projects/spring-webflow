@@ -62,6 +62,11 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 	}
 
 	@Override
+	public boolean isStateless(FacesContext context, String viewId) {
+		return false;
+	}
+
+	@Override
 	public void writeState(FacesContext facesContext, Object state) throws IOException {
 		if (!JsfUtils.isFlowRequest()) {
 			super.writeState(facesContext, state);
