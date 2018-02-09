@@ -17,7 +17,6 @@ package org.springframework.faces.webflow;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.component.visit.VisitContextFactory;
@@ -103,9 +102,7 @@ public class JsfUtils {
 		FACTORY_NAMES.put(ApplicationFactory.class, FactoryFinder.APPLICATION_FACTORY);
 		FACTORY_NAMES.put(ExceptionHandlerFactory.class, FactoryFinder.EXCEPTION_HANDLER_FACTORY);
 		FACTORY_NAMES.put(ExternalContextFactory.class, FactoryFinder.EXTERNAL_CONTEXT_FACTORY);
-		if (JsfRuntimeInformation.isAtLeastJsf21()) {
-			FACTORY_NAMES.put(FaceletCacheFactory.class, FactoryFinder.FACELET_CACHE_FACTORY);
-		}
+		FACTORY_NAMES.put(FaceletCacheFactory.class, FactoryFinder.FACELET_CACHE_FACTORY);
 		FACTORY_NAMES.put(FacesContextFactory.class, FactoryFinder.FACES_CONTEXT_FACTORY);
 		FACTORY_NAMES.put(LifecycleFactory.class, FactoryFinder.LIFECYCLE_FACTORY);
 		FACTORY_NAMES.put(PartialViewContextFactory.class, FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);

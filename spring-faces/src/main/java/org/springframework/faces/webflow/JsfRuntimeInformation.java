@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextWrapper;
 
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Helper class to provide information about the JSF runtime environment such as
@@ -33,33 +32,6 @@ public class JsfRuntimeInformation {
 
 	private static final ClassLoader CLASSLOADER = JsfRuntimeInformation.class.getClassLoader();
 
-
-	public static final int JSF_22 = 4;
-
-	public static final int JSF_21 = 3;
-
-	public static final int JSF_20 = 2;
-
-	public static final int JSF_12 = 1;
-
-	public static final int JSF_11 = 0;
-
-	private static final int jsfVersion;
-
-	static {
-		if (ReflectionUtils.findMethod(FacesContext.class, "getResourceLibraryContracts") != null) {
-			jsfVersion = JSF_22;
-		} else if (ReflectionUtils.findMethod(FacesContext.class, "isReleased") != null) {
-			jsfVersion = JSF_21;
-		} else if (ReflectionUtils.findMethod(FacesContext.class, "isPostback") != null) {
-			jsfVersion = JSF_20;
-		} else if (ReflectionUtils.findMethod(FacesContext.class, "getELContext") != null) {
-			jsfVersion = JSF_12;
-		} else {
-			jsfVersion = JSF_11;
-		}
-	}
-
 	private static final boolean mojarraPresent =
 			ClassUtils.isPresent("com.sun.faces.context.FacesContextImpl", CLASSLOADER);
 
@@ -69,25 +41,39 @@ public class JsfRuntimeInformation {
 	private static Boolean myFacesInUse;
 
 
-
+	/**
+	 * @deprecated as of 2.5, always returns true.
+	 */
 	public static boolean isAtLeastJsf22() {
-		return jsfVersion >= JSF_22;
+		return true;
 	}
 
+	/**
+	 * @deprecated as of 2.5, always returns true.
+	 */
 	public static boolean isAtLeastJsf21() {
-		return jsfVersion >= JSF_21;
+		return true;
 	}
 
+	/**
+	 * @deprecated as of 2.5, always returns true.
+	 */
 	public static boolean isAtLeastJsf20() {
-		return jsfVersion >= JSF_20;
+		return true;
 	}
 
+	/**
+	 * @deprecated as of 2.5, always returns true.
+	 */
 	public static boolean isAtLeastJsf12() {
-		return jsfVersion >= JSF_12;
+		return true;
 	}
 
+	/**
+	 * @deprecated as of 2.5, always returns false.
+	 */
 	public static boolean isLessThanJsf20() {
-		return jsfVersion < JSF_20;
+		return false;
 	}
 
 
