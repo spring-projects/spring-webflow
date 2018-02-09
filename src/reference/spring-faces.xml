@@ -17,6 +17,7 @@ xsi:schemaLocation="
 			a Spring Security tag library for use in JSF environments,
 			see <xref linkend="spring-faces-security-taglib" /> for more details.
 		</para>
+		<para>Spring Web Flow 2.5 requires JSF 2.2 or higher.</para>
 	</sect1>
 
 	<sect1 xml:id="spring-faces-config-web.xml">

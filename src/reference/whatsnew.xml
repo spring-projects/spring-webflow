@@ -24,6 +24,7 @@
 			The <emphasis>spring-js-resources</emphasis> module is available as an optional module that
 			must be included explicitly.
 		</para>
+		<para>This release requires JSF 2.2 or higher.</para>
 	</sect1>
 
 	<sect1 xml:id="whatsnew-swf-240">
