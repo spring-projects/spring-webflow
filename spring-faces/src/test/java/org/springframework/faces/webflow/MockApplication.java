@@ -141,7 +141,7 @@ public class MockApplication extends Application {
 		return null;
 	}
 
-	public MethodBinding createMethodBinding(String ref, Class<?>... params) throws ReferenceSyntaxException {
+	public MethodBinding createMethodBinding(String ref, Class<?>[] params) throws ReferenceSyntaxException {
 		return null;
 	}
 

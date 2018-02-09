@@ -30,6 +30,7 @@ public class JsfManagedBeanAwareELExpressionParserTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testGetJSFBean() {
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
 		Expression expr = this.parser.parseExpression("myJsfBean", new FluentParserContext().evaluate(RequestContext.class));

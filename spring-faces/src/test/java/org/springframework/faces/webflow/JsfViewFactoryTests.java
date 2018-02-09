@@ -159,7 +159,7 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no flow event signaled
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public final void testGetView_RestoreWithBindings() {
 
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
