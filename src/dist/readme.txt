@@ -1,6 +1,6 @@
 SPRING WEB FLOW ${version}
 --------------------------
-http://www.springframework.org/webflow
+http://projects.spring.io/spring-webflow/
 
 1. INTRODUCTION
 ---------------
@@ -34,18 +34,18 @@ Spring Web Flow is released under the terms of the Apache Software License (see 
 3. GETTING STARTED
 ------------------
 Current samples:
-https://github.com/SpringSource/spring-webflow-samples.
+https://github.com/spring-projects/spring-webflow-samples.
 
-4. OBTAINING RELEASE JARS WITH MAVEN OR IVY
--------------------------------------------
+4. OBTAINING RELEASE JARS THROUGH MAVEN REPOSITORY
+--------------------------------------------------
 Release versions of Spring Web Flow artifacts are available via Maven Central.
 
-For milestones and snapshots only (and for Ivy dependencies) you'll need to use the
-SpringSource repository. Add the following repository to your Maven pom.xml:
+For milestones and snapshots only you'll need to use the Spring repository.
+Add the following repository to your Maven pom.xml:
 
 <repository>
-    <id>springsource-repository</id>
-    <name>Spring project releases, milestones, and snapshots</name>
+    <id>spring</id>
+    <name>Spring Snapshots</name>
     <url>http://repo.spring.io/snapshot</url>
 </repository>
 
@@ -73,36 +73,6 @@ If using JSF all you need to include is:
     <version>${version}</version>
 </dependency> 
 
-To access jars using Ivy, add the following repositories to your Ivy config:
-
-<url name="com.springsource.repository.bundles.release">
-    <ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-</url>
-
-<url name="com.springsource.repository.bundles.external">
-    <ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-</url>
-
-Then declare the following dependencies in your ivy.xml:
-
-<dependency org="org.springframework.webflow" name="org.springframework.binding" rev="${version}" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js" rev="${version}" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.webflow" rev="${version}" conf="compile->runtime" />
-
-If using JavaServerFaces:
-
-<dependency org="org.springframework.webflow" name="org.springframework.faces" rev="${version}" conf="compile->runtime" />
-
-For more information see the reference documentation and the SpringSource Repository FAQ:
-https://github.com/spring-projects/spring-framework/wiki/Spring-repository-FAQ
-	
-5. ADDITIONAL RESOURCES
------------------------
-The Spring Web Flow homepage is located at:
-    http://projects.spring.io/spring-webflow/
-
-The Spring Web Flow community forums are located at:
-    http://forum.spring.io/
+For more details see the following Spring Framework wiki page:
+https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-Artifacts
 

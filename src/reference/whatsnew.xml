@@ -11,8 +11,19 @@
 
 	<sect1 xml:id="whatsnew-swf-250">
 		<title>Spring Web Flow 2.5</title>
-		<para>This release requires JDK 1.8 and Spring Framework 5.0.</para>
-		<!-- TODO -->
+		<para>
+			This release provides an upgrade path to Spring Framework 5 that in turn requires
+			Java 8+, Servlet 3.1, Hibernate 5, Tiles 3. See the
+			<link xl:href="https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-5.x">Spring Framework wiki</link>
+			for more details. The <link xl:href="https://github.com/spring-projects/spring-webflow-samples">samples repository</link>
+			has been upgraded to Spring Web Flow 2.5.
+		</para>
+		<para>
+			As of 2.5 there is no longer a <emphasis>spring-js</emphasis> module. The classes from that module
+			have been kept but moved to new packages in the <emphasis>spring-webflow</emphasis> module.
+			The <emphasis>spring-js-resources</emphasis> module is available as an optional module that
+			must be included explicitly.
+		</para>
 	</sect1>
 
 	<sect1 xml:id="whatsnew-swf-240">

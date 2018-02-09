@@ -19,10 +19,10 @@
 	<sect1 xml:id="system-requirements">
 		<title>What Web Flow requires to run</title>
 		<para>
-			Java 1.6 or higher.
+			Java 1.8 or higher.
 		</para>
 		<para>
-			Spring 3.2 or higher.
+			Spring 5.0 or higher.
 		</para>
 	</sect1>
 	<sect1 xml:id="resources">
@@ -48,8 +48,7 @@
 			build system for your web development project.
 		</para>
 		<para>
-			To access Web Flow jars from Maven Central, declare the following dependency in your pom (includes
-			transitive dependencies "spring-binding"):
+			To access Web Flow jars from Maven Central, declare the following dependency in your pom:
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
@@ -72,54 +71,6 @@
 ]]>
 		</programlisting>
 	</sect1>
-	<sect1 xml:id="jars-ivy">
-		<title>How to access Web Flow artifacts with Ivy</title>
-		<para>
-			To access Spring Web Flow jars with Ivy, add the following repositories to your Ivy config:
-		</para>
-			<programlisting language="xml"><![CDATA[
-<url name="com.springsource.repository.bundles.release">
-    <ivy pattern="http://repository.springsource.com/ivy/bundles/release/
-                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/bundles/release/
-                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-</url>
-
-<url name="com.springsource.repository.bundles.external">
-    <ivy pattern="http://repository.springsource.com/ivy/bundles/external/
-                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/bundles/external/
-                  [organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-</url>]]>
-			</programlisting>
-		<para>
-			To access Spring Web Flow jars as well as 3rd party dependencies with Ivy, add the following repository to your Ivy config:
-		</para>
-			<programlisting language="xml"><![CDATA[
-<url name="springsource-repository">
-    <ivy pattern="http://repo.spring.io/libs-release/[organization]/[module]/[revision]/[type]s/ivy-[revision].xml" />
-    <artifact pattern="http://repo.spring.io/libs-release/[organization]/[module]/[revision]/[type]s/[module](-[classifier])-[revision].[ext]" />
-</url>]]>
-			</programlisting>
-		<para>
-			Then declare the following dependencies in your ivy.xml:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency org="org.springframework.webflow" name="org.springframework.binding"
-            rev="x.y.z.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.js"
-            rev="x.y.z.RELEASE" conf="compile->runtime" />
-<dependency org="org.springframework.webflow" name="org.springframework.webflow"
-            rev="x.y.z.RELEASE" conf="compile->runtime" />]]>
-		</programlisting>
-		<para>
-			If using JavaServer Faces, declare the following dependency in your pom (also adds the above dependencies):
-		</para>
-		<programlisting language="xml"><![CDATA[
-<dependency org="org.springframework.webflow" name="org.springframework.faces"
-            rev="x.y.z.RELEASE" conf="compile->runtime" />]]>
-		</programlisting>
-	</sect1>
 	<sect1>
 		<title>How to access nightly builds and milestone releases</title>
 		<para>
@@ -134,8 +85,8 @@
 			</para>
 			<programlisting language="xml"><![CDATA[
 <repository>
-    <id>springsource-repository</id>
-    <name>Spring project snapshots, milestones, and releases</name>
+    <id>spring</id>
+    <name>Spring Repository</name>
     <url>http://repo.spring.io/snapshot</url>
 </repository>]]>
 			</programlisting>
@@ -145,18 +96,12 @@
 			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.webflow</groupId>
-    <artifactId>spring-binding</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
     <version>x.y.z.BUILD-SNAPSHOT</version>
 </dependency>]]>
 			</programlisting>
 			<para>
-				And if using JavaServerFaces:
+				And if using JSF:
 			</para>
 			<programlisting language="xml"><![CDATA[
 <dependency>

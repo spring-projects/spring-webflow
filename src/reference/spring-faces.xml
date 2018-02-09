@@ -11,121 +11,12 @@ xsi:schemaLocation="
 
 	<sect1 xml:id="spring-faces-introduction">
 		<title>Introduction</title>
-
-		<para>Spring Web Flow provides a JSF integration that simplifies using JSF
-		with Spring. It lets you use the JSF UI Component Model with Spring MVC
-		and Spring Web Flow controllers. Along with the JSF integration Spring Web
-		Flow provides a Spring Security tag library for use in JSF environments
-		(see <xref linkend="spring-faces-security-taglib" /> for more details).
+		<para>
+			Spring Web Flow provides a JSF integration that lets you use the JSF UI
+			Component Model with Spring Web Flow controllers. Web Flow also provides
+			a Spring Security tag library for use in JSF environments,
+			see <xref linkend="spring-faces-security-taglib" /> for more details.
 		</para>
-
-		<para>Starting with Spring Web Flow version 2.4, JSF integration requires
-		JSF v2.0 or above.    Both Sun Mojarra and Apache MyFaces runtime environments
-		are supported.</para>
-
-	</sect1>
-
-	<sect1 xml:id="spring-faces-integration">
-		<title>JSF Integration For Spring Developers</title>
-
-		<para>Spring Web Flow complements the strengths of JSF, its component
-		model, and provides more sophisticated state management and navigation. In
-		addition you have the ability to use Spring MVC @Controller or flow
-		definitions as controllers in the web layer.</para>
-
-		<para>JSF applications using Spring Web Flow applications gain benefits in
-		the following areas: <orderedlist>
-			<listitem>
-				<para>Managed bean facility</para>
-			</listitem>
-
-			<listitem>
-				<para>Scope management</para>
-			</listitem>
-
-			<listitem>
-				<para>Event handling</para>
-			</listitem>
-
-			<listitem>
-				<para>Navigation</para>
-			</listitem>
-
-			<listitem>
-				<para>Modularization and packaging of views</para>
-			</listitem>
-
-			<listitem>
-				<para>Cleaner URLs</para>
-			</listitem>
-
-			<listitem>
-				<para>Model-level validation</para>
-			</listitem>
-		</orderedlist> Using these features significantly reduce the amount of
-		configuration required in faces-config.xml. They provide a cleaner
-		separation between the view and controller layers along with better
-		modularization of application functionals. These features are detailed in
-		the sections to follow. The majority of these features build on the flow
-		definition language of Spring Web Flow. Therefore it is assumed that you
-		have an understanding of the foundations presented in <xref
-		linkend="defining-flows" />.</para>
-	</sect1>
-
-	<sect1 xml:id="spring-faces-upgrade-from-swf23">
-		<title>Upgrading from Spring Web Flow 2.3</title>
-
-		<para>If you are upgrading from Spring Web Flow 2.3 or earlier you may need to
-		update several aspects of your project.    JSF 2.0 is now a minimum requirement
-		and as result some components from previous releases are no longer included.</para>
-
-		<sect2 xml:id="spring-faces-upgrade-from-swf23-components">
-			<title>Spring Faces Components</title>
-			<para>Previous releases of Spring Web Flow shipped with a component library
-			which provided Ajax and client-side validation capabilities for JSF 1.2
-			environments.    Applications using these components will need to switch to a
-			3rd party JSF component library such as PrimeFaces or RichFaces.
-			Components that have been removed include <code>&lt;sf:clientTextValidator&gt;</code>,
-			<code>&lt;sf:clientNumberValidator&gt;</code>, <code>&lt;sf:clientDateValidator&gt;</code>,
-			<code>&lt;sf:validateAllOnClick&gt;</code>, <code>&lt;sf:resource&gt;</code> and
-			<code>&lt;sf:resourceGroup&gt;</code>.
-			The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution
-			shows an example built with PrimeFaces components.</para>
-		</sect2>
-
-		<sect2 xml:id="spring-faces-upgrade-from-swf23-faces-config">
-			<title>Configuring faces-config.xml</title>
-			<para>If your application defines a <code>faces-config.xml</code> file you should
-			ensure that the correct schema version is specified.    In addition you should remove
-			any <code>FaceletViewHandler</code> references as Facelets are now the default rendering
-			technology for JSF 2.0</para>
-
-			<programlisting language="xml">
-&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
-		version="2.0"&gt;
-
-&lt;/faces-config&gt;
-			</programlisting>
-		</sect2>
-
-		<sect2 xml:id="spring-faces-upgrade-from-swf23-thirdpartylibraries">
-			<title>Third-party Libraries</title>
-			<para>Previous releases of Spring Web Flow would often require additional configuration in order
-			for 3rd party component libraries to work correctly.    JSF 2.0 introduced standard resource
-			loading mechanisms that removes the need for such custom configuration.    As long as you
-			have a <code>&lt;faces:resources&gt;</code> element in your Spring configuration, libraries
-			such as RichFaces or Apache Trinidad you should work.</para>
-		</sect2>
-
-		<sect2 xml:id="spring-faces-upgrade-from-swf23-security-taglib">
-			<title>Spring Security Facelets Tag Library</title>
-			<para>If you have a previously configured <code>/WEB-INF/springsecurity.taglib.xml</code> file
-			you may need to update the contents.    See <xref linkend="spring-faces-security-taglib"/> for
-			details.</para>
-		</sect2>
 	</sect1>
 
 	<sect1 xml:id="spring-faces-config-web.xml">
@@ -737,7 +628,7 @@ mvn package
 		with these components JSF must take complete control of parsing multi-part requests and Spring MVC's
 		<code>MultipartResolver</code> cannot be used.</para>
 
-		<para>Spring Web Flow has been tested with file upload components from PrimeFaces and RichFaces. Check the
+		<para>Spring Web Flow has been tested with file upload components from PrimeFaces. Check the
 		documentation of your JSF component library for other providers to see how to configure file upload.</para>
 
 		<sect2>
@@ -753,41 +644,15 @@ mvn package
 <filter-mapping>
 	<filter-name>PrimeFaces FileUpload Filter</filter-name>
 	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-</filter-mapping>]]>
+</filter-mapping>
+
+<context-param>
+	<param-name>primefaces.UPLOADER</param-name>
+	<param-value>commons</param-value>
+</context-param>]]>
 			</programlisting>
 			<para>For more details refer to the
 			<link xl:href="http://primefaces.org/documentation.html">PrimeFaces documentation</link>.</para>
-		</sect2>
-
-		<sect2>
-			<title>File Uploads with RichFaces</title>
-			<para>RichFaces provides a <code>&lt;rich:fileUpload&gt;</code> component for uploading files. No
-			special configuration is required to use the component, however, you will need to perform
-			some additional steps in your <code>fileUploadListener</code>.</para>
-			<para>Here is some typical XHTML markup. In this example the <code>fileUploadBean</code> refers
-			to Spring singleton bean.</para>
-			<programlisting language="xml"><![CDATA[<rich:fileUpload id="upload"
-	fileUploadListener="#{fileUploadBean.listener}"
-	acceptedTypes="jpg, gif, png, bmp">
-</rich:fileUpload>]]></programlisting>
-			<para>Within your <code>fileUploadBean</code> you need to tell Web Flow that the response has been
-			handled and that it should not attempt any redirects. The <interfacename>org.springframework.webflow.context.ExternalContext</interfacename>
-			interface provides a <code>recordResponseComplete()</code> for just such purposes.</para>
-			<para>In addition, it is imperative that some partial response data is returned to the client. If your
-			<code>&lt;rich:fileUpload&gt;</code> component does not specify a <code>render</code> attribute you
-			may need to call <code>processPartial(PhaseId.RENDER_RESPONSE)</code> on the JSF
-			<code>PartialViewContext</code>.</para>
-			<programlisting language="java">public class FileUploadBean {
-
-	public void listener(FileUploadEvent event) throws Exception{
-		FacesContext.getCurrentInstance().getPartialViewContext().processPartial(PhaseId.RENDER_RESPONSE);
-		ExternalContextHolder.getExternalContext().recordResponseComplete();
-		UploadedFile file = event.getUploadedFile();
-		// Do something with the file
-	}
-}</programlisting>
-			<para>For more details refer to the
-			<link xl:href="http://www.jboss.org/richfaces/docs">RichFaces documentation</link>.</para>
 		</sect2>
 	</sect1>
 

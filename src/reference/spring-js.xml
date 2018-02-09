@@ -11,42 +11,23 @@
 	<sect1 xml:id="spring-js-introduction">
 		<title>Introduction</title>
 		<para>
-			Spring Javascript (spring-js) is a lightweight abstraction over common JavaScript toolkits such as Dojo.
-			It aims to provide a common client-side programming model for progressively enhancing a web page with rich widget behavior and Ajax remoting.
+			The <emphasis>spring-js-resources</emphasis> module is a legacy module that is no longer recommended for use
+			but is provided still as an optional module for backwards compatibility. Its original aim is to provide a
+			client-side programming model for progressively enhancing a web page with behavior and Ajax remoting.
 		</para>
 		<para>
-			Use of the Spring JS API is demonstrated in the the Spring MVC + Web Flow version of the Spring Travel reference application.
+			Use of the Spring JS API is demonstrated in the
+			<link xl:href="https://github.com/spring-projects/spring-webflow-samples">samples repository</link>.
 		</para>
 	</sect1>
 	<sect1 xml:id="spring-js-resource-servlet">
 		<title>Serving Javascript Resources</title>
 		<para>
-			Spring JS provides a generic <code>ResourceServlet</code> to serve web resources such as JavaScript and CSS files from jar files,
-			as well as the webapp root directory.
-			This servlet provides a convenient way to serve Spring.js files to your pages.
-			To deploy this servlet, declare the following in <code>web.xml</code>:
-		</para>
-		<programlisting language="xml"><![CDATA[
-<!-- Serves static resource content from .jar files such as spring-js.jar -->
-<servlet>
-	<servlet-name>Resource Servlet</servlet-name>
-	<servlet-class>org.springframework.js.resource.ResourceServlet</servlet-class>
-</servlet>
-
-<!-- Map all /resources requests to the Resource Servlet for handling -->
-<servlet-mapping>
-	<servlet-name>Resource Servlet</servlet-name>
-	<url-pattern>/resources/*</url-pattern>
-</servlet-mapping>]]>
-		</programlisting>
-		<para>
-			Note that starting with version 3.0.4, the Spring Framework includes
-			a replacement for the <code>ResourceServlet</code> (see the
-			<link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">Spring Framework documentation</link>).
-			With the new &lt;mvc:resources&gt; element resource requests (.js, .css) are handled by the
-			<code>DispatcherSevlet</code> without the need for a separate <code>ResourceServlet</code>.
-			Here is the relevant portion of the Spring MVC configuration in
-			the mvc-booking sample:
+			The Spring Framework provides a mechanism for serving static resources.
+			See the
+			<link xl:href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-config-static-resources">Spring Framework documentation</link>).
+			With the new &lt;mvc:resources&gt; element resource requests (.js, .css) are handled by the<code>DispatcherSevlet</code>.
+			Here is example configuration in XML (Java config is also available):
 		</para>
 		<programlisting language="xml"><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
@@ -77,12 +58,12 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <servlet>
-	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<servlet-name>DispatcherServlet</servlet-name>
 	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 </servlet>
 
 <servlet-mapping>
-	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<servlet-name>DispatcherServlet</servlet-name>
 	<url-pattern>/</url-pattern>
 </servlet-mapping>
 ]]>
@@ -263,7 +244,7 @@
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean id="tilesViewResolver" class="org.springframework.webflow.mvc.view.AjaxUrlBasedViewResolver">
-	<property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTilesView"/>
+	<property name="viewClass" value="org.springframework.webflow.mvc.view.FlowAjaxTiles3View"/>
 </bean>]]>
 			</programlisting>
 			<para>
