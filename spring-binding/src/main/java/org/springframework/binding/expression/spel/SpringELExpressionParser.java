@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2017 the original author or authors.
+ * Copyright 2004-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.support.NullParserContext;
+import org.springframework.binding.expression.support.SimpleParserContext;
 import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
@@ -49,6 +50,9 @@ public class SpringELExpressionParser implements ExpressionParser {
 
 	private final List<PropertyAccessor> propertyAccessors = new ArrayList<>();
 
+	private final SimpleEvaluationContextFactory simpleContextFactory;
+
+
 	public SpringELExpressionParser(SpelExpressionParser expressionParser) {
 		this(expressionParser, new DefaultConversionService());
 	}
@@ -57,6 +61,7 @@ public class SpringELExpressionParser implements ExpressionParser {
 		this.expressionParser = expressionParser;
 		this.propertyAccessors.add(new MapAccessor());
 		this.conversionService = conversionService;
+		this.simpleContextFactory = new SimpleEvaluationContextFactory(this.propertyAccessors, conversionService);
 	}
 
 	public ConversionService getConversionService() {
@@ -78,11 +83,17 @@ public class SpringELExpressionParser implements ExpressionParser {
 		Class<?> expectedResultType = context.getExpectedEvaluationResultType();
 		org.springframework.core.convert.ConversionService cs = conversionService.getDelegateConversionService();
 
-		return createSpringELExpression(expressionVars, spelExpression, expectedResultType, cs);
+		return context instanceof SimpleParserContext ?
+				new SpringELExpression(spelExpression, expectedResultType, simpleContextFactory) :
+				createSpringELExpression(expressionVars, spelExpression, expectedResultType, cs);
 	}
 
 	/**
 	 * Create the {@link SpringELExpression}.
+	 * <p><strong>Note:</strong> as of 2.4.8, this method is not invoked when a
+	 * {@link SimpleParserContext} is passed in, which is mainly the case when using
+	 * SpEL for data binding. In those scenarios, the configuration options are
+	 * limited to the use of property accessors and a ConversionService.
 	 */
 	protected SpringELExpression createSpringELExpression(Map<String, Expression> expressionVars,
 			org.springframework.expression.Expression spelExpression, Class<?> expectedResultType,

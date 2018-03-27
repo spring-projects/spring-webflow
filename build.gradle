@@ -67,8 +67,8 @@ configure(subprojects.findAll {
 	}
 
 	subproject.ext {
-		springVersion         = "5.0.3.RELEASE"
-		springSecurityVersion = "5.0.1.RELEASE"
+		springVersion         = "5.0.5.BUILD-SNAPSHOT"
+		springSecurityVersion = "5.0.3.RELEASE"
 		servletVersion        = "3.1.0"
 		hibernate5Version     = "5.2.12.Final"
 		tiles3Version         = "3.0.7"

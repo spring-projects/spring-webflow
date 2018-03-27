@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the original author or authors.
+ * Copyright 2004-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.lang.model.SourceVersion;
 
 import org.apache.commons.logging.Log;
@@ -38,7 +37,7 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser;
-import org.springframework.binding.expression.support.FluentParserContext;
+import org.springframework.binding.expression.support.SimpleParserContext;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.mapping.MappingResult;
 import org.springframework.binding.mapping.MappingResults;
@@ -443,7 +442,7 @@ public abstract class AbstractMvcView implements View {
 	 */
 	protected void addMapping(DefaultMapper mapper, Binding binding, Object model) {
 		Expression source = new RequestParameterExpression(binding.getProperty());
-		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		ParserContext parserContext = new SimpleParserContext(model.getClass());
 		Expression target = expressionParser.parseExpression(binding.getProperty(), parserContext);
 		DefaultMapping mapping = new DefaultMapping(source, target);
 		mapping.setRequired(binding.getRequired());
@@ -490,7 +489,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param model the model
 	 */
 	protected void addEmptyValueMapping(DefaultMapper mapper, String field, Object model) {
-		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		ParserContext parserContext = new SimpleParserContext(model.getClass());
 		Expression target = emptyValueExpressionParser.parseExpression(field, parserContext);
 		try {
 			Class<?> propertyType = target.getValueType(model);
@@ -513,7 +512,7 @@ public abstract class AbstractMvcView implements View {
 	 */
 	protected void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
 		Expression source = new RequestParameterExpression(parameter);
-		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
+		ParserContext parserContext = new SimpleParserContext(model.getClass());
 		if (expressionParser instanceof BeanWrapperExpressionParser || checkModelProperty(parameter, model)) {
 			Expression target = expressionParser.parseExpression(parameter, parserContext);
 			DefaultMapping mapping = new DefaultMapping(source, target);
