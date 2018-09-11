@@ -29,7 +29,7 @@ import org.springframework.webflow.execution.RequestContext;
  * A path from one {@link TransitionableState state} to another {@link State state}.
  * <p>
  * When executed a transition takes a flow execution from its current state, called the <i>source state</i>, to another
- * state, called the </i>target state</i>. A transition may become eligible for execution on the occurrence of an
+ * state, called the <i>target state</i>. A transition may become eligible for execution on the occurrence of an
  * {@link Event} from within a transitionable source state.
  * <p>
  * When an event occurs within this transition's source <code>TransitionableState</code> the determination of the

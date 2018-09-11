@@ -41,6 +41,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * <p>
  * <b>Commonly used configurable properties</b><br>
  * <table border="1">
+ * <caption>Configurable Properties</caption>
  * <tr>
  * <td><b>name</b></td>
  * <td><b>description</b></td>
@@ -62,8 +63,7 @@ import org.springframework.webflow.execution.repository.FlowExecutionRepository;
  * <td>None</td>
  * </tr>
  * </table>
- * </p>
- * 
+ *
  * @see FlowDefinitionLocator
  * @see FlowExecutionFactory
  * @see FlowExecutionRepository

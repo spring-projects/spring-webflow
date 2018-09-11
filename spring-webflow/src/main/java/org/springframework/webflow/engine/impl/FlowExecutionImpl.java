@@ -57,8 +57,8 @@ import org.springframework.webflow.execution.View;
 
 /**
  * Default implementation of FlowExecution that uses a stack-based data structure to manage spawned flow sessions. This
- * class is closely coupled with package-private <code>FlowSessionImpl</code> and <code>RequestControlContextImpl</code>
- * . The three classes work together to form a complete flow execution implementation based on a finite state machine.
+ * class is closely coupled with package-private <code>FlowSessionImpl</code> and <code>RequestControlContextImpl</code>.
+ * The three classes work together to form a complete flow execution implementation based on a finite state machine.
  * <p>
  * This implementation of FlowExecution is serializable so it can be safely stored in an HTTP session or other
  * persistent store such as a file, database, or client-side form field. Once deserialized, the

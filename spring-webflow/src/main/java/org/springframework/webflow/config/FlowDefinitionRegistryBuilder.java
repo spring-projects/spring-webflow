@@ -67,7 +67,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Create a new instance with the given ApplicationContext.
 	 *
-	 * @param applicationContext the ApplicationContext to use for initializing the
+	 * @param appContext the ApplicationContext to use for initializing the
 	 * 	FlowDefinitionResourceFactory and FlowBuilderServices instances with
 	 */
 	public FlowDefinitionRegistryBuilder(ApplicationContext appContext) {
@@ -77,7 +77,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Create a new instance with the given ApplicationContext and {@link FlowBuilderServices}.
 	 *
-	 * @param applicationContext the ApplicationContext to use for initializing the
+	 * @param appContext the ApplicationContext to use for initializing the
 	 * 	FlowDefinitionResourceFactory and FlowBuilderServices instances with
 	 * @param builderServices a {@link FlowBuilderServices} instance to configure
 	 * 	on the FlowDefinitionRegistry

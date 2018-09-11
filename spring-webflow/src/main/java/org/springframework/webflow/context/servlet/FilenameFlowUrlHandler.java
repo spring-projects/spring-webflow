@@ -32,7 +32,8 @@ import org.springframework.webflow.mvc.servlet.FlowController;
  * <p>
  * This implementation extracts the filename and removes the file extension from the request URL. The results will be
  * used as the flow Id that must be unique throughout the application.
- * 
+ *
+ * <p>
  * For example the URLs
  * 
  * <pre>
@@ -42,8 +43,7 @@ import org.springframework.webflow.mvc.servlet.FlowController;
  * </pre>
  * 
  * will all treat the filename "foo" as the flow id.
- * </p>
- * 
+ *
  * <strong>Note:</strong> Because this class only treats a filename as a flow id, clashes can result. For example:
  * 
  * <pre>
