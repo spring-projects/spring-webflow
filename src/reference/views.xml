@@ -382,8 +382,12 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 	<sect1 xml:id="view-binder">
 		<title>Specifying bindings explicitly</title>
 		<para>
-			Use the <code>binder</code> element to configure the exact set of model bindings usable by the view.
-			This is particularly useful in a Spring MVC environment for restricting the set of "allowed fields" per view.
+			Use the <code>binder</code> element to configure the exact set of model properties to
+			apply data binding to. This is useful to restrict the set of "allowed fields" per view.
+			Not using this could lead to a security issue, depending on the application domain and actual users,
+			since by default if the binder element is not specified all public properties of the model are
+			eligible for data binding by the view. By contrast when the <code>binder</code> element is specified,
+			only the explicitly configured bindings are allowed. Below is an example:
 		</para>
 		<programlisting language="xml"><![CDATA[
 <view-state id="enterBookingDetails" model="booking">
@@ -398,10 +402,6 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 </view-state>
 ]]>
 		</programlisting>
-		<para>
-			If the binder element is not specified, all public properties of the model are eligible for binding by the view.
-			With the binder element specified, only the explicitly configured bindings are allowed.
-		</para>
 		<para>
 			Each binding may also apply a converter to format the model property value for display in a custom manner.
 			If no converter is specified, the default converter for the model property's type will be used.
