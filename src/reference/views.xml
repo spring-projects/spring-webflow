@@ -694,11 +694,15 @@ public class BookingValidator {
 			<title>Transition actions</title>
 			<para>
 				A view-state transition can execute one or more actions before executing.
-				These actions may return an error result to prevent the transition from exiting the current view-state.
-				If an error result occurs, the view will re-render and should display an appropriate message to the user.
+				These actions may return an error result to prevent the transition from exiting the
+				current view-state. If an error result occurs, the view will re-render and should display
+				an appropriate message to the user.
 			</para>
 			<para>
-				If the transition action invokes a plain Java method, the invoked method may return false to prevent the transition from executing.
+				If the transition action invokes a plain Java method, the invoked method may return a boolean
+				whose value, true or false, indicates whether the transition should take place or be prevented
+				from executing. A method may also return a String where the literal values "success", "yes", or
+				"true" indicate the transition should occur, and any other value means the opposite.
 				This technique can be used to handle exceptions thrown by service-layer methods.
 				The example below invokes an action that calls a service and handles an exceptional situation:
 			</para>
@@ -721,12 +725,12 @@ public class BookingAction {
    }
 }]]>
 			</programlisting>
-			<note>
-				<para>
-					When there is more than one action defined on a transition, if one returns an error result the remaining actions in the set will <emphasis>not</emphasis> be executed.
-					If you need to ensure one transition action's result cannot impact the execution of another, define a single transition action that invokes a method that encapsulates all the action logic.
-				</para>
-			</note>
+			<para>
+				When there is more than one action defined on a transition, if one returns an error result the
+				remaining actions in the set will <emphasis>not</emphasis> be executed. If you need to ensure one
+				transition action's result cannot impact the execution of another, define a single transition
+				action that invokes a method that encapsulates all the action logic.
+			</para>
 		</sect2>
 		<sect2 xml:id="event-handlers-global">
 			<title>Global transitions</title>
