@@ -46,7 +46,7 @@ Check out the [Spring forums](http://forum.springsource.org/forumdisplay.php?36-
 
 Check out sources:
 ````
-git clone git://github.com/SpringSource/spring-webflow.git
+git clone git://github.com/spring-projects/spring-webflow.git
 ````
 
 Compile and test, build all jars, distribution zips and docs:
