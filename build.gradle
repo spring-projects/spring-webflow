@@ -1,6 +1,6 @@
 buildscript {
 	repositories {
-		maven { url "http://repo.spring.io/plugins-release" }
+		maven { url "https://repo.spring.io/plugins-release" }
 	}
 	dependencies {
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
@@ -30,8 +30,8 @@ subprojects { subproject ->
 	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
 
 	repositories {
-		maven { url "http://repo.spring.io/libs-release" }
-		maven { url "http://repo.spring.io/libs-snapshot" }
+		maven { url "https://repo.spring.io/libs-release" }
+		maven { url "https://repo.spring.io/libs-snapshot" }
 	}
 
 	jar {
