@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Rendering views</title>
 	<sect1 xml:id="views-introduction">
 		<title>Introduction</title>
@@ -183,7 +183,7 @@
 		<sect2 xml:id="converter-options">
 			<title>Type Conversion Options</title>
 			<para>
-				Starting with version 2.1 Spring Web Flow uses the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">type conversion</link> and <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#format">formatting</link> system introduced in Spring 3 for nearly all type conversion needs.
+				Starting with version 2.1 Spring Web Flow uses the <link xl:href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert">type conversion</link> and <link xl:href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/validation.html#format">formatting</link> system introduced in Spring 3 for nearly all type conversion needs.
 				Previously Web Flow applications used a type conversion mechanism that was different from the one in Spring MVC, which relied on the <code>java.beans.PropertyEditor</code> abstraction.
 				Spring 3 offers a modern type conversion alternative to PropertyEditors that was actually influenced by Web Flow's own type conversion system.
 				Hence Web Flow users should find it natural to work with the new Spring 3 type conversion.
@@ -241,9 +241,9 @@ public class ApplicationConversionService extends DefaultConversionService {
     xmlns:mvc="http://www.springframework.org/schema/mvc"
     xsi:schemaLocation="
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<mvc:annotation-driven/>
 ]]>
@@ -288,9 +288,9 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
     xmlns:mvc="http://www.springframework.org/schema/mvc"
     xsi:schemaLocation="
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <mvc:annotation-driven conversion-service="applicationConversionService" />
 
@@ -362,7 +362,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 				The <code>DateTimeFormat</code> annotation on the other hand provides more fine-grained control where it is necessary to deviate from the default.
 			</para>
 			<para>
-				For more information on working with Spring 3 type conversion and formatting please refer to the relevant sections of the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/index.html">Spring documentation</link>.
+				For more information on working with Spring 3 type conversion and formatting please refer to the relevant sections of the <link xl:href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/index.html">Spring documentation</link>.
 			</para>
 		</sect2>
 	</sect1>
