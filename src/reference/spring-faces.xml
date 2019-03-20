@@ -5,8 +5,8 @@ xmlns:xl="http://www.w3.org/1999/xlink"
 xmlns:xi="http://www.w3.org/2001/XInclude"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="
-	http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-	http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+	http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+	http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>JSF Integration</title>
 
 	<sect1 xml:id="spring-faces-introduction">
@@ -96,11 +96,11 @@ xsi:schemaLocation="
 	xmlns:faces="http://www.springframework.org/schema/faces"
 	si:schemaLocation="
 		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans.xsd
+		https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/webflow-config
-		http://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd
+		https://www.springframework.org/schema/webflow-config/spring-webflow-config.xsd
 		http://www.springframework.org/schema/faces
-		http://www.springframework.org/schema/faces/spring-faces.xsd"&gt;
+		https://www.springframework.org/schema/faces/spring-faces.xsd"&gt;
 
 	&lt;!-- Executes flows: the central entry point into the Spring Web Flow system --&gt;
 	&lt;webflow:flow-executor id="flowExecutor"&gt;
@@ -168,9 +168,9 @@ public class WebFlowConfig extends AbstractFacesFlowConfiguration {
 		 xmlns:faces="http://www.springframework.org/schema/faces"
 		 xsi:schemaLocation="
 			 http://www.springframework.org/schema/beans
-			 http://www.springframework.org/schema/beans/spring-beans.xsd
+			 https://www.springframework.org/schema/beans/spring-beans.xsd
 			 http://www.springframework.org/schema/faces
-			 http://www.springframework.org/schema/faces/spring-faces.xsd"&gt;
+			 https://www.springframework.org/schema/faces/spring-faces.xsd"&gt;
 
 	&lt;faces:resources /&gt;
 
@@ -653,7 +653,7 @@ mvn package
 </context-param>]]>
 			</programlisting>
 			<para>For more details refer to the
-			<link xl:href="http://primefaces.org/documentation.html">PrimeFaces documentation</link>.</para>
+			<link xl:href="https://primefaces.org/documentation.html">PrimeFaces documentation</link>.</para>
 		</sect2>
 	</sect1>
 
@@ -671,7 +671,7 @@ mvn package
 &lt;?xml version="1.0"?&gt;
 &lt;!DOCTYPE facelet-taglib PUBLIC
 "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
-"http://java.sun.com/dtd/facelet-taglib_1_0.dtd"&gt;
+"https://java.sun.com/dtd/facelet-taglib_1_0.dtd"&gt;
 &lt;facelet-taglib&gt;
 	&lt;namespace&gt;http://www.springframework.org/security/tags&lt;/namespace&gt;
 	&lt;tag&gt;
@@ -712,7 +712,7 @@ mvn package
 		<para>Now you are ready to use the tag library in your views. You can use
 		the authorize tag to include nested content conditionally:</para>
 
-		<programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+		<programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -736,7 +736,7 @@ mvn package
 		<para>You can also use one of several EL functions in the rendered or
 		other attribute of any JSF component:</para>
 
-		<programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+		<programlisting language="xml">&lt;!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"

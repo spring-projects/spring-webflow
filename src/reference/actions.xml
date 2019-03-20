@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Executing actions</title>
 	<sect1 xml:id="actions-introduction">
 		<title>Introduction</title>
@@ -35,7 +35,7 @@
 <flow xmlns="http://www.springframework.org/schema/webflow"
 	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
-						  http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+						  https://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
 	<on-start>
 		<evaluate expression="interviewFactory.createInterview()" result="flowScope.interview" />
@@ -278,7 +278,7 @@ public Event makeBooking(RequestContext context) {
 <flow xmlns="http://www.springframework.org/schema/webflow"
 	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
-						  http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+						  https://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
 	<input name="hotelId" />
 
@@ -332,7 +332,7 @@ public Event makeBooking(RequestContext context) {
 <flow xmlns="http://www.springframework.org/schema/webflow"
 	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
-						  http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+						  https://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
 	<input name="orderId" />
 
@@ -440,7 +440,7 @@ public class PrintBoardingPassAction extends AbstractAction {
 			<title>Handling File Uploads</title>
 			<para>
 				Another common task is to use Web Flow to handle multipart file uploads in combination with Spring MVC's
-				<code>MultipartResolver</code>.  Once the resolver is set up correctly <link xl:href="http://static.springsource.org/spring/docs/2.5.x/reference/mvc.html#mvc-multipart">as described here</link> and the submitting
+				<code>MultipartResolver</code>.  Once the resolver is set up correctly <link xl:href="https://docs.spring.io/spring/docs/2.5.x/reference/mvc.html#mvc-multipart">as described here</link> and the submitting
 				HTML form is configured with <code>enctype="multipart/form-data"</code>, you can easily handle the file upload in a
 				transition action.
 			</para>
