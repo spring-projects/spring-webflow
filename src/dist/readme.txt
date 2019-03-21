@@ -1,6 +1,6 @@
 SPRING WEB FLOW ${version}
 --------------------------
-http://projects.spring.io/spring-webflow/
+https://projects.spring.io/spring-webflow/
 
 1. INTRODUCTION
 ---------------
@@ -46,7 +46,7 @@ Add the following repository to your Maven pom.xml:
 <repository>
     <id>spring</id>
     <name>Spring Snapshots</name>
-    <url>http://repo.spring.io/snapshot</url>
+    <url>https://repo.spring.io/snapshot</url>
 </repository>
 
 Then declare the following dependencies (note that many times it's sufficient
