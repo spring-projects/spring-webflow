@@ -77,7 +77,7 @@ The Spring Framework and Spring Web Flow use a very similar build system. For th
 
 # License
 
-Spring Web Flow is released under version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
+Spring Web Flow is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
 
 
 
