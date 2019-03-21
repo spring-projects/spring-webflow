@@ -11,21 +11,21 @@ public class WebFlowEntityResolverTests extends TestCase {
 	public void testResolve24() {
 		WebFlowEntityResolver resolver = new WebFlowEntityResolver();
 		InputSource source = resolver.resolveEntity(PUBLIC_ID,
-				"http://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd");
+				"https://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd");
 		assertNotNull(source);
 	}
 
 	public void testResolve20() {
 		WebFlowEntityResolver resolver = new WebFlowEntityResolver();
 		InputSource source = resolver.resolveEntity(PUBLIC_ID,
-				"http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd");
+				"https://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd");
 		assertNotNull(source);
 	}
 
 	public void testResolveLatest() {
 		WebFlowEntityResolver resolver = new WebFlowEntityResolver();
 		InputSource source = resolver.resolveEntity(PUBLIC_ID,
-				"http://www.springframework.org/schema/webflow/spring-webflow.xsd");
+				"https://www.springframework.org/schema/webflow/spring-webflow.xsd");
 		assertNotNull(source);
 	}
 

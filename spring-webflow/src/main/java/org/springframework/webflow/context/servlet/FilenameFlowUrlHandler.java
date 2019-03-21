@@ -35,9 +35,9 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * For example the URLs:
  * 
  * <pre>
- * 	http://someHost/someApp/someServlet/foo
- * 	http://someHost/someApp/someServlet/nestedPath/foo
- * 	http://someHost/someApp/someServlet/nestedPath/foo.html
+ * 	https://someHost/someApp/someServlet/foo
+ * 	https://someHost/someApp/someServlet/nestedPath/foo
+ * 	https://someHost/someApp/someServlet/nestedPath/foo.html
  * </pre>
  * 
  * will all treat the filename "foo" as the flow id.
@@ -101,13 +101,13 @@ public class FilenameFlowUrlHandler extends DefaultFlowUrlHandler {
 	 * Example - given a request originating at:
 	 * 
 	 * <pre>
-	 * http://someHost/someApp/someServlet/nestedPath/foo.html
+	 * https://someHost/someApp/someServlet/nestedPath/foo.html
 	 * </pre>
 	 * 
 	 * and a request for the flow id "bar", the new flow definition URL would be:
 	 * 
 	 * <pre>
-	 * http://someHost/someApp/someServlet/nestedPath/bar.html
+	 * https://someHost/someApp/someServlet/nestedPath/bar.html
 	 * </pre>
 	 */
 	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {

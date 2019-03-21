@@ -33,7 +33,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * </p>
  * 
  * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;
+ * https://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;
  * </pre>
  * 
  * As an example, the URL <code>http://localhost/springtravel/app/booking</code> would map to flow "booking", while the
@@ -51,7 +51,7 @@ import org.springframework.webflow.core.collection.AttributeMap;
  * </p>
  * 
  * <pre>
- * http://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;?execution=&lt;flow execution key&gt;
+ * https://&lt;host&gt;/[app context path]/[app servlet path]/&lt;flow path&gt;?execution=&lt;flow execution key&gt;
  * </pre>
  * 
  * As an example, the URL http://localhost/springtravel/app/hotels/booking?execution=e1s1 would attempt to resume
@@ -118,13 +118,13 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 	 * Example - given a request originating at:
 	 * 
 	 * <pre>
-	 * http://someHost/someApp/someServlet/nestedPath/foo
+	 * https://someHost/someApp/someServlet/nestedPath/foo
 	 * </pre>
 	 * 
 	 * and a request for the flow id "nestedPath/bar", the new flow definition URL would be:
 	 * 
 	 * <pre>
-	 * http://someHost/someApp/someServlet/nestedPath/bar
+	 * https://someHost/someApp/someServlet/nestedPath/bar
 	 * </pre>
 	 */
 	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
