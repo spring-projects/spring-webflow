@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Upgrading from 1.0</title>
 	<sect1 xml:id="upgrade-guide-introduction">
 		<title>Introduction</title>
@@ -125,9 +125,9 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
        xmlns:webflow="http://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           https://www.springframework.org/schema/beans/spring-beans-4.0.xsd
            http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd">
+           https://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd">
 			]]></programlisting>
 			<sect3 xml:id="upgrade-guide-webflow-config-schema-executor">
 				<title>flow-executor</title>
@@ -202,7 +202,7 @@ java org.springframework.webflow.upgrade.WebFlowUpgrader flow-to-upgrade.xml
 			</para>
 			<para>
 				In order for version 1 flows to work in Web Flow 2 the default view resolver must be overridden.
-				A common use case is to use <link xl:href="http://tiles.apache.org/">Apache Tiles</link> for view resolution.
+				A common use case is to use <link xl:href="https://tiles.apache.org/">Apache Tiles</link> for view resolution.
 				The following configuration will replace the default view resolver with a Tiles view resolver.
 				The <code>tilesViewResolver</code> in this example can be replaced with any other view resolver.
 			</para>
