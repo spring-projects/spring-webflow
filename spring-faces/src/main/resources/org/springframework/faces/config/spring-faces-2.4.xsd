@@ -7,7 +7,7 @@
 	elementFormDefault="qualified" attributeFormDefault="unqualified"
 	version="2.4">
 
-	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="https://www.springframework.org/schema/beans/spring-beans-3.0.xsd" />
 	
 	<xsd:element name="flow-builder-services">
 		<xsd:annotation>
