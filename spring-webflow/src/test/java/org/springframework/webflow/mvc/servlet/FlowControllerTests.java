@@ -224,7 +224,7 @@ public class FlowControllerTests extends TestCase {
 		request.setPathInfo("/foo");
 		request.setRequestURI("/springtravel/app/foo");
 		request.setMethod("GET");
-		context.requestExternalRedirect("http://www.paypal.com");
+		context.requestExternalRedirect("https://www.paypal.com");
 		executor.launchExecution("foo", null, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
@@ -232,7 +232,7 @@ public class FlowControllerTests extends TestCase {
 		ModelAndView mv = controller.handleRequest(request, response);
 		assertNull(mv);
 		EasyMock.verify(new Object[] { executor });
-		assertEquals("http://www.paypal.com", response.getRedirectedUrl());
+		assertEquals("https://www.paypal.com", response.getRedirectedUrl());
 		EasyMock.verify(new Object[] { executor });
 	}
 

@@ -20,7 +20,7 @@ Some key benefits of using Spring Web Flow:
 
 # Documentation
 
-See the current [Javadoc](http://docs.spring.io/spring-webflow/docs/current/api/) and [Reference](http://docs.spring.io/spring-webflow/docs/current/reference/html/) docs.
+See the current [Javadoc](https://docs.spring.io/spring-webflow/docs/current/api/) and [Reference](https://docs.spring.io/spring-webflow/docs/current/reference/html/) docs.
 
 # Samples
 
@@ -36,11 +36,11 @@ Instructions on [downloading Spring Web Flow](https://github.com/SpringSource/sp
 
 # Issue Tracking
 
-Spring Web Flow's JIRA issue tracker can be found [here](http://jira.springsource.org/browse/SWF). If you think you've found a bug, please consider helping to reproduce it by submitting an issue reproduction project via the [spring-webflow-issues](https://github.com/springsource/spring-webflow-issues) repository. The [readme](https://github.com/springsource/spring-webflow-issues#readme) provides simple step-by-step instructions.
+Spring Web Flow's JIRA issue tracker can be found [here](https://jira.springsource.org/browse/SWF). If you think you've found a bug, please consider helping to reproduce it by submitting an issue reproduction project via the [spring-webflow-issues](https://github.com/springsource/spring-webflow-issues) repository. The [readme](https://github.com/springsource/spring-webflow-issues#readme) provides simple step-by-step instructions.
 
 # Getting support
 
-Check out the [Spring forums](http://forum.springsource.org/forumdisplay.php?36-Web-Flow) and the [spring-webflow tag](http://stackoverflow.com/questions/tagged/spring-webflow) on StackOverflow. [Commercial support](http://springsource.com/support/springsupport) is available too.
+Check out the [Spring forums](https://forum.spring.io/forumdisplay.php?36-Web-Flow) and the [spring-webflow tag](https://stackoverflow.com/questions/tagged/spring-webflow) on StackOverflow. [Commercial support](https://springsource.com/support/springsupport) is available too.
 
 # Building from source
 
@@ -73,7 +73,7 @@ The Spring Framework and Spring Web Flow use a very similar build system. For th
 
 # Contributing
 
-[Pull requests](http://help.github.com/send-pull-requests) are welcome. You'll be asked to sign our contributor license agreement ([CLA](https://support.springsource.com/spring_committer_signup)). Trivial changes like typo fixes are especially appreciated (just [fork and edit](https://github.com/blog/844-forking-with-the-edit-button)!). For larger changes, please search through JIRA for similiar issues, creating a new one if necessary, and discuss your ideas with the Spring Web Flow team.
+[Pull requests](https://help.github.com/send-pull-requests) are welcome. You'll be asked to sign our contributor license agreement ([CLA](https://support.springsource.com/spring_committer_signup)). Trivial changes like typo fixes are especially appreciated (just [fork and edit](https://github.com/blog/844-forking-with-the-edit-button)!). For larger changes, please search through JIRA for similiar issues, creating a new one if necessary, and discuss your ideas with the Spring Web Flow team.
 
 # License
 
