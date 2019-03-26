@@ -215,14 +215,14 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	public void testLaunchFlowWithExternalHttpRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
-		context.requestExternalRedirect("http://www.paypal.com");
+		context.requestExternalRedirect("https://www.paypal.com");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(flowExecutor);
 		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(flowExecutor);
-		assertEquals("http://www.paypal.com", response.getRedirectedUrl());
+		assertEquals("https://www.paypal.com", response.getRedirectedUrl());
 		EasyMock.verify(flowExecutor);
 	}
 
@@ -388,13 +388,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testRemoteHost() throws Exception {
-		assertFalse(flowHandlerAdapter.isRemoteHost("http://url.somewhere.com"));
+		assertFalse(flowHandlerAdapter.isRemoteHost("https://url.somewhere.com"));
 		assertFalse(flowHandlerAdapter.isRemoteHost("/path"));
 		assertFalse(flowHandlerAdapter.isRemoteHost("http://url.somewhereelse.com"));
 
 		flowHandlerAdapter.setHosts(new String[] {"url.somewhere.com"});
 
-		assertFalse(flowHandlerAdapter.isRemoteHost("http://url.somewhere.com"));
+		assertFalse(flowHandlerAdapter.isRemoteHost("https://url.somewhere.com"));
 		assertFalse(flowHandlerAdapter.isRemoteHost("/path"));
 		assertTrue(flowHandlerAdapter.isRemoteHost("http://url.somewhereelse.com"));
 

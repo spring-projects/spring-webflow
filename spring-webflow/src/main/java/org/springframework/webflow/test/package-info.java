@@ -26,7 +26,7 @@
  *
  * <p>All mock implementations provided by this package are NOT intended to be used for anything but standalone unit
  * tests. They are simple state holders, <i>stub</i> implementations, at least if you follow
- * <a href="http://www.martinfowler.com/articles/mocksArentStubs.html">Martin Fowler's</a> reasoning. These classes
+ * <a href="https://www.martinfowler.com/articles/mocksArentStubs.html">Martin Fowler's</a> reasoning. These classes
  * are called <i>Mock</i>s to be consistent with the naming convention in the rest of the Spring framework
  * (e.g. {@code MockHttpServletRequest}, ...).
  */
