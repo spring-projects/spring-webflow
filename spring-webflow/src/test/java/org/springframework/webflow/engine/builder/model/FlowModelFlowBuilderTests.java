@@ -240,7 +240,7 @@ public class FlowModelFlowBuilderTests extends TestCase {
 
 	public void testViewStateExternalRedirect() {
 		ViewStateModel state = new ViewStateModel("view");
-		state.setView("externalRedirect:http://www.paypal.com?_callbackUrl=#{flowExecutionUri}");
+		state.setView("externalRedirect:https://www.paypal.com?_callbackUrl=#{flowExecutionUri}");
 		model.setStates(asList(state));
 		Flow flow = getFlow(model);
 		ViewFactory vf = ((ViewState) flow.getStateInstance("view")).getViewFactory();
