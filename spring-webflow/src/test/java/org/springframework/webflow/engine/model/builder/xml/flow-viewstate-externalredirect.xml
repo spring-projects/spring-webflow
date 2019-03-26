@@ -1,7 +1,7 @@
 <flow xmlns="http://www.springframework.org/schema/webflow"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow https://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
-	<view-state id="view" view="externalRedirect:http://www.paypal.com?_callbackUrl=#{flowExecutionUri}" />
+	<view-state id="view" view="externalRedirect:https://www.paypal.com?_callbackUrl=#{flowExecutionUri}" />
 
 </flow>

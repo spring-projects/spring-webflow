@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Expression Language (EL)</title>
 	<sect1 xml:id="el-introduction">
 		<title>Introduction</title>
@@ -79,7 +79,7 @@
 		<sect2 xml:id="el-spring-el">
 			<title>Spring EL</title>
 			<para>
-				Web Flow uses the <link xl:href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html">Spring Expression Language</link> (Spring EL).
+				Web Flow uses the <link xl:href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html">Spring Expression Language</link> (Spring EL).
 				Spring EL was created to provide a single, well-supported expression language for use across all the products in the Spring portfolio.
 				It is distributed as a separate jar <code>org.springframework.expression</code> in the Spring Framework.
 			</para>
@@ -87,7 +87,7 @@
 		<sect2 xml:id="el-unified-el">
 			<title>Unified EL</title>
 			<para>
-				Use of <link xl:href="http://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</link>
+				Use of <link xl:href="https://en.wikipedia.org/wiki/Unified_Expression_Language">Unified EL</link>
 				also implies a dependency on <code>el-api</code> although that is typically <emphasis>provided</emphasis>
 				by your web container.
 				Although Spring EL is the default and recommended expression language to use,
@@ -140,7 +140,7 @@
 					</para>
 				</listitem>
 			</orderedlist>
-			For more information on Spring EL syntax please refer to the <link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html#expressions-language-ref">Language Reference</link> section in the Spring Documentation.
+			For more information on Spring EL syntax please refer to the <link xl:href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/expressions.html#expressions-language-ref">Language Reference</link> section in the Spring Documentation.
 		</para>
 	</sect1>
 	<sect1 xml:id="el-variables">
