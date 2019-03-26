@@ -5,8 +5,8 @@ xmlns:xl="http://www.w3.org/1999/xlink"
 xmlns:xi="http://www.w3.org/2001/XInclude"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="
-	http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-	http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+	http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+	http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 <title>Spring MVC Integration</title>
 
 <sect1 xml:id="spring-mvc-introduction">
@@ -307,7 +307,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 		<para>These same redirect prefixes are also supported within a flow
 		definition when using the <code>externalRedirect:</code> directive in
 		conjunction with a view-state or end-state; for example,
-		<code>view="externalRedirect:http://springframework.org"</code></para>
+		<code>view="externalRedirect:https://springframework.org"</code></para>
 	</sect2>
 </sect1>
 
