@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xml:id="system-setup"
-	xmlns="http://docbook.org/ns/docbook" version="5.0"
-	xmlns:xl="http://www.w3.org/1999/xlink"
-	xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://docbook.org/ns/docbook" version="5.0"
+	xmlns:xl="https://www.w3.org/1999/xlink"
+	xmlns:xi="https://www.w3.org/2001/XInclude"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		https://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		https://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>System Setup</title>
 	<sect1 xml:id="system-setup-introduction">
 		<title>Introduction</title>
@@ -24,14 +24,14 @@
 			To get started with XML based configuration declare the webflow config XML namespace:
 		</para>
 		<programlisting language="xml"><![CDATA[
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:webflow="http://www.springframework.org/schema/webflow-config"
+<beans xmlns="https://www.springframework.org/schema/beans"
+       xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+       xmlns:webflow="https://www.springframework.org/schema/webflow-config"
        xsi:schemaLocation="
-           http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-           http://www.springframework.org/schema/webflow-config
-           http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd">
+           https://www.springframework.org/schema/beans
+           https://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           https://www.springframework.org/schema/webflow-config
+           https://www.springframework.org/schema/webflow-config/spring-webflow-config-2.4.xsd">
 
     <!-- Setup Web Flow here -->
 
