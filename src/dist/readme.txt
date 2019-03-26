@@ -1,6 +1,6 @@
 SPRING WEB FLOW ${version}
 --------------------------
-http://www.springframework.org/webflow
+https://www.springframework.org/webflow
 
 1. INTRODUCTION
 ---------------
@@ -46,7 +46,7 @@ SpringSource repository. Add the following repository to your Maven pom.xml:
 <repository>
     <id>springsource-repository</id>
     <name>Spring project releases, milestones, and snapshots</name>
-    <url>http://repo.spring.io/snapshot</url>
+    <url>https://repo.spring.io/snapshot</url>
 </repository>
 
 Then declare the following dependencies (note that many times it's sufficient
@@ -76,13 +76,13 @@ If using JSF all you need to include is:
 To access jars using Ivy, add the following repositories to your Ivy config:
 
 <url name="com.springsource.repository.bundles.release">
-    <ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <ivy pattern="https://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="https://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
 <url name="com.springsource.repository.bundles.external">
-    <ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-    <artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <ivy pattern="https://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+    <artifact pattern="https://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 </url>
 
 Then declare the following dependencies in your ivy.xml:
@@ -101,8 +101,8 @@ https://github.com/spring-projects/spring-framework/wiki/Spring-repository-FAQ
 5. ADDITIONAL RESOURCES
 -----------------------
 The Spring Web Flow homepage is located at:
-    http://projects.spring.io/spring-webflow/
+    https://projects.spring.io/spring-webflow/
 
 The Spring Web Flow community forums are located at:
-    http://forum.spring.io/
+    https://forum.spring.io/
 

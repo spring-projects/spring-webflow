@@ -83,7 +83,7 @@ public class WebFlowUpgrader {
 			Source source = new StreamSource(xslResource.getInputStream());
 			transformer = factory.newTransformer(source);
 			// com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory.S_KEY_INDENT_AMOUNT
-			transformer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "4");
+			transformer.setOutputProperty("{https://xml.apache.org/xalan}indent-amount", "4");
 		}
 		return transformer;
 	}
