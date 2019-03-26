@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Spring JavaScript Quick Reference</title>
 	<sect1 xml:id="spring-js-introduction">
 		<title>Introduction</title>
@@ -42,7 +42,7 @@
 		<para>
 			Note that starting with version 3.0.4, the Spring Framework includes
 			a replacement for the <code>ResourceServlet</code> (see the
-			<link xl:href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">Spring Framework documentation</link>).
+			<link xl:href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources">Spring Framework documentation</link>).
 			With the new &lt;mvc:resources&gt; element resource requests (.js, .css) are handled by the
 			<code>DispatcherSevlet</code> without the need for a separate <code>ResourceServlet</code>.
 			Here is the relevant portion of the Spring MVC configuration in
@@ -53,8 +53,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
 	<mvc:annotation-driven/>
 
@@ -102,8 +102,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
 	...
 
