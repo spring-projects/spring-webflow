@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Portlet Integration</title>
 	<sect1 xml:id="portlet-introduction">
 		<title>Introduction</title>
@@ -21,7 +21,7 @@
 		<title>Configuring web.xml and portlet.xml</title>
 		<para>
 			The configuration for a portlet depends on the portlet container used.
-			The sample applications, included with Web Flow, are both configured to use <link xl:href="http://portals.apache.org/pluto/">Apache Pluto</link>.
+			The sample applications, included with Web Flow, are both configured to use <link xl:href="https://portals.apache.org/pluto/">Apache Pluto</link>.
 		</para>
 		<para>
 			In general, the configuration requires adding a servlet mapping in the <code>web.xml</code> file to dispatch request to the portlet container.
@@ -107,7 +107,7 @@ public class ViewFlowHandler extends AbstractFlowHandler {
 			<title>Handler Mappings</title>
 			<para>
 				Spring Portlet MVC provides a rich set of methods to map portlet requests.
-				Complete documentation  is available in the <link xl:href="http://static.springframework.org/spring/docs/current/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</link>.
+				Complete documentation  is available in the <link xl:href="https://docs.spring.io/spring/docs/current/reference/portlet.html#portlet-handlermapping">Spring Reference Documentation</link>.
 			</para>
 			<para>
 				The <code>booking-portlet-mvc</code> sample application uses a <code>PortletModeHandlerMapping</code> to map portlet requests.
@@ -230,7 +230,7 @@ externalContext.requestMap.portletMode
 <programlisting language="java"><![CDATA[<?xml version="1.0"?>
 <!DOCTYPE faces-config PUBLIC
   "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
-  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+  "https://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
     <application>
