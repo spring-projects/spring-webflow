@@ -5,8 +5,8 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-		http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+		http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+		http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	<title>Securing Flows</title>
 	<sect1 xml:id="flow-security-introduction">
 		<title>Introduction</title>
@@ -110,7 +110,7 @@
 			<para>
 				If your application is using authorities that are not role based, you will need to configure a custom <code>AccessDecisionManager</code>.
 				You can override the default decision manager by setting the <code>accessDecisionManager</code> property on the security listener.
-				Please consult the <link xl:href="http://static.springframework.org/spring-security/site/reference.html">Spring Security reference documentation</link> to learn more about decision managers.
+				Please consult the <link xl:href="https://docs.spring.io/spring-security/site/reference.html">Spring Security reference documentation</link> to learn more about decision managers.
 			</para>
 			<programlisting language="xml"><![CDATA[
 <bean id="securityFlowExecutionListener"
@@ -124,7 +124,7 @@
 		<title>Configuring Spring Security</title>
 		<para>
 			Spring Security has robust configuration options available.
-			As every application and environment has its own security requirements, the <link xl:href="http://static.springframework.org/spring-security/site/reference.html">Spring Security reference documentation</link> is the best place to learn the available options.
+			As every application and environment has its own security requirements, the <link xl:href="https://docs.spring.io/spring-security/site/reference.html">Spring Security reference documentation</link> is the best place to learn the available options.
 		</para>
 		<para>
 			Both the <code>booking-faces</code> and <code>booking-mvc</code> sample applications are configured to use Spring Security.
