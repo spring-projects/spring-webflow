@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xml:id="spring-mvc"
-xmlns="http://docbook.org/ns/docbook" version="5.0"
-xmlns:xl="http://www.w3.org/1999/xlink"
-xmlns:xi="http://www.w3.org/2001/XInclude"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="https://docbook.org/ns/docbook" version="5.0"
+xmlns:xl="https://www.w3.org/1999/xlink"
+xmlns:xi="https://www.w3.org/2001/XInclude"
+xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="
-	http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-	http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+	https://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+	https://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 <title>Spring MVC Integration</title>
 
 <sect1 xml:id="spring-mvc-introduction">
@@ -188,7 +188,7 @@ public interface FlowHandler {
 		of your flow cannot be directly derived from the HTTP request. By
 		default, the id of the flow to execute is derived from the pathInfo
 		portion of the request URI. For example,
-		<code>http://localhost/app/hotels/booking?hotelId=1</code> results in
+		<code>https://localhost/app/hotels/booking?hotelId=1</code> results in
 		a flow id of <code>hotels/booking</code> by default.</para>
 		</listitem>
 
@@ -307,7 +307,7 @@ public class BookingFlowHandler extends AbstractFlowHandler {
 		<para>These same redirect prefixes are also supported within a flow
 		definition when using the <code>externalRedirect:</code> directive in
 		conjunction with a view-state or end-state; for example,
-		<code>view="externalRedirect:http://springframework.org"</code></para>
+		<code>view="externalRedirect:https://springframework.org"</code></para>
 	</sect2>
 </sect1>
 
