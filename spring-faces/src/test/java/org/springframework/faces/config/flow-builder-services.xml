@@ -4,9 +4,9 @@
        xmlns:faces="http://www.springframework.org/schema/faces"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd
+           https://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/faces
-           http://www.springframework.org/schema/faces/spring-faces.xsd">
+           https://www.springframework.org/schema/faces/spring-faces.xsd">
 	
 	<faces:flow-builder-services id="flowBuilderServicesDefault"/>
 	
