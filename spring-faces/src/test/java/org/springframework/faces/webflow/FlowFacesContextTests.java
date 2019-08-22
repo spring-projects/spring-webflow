@@ -1,5 +1,10 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -12,9 +17,10 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
@@ -22,7 +28,7 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.faces.webflow.FlowFacesContext.FacesMessageSource;
 import org.springframework.webflow.execution.RequestContext;
 
-public class FlowFacesContextTests extends TestCase {
+public class FlowFacesContextTests {
 
 	JSFMockHelper jsf = new JSFMockHelper();
 
@@ -35,22 +41,25 @@ public class FlowFacesContextTests extends TestCase {
 	MessageContext prepopulatedMessageContext;
 
 	@SuppressWarnings("cast")
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		this.jsf.setUp();
 		this.requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
 		this.facesContext = new FlowFacesContext(this.requestContext, this.jsf.facesContext());
 		setupMessageContext();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		this.jsf.tearDown();
 	}
 
+	@Test
 	public final void testCurrentInstance() {
 		assertSame(FacesContext.getCurrentInstance(), this.facesContext);
 	}
 
+	@Test
 	public final void testAddMessage() {
 		this.messageContext = new DefaultMessageContext();
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -63,6 +72,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals("foo : bar", message.getText());
 	}
 
+	@Test
 	public final void testGetGlobalMessagesOnly() {
 		this.messageContext = new DefaultMessageContext();
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -81,6 +91,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(1, iterationCount);
 	}
 
+	@Test
 	public final void testGetAllMessages() {
 		this.messageContext = new DefaultMessageContext();
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -99,6 +110,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(2, iterationCount);
 	}
 
+	@Test
 	public final void testAddMessages_MultipleNullIds() {
 		this.messageContext = new DefaultMessageContext();
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -113,6 +125,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals("zoo : zar", messages[1].getText());
 	}
 
+	@Test
 	public final void testGetMessages() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -127,6 +140,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals("There should be 6 messages to iterate", 6, iterationCount);
 	}
 
+	@Test
 	public final void testMutableGetMessages() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -145,6 +159,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals("summary2", gotMessage.getSummary());
 	}
 
+	@Test
 	public final void testGetMessagesByClientId_ForComponent() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -162,6 +177,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(2, iterationCount);
 	}
 
+	@Test
 	public final void testGetMessagesByClientId_ForUserMessage() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -179,6 +195,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(1, iterationCount);
 	}
 
+	@Test
 	public final void testgetMessagesByClientId_InvalidId() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -188,6 +205,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertFalse(i.hasNext());
 	}
 
+	@Test
 	public final void testGetClientIdsWithMessages() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -208,6 +226,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(3, iterationCount);
 	}
 
+	@Test
 	public final void testMessagesAreSerializable() throws Exception {
 		DefaultMessageContext messageContext = new DefaultMessageContext();
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(messageContext);
@@ -243,6 +262,7 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(FacesMessage.SEVERITY_FATAL, gotMessage.getSeverity());
 	}
 
+	@Test
 	public final void testGetMaximumSeverity() {
 		this.messageContext = this.prepopulatedMessageContext;
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);
@@ -251,12 +271,14 @@ public class FlowFacesContextTests extends TestCase {
 		assertEquals(FacesMessage.SEVERITY_FATAL, this.facesContext.getMaximumSeverity());
 	}
 
+	@Test
 	public final void testGetELContext() {
 
 		assertNotNull(this.facesContext.getELContext());
 		assertSame(this.facesContext, this.facesContext.getELContext().getContext(FacesContext.class));
 	}
 
+	@Test
 	public final void testValidationFailed() {
 		this.messageContext = new DefaultMessageContext();
 		EasyMock.expect(this.requestContext.getMessageContext()).andStubReturn(this.messageContext);

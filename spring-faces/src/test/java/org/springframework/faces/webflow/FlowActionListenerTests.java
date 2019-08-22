@@ -1,21 +1,26 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import javax.el.ELContext;
 import javax.el.MethodExpression;
 import javax.el.MethodInfo;
 import javax.faces.component.UICommand;
 import javax.faces.event.ActionEvent;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
-public class FlowActionListenerTests extends TestCase {
+public class FlowActionListenerTests {
 
 	FlowActionListener listener;
 
@@ -23,7 +28,8 @@ public class FlowActionListenerTests extends TestCase {
 
 	RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 
 		this.listener = new FlowActionListener(this.jsfMock.application().getActionListener());
@@ -34,12 +40,13 @@ public class FlowActionListenerTests extends TestCase {
 		EasyMock.replay(this.context);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public final void testProcessAction() {
 
 		String outcome = "foo";
@@ -56,6 +63,7 @@ public class FlowActionListenerTests extends TestCase {
 				this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
 	}
 
+	@Test
 	public final void testProcessAction_NullOutcome() {
 
 		String outcome = null;

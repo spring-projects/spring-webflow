@@ -15,13 +15,19 @@
  */
 package org.springframework.faces.webflow;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class JsfManagedBeanPropertyAccessorTests extends TestCase {
+public class JsfManagedBeanPropertyAccessorTests {
 
 	JSFMockHelper jsfMock = new JSFMockHelper();
 
@@ -29,31 +35,35 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 
 	private MockRequestContext requestContext;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCanRead() {
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
 		assertTrue(this.accessor.canRead(null, null, "myJsfBean"));
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testRead() {
 		Object jsfBean = new Object();
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", jsfBean);
 		assertEquals(jsfBean, this.accessor.read(null, null, "myJsfBean").getValue());
 	}
 
+	@Test
 	public void testCanWrite() {
 		assertFalse(this.accessor.canWrite(null, null, "myJsfBean"));
 
@@ -73,6 +83,7 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 		map.clear();
 	}
 
+	@Test
 	public void testWrite() {
 		Object jsfBean1 = new Object();
 		Object jsfBean2 = new Object();

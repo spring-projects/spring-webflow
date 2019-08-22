@@ -15,50 +15,59 @@
  */
 package org.springframework.faces.security;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link FaceletsAuthorizeTag}.
  * @author Rossen Stoyanchev
  */
-public class FaceletsAuthorizeTagTests extends TestCase {
+public class FaceletsAuthorizeTagTests {
 
+	@Test
 	public void testIfAllGrantedWithOneRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAllGranted("ROLE_A");
 		assertEquals("hasRole('ROLE_A')", tag.getAccess());
 	}
 
+	@Test
 	public void testIfAllGrantedWithMultipleRoles() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAllGranted("ROLE_A, ROLE_B, ROLE_C");
 		assertEquals("hasRole('ROLE_A') and hasRole('ROLE_B') and hasRole('ROLE_C')", tag.getAccess());
 	}
 
+	@Test
 	public void testIfAnyGrantedWithOneRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAnyGranted("ROLE_A");
 		assertEquals("hasAnyRole('ROLE_A')", tag.getAccess());
 	}
 
+	@Test
 	public void testIfAnyGrantedWithMultipleRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAnyGranted("ROLE_A, ROLE_B, ROLE_C");
 		assertEquals("hasAnyRole('ROLE_A','ROLE_B','ROLE_C')", tag.getAccess());
 	}
 
+	@Test
 	public void testIfNoneGrantedWithOneRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfNotGranted("ROLE_A");
 		assertEquals("!hasAnyRole('ROLE_A')", tag.getAccess());
 	}
 
+	@Test
 	public void testIfNoneGrantedWithMultipleRole() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfNotGranted("ROLE_A, ROLE_B, ROLE_C");
 		assertEquals("!hasAnyRole('ROLE_A','ROLE_B','ROLE_C')", tag.getAccess());
 	}
 
+	@Test
 	public void testIfAllAnyNotGranted() {
 		FaceletsAuthorizeTag tag = new FaceletsAuthorizeTag();
 		tag.setIfAllGranted("ROLE_A");
