@@ -1,13 +1,18 @@
 package org.springframework.faces.mvc;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Locale;
 
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.MockViewHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -17,12 +22,13 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-public class JsfViewTests extends TestCase {
+public class JsfViewTests {
 
 	UrlBasedViewResolver resolver;
 
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
+	@Before
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.jsfMock.facesContext().getApplication().setViewHandler(new ResourceCheckingViewHandler());
@@ -34,15 +40,18 @@ public class JsfViewTests extends TestCase {
 		this.resolver.setApplicationContext(new StaticWebApplicationContext());
 	}
 
+	@After
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 	}
 
+	@Test
 	public void testViewResolution() throws Exception {
 		View view = this.resolver.resolveViewName("intro", new Locale("EN"));
 		assertTrue(view instanceof JsfView);
 	}
 
+	@Test
 	public void testViewRender() throws Exception {
 		JsfView view = (JsfView) this.resolver.resolveViewName("intro", new Locale("EN"));
 		view.setApplicationContext(new StaticWebApplicationContext());

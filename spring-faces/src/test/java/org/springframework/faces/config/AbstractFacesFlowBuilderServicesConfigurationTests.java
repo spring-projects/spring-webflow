@@ -1,7 +1,12 @@
 package org.springframework.faces.config;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -23,7 +28,7 @@ import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 import org.springframework.webflow.validation.ValidationHintResolver;
 
-public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends TestCase {
+public abstract class AbstractFacesFlowBuilderServicesConfigurationTests {
 
 	protected ApplicationContext context;
 
@@ -31,7 +36,7 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends
 
 	protected final JSFMockHelper jsf = new JSFMockHelper();
 
-
+	@Before
 	public void setUp() throws Exception {
 		this.jsf.setUp();
 		this.context = initApplicationContext();
@@ -39,10 +44,12 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends
 
 	protected abstract ApplicationContext initApplicationContext();
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		this.jsf.tearDown();
 	}
 
+	@Test
 	public void testConfigureDefaults() {
 		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesDefault");
 		assertNotNull(this.builderServices);
@@ -52,6 +59,7 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends
 		assertFalse(this.builderServices.getDevelopment());
 	}
 
+	@Test
 	public void testEnableManagedBeans() {
 		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesLegacy");
 		assertNotNull(this.builderServices);
@@ -61,6 +69,7 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends
 		assertFalse(this.builderServices.getDevelopment());
 	}
 
+	@Test
 	public void testFlowBuilderServicesAllCustomized() {
 		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesAllCustom");
 		assertNotNull(this.builderServices);
@@ -72,6 +81,7 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests extends
 		assertTrue(this.builderServices.getDevelopment());
 	}
 
+	@Test
 	public void testFlowBuilderServicesConversionServiceCustomized() {
 		this.builderServices = (FlowBuilderServices) this.context.getBean("flowBuilderServicesConversionServiceCustom");
 		assertNotNull(this.builderServices);

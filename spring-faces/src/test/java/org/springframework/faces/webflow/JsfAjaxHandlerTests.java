@@ -1,15 +1,20 @@
 package org.springframework.faces.webflow;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
-public class JsfAjaxHandlerTests extends TestCase {
+public class JsfAjaxHandlerTests {
 
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 	private JsfAjaxHandler ajaxHandler;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		StaticWebApplicationContext webappContext = new StaticWebApplicationContext();
 		webappContext.setServletContext(this.jsfMock.servletContext());
@@ -17,10 +22,12 @@ public class JsfAjaxHandlerTests extends TestCase {
 		this.ajaxHandler.setApplicationContext(webappContext);
 	}
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 	}
 
+	@Test
 	public void testSendAjaxRedirect() throws Exception {
 		this.ajaxHandler.sendAjaxRedirectInternal("/target", this.jsfMock.request(), this.jsfMock.response(), false);
 		assertTrue(this.jsfMock.contentAsString().matches("<\\?xml version='1.0' encoding='utf-8'\\?>\n<partial-response.*><redirect url=\"/target\"/></partial-response>"));
