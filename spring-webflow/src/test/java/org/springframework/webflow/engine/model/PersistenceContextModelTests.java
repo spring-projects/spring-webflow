@@ -15,13 +15,16 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link PersistenceContextModel}.
  */
-public class PersistenceContextModelTests extends TestCase {
+public class PersistenceContextModelTests {
 
+	@Test
 	public void testNotMergeable() {
 		PersistenceContextModel child = new PersistenceContextModel();
 		assertFalse(child.isMergeableWith(child));

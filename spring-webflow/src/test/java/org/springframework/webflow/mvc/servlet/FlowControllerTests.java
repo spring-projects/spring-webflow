@@ -1,15 +1,18 @@
 package org.springframework.webflow.mvc.servlet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -26,14 +29,15 @@ import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
-public class FlowControllerTests extends TestCase {
+public class FlowControllerTests {
 	private FlowController controller;
 	private FlowExecutor executor;
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
 	private ServletExternalContext context;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		executor = EasyMock.createMock(FlowExecutor.class);
 		controller = new FlowController();
 		FlowHandlerAdapter handlerAdapter = new FlowHandlerAdapter() {
@@ -58,6 +62,7 @@ public class FlowControllerTests extends TestCase {
 		context = new ServletExternalContext(servletContext, request, response, controller.getFlowUrlHandler());
 	}
 
+	@Test
 	public void testLaunchFlowRequest() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -73,6 +78,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowRequestEndsAfterProcessing() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -92,6 +98,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testResumeFlowRequest() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -110,6 +117,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testResumeFlowRequestEndsAfterProcessing() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -132,6 +140,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExecutionRedirect() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -149,6 +158,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExecutionRedirectAjaxHeaderOpenInPopup() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -172,6 +182,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExecutionRedirectAjaxParameter() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -196,6 +207,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowWithDefinitionRedirect() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -219,6 +231,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirect() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -237,6 +250,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testDefaultHandleFlowException() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -257,6 +271,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testDefaultHandleNoSuchFlowExecutionException() throws Exception {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -274,6 +289,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testLaunchFlowWithCustomFlowHandler() throws Exception {
 		final LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		input.put("bar", "boop");
@@ -309,6 +325,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testHandleFlowOutcomeCustomFlowHandler() throws Exception {
 		final LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		input.put("bar", "boop");
@@ -352,6 +369,7 @@ public class FlowControllerTests extends TestCase {
 		EasyMock.verify(executor);
 	}
 
+	@Test
 	public void testHandleFlowExceptionCustomFlowHandler() throws Exception {
 		final FlowException flowException = new FlowException("Error") {
 		};

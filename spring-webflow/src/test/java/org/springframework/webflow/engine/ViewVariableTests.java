@@ -1,14 +1,18 @@
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
 
-public class ViewVariableTests extends TestCase {
+public class ViewVariableTests {
 
 	private boolean restoreCalled;
 
+	@Test
 	public void testCreateVariable() {
 		ViewVariable var = new ViewVariable("foo", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {
@@ -26,6 +30,7 @@ public class ViewVariableTests extends TestCase {
 		assertEquals("bar", context.getViewScope().get("foo"));
 	}
 
+	@Test
 	public void testDestroyVariable() {
 		ViewVariable var = new ViewVariable("foo", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {
@@ -45,6 +50,7 @@ public class ViewVariableTests extends TestCase {
 		assertFalse(context.getViewScope().contains("foo"));
 	}
 
+	@Test
 	public void testRestoreVariable() {
 		ViewVariable var = new ViewVariable("foo", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {

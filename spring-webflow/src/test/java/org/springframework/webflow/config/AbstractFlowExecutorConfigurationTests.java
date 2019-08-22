@@ -1,7 +1,10 @@
 package org.springframework.webflow.config;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -16,10 +19,11 @@ import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.executor.FlowExecutorImpl;
 import org.springframework.webflow.test.MockExternalContext;
 
-public abstract class AbstractFlowExecutorConfigurationTests extends TestCase {
+public abstract class AbstractFlowExecutorConfigurationTests {
 
 	private ApplicationContext context;
 
+	@Before
 	public void setUp() {
 		context = initApplicationContext();
 	}
@@ -27,6 +31,7 @@ public abstract class AbstractFlowExecutorConfigurationTests extends TestCase {
 	protected abstract ApplicationContext initApplicationContext();
 
 
+	@Test
 	public void testConfigOk() {
 		FlowExecutor executor = context.getBean("flowExecutor", FlowExecutor.class);
 		executor.launchExecution("flow", null, new MockExternalContext());
@@ -34,6 +39,7 @@ public abstract class AbstractFlowExecutorConfigurationTests extends TestCase {
 		executor2.launchExecution("flow", null, new MockExternalContext());
 	}
 
+	@Test
 	public void testCustomConversationManager() {
 		FlowExecutorImpl executor = context.getBean("flowExecutor", FlowExecutorImpl.class);
 		try {

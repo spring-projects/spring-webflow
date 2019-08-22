@@ -15,8 +15,16 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -35,7 +43,7 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Erwin Vervaet
  */
-public class FormActionTests extends TestCase {
+public class FormActionTests {
 
 	private static class TestBean {
 
@@ -80,10 +88,12 @@ public class FormActionTests extends TestCase {
 
 	private FormAction action;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		action = createFormAction("test");
 	}
 
+	@Test
 	public void testSetupForm() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 
@@ -111,6 +121,7 @@ public class FormActionTests extends TestCase {
 		return map;
 	}
 
+	@Test
 	public void testSetupFormWithExistingFormObject() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 
@@ -135,6 +146,7 @@ public class FormActionTests extends TestCase {
 		assertEquals("bla", getFormObject(context).getProp());
 	}
 
+	@Test
 	public void testBindAndValidate() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 
@@ -150,6 +162,7 @@ public class FormActionTests extends TestCase {
 		assertEquals("value", getFormObject(context).getProp());
 	}
 
+	@Test
 	public void testBindAndValidateFailure() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 
@@ -165,6 +178,7 @@ public class FormActionTests extends TestCase {
 		assertNull(getFormObject(context).getProp());
 	}
 
+	@Test
 	public void testBindAndValidateWithExistingFormObject() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 
@@ -189,6 +203,7 @@ public class FormActionTests extends TestCase {
 	}
 
 	// this is what happens in a 'form state'
+	@Test
 	public void testBindAndValidateFailureThenSetupForm() throws Exception {
 		MockRequestContext context = new MockRequestContext(blankParameters());
 
@@ -221,6 +236,7 @@ public class FormActionTests extends TestCase {
 		assertEquals("", getFormObject(context).getProp());
 	}
 
+	@Test
 	public void testMultipleFormObjectsInOneFlow() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 
@@ -263,6 +279,7 @@ public class FormActionTests extends TestCase {
 		assertEquals("", getFormObject(context, "otherTest").getProp());
 	}
 
+	@Test
 	public void testGetFormObject() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 		FormAction action = createFormAction("test");
@@ -276,6 +293,7 @@ public class FormActionTests extends TestCase {
 		assertSame(formObject, testBean);
 	}
 
+	@Test
 	public void testGetFormErrors() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 		FormAction action = createFormAction("test");
@@ -290,6 +308,7 @@ public class FormActionTests extends TestCase {
 		assertSame(errors, testErrors);
 	}
 
+	@Test
 	public void testFormObjectAccessUsingAlias() throws Exception {
 		MockRequestContext context = new MockRequestContext(blankParameters());
 
@@ -319,6 +338,7 @@ public class FormActionTests extends TestCase {
 	}
 
 	// as reported in SWF-4
+	@Test
 	public void testInconsistentFormObjectAndErrors() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 
@@ -353,6 +373,7 @@ public class FormActionTests extends TestCase {
 		assertSame(formObject, errors.getTarget());
 	}
 
+	@Test
 	public void testMultipleFormObjects() throws Exception {
 		MockRequestContext context = new MockRequestContext(parameters());
 
@@ -387,6 +408,7 @@ public class FormActionTests extends TestCase {
 		assertSame(test2, new FormObjectAccessor(context).getCurrentFormObject());
 	}
 
+	@Test
 	public void testFormObjectAndNoErrors() throws Exception {
 		// this typically happens with mapping from parent flow to subflow
 		MockRequestContext context = new MockRequestContext(parameters());
@@ -408,6 +430,7 @@ public class FormActionTests extends TestCase {
 		assertFalse(getErrors(context).hasErrors());
 	}
 
+	@Test
 	public void testSetupFormThenBindAndValidate() throws Exception {
 		FormAction action = createFormAction("testBean");
 		MockRequestContext context = new MockRequestContext();
@@ -424,6 +447,7 @@ public class FormActionTests extends TestCase {
 		assertEquals(true, ((TestBeanValidator) action.getValidator()).invoked);
 	}
 
+	@Test
 	public void testFormActionWithValidatorAndNoFormActionClass() throws Exception {
 		FormAction action = new FormAction() {
 			protected Object createFormObject(RequestContext context) throws Exception {

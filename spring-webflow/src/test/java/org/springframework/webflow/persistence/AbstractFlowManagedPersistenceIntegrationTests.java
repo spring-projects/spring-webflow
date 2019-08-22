@@ -2,8 +2,8 @@ package org.springframework.webflow.persistence;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
@@ -22,7 +22,7 @@ import org.springframework.webflow.execution.factory.StaticFlowExecutionListener
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
-public abstract class AbstractFlowManagedPersistenceIntegrationTests extends TestCase {
+public abstract class AbstractFlowManagedPersistenceIntegrationTests {
 
 	private FlowExecutionListener persistenceListener;
 
@@ -34,7 +34,8 @@ public abstract class AbstractFlowManagedPersistenceIntegrationTests extends Tes
 		return dataSource;
 	}
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		initDataSource();
 		populateDataBase();
 		persistenceListener = createFlowExecutionListener();
@@ -72,6 +73,7 @@ public abstract class AbstractFlowManagedPersistenceIntegrationTests extends Tes
 		flowExecution = factory.createFlowExecution(rootFlow);
 	}
 
+	@Test
 	public void testFlowWithSubflow() {
 		MockExternalContext context = new MockExternalContext();
 		flowExecution.start(null, context);
@@ -81,6 +83,7 @@ public abstract class AbstractFlowManagedPersistenceIntegrationTests extends Tes
 		flowExecution.resume(context);
 	}
 
+	@Test
 	public void testManagedFlowWithUnmanagedSubflow() {
 		MockExternalContext context = new MockExternalContext();
 		flowExecution.start(null, context);

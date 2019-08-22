@@ -15,15 +15,14 @@
  */
 package org.springframework.webflow.engine;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Collections;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.support.AbstractGetValueExpression;
-import org.springframework.binding.mapping.Mapper;
-import org.springframework.binding.mapping.MappingResult;
-import org.springframework.binding.mapping.MappingResults;
 import org.springframework.binding.mapping.impl.DefaultMappingResults;
 import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -39,13 +38,14 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * 
  * @author Keith Donald
  */
-public class SubflowStateTests extends TestCase {
+public class SubflowStateTests {
 
 	private Flow parentFlow;
 	private SubflowState subflowState;
 	private Flow subflow;
 	private MockRequestControlContext context;
 
+	@Before
 	public void setUp() {
 		parentFlow = new Flow("parent");
 		subflow = new Flow("child");
@@ -58,6 +58,7 @@ public class SubflowStateTests extends TestCase {
 		context.setCurrentState(subflowState);
 	}
 
+	@Test
 	public void testEnter() {
 		new State(subflow, "whatev") {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
@@ -68,6 +69,7 @@ public class SubflowStateTests extends TestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testEnterWithInput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {
@@ -91,6 +93,7 @@ public class SubflowStateTests extends TestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testReturnWithOutput() {
 		subflowState.setAttributeMapper(new SubflowAttributeMapper() {
 			public MutableAttributeMap<Object> createSubflowInput(RequestContext context) {

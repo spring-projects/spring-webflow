@@ -15,17 +15,20 @@
  */
 package org.springframework.webflow.execution.repository.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
 import org.springframework.webflow.conversation.impl.SimpleConversationId;
 
-public class CompositeFlowExecutionKeyTests extends TestCase {
+public class CompositeFlowExecutionKeyTests {
 
+	@Test
 	public void testToString() {
 		CompositeFlowExecutionKey key = new CompositeFlowExecutionKey(new SimpleConversationId("1"), "1");
 		assertEquals("e1s1", key.toString());
 	}
 
+	@Test
 	public void testEquals() {
 		CompositeFlowExecutionKey key = new CompositeFlowExecutionKey(new SimpleConversationId("foo"), "bar");
 		CompositeFlowExecutionKey key2 = new CompositeFlowExecutionKey(new SimpleConversationId("foo"), "bar");

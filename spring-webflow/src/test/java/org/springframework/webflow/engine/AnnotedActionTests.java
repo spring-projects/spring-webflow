@@ -15,8 +15,10 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.AnnotatedAction;
 import org.springframework.webflow.execution.Event;
@@ -24,21 +26,24 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class AnnotedActionTests extends TestCase {
+public class AnnotedActionTests {
 
 	private AnnotatedAction action = new AnnotatedAction(new TestAction());
 
 	private MockRequestContext context;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		Flow flow = new Flow("myFlow");
 		context = new MockRequestContext(flow);
 	}
 
+	@Test
 	public void testBasicExecute() throws Exception {
 		assertEquals("success", action.execute(context).getId());
 	}
 
+	@Test
 	public void testExecuteWithCustomAttribute() throws Exception {
 		action.getAttributes().put("attr", "value");
 		action.setTargetAction(new AbstractAction() {
@@ -51,6 +56,7 @@ public class AnnotedActionTests extends TestCase {
 		assertEquals(0, context.getAttributes().size());
 	}
 
+	@Test
 	public void testExecuteWithChainOfCustomAttributes() throws Exception {
 		AnnotatedAction action2 = new AnnotatedAction(action);
 		action2.getAttributes().put("attr2", "value");
@@ -66,6 +72,7 @@ public class AnnotedActionTests extends TestCase {
 		assertEquals(0, context.getAttributes().size());
 	}
 
+	@Test
 	public void testExecuteWithName() throws Exception {
 		action.getAttributes().put("name", "foo");
 		action.setTargetAction(new AbstractAction() {

@@ -15,12 +15,12 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import org.springframework.binding.expression.Expression;
-import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.ParserContext;
-import org.springframework.binding.expression.ParserException;
+import org.junit.After;
+import org.junit.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.TransitionCriteria;
@@ -31,16 +31,17 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class TextToTransitionCriteriaTests extends TestCase {
+public class TextToTransitionCriteriaTests {
 
 	private MockFlowBuilderContext serviceLocator = new MockFlowBuilderContext("flowId");
 	private TextToTransitionCriteria converter = new TextToTransitionCriteria(serviceLocator);
 
-	@Override
-	protected void tearDown() {
+	@After
+	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public void testAny() throws Exception {
 		String expression = "*";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
@@ -55,6 +56,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 				converter.convertSourceToTargetClass(null, TransitionCriteria.class));
 	}
 
+	@Test
 	public void testStaticEventId() throws Exception {
 		String expression = "sample";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
@@ -63,6 +65,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
+	@Test
 	public void testTrueEvaluation() throws Exception {
 		String expression = "#{flowScope.foo == 'bar'}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
@@ -71,6 +74,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
+	@Test
 	public void testFalseEvaluation() throws Exception {
 		String expression = "#{flowScope.foo != 'bar'}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
@@ -79,6 +83,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
 	}
 
+	@Test
 	public void testNonStringEvaluation() throws Exception {
 		String expression = "#{3 + 4}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
@@ -88,6 +93,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
+	@Test
 	public void testCurrenEventEval() throws Exception {
 		String expression = "#{currentEvent.id == 'submit'}";
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
@@ -97,6 +103,7 @@ public class TextToTransitionCriteriaTests extends TestCase {
 		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
 	}
 
+	@Test
 	public void testNullExpressionEvaluation() throws Exception {
 		serviceLocator.getFlowBuilderServices()
 				.setExpressionParser((expressionString, context) -> new StaticExpression(null));

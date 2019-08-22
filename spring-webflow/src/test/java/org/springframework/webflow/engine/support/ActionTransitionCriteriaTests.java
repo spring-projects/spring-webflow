@@ -15,39 +15,47 @@
  */
 package org.springframework.webflow.engine.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.test.MockAction;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class ActionTransitionCriteriaTests extends TestCase {
+public class ActionTransitionCriteriaTests {
 
 	private MockAction action;
 
 	private ActionTransitionCriteria criteria;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		action = new MockAction();
 		criteria = new ActionTransitionCriteria(action);
 	}
 
+	@Test
 	public void testExecuteSuccessResult() {
 		MockRequestContext context = new MockRequestContext();
 		assertTrue(criteria.test(context));
 	}
 
+	@Test
 	public void testExecuteTrueResult() {
 		action.setResultEventId("true");
 		MockRequestContext context = new MockRequestContext();
 		assertTrue(criteria.test(context));
 	}
 
+	@Test
 	public void testExecuteYesResult() {
 		action.setResultEventId("yes");
 		MockRequestContext context = new MockRequestContext();
 		assertTrue(criteria.test(context));
 	}
 
+	@Test
 	public void testExecuteErrorResult() {
 		action.setResultEventId("whatever");
 		MockRequestContext context = new MockRequestContext();

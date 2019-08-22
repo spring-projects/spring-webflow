@@ -15,20 +15,31 @@
  */
 package org.springframework.webflow.core.collection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit tests for {@link LocalAttributeMap}.
  */
-public class LocalAttributeMapTests extends TestCase {
+public class LocalAttributeMapTests {
 
 	private LocalAttributeMap<Object> attributeMap = new LocalAttributeMap<>();
 
+	@Before
 	public void setUp() {
 		attributeMap.put("string", "A string");
 		attributeMap.put("integer", 12345);
@@ -42,21 +53,25 @@ public class LocalAttributeMapTests extends TestCase {
 		attributeMap.put("collection", new LinkedList<>());
 	}
 
+	@Test
 	public void testGet() {
 		TestBean bean = (TestBean) attributeMap.get("bean");
 		assertNotNull(bean);
 	}
 
+	@Test
 	public void testGetNull() {
 		TestBean bean = (TestBean) attributeMap.get("bogus");
 		assertNull(bean);
 	}
 
+	@Test
 	public void testGetRequiredType() {
 		TestBean bean = attributeMap.get("bean", TestBean.class);
 		assertNotNull(bean);
 	}
 
+	@Test
 	public void testGetWrongType() {
 		try {
 			attributeMap.get("bean", String.class);
@@ -66,6 +81,7 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetWithDefaultOption() {
 		TestBean d = new TestBean();
 		TestBean bean = (TestBean) attributeMap.get("bean", d);
@@ -73,17 +89,20 @@ public class LocalAttributeMapTests extends TestCase {
 		assertNotSame(bean, d);
 	}
 
+	@Test
 	public void testGetWithDefault() {
 		TestBean d = new TestBean();
 		TestBean bean = (TestBean) attributeMap.get("bogus", d);
 		assertSame(bean, d);
 	}
 
+	@Test
 	public void testGetRequired() {
 		TestBean bean = (TestBean) attributeMap.getRequired("bean");
 		assertNotNull(bean);
 	}
 
+	@Test
 	public void testGetRequiredNotPresent() {
 		try {
 			attributeMap.getRequired("bogus");
@@ -93,11 +112,13 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetRequiredOfType() {
 		TestBean bean = attributeMap.getRequired("bean", TestBean.class);
 		assertNotNull(bean);
 	}
 
+	@Test
 	public void testGetRequiredWrongType() {
 		try {
 			attributeMap.getRequired("bean", String.class);
@@ -107,11 +128,13 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetNumber() {
 		BigDecimal bd = attributeMap.getNumber("bigDecimal", BigDecimal.class);
 		assertEquals(new BigDecimal("12345.67"), bd);
 	}
 
+	@Test
 	public void testGetNumberWrongType() {
 		try {
 			attributeMap.getNumber("bigDecimal", Integer.class);
@@ -121,6 +144,7 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetNumberWithDefaultOption() {
 		BigDecimal d = new BigDecimal("1");
 		BigDecimal bd = attributeMap.getNumber("bigDecimal", BigDecimal.class, d);
@@ -128,6 +152,7 @@ public class LocalAttributeMapTests extends TestCase {
 		assertNotSame(d, bd);
 	}
 
+	@Test
 	public void testGetNumberWithDefault() {
 		BigDecimal d = new BigDecimal("1");
 		BigDecimal bd = attributeMap.getNumber("bogus", BigDecimal.class, d);
@@ -135,11 +160,13 @@ public class LocalAttributeMapTests extends TestCase {
 		assertSame(d, bd);
 	}
 
+	@Test
 	public void testGetNumberRequired() {
 		BigDecimal bd = attributeMap.getRequiredNumber("bigDecimal", BigDecimal.class);
 		assertEquals(new BigDecimal("12345.67"), bd);
 	}
 
+	@Test
 	public void testGetNumberRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredNumber("bogus", BigDecimal.class);
@@ -149,21 +176,25 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetInteger() {
 		Integer i = attributeMap.getInteger("integer");
 		assertEquals(new Integer(12345), i);
 	}
 
+	@Test
 	public void testGetIntegerNull() {
 		Integer i = attributeMap.getInteger("bogus");
 		assertNull(i);
 	}
 
+	@Test
 	public void testGetIntegerRequired() {
 		Integer i = attributeMap.getRequiredInteger("integer");
 		assertEquals(new Integer(12345), i);
 	}
 
+	@Test
 	public void testGetIntegerRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredInteger("bogus");
@@ -173,21 +204,25 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetLong() {
 		Long i = attributeMap.getLong("long");
 		assertEquals(new Long(12345), i);
 	}
 
+	@Test
 	public void testGetLongNull() {
 		Long i = attributeMap.getLong("bogus");
 		assertNull(i);
 	}
 
+	@Test
 	public void testGetLongRequired() {
 		Long i = attributeMap.getRequiredLong("long");
 		assertEquals(new Long(12345), i);
 	}
 
+	@Test
 	public void testGetLongRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredLong("bogus");
@@ -197,21 +232,25 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetString() {
 		String i = attributeMap.getString("string");
 		assertEquals("A string", i);
 	}
 
+	@Test
 	public void testGetStringNull() {
 		String i = attributeMap.getString("bogus");
 		assertNull(i);
 	}
 
+	@Test
 	public void testGetStringRequired() {
 		String i = attributeMap.getRequiredString("string");
 		assertEquals("A string", i);
 	}
 
+	@Test
 	public void testGetStringRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredString("bogus");
@@ -221,21 +260,25 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetBoolean() {
 		Boolean i = attributeMap.getBoolean("boolean");
 		assertEquals(Boolean.TRUE, i);
 	}
 
+	@Test
 	public void testGetBooleanNull() {
 		Boolean i = attributeMap.getBoolean("bogus");
 		assertNull(i);
 	}
 
+	@Test
 	public void testGetBooleanRequired() {
 		Boolean i = attributeMap.getRequiredBoolean("boolean");
 		assertEquals(Boolean.TRUE, i);
 	}
 
+	@Test
 	public void testGetBooleanRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredBoolean("bogus");
@@ -245,21 +288,25 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetArray() {
 		String[] i = attributeMap.getArray("stringArray", String[].class);
 		assertEquals(3, i.length);
 	}
 
+	@Test
 	public void testGetArrayNull() {
 		String[] i = attributeMap.getArray("A bogus array", String[].class);
 		assertNull(i);
 	}
 
+	@Test
 	public void testGetArrayRequired() {
 		String[] i = attributeMap.getRequiredArray("stringArray", String[].class);
 		assertEquals(3, i.length);
 	}
 
+	@Test
 	public void testGetArrayRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredArray("A bogus array", String[].class);
@@ -270,6 +317,7 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testGetCollection() {
 		List<Object> i = attributeMap.getCollection("collection", List.class);
 		assertTrue(i instanceof LinkedList);
@@ -277,17 +325,20 @@ public class LocalAttributeMapTests extends TestCase {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testGetCollectionNull() {
 		List<Object> i = attributeMap.getCollection("bogus", List.class);
 		assertNull(i);
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testGetCollectionRequired() {
 		List<Object> i = attributeMap.getRequiredCollection("collection", List.class);
 		assertEquals(0, i.size());
 	}
 
+	@Test
 	public void testGetCollectionRequiredNotPresent() {
 		try {
 			attributeMap.getRequiredCollection("A bogus collection");
@@ -297,11 +348,13 @@ public class LocalAttributeMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetMap() {
 		Map<String, Object> map = attributeMap.asMap();
 		assertEquals(10, map.size());
 	}
 
+	@Test
 	public void testUnion() {
 		LocalAttributeMap<Object> one = new LocalAttributeMap<>();
 		one.put("foo", "bar");
@@ -318,6 +371,7 @@ public class LocalAttributeMapTests extends TestCase {
 		assertEquals("boo", three.get("bar"));
 	}
 
+	@Test
 	public void testEquality() {
 		LocalAttributeMap<String> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
@@ -328,6 +382,7 @@ public class LocalAttributeMapTests extends TestCase {
 		assertEquals(map, map2);
 	}
 
+	@Test
 	public void testExtract() {
 		assertEquals("A string", attributeMap.extract("string"));
 		assertFalse(attributeMap.contains("string"));

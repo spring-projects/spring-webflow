@@ -1,11 +1,15 @@
 package org.springframework.webflow.test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 
-public class MockActionTests extends TestCase {
+public class MockActionTests {
+	@Test
 	public void testMockActionExecute() {
 		MockAction action = new MockAction();
 		Event e = action.execute(new MockRequestContext());
@@ -13,6 +17,7 @@ public class MockActionTests extends TestCase {
 		assertTrue(e.getAttributes().isEmpty());
 	}
 
+	@Test
 	public void testMockActionExecuteCustomResult() {
 		MockAction action = new MockAction("foo");
 		Event e = action.execute(new MockRequestContext());
@@ -20,6 +25,7 @@ public class MockActionTests extends TestCase {
 		assertTrue(e.getAttributes().isEmpty());
 	}
 
+	@Test
 	public void testMockActionExecuteCustomResultAttributes() {
 		MockAction action = new MockAction("foo");
 		LocalAttributeMap<Object> resultAttributes = new LocalAttributeMap<>();

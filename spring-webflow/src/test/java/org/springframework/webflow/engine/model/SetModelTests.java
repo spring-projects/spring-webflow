@@ -15,13 +15,16 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link SetModel}.
  */
-public class SetModelTests extends TestCase {
+public class SetModelTests {
 
+	@Test
 	public void testNotMergeable() {
 		SetModel child = new SetModel("name", "value");
 		assertFalse(child.isMergeableWith(child));

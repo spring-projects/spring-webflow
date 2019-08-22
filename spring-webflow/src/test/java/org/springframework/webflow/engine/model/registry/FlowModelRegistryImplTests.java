@@ -1,11 +1,15 @@
 package org.springframework.webflow.engine.model.registry;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
 
-public class FlowModelRegistryImplTests extends TestCase {
+public class FlowModelRegistryImplTests {
 
 	private FlowModelRegistryImpl registry = new FlowModelRegistryImpl();
 
@@ -13,11 +17,13 @@ public class FlowModelRegistryImplTests extends TestCase {
 
 	private FlowModel barFlow;
 
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		fooFlow = new FlowModel();
 		barFlow = new FlowModel();
 	}
 
+	@Test
 	public void testNoSuchFlowDefinition() {
 		try {
 			registry.getFlowModel("bogus");
@@ -27,11 +33,13 @@ public class FlowModelRegistryImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRegisterFlow() {
 		registry.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
 		assertEquals(fooFlow, registry.getFlowModel("foo"));
 	}
 
+	@Test
 	public void testRegisterFlowSameIds() {
 		registry.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
 		FlowModel newFlow = new FlowModel();
@@ -39,6 +47,7 @@ public class FlowModelRegistryImplTests extends TestCase {
 		assertSame(newFlow, registry.getFlowModel("foo"));
 	}
 
+	@Test
 	public void testRegisterMultipleFlows() {
 		registry.registerFlowModel("foo", new StaticFlowModelHolder(fooFlow));
 		registry.registerFlowModel("bar", new StaticFlowModelHolder(barFlow));
@@ -46,6 +55,7 @@ public class FlowModelRegistryImplTests extends TestCase {
 		assertEquals(barFlow, registry.getFlowModel("bar"));
 	}
 
+	@Test
 	public void testParentHierarchy() {
 		testRegisterMultipleFlows();
 		FlowModelRegistryImpl child = new FlowModelRegistryImpl();

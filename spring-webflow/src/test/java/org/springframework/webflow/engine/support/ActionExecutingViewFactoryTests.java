@@ -1,15 +1,20 @@
 package org.springframework.webflow.engine.support;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class ActionExecutingViewFactoryTests extends TestCase {
+public class ActionExecutingViewFactoryTests {
 
+	@Test
 	public void testGetView() throws Exception {
 		TestAction action = new TestAction();
 		ActionExecutingViewFactory factory = new ActionExecutingViewFactory(action);
@@ -20,6 +25,7 @@ public class ActionExecutingViewFactoryTests extends TestCase {
 		assertTrue(action.isExecuted());
 	}
 
+	@Test
 	public void testProcessUserEvent() throws IOException {
 		TestAction action = new TestAction();
 		ActionExecutingViewFactory factory = new ActionExecutingViewFactory(action);
@@ -34,6 +40,7 @@ public class ActionExecutingViewFactoryTests extends TestCase {
 		assertEquals("foo", view.getFlowEvent().getId());
 	}
 
+	@Test
 	public void testProcessUserEventButton() throws IOException {
 		TestAction action = new TestAction();
 		ActionExecutingViewFactory factory = new ActionExecutingViewFactory(action);
@@ -48,6 +55,7 @@ public class ActionExecutingViewFactoryTests extends TestCase {
 		assertEquals("foo", view.getFlowEvent().getId());
 	}
 
+	@Test
 	public void testProcessUserEventNoEvent() throws IOException {
 		TestAction action = new TestAction();
 		ActionExecutingViewFactory factory = new ActionExecutingViewFactory(action);

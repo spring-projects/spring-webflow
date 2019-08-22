@@ -15,8 +15,10 @@
  */
 package org.springframework.webflow.engine.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
+import org.junit.Test;
 import org.springframework.webflow.engine.WildcardTransitionCriteria;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -25,8 +27,9 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Erwin Vervaet
  */
-public class NotTransitionCriteriaTests extends TestCase {
+public class NotTransitionCriteriaTests {
 
+	@Test
 	public void testNull() {
 		try {
 			new NotTransitionCriteria(null);
@@ -35,6 +38,7 @@ public class NotTransitionCriteriaTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNegation() {
 		assertFalse(new NotTransitionCriteria(WildcardTransitionCriteria.INSTANCE).test(new MockRequestContext()));
 	}

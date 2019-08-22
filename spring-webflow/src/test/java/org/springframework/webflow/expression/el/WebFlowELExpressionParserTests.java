@@ -1,11 +1,13 @@
 package org.springframework.webflow.expression.el;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
 import java.security.Principal;
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
 import org.apache.el.ExpressionFactoryImpl;
+import org.junit.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.context.support.StaticApplicationContext;
@@ -23,9 +25,10 @@ import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
 
-public class WebFlowELExpressionParserTests extends TestCase {
+public class WebFlowELExpressionParserTests {
 	private WebFlowELExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
+	@Test
 	public void testResolveMap() {
 		LocalAttributeMap<Object> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
@@ -35,6 +38,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals(null, exp2.getValue(map));
 	}
 
+	@Test
 	public void testSetMap() {
 		LocalAttributeMap<Object> map = new LocalAttributeMap<>();
 		map.put("foo", "bar");
@@ -47,6 +51,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("new", exp2.getValue(map));
 	}
 
+	@Test
 	public void testResolveFlowRequestContext() {
 		MockRequestContext context = new MockRequestContext();
 		Expression exp = parser.parseExpression("flowRequestContext",
@@ -54,6 +59,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertSame(context, exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveCurrentUser() {
 		MockRequestContext context = new MockRequestContext();
 		context.getMockExternalContext().setCurrentUser("Keith");
@@ -62,6 +68,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("Keith", ((Principal) exp.getValue(context)).getName());
 	}
 
+	@Test
 	public void testResolveRequestScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getRequestScope().put("foo", "bar");
@@ -69,6 +76,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("bar", exp.getValue(context));
 	}
 
+	@Test
 	public void testSetRequestScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getRequestScope().put("foo", "bar");
@@ -77,6 +85,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("baz", exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveFlashScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlashScope().put("foo", "bar");
@@ -84,6 +93,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("bar", exp.getValue(context));
 	}
 
+	@Test
 	public void testSetFlashScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlashScope().put("foo", "bar");
@@ -92,6 +102,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("baz", exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveViewScope() {
 		MockRequestControlContext context = new MockRequestControlContext();
 		ViewState state = new ViewState(context.getRootFlow(), "view", new StubViewFactory());
@@ -101,6 +112,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("bar", exp.getValue(context));
 	}
 
+	@Test
 	public void testSetViewScope() {
 		MockRequestControlContext context = new MockRequestControlContext();
 		ViewState state = new ViewState(context.getRootFlow(), "view", new StubViewFactory());
@@ -111,6 +123,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("baz", exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveFlowScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlowScope().put("foo", "bar");
@@ -118,6 +131,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("bar", exp.getValue(context));
 	}
 
+	@Test
 	public void testSetFlowScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getFlowScope().put("foo", "bar");
@@ -126,6 +140,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("baz", exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveConversationScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getConversationScope().put("foo", "bar");
@@ -133,6 +148,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("bar", exp.getValue(context));
 	}
 
+	@Test
 	public void testSetConversationScope() {
 		MockRequestContext context = new MockRequestContext();
 		context.getConversationScope().put("foo", "bar");
@@ -141,6 +157,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("baz", exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveSpringBean() {
 		MockRequestContext context = new MockRequestContext();
 		StaticApplicationContext ac = new StaticApplicationContext();
@@ -150,6 +167,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertSame(ac.getBean("testBean"), exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveAction() {
 		MockRequestContext context = new MockRequestContext();
 		StaticApplicationContext ac = new StaticApplicationContext();
@@ -159,6 +177,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertSame(ac.getBean("action"), exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveMultiAction() {
 		MockRequestContext context = new MockRequestContext();
 		StaticApplicationContext ac = new StaticApplicationContext();
@@ -171,6 +190,7 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("setupForm", action.getMethod());
 	}
 
+	@Test
 	public void testResolveEventAttributes() {
 		MockRequestContext context = new MockRequestContext();
 		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
@@ -181,12 +201,14 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		assertEquals("bar", exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveNull() {
 		MockRequestContext context = new MockRequestContext();
 		Expression exp = parser.parseExpression("null", new FluentParserContext().evaluate(RequestContext.class));
 		assertEquals(null, exp.getValue(context));
 	}
 
+	@Test
 	public void testResolveMessage() {
 		MockRequestContext context = new MockRequestContext();
 		StaticApplicationContext ac = new StaticApplicationContext();
