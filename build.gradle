@@ -157,7 +157,7 @@ project("spring-webflow") {
 		optional("org.apache.tiles:tiles-extras:$tiles3Version") {
 			exclude group: "org.springframework", module: "spring-web"
 		}
-		provided("junit:junit:3.8.2")
+		provided("junit:junit:4.12")
 		testCompile("org.springframework:spring-aop:$springVersion")
 		testCompile("org.springframework:spring-jdbc:$springVersion")
 		testCompile("org.springframework:spring-test:$springVersion")
