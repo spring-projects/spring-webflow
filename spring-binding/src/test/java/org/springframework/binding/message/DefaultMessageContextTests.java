@@ -1,22 +1,26 @@
 package org.springframework.binding.message;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.Serializable;
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.StaticMessageSource;
 
-public class DefaultMessageContextTests extends TestCase {
+public class DefaultMessageContextTests {
 	private DefaultMessageContext context;
 
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		StaticMessageSource messageSource = new StaticMessageSource();
 		messageSource.addMessage("message", Locale.getDefault(), "Hello world resolved!");
 		messageSource.addMessage("argmessage", Locale.getDefault(), "Hello world {0}!");
 		context = new DefaultMessageContext(messageSource);
 	}
 
+	@Test
 	public void testCreateMessageContext() {
 		context.addMessage(new MessageBuilder().defaultText("Hello world!").build());
 		Message[] messages = context.getAllMessages();
@@ -26,6 +30,7 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals(null, messages[0].getSource());
 	}
 
+	@Test
 	public void testResolveMessage() {
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());
 		Message[] messages = context.getMessagesBySource(this);
@@ -35,6 +40,7 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals(this, messages[0].getSource());
 	}
 
+	@Test
 	public void testResolveMessageDefaultText() {
 		context.addMessage(new MessageBuilder().error().code("bogus").defaultText("Hello world fallback!").build());
 		Message[] messages = context.getAllMessages();
@@ -44,6 +50,7 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals(null, messages[0].getSource());
 	}
 
+	@Test
 	public void testResolveMessageWithArgs() {
 		context.addMessage(new MessageBuilder().error().source(this).code("argmessage").arg("Keith")
 				.defaultText("Hello world fallback!").build());
@@ -54,6 +61,7 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals(this, messages[0].getSource());
 	}
 
+	@Test
 	public void testResolveMessageWithMultipleCodes() {
 		context.addMessage(new MessageBuilder().error().source(this).code("bogus").code("argmessage").arg("Keith")
 				.defaultText("Hello world fallback!").build());
@@ -64,6 +72,7 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals(this, messages[0].getSource());
 	}
 
+	@Test
 	public void testSaveRestoreMessages() {
 		context.addMessage(new MessageBuilder().defaultText("Info").build());
 		context.addMessage(new MessageBuilder().error().defaultText("Error").build());
@@ -80,6 +89,7 @@ public class DefaultMessageContextTests extends TestCase {
 		assertEquals(1, context.getMessagesBySource(this).length);
 	}
 
+	@Test
 	public void testMessageSequencing() {
 		context.addMessage(new MessageBuilder().defaultText("Info").build());
 		context.addMessage(new MessageBuilder().warning().source(this).code("message").build());

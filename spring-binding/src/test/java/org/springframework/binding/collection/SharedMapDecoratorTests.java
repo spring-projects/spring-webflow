@@ -15,21 +15,28 @@
  */
 package org.springframework.binding.collection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Unit tests for {@link org.springframework.binding.collection.SharedMapDecorator}.
  */
-public class SharedMapDecoratorTests extends TestCase {
+public class SharedMapDecoratorTests {
 
 	private SharedMapDecorator<String, String> map = new SharedMapDecorator<>(
 			new HashMap<>());
 
+	@Test
 	public void testGetPutRemove() {
 		assertTrue(map.size() == 0);
 		assertTrue(map.isEmpty());
@@ -47,6 +54,7 @@ public class SharedMapDecoratorTests extends TestCase {
 		assertNull(map.get("foo"));
 	}
 
+	@Test
 	public void testPutAll() {
 		Map<String, String> all = new HashMap<>();
 		all.put("foo", "bar");
@@ -55,6 +63,7 @@ public class SharedMapDecoratorTests extends TestCase {
 		assertTrue(map.size() == 2);
 	}
 
+	@Test
 	public void testEntrySet() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
@@ -62,6 +71,7 @@ public class SharedMapDecoratorTests extends TestCase {
 		assertTrue(entrySet.size() == 2);
 	}
 
+	@Test
 	public void testKeySet() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");
@@ -69,6 +79,7 @@ public class SharedMapDecoratorTests extends TestCase {
 		assertTrue(keySet.size() == 2);
 	}
 
+	@Test
 	public void testValues() {
 		map.put("foo", "bar");
 		map.put("bar", "baz");

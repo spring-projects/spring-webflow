@@ -15,8 +15,13 @@
  */
 package org.springframework.binding.expression.beanwrapper;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.junit.Test;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.binding.convert.converters.StringToDate;
 import org.springframework.binding.convert.service.GenericConversionService;
@@ -25,12 +30,13 @@ import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.expression.support.FluentParserContext;
 
-public class BeanWrapperExpressionParserTests extends TestCase {
+public class BeanWrapperExpressionParserTests {
 
 	private BeanWrapperExpressionParser parser = new BeanWrapperExpressionParser();
 
 	private TestBean bean = new TestBean();
 
+	@Test
 	public void testParseSimple() {
 		String exp = "flag";
 		Expression e = parser.parseExpression(exp, null);
@@ -39,6 +45,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		assertFalse(b);
 	}
 
+	@Test
 	public void testParseSimpleAllowDelimited() {
 		parser.setAllowDelimitedEvalExpressions(true);
 		String exp = "${flag}";
@@ -48,6 +55,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		assertFalse(b);
 	}
 
+	@Test
 	public void testParseSimpleDelimitedNotAllowed() {
 		String exp = "${flag}";
 		try {
@@ -57,6 +65,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseTemplateSimpleLiteral() {
 		String exp = "flag";
 		Expression e = parser.parseExpression(exp, new FluentParserContext().template());
@@ -64,12 +73,14 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		assertEquals("flag", e.getValue(bean));
 	}
 
+	@Test
 	public void testParseTemplateEmpty() {
 		Expression e = parser.parseExpression("", new FluentParserContext().template());
 		assertNotNull(e);
 		assertEquals("", e.getValue(bean));
 	}
 
+	@Test
 	public void testParseTemplateComposite() {
 		String exp = "hello ${flag} ${flag} ${flag}";
 		Expression e = parser.parseExpression(exp, new FluentParserContext().template());
@@ -78,6 +89,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		assertEquals("hello false false false", str);
 	}
 
+	@Test
 	public void testTemplateEnclosedCompositeNotSupported() {
 		String exp = "${hello ${flag} ${flag} ${flag}}";
 		try {
@@ -87,18 +99,21 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetValueType() {
 		String exp = "flag";
 		Expression e = parser.parseExpression(exp, null);
 		assertEquals(boolean.class, e.getValueType(bean));
 	}
 
+	@Test
 	public void testGetValueTypeNullCollectionValue() {
 		String exp = "list[0]";
 		Expression e = parser.parseExpression(exp, null);
 		assertEquals(null, e.getValueType(bean));
 	}
 
+	@Test
 	public void testSetValueWithCoersion() {
 		GenericConversionService cs = (GenericConversionService) parser.getConversionService();
 		StringToDate converter = new StringToDate();
@@ -108,6 +123,7 @@ public class BeanWrapperExpressionParserTests extends TestCase {
 		e.setValue(bean, "2008-9-15");
 	}
 
+	@Test
 	public void testSetBogusValueWithCoersion() {
 		Expression e = parser.parseExpression("date", null);
 		try {

@@ -15,8 +15,12 @@
  */
 package org.springframework.binding.expression.spel;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
@@ -40,20 +44,23 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * 
  * @author Rossen Stoyanchev
  */
-public class ELExpressionParserCompatibilityTests extends TestCase {
+public class ELExpressionParserCompatibilityTests {
 
 	private SpringELExpressionParser parser = new SpringELExpressionParser(new SpelExpressionParser());
 
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		parser.addPropertyAccessor(new SpecialPropertyAccessor());
 	}
 
+	@Test
 	public void testParseSimpleEvalExpressionNoParserContext() {
 		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals(7, exp.getValue(null)); // Unified EL returns Long
 	}
 
+	@Test
 	public void testParseNullExpressionString() {
 		String expressionString = null;
 		try {
@@ -64,11 +71,13 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseNull() {
 		Expression exp = parser.parseExpression("null", null);
 		assertEquals(null, exp.getValue(null));
 	}
 
+	@Test
 	public void testParseEmptyExpressionString() {
 		String expressionString = "";
 		try {
@@ -79,18 +88,21 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseSimpleEvalExpressionNoEvalContextWithTypeCoersion() {
 		String expressionString = "3 + 4";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(Long.class));
 		assertEquals(7L, exp.getValue(null));
 	}
 
+	@Test
 	public void testParseBeanEvalExpressionNoParserContext() {
 		String expressionString = "value";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals("foo", exp.getValue(new TestBean()));
 	}
 
+	@Test
 	public void testParseEvalExpressionWithContextTypeCoersion() {
 		String expressionString = "maximum";
 		Expression exp = parser
@@ -98,12 +110,14 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertEquals(2, exp.getValue(new TestBean()));
 	}
 
+	@Test
 	public void testParseEvalExpressionWithContextCustomELVariableResolver() {
 		String expressionString = "specialProperty";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().evaluate(TestBean.class));
 		assertEquals("Custom resolver resolved this special property!", exp.getValue(null));
 	}
 
+	@Test
 	public void testParseBeanEvalExpressionInvalidELVariable() {
 		try {
 			String expressionString = "bogus";
@@ -116,12 +130,14 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseLiteralExpression() {
 		String expressionString = "'value'";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals("value", exp.getValue(null));
 	}
 
+	@Test
 	public void testParseTemplateExpression() {
 		String expressionString = "text text text #{value} text text text#{value}";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().template());
@@ -129,6 +145,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertEquals("text text text foo text text textfoo", exp.getValue(target));
 	}
 
+	@Test
 	public void testParseTemplateExpressionWithVariables() {
 		String expressionString = "#{value}#{#max}";
 		Expression exp = parser.parseExpression(expressionString,
@@ -137,12 +154,14 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertEquals("foo2", exp.getValue(target)); // TODO:
 	}
 
+	@Test
 	public void testGetExpressionString() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
 		assertEquals("maximum", exp.getExpressionString());
 	}
 
+	@Test
 	public void testGetExpressionType() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
@@ -151,6 +170,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertTrue(int.class.equals(clazz) || Integer.class.equals(clazz));
 	}
 
+	@Test
 	public void testGetValueWithCoersion() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, new FluentParserContext().expectResult(String.class));
@@ -158,6 +178,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertEquals("2", exp.getValue(context));
 	}
 
+	@Test
 	public void testGetValueCoersionError() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString,
@@ -170,6 +191,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSetValue() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
@@ -178,6 +200,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertEquals(5, context.getMaximum());
 	}
 
+	@Test
 	public void testSetValueWithTypeCoersion() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
@@ -186,6 +209,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 		assertEquals(5, context.getMaximum());
 	}
 
+	@Test
 	public void testSetValueCoersionError() {
 		String expressionString = "maximum";
 		Expression exp = parser.parseExpression(expressionString, null);
