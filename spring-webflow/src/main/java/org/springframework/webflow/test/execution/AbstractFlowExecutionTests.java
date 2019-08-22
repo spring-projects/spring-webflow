@@ -15,7 +15,9 @@
  */
 package org.springframework.webflow.test.execution;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
@@ -53,7 +55,7 @@ import org.springframework.webflow.test.MockExternalContext;
  * 
  * @author Keith Donald
  */
-public abstract class AbstractFlowExecutionTests extends TestCase {
+public abstract class AbstractFlowExecutionTests {
 
 	/**
 	 * The factory that will create the flow execution to test.
@@ -69,22 +71,6 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * The outcome that was reached when the flow ends; initially null.
 	 */
 	private FlowExecutionOutcome flowExecutionOutcome;
-
-	/**
-	 * Constructs a default flow execution test.
-	 * @see #setName(String)
-	 */
-	public AbstractFlowExecutionTests() {
-		super();
-	}
-
-	/**
-	 * Constructs a flow execution test with given name.
-	 * @param name the name of the test
-	 */
-	public AbstractFlowExecutionTests(String name) {
-		super(name);
-	}
 
 	/**
 	 * Gets the factory that will create the flow execution to test. This method will create the factory if it is not
