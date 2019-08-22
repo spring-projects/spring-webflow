@@ -15,8 +15,12 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -26,7 +30,7 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * 
  * @author Keith Donald
  */
-public class StateTests extends TestCase {
+public class StateTests {
 
 	private Flow flow;
 
@@ -36,6 +40,7 @@ public class StateTests extends TestCase {
 
 	private boolean handled;
 
+	@Before
 	public void setUp() {
 		flow = new Flow("flow");
 		state = new State(flow, "myState") {
@@ -45,6 +50,7 @@ public class StateTests extends TestCase {
 		};
 	}
 
+	@Test
 	public void testStateEnter() {
 		assertEquals("myState", state.getId());
 		MockRequestControlContext context = new MockRequestControlContext(flow);
@@ -53,6 +59,7 @@ public class StateTests extends TestCase {
 		assertTrue(entered);
 	}
 
+	@Test
 	public void testStateEnterWithEntryAction() {
 		TestAction action = new TestAction();
 		state.getEntryActionList().add(action);
@@ -64,6 +71,7 @@ public class StateTests extends TestCase {
 		assertEquals(1, action.getExecutionCount());
 	}
 
+	@Test
 	public void testHandledException() {
 		state.getExceptionHandlerSet().add(new FlowExecutionExceptionHandler() {
 			public boolean canHandle(FlowExecutionException exception) {
@@ -81,6 +89,7 @@ public class StateTests extends TestCase {
 		assertTrue(handled);
 	}
 
+	@Test
 	public void testCouldNotHandleException() {
 		FlowExecutionException e = new FlowExecutionException(flow.getId(), state.getId(), "Whatev");
 		MockRequestControlContext context = new MockRequestControlContext(flow);

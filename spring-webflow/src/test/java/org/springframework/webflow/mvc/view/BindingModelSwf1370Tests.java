@@ -1,10 +1,12 @@
 package org.springframework.webflow.mvc.view;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.message.DefaultMessageContext;
@@ -16,18 +18,20 @@ import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionPars
  * Test harness based on: https://jira.springframework.org/browse/SWF-1370
  * 
  */
-public class BindingModelSwf1370Tests extends TestCase {
+public class BindingModelSwf1370Tests {
 
 	private ConversionService conversionService;
 	private ConverterRegistry converterRegistry;
 	private WebFlowSpringELExpressionParser expressionParser;
 
+	@Before
 	public void setUp() {
 		conversionService = new DefaultConversionService();
 		expressionParser = new WebFlowSpringELExpressionParser(new SpelExpressionParser(), conversionService);
 		converterRegistry = (ConverterRegistry) conversionService.getDelegateConversionService();
 	}
 
+	@Test
 	public void testGetFieldValueWithInvalidBeanWrapperExpression() throws Exception {
 		Question question = new Question();
 		converterRegistry.addConverter(new QuestionConverter(question));

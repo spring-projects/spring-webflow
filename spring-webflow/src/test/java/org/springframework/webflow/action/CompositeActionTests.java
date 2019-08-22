@@ -15,9 +15,11 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -29,19 +31,20 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Ulrik Sandberg
  */
-public class CompositeActionTests extends TestCase {
+public class CompositeActionTests {
 
 	private CompositeAction tested;
 
 	private Action actionMock;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		actionMock = EasyMock.createMock(Action.class);
 		Action[] actions = new Action[] { actionMock };
 		tested = new CompositeAction(actions);
 	}
 
+	@Test
 	public void testDoExecute() throws Exception {
 		MockRequestContext mockRequestContext = new MockRequestContext();
 		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
@@ -54,6 +57,7 @@ public class CompositeActionTests extends TestCase {
 		assertEquals(1, result.getAttributes().size());
 	}
 
+	@Test
 	public void testDoExecuteWithError() throws Exception {
 		tested.setStopOnError(true);
 		MockRequestContext mockRequestContext = new MockRequestContext();
@@ -64,6 +68,7 @@ public class CompositeActionTests extends TestCase {
 		assertEquals("error", result.getId());
 	}
 
+	@Test
 	public void testDoExecuteWithNullResult() throws Exception {
 		tested.setStopOnError(true);
 		MockRequestContext mockRequestContext = new MockRequestContext();
@@ -74,6 +79,7 @@ public class CompositeActionTests extends TestCase {
 		assertEquals("Expecting success since no check is performed if null result,", "success", result.getId());
 	}
 
+	@Test
 	public void testMultipleActions() throws Exception {
 		CompositeAction ca = new CompositeAction(
 				new Action() {

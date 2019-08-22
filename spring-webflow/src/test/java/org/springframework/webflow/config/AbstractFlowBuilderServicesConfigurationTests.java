@@ -1,9 +1,14 @@
 package org.springframework.webflow.config;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Set;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;
@@ -22,18 +27,20 @@ import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.mvc.builder.MvcViewFactoryCreator;
 import org.springframework.webflow.validation.ValidationHintResolver;
 
-public abstract class AbstractFlowBuilderServicesConfigurationTests extends TestCase {
+public abstract class AbstractFlowBuilderServicesConfigurationTests {
 
 	protected ApplicationContext context;
 
 	protected FlowBuilderServices builderServices;
 
+	@Before
 	public void setUp() {
 		context = initApplicationContext();
 	}
 
 	protected abstract ApplicationContext initApplicationContext();
 
+	@Test
 	public void testFlowBuilderServicesDefaultConfig() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesDefault");
 		assertNotNull(builderServices);
@@ -44,6 +51,7 @@ public abstract class AbstractFlowBuilderServicesConfigurationTests extends Test
 		assertFalse(builderServices.getDevelopment());
 	}
 
+	@Test
 	public void testFlowBuilderServicesAllCustomized() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesAllCustom");
 		assertNotNull(builderServices);
@@ -55,6 +63,7 @@ public abstract class AbstractFlowBuilderServicesConfigurationTests extends Test
 		assertTrue(builderServices.getDevelopment());
 	}
 
+	@Test
 	public void testFlowBuilderServicesConversionServiceCustomized() {
 		builderServices = (FlowBuilderServices) context.getBean("flowBuilderServicesConversionServiceCustom");
 		assertNotNull(builderServices);

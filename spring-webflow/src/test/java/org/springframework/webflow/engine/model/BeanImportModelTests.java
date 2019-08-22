@@ -15,13 +15,16 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link BeanImportModel}.
  */
-public class BeanImportModelTests extends TestCase {
+public class BeanImportModelTests {
 
+	@Test
 	public void testNotMergeable() {
 		BeanImportModel child = new BeanImportModel("child");
 		assertFalse(child.isMergeableWith(child));

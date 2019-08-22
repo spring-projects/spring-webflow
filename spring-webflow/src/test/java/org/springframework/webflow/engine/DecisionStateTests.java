@@ -15,8 +15,10 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
+import org.junit.Test;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Event;
@@ -27,8 +29,9 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * 
  * @author Keith Donald
  */
-public class DecisionStateTests extends TestCase {
+public class DecisionStateTests {
 
+	@Test
 	public void testIfDecision() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");
@@ -40,6 +43,7 @@ public class DecisionStateTests extends TestCase {
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
 
+	@Test
 	public void testElseDecision() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");
@@ -52,6 +56,7 @@ public class DecisionStateTests extends TestCase {
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
 
+	@Test
 	public void testCannotDecide() {
 		Flow flow = new Flow("flow");
 		DecisionState state = new DecisionState(flow, "decisionState");

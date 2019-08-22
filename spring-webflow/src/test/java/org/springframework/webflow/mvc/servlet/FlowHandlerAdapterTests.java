@@ -1,14 +1,20 @@
 package org.springframework.webflow.mvc.servlet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -27,7 +33,7 @@ import org.springframework.webflow.executor.FlowExecutionResult;
 import org.springframework.webflow.executor.FlowExecutor;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
-public class FlowHandlerAdapterTests extends TestCase {
+public class FlowHandlerAdapterTests {
 	private FlowHandlerAdapter flowHandlerAdapter;
 	private FlowExecutor flowExecutor;
 	private MockHttpServletRequest request;
@@ -39,7 +45,8 @@ public class FlowHandlerAdapterTests extends TestCase {
 	private boolean handleExecutionOutcome;
 	private MockFlashMapManager flashMapManager = new MockFlashMapManager();
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		flowExecutor = EasyMock.createMock(FlowExecutor.class);
 		flowHandlerAdapter = new FlowHandlerAdapter() {
 			protected ServletExternalContext createServletExternalContext(HttpServletRequest request,
@@ -87,6 +94,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		request.setAttribute(DispatcherServlet.FLASH_MAP_MANAGER_ATTRIBUTE, flashMapManager);
 	}
 
+	@Test
 	public void testLaunchFlowRequest() throws Exception {
 		setupRequest("/springtravel", "/app", "/whatever", "GET");
 		flowExecutor.launchExecution("foo", flowInput, context);
@@ -97,6 +105,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowRequestEndsAfterProcessing() throws Exception {
 		setupRequest("/springtravel", "/app", "/whatever", "GET");
 		Map<String, String> parameters = new HashMap<>();
@@ -113,6 +122,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowRequestEndsAfterProcessingAjaxRequest() throws Exception {
 		setupRequest("/springtravel", "/app", "/whatever", "GET");
 		Map<String, String> parameters = new HashMap<>();
@@ -131,6 +141,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testResumeFlowRequest() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
@@ -142,6 +153,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testResumeFlowRequestEndsAfterProcessing() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
@@ -160,6 +172,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testResumeFlowRequestEndsAfterProcessingFlowCommittedResponse() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "POST");
 		request.addParameter("execution", "12345");
@@ -179,6 +192,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExecutionRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestFlowExecutionRedirect();
@@ -192,6 +206,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithDefinitionRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		Map<String, String> parameters = new HashMap<>();
@@ -213,6 +228,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalHttpRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("https://www.paypal.com");
@@ -226,6 +242,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalHttpsRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("https://www.paypal.com");
@@ -239,6 +256,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectServletRelative() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("servletRelative:bar");
@@ -252,6 +270,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectServletRelativeWithSlash() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("servletRelative:/bar");
@@ -265,6 +284,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectContextRelative() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("contextRelative:bar");
@@ -278,6 +298,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectContextRelativeWithSlash() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("contextRelative:/bar");
@@ -291,6 +312,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectServerRelative() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("serverRelative:bar");
@@ -304,6 +326,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectServerRelativeWithSlash() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		context.requestExternalRedirect("serverRelative:/bar");
@@ -317,6 +340,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testLaunchFlowWithExternalRedirectNotHttp10Compatible() throws Exception {
 		flowHandlerAdapter.setRedirectHttp10Compatible(false);
 		setupRequest("/springtravel", "/app", "/foo", "GET");
@@ -332,6 +356,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testSwf1385DefaultServletExternalRedirect() throws Exception {
 		setupRequest("/springtravel", "/foo", null, "GET");
 		context.requestExternalRedirect("/bar");
@@ -345,6 +370,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testSwf1385DefaultServletExternalRedirectDeviation() throws Exception {
 		// Deviation from the default case:
 		// In some containers the default behavior can be switched so that the contents of the URI after
@@ -361,6 +387,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testSwf1385DefaultServletExternalRedirectServletRelative() throws Exception {
 		setupRequest("/springtravel", "/foo", null, "GET");
 		context.requestExternalRedirect("/bar");
@@ -374,6 +401,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testExternalRedirectServletRelativeWithDefaultServletMapping() throws Exception {
 		setupRequest("/springtravel", "/foo", null, "GET");
 		context.requestExternalRedirect("servletRelative:bar");
@@ -387,6 +415,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testRemoteHost() throws Exception {
 		assertFalse(flowHandlerAdapter.isRemoteHost("https://url.somewhere.com"));
 		assertFalse(flowHandlerAdapter.isRemoteHost("/path"));
@@ -400,6 +429,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 
 	}
 
+	@Test
 	public void testDefaultHandleFlowException() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		Map<String, String> parameters = new HashMap<>();
@@ -418,6 +448,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testDefaultHandleNoSuchFlowExecutionException() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		request.addParameter("execution", "12345");
@@ -430,6 +461,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testDefaultHandleNoSuchFlowExecutionExceptionAjaxRequest() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
 		request.addParameter("execution", "12345");
@@ -444,11 +476,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testHandleFlowOutcomeCustomFlowHandler() throws Exception {
 		doHandleFlowServletRedirectOutcome();
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testHandleFlowExceptionCustomFlowHandler() throws Exception {
 		handleException = true;
 		final FlowException flowException = new FlowException("Error") {
@@ -461,11 +495,13 @@ public class FlowHandlerAdapterTests extends TestCase {
 		EasyMock.verify(flowExecutor);
 	}
 
+	@Test
 	public void testHandleFlowServletRedirectOutcomeWithoutFlash() throws Exception {
 		doHandleFlowServletRedirectOutcome();
 		assertNull(flashMapManager.getFlashMap());
 	}
 
+	@Test
 	public void testHandleFlowServletRedirectOutcomeWithFlash() throws Exception {
 		flowHandlerAdapter.setSaveOutputToFlashScopeOnRedirect(true);
 		doHandleFlowServletRedirectOutcome();

@@ -1,5 +1,12 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +28,12 @@ import javax.faces.event.PostRestoreStateEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.lifecycle.Lifecycle;
 
-import junit.framework.TestCase;
 import org.apache.el.ExpressionFactoryImpl;
 import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -43,7 +51,7 @@ import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
 
-public class JsfViewFactoryTests extends TestCase {
+public class JsfViewFactoryTests {
 
 	private static final String VIEW_ID = "/testView.xhtml";
 
@@ -69,7 +77,8 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		configureJsf();
 		this.extContext.setNativeContext(this.servletContext);
 		this.extContext.setNativeRequest(this.request);
@@ -81,8 +90,8 @@ public class JsfViewFactoryTests extends TestCase {
 				new LocalParameterMap(new HashMap<>()));
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
@@ -100,6 +109,7 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * View has not yet been created
 	 */
+	@Test
 	public final void testGetView_Create() {
 
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
@@ -126,6 +136,7 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no flow event signaled
 	 */
+	@Test
 	public final void testGetView_Restore() {
 
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
@@ -159,6 +170,7 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * View already exists in view/flash scope and must be restored and the lifecycle executed, no flow event signaled
 	 */
+	@Test
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public final void testGetView_RestoreWithBindings() {
 
@@ -208,6 +220,7 @@ public class JsfViewFactoryTests extends TestCase {
 	 * Ajax Request - View already exists in view/flash scope and must be restored and the lifecycle executed, no flow
 	 * event signaled
 	 */
+	@Test
 	public final void testGetView_Restore_Ajax() {
 
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
@@ -241,6 +254,7 @@ public class JsfViewFactoryTests extends TestCase {
 	/**
 	 * Third party sets the view root before RESTORE_VIEW
 	 */
+	@Test
 	public final void testGetView_ExternalViewRoot() {
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
 		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
@@ -264,6 +278,7 @@ public class JsfViewFactoryTests extends TestCase {
 		assertTrue("The PostRestoreViewEvent was not seen", newRoot.isPostRestoreStateEventSeen());
 	}
 
+	@Test
 	public void testGetView_ExceptionsOnPostRestoreStateEvent() {
 		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
 		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,

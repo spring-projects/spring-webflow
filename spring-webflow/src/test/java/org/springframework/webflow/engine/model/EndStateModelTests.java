@@ -15,31 +15,39 @@
  */
 package org.springframework.webflow.engine.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Unit tests for {@link EndStateModel}.
  */
-public class EndStateModelTests extends TestCase {
+public class EndStateModelTests {
 
+	@Test
 	public void testMergeable() {
 		EndStateModel child = new EndStateModel("child");
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		EndStateModel child = new EndStateModel("child");
 		EndStateModel parent = new EndStateModel("parent");
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		EndStateModel child = new EndStateModel("child");
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		EndStateModel child = new EndStateModel("child");
 		EndStateModel parent = new EndStateModel("child");

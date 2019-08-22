@@ -1,9 +1,12 @@
 package org.springframework.webflow.mvc.view;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
 import org.apache.tiles.Attribute;
 import org.apache.tiles.AttributeContext;
 import org.apache.tiles.Definition;
@@ -14,7 +17,8 @@ import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.wildcard.WildcardServletApplicationContext;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -23,8 +27,7 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
-
-public class AjaxTiles3ViewTests extends TestCase {
+public class AjaxTiles3ViewTests {
 
 	private AjaxTiles3View ajaxTilesView;
 
@@ -35,7 +38,8 @@ public class AjaxTiles3ViewTests extends TestCase {
 	private MockServletContext servletContext;
 
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 
 		servletContext = new MockServletContext("/org/springframework/webflow/mvc/view/");
 		request = new MockHttpServletRequest(servletContext);
@@ -59,6 +63,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		ajaxTilesView.setApplicationContext(wac);
 	}
 
+	@Test
 	public void testFullPageRendering() throws Exception {
 		setupStaticWebApplicationContext();
 		ajaxTilesView.setUrl("search");
@@ -67,6 +72,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertEquals("/WEB-INF/layout.jsp", response.getForwardedUrl());
 	}
 
+	@Test
 	public void testAjaxRequestNoFragments() throws Exception {
 		setupStaticWebApplicationContext();
 		request.addHeader("Accept", DefaultAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
@@ -76,6 +82,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertEquals("/WEB-INF/layout.jsp", response.getForwardedUrl());
 	}
 
+	@Test
 	public void testRenderFragment_Template() throws Exception {
 		setupStaticWebApplicationContext();
 		request.addHeader("Accept", DefaultAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
@@ -86,6 +93,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertEquals("/WEB-INF/searchResults.jsp", response.getForwardedUrl());
 	}
 
+	@Test
 	public void testRenderFragment_Definition() throws Exception {
 		setupStaticWebApplicationContext();
 		request.addHeader("Accept", DefaultAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
@@ -96,6 +104,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertEquals("/WEB-INF/search.jsp", response.getForwardedUrl());
 	}
 
+	@Test
 	public void testRenderFragment_CascadedAttribute() throws Exception {
 		setupStaticWebApplicationContext();
 		request.addHeader("Accept", DefaultAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
@@ -106,6 +115,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getForwardedUrl());
 	}
 
+	@Test
 	public void testRenderFragment_InheritCascadedAttribute() throws Exception {
 		ApplicationContext tilesAppContext = new WildcardServletApplicationContext(servletContext);
 		Request tilesRequest = new ServletRequest(tilesAppContext, request, response);
@@ -121,6 +131,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertTrue(AttributeTestingPreparer.invoked);
 	}
 
+	@Test
 	public void testRenderFragment_DynamicAttribute() throws Exception {
 		ApplicationContext tilesAppContext = new WildcardServletApplicationContext(servletContext);
 		Request tilesRequest = new ServletRequest(tilesAppContext, request, response);
@@ -134,6 +145,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		container.endContext(tilesRequest);
 	}
 
+	@Test
 	public void testRenderFragment_Multiple() throws Exception {
 		setupStaticWebApplicationContext();
 		request.addHeader("Accept", DefaultAjaxHandler.AJAX_ACCEPT_CONTENT_TYPE);
@@ -146,6 +158,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrls().get(1));
 	}
 
+	@Test
 	public void testFlattenAttributeMap() throws Exception {
 		ApplicationContext tilesAppContext = new WildcardServletApplicationContext(servletContext);
 		Request tilesRequest = new ServletRequest(tilesAppContext, request, response);
@@ -159,6 +172,7 @@ public class AjaxTiles3ViewTests extends TestCase {
 		assertNotNull(resultMap.get("searchResults"));
 	}
 
+	@Test
 	public void testGetRenderFragments() throws Exception {
 		Map<String, Object> model = new HashMap<>();
 		request.setParameter("fragments", "f1,f2,  f3");

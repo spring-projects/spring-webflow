@@ -15,31 +15,41 @@
  */
 package org.springframework.webflow.engine.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
 
 /**
  * Unit tests for {@link ViewStateModel}.
  */
-public class ViewStateModelTests extends TestCase {
+public class ViewStateModelTests {
 
+	@Test
 	public void testMergeable() {
 		ViewStateModel child = new ViewStateModel("child");
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		ViewStateModel child = new ViewStateModel("child");
 		ViewStateModel parent = new ViewStateModel("parent");
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		ViewStateModel child = new ViewStateModel("child");
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		ViewStateModel child = new ViewStateModel("child");
 		ViewStateModel parent = new ViewStateModel("parent");

@@ -15,29 +15,37 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link SecuredModel}.
  */
-public class SecuredModelTests extends TestCase {
+public class SecuredModelTests {
 
+	@Test
 	public void testMergeable() {
 		SecuredModel child = new SecuredModel("child");
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		SecuredModel child = new SecuredModel("child");
 		SecuredModel parent = new SecuredModel("parent");
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		SecuredModel child = new SecuredModel("child");
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		SecuredModel child = new SecuredModel("child");
 		SecuredModel parent = new SecuredModel("child");

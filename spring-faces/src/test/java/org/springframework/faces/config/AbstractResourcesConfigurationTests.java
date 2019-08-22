@@ -1,27 +1,36 @@
 package org.springframework.faces.config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.faces.webflow.JsfResourceRequestHandler;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 
-public abstract class AbstractResourcesConfigurationTests extends TestCase {
+public abstract class AbstractResourcesConfigurationTests {
 
 	protected ApplicationContext context;
 
+	@Before
 	public void setUp() throws Exception {
 		this.context = initApplicationContext();
 	}
 
 	protected abstract ApplicationContext initApplicationContext();
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 	}
 
+	@Test
 	public void testConfigureDefaults() {
 		Map<String, ?> map = this.context.getBeansOfType(HttpRequestHandlerAdapter.class);
 		assertEquals(1, map.values().size());

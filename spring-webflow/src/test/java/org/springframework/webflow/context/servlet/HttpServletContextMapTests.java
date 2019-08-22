@@ -15,11 +15,16 @@
  */
 package org.springframework.webflow.context.servlet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 
 /**
@@ -28,14 +33,14 @@ import org.springframework.mock.web.MockServletContext;
  * @author Ulrik Sandberg
  * @author Erwin Vervaet
  */
-public class HttpServletContextMapTests extends TestCase {
+public class HttpServletContextMapTests {
 
 	private HttpServletContextMap tested;
 
 	private MockServletContext context;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		context = new MockServletContext();
 		// a fresh MockServletContext seems to already contain an element;
 		// that's confusing, so we remove it
@@ -44,39 +49,46 @@ public class HttpServletContextMapTests extends TestCase {
 		tested.put("SomeKey", "SomeValue");
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		context = null;
 		tested = null;
 	}
 
+	@Test
 	public void testIsEmpty() {
 		tested.remove("SomeKey");
 		assertEquals("size,", 0, tested.size());
 		assertEquals("isEmpty,", true, tested.isEmpty());
 	}
 
+	@Test
 	public void testSizeAddOne() {
 		assertEquals("size,", 1, tested.size());
 	}
 
+	@Test
 	public void testSizeAddTwo() {
 		tested.put("SomeOtherKey", "SomeOtherValue");
 		assertEquals("size,", 2, tested.size());
 	}
 
+	@Test
 	public void testContainsKey() {
 		assertEquals("containsKey,", true, tested.containsKey("SomeKey"));
 	}
 
+	@Test
 	public void testContainsValue() {
 		assertTrue(tested.containsValue("SomeValue"));
 	}
 
+	@Test
 	public void testGet() {
 		assertEquals("get,", "SomeValue", tested.get("SomeKey"));
 	}
 
+	@Test
 	public void testPut() {
 		Object old = tested.put("SomeKey", "SomeNewValue");
 
@@ -84,6 +96,7 @@ public class HttpServletContextMapTests extends TestCase {
 		assertEquals("new value,", "SomeNewValue", tested.get("SomeKey"));
 	}
 
+	@Test
 	public void testRemove() {
 		Object old = tested.remove("SomeKey");
 
@@ -91,6 +104,7 @@ public class HttpServletContextMapTests extends TestCase {
 		assertNull("should be gone", tested.get("SomeKey"));
 	}
 
+	@Test
 	public void testPutAll() {
 		Map<String, Object> otherMap = new HashMap<>();
 		otherMap.put("SomeOtherKey", "SomeOtherValue");
@@ -100,21 +114,25 @@ public class HttpServletContextMapTests extends TestCase {
 		assertEquals("SomeUpdatedValue", tested.get("SomeKey"));
 	}
 
+	@Test
 	public void testClear() {
 		tested.clear();
 		assertTrue(tested.isEmpty());
 	}
 
+	@Test
 	public void testKeySet() {
 		assertEquals(1, tested.keySet().size());
 		assertTrue(tested.keySet().contains("SomeKey"));
 	}
 
+	@Test
 	public void testValues() {
 		assertEquals(1, tested.values().size());
 		assertTrue(tested.values().contains("SomeValue"));
 	}
 
+	@Test
 	public void testEntrySet() {
 		assertEquals(1, tested.entrySet().size());
 		assertEquals("SomeKey", tested.entrySet().iterator().next().getKey());

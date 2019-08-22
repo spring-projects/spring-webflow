@@ -1,21 +1,25 @@
 package org.springframework.binding.mapping;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.binding.mapping.impl.DefaultMapper;
 import org.springframework.binding.mapping.impl.DefaultMapping;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-public class DefaultMapperTests extends TestCase {
+public class DefaultMapperTests {
 	private DefaultMapper mapper = new DefaultMapper();
 	private ExpressionParser parser = new SpringELExpressionParser(new SpelExpressionParser());
 
+	@Test
 	public void testMapping() {
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("foo", null), parser.parseExpression("bar",
 				null));
@@ -43,6 +47,7 @@ public class DefaultMapperTests extends TestCase {
 		}).size());
 	}
 
+	@Test
 	public void testMappingConversion() {
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("beep", null), parser.parseExpression(
 				"beep", null));
@@ -55,6 +60,7 @@ public class DefaultMapperTests extends TestCase {
 		assertEquals(Locale.ENGLISH, bean2.beep);
 	}
 
+	@Test
 	public void testMappingConversionError() {
 		DefaultMapping mapping1 = new DefaultMapping(parser.parseExpression("boop", null), parser.parseExpression(
 				"boop", null));

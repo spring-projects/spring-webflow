@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.junit.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 
@@ -25,8 +28,9 @@ import org.springframework.webflow.execution.Event;
  * 
  * @author Keith Donald
  */
-public class EventTests extends TestCase {
+public class EventTests {
 
+	@Test
 	public void testNewEvent() {
 		Event event = new Event(this, "id");
 		assertEquals("id", event.getId());
@@ -34,6 +38,7 @@ public class EventTests extends TestCase {
 		assertTrue(event.getAttributes().isEmpty());
 	}
 
+	@Test
 	public void testEventNullSource() {
 		try {
 			new Event(null, "id");
@@ -43,6 +48,7 @@ public class EventTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEventNullId() {
 		try {
 			new Event(this, null);
@@ -52,6 +58,7 @@ public class EventTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNewEventWithAttributes() {
 		LocalAttributeMap<Object> attrs = new LocalAttributeMap<>();
 		attrs.put("name", "value");
@@ -60,6 +67,7 @@ public class EventTests extends TestCase {
 		assertEquals(1, event.getAttributes().size());
 	}
 
+	@Test
 	public void testNewEventNullAttributes() {
 		Event event = new Event(this, "id", null);
 		assertTrue(event.getAttributes().isEmpty());

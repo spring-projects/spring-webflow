@@ -1,14 +1,18 @@
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class FlowVariableTests extends TestCase {
+public class FlowVariableTests {
 
 	private boolean restoreCalled;
 
+	@Test
 	public void testCreateVariable() {
 		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {
@@ -23,6 +27,7 @@ public class FlowVariableTests extends TestCase {
 		assertEquals("bar", context.getFlowScope().get("foo"));
 	}
 
+	@Test
 	public void testDestroyVariable() {
 		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {
@@ -39,6 +44,7 @@ public class FlowVariableTests extends TestCase {
 		assertFalse(context.getFlowScope().contains("foo"));
 	}
 
+	@Test
 	public void testRestoreVariable() {
 		FlowVariable var = new FlowVariable("foo", new VariableValueFactory() {
 			public Object createInitialValue(RequestContext context) {

@@ -15,13 +15,18 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link TransitionModel}.
  */
-public class TransitionModelTests extends TestCase {
+public class TransitionModelTests {
 
+	@Test
 	public void testMergeable() {
 		TransitionModel child = new TransitionModel();
 		child.setOn("event");
@@ -30,6 +35,7 @@ public class TransitionModelTests extends TestCase {
 		assertTrue(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testMergeableOnException() {
 		TransitionModel child = new TransitionModel();
 		child.setOnException("expception");
@@ -38,6 +44,7 @@ public class TransitionModelTests extends TestCase {
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		TransitionModel child = new TransitionModel();
 		child.setOn("child");
@@ -46,6 +53,7 @@ public class TransitionModelTests extends TestCase {
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableOnException() {
 		TransitionModel child = new TransitionModel();
 		child.setOnException("child");
@@ -54,11 +62,13 @@ public class TransitionModelTests extends TestCase {
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		TransitionModel child = new TransitionModel();
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		TransitionModel child = new TransitionModel();
 		child.setOn("child");
