@@ -1,23 +1,29 @@
 package org.springframework.binding.message;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.StaticMessageSource;
 
-public class MessageBuilderTests extends TestCase {
+public class MessageBuilderTests {
 	private StaticMessageSource messageSource = new StaticMessageSource();
 	private Locale locale = Locale.getDefault();
 	private MessageBuilder builder = new MessageBuilder();
 
+	@Before
 	public void setUp() {
 		messageSource.addMessage("foo", locale, "bar");
 		messageSource.addMessage("bar", locale, "{0}");
 		messageSource.addMessage("baz", locale, "boop");
 	}
 
+	@Test
 	public void testBuildDefaultText() {
 		MessageResolver resolver = builder.defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -26,6 +32,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildFatal() {
 		MessageResolver resolver = builder.fatal().defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -34,6 +41,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildError() {
 		MessageResolver resolver = builder.error().defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -42,6 +50,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildWarning() {
 		MessageResolver resolver = builder.warning().defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -50,6 +59,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildNothing() {
 		MessageResolver resolver = builder.build();
 		try {
@@ -60,6 +70,7 @@ public class MessageBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBuildCode() {
 		MessageResolver resolver = builder.error().code("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -68,6 +79,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildCodes() {
 		MessageResolver resolver = builder.error().codes("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -76,6 +88,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildArg() {
 		MessageResolver resolver = builder.error().code("bar").arg("baz").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -84,6 +97,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildArgs() {
 		MessageResolver resolver = builder.error().codes("bar").args("baz").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -92,6 +106,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildCodesNull() {
 		MessageResolver resolver = builder.codes().build();
 		try {
@@ -102,6 +117,7 @@ public class MessageBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBuildArgsNull() {
 		MessageResolver resolver = builder.args().build();
 		try {
@@ -112,6 +128,7 @@ public class MessageBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBuildArgsWithNullCodes() {
 		MessageResolver resolver = builder.error().args("baz").build();
 		try {
@@ -121,12 +138,14 @@ public class MessageBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBuildArgsWithNullCodesDefaultText() {
 		MessageResolver resolver = builder.error().args("baz").defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
 		assertEquals("foo", message.getText());
 	}
 
+	@Test
 	public void testBuildWithSource() {
 		MessageResolver resolver = builder.source("foo").defaultText("foo").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -135,6 +154,7 @@ public class MessageBuilderTests extends TestCase {
 		assertEquals(Severity.INFO, message.getSeverity());
 	}
 
+	@Test
 	public void testBuildResolvableArg() {
 		MessageResolver resolver = builder.error().code("bar").resolvableArg("baz").build();
 		Message message = resolver.resolveMessage(messageSource, locale);
@@ -143,6 +163,7 @@ public class MessageBuilderTests extends TestCase {
 		assertNull(message.getSource());
 	}
 
+	@Test
 	public void testBuildResolvableArgs() {
 		MessageResolver resolver = builder.error().codes("bar").resolvableArgs("baz")
 				.build();

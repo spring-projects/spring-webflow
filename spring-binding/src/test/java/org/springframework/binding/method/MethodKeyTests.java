@@ -15,46 +15,53 @@
  */
 package org.springframework.binding.method;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Method;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author Rob Harrop
  * @since 1.0
  */
-public class MethodKeyTests extends TestCase {
+public class MethodKeyTests {
 
 	private static final Method LIST_NO_ARGS = safeGetMethod(File.class, "list", null);
 
 	private static final Method LIST_FILENAME_FILTER = safeGetMethod(File.class, "list",
 			new Class[] { FilenameFilter.class });
 
+	@Test
 	public void testGetMethodWithNoArgs() {
 		MethodKey key = new MethodKey(File.class, "list");
 		Method m = key.getMethod();
 		assertEquals(LIST_NO_ARGS, m);
 	}
 
+	@Test
 	public void testGetMoreGenericMethod() {
 		MethodKey key = new MethodKey(Object.class, "equals", Long.class);
 		assertEquals(safeGetMethod(Object.class, "equals", new Class[] { Object.class }), key.getMethod());
 	}
 
+	@Test
 	public void testGetMethodWithSingleArg() {
 		MethodKey key = new MethodKey(File.class, "list", FilenameFilter.class);
 		Method m = key.getMethod();
 		assertEquals(LIST_FILENAME_FILTER, m);
 	}
 
+	@Test
 	public void testGetMethodWithSingleNullArgAndValidMatch() {
 		MethodKey key = new MethodKey(File.class, "list", new Class[] { null });
 		Method m = key.getMethod();
 		assertEquals(LIST_FILENAME_FILTER, m);
 	}
 
+	@Test
 	public void testGetMethodWithSingleNullAndUnclearMatch() {
 		new MethodKey(File.class, "listFiles", new Class[] { null });
 	}
