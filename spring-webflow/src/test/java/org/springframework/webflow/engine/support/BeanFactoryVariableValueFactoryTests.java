@@ -1,14 +1,16 @@
 package org.springframework.webflow.engine.support;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.webflow.TestBean;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class BeanFactoryVariableValueFactoryTests extends TestCase {
+public class BeanFactoryVariableValueFactoryTests {
 	private BeanFactoryVariableValueFactory factory;
 
+	@Test
 	public void testCreateValue() {
 		factory = new BeanFactoryVariableValueFactory(TestBean.class, new DefaultListableBeanFactory());
 		MockRequestContext context = new MockRequestContext();
@@ -16,6 +18,7 @@ public class BeanFactoryVariableValueFactoryTests extends TestCase {
 		assertTrue(value instanceof TestBean);
 	}
 
+	@Test
 	public void testRestoreValue() {
 		factory = new BeanFactoryVariableValueFactory(TestBean.class, new DefaultListableBeanFactory());
 		MockRequestContext context = new MockRequestContext();

@@ -15,11 +15,17 @@
  */
 package org.springframework.webflow.context.servlet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.Writer;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -28,7 +34,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 /**
  * Unit tests for {@link ServletExternalContext}.
  */
-public class ServletExternalContextTests extends TestCase {
+public class ServletExternalContextTests {
 
 	private MockServletContext servletContext;
 
@@ -38,7 +44,8 @@ public class ServletExternalContextTests extends TestCase {
 
 	private ServletExternalContext context;
 
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		servletContext = new MockServletContext();
 		servletContext.setAttribute("aFoo", "bar");
 		request = new MockHttpServletRequest();
@@ -48,52 +55,63 @@ public class ServletExternalContextTests extends TestCase {
 		context = new ServletExternalContext(servletContext, request, response);
 	}
 
+	@Test
 	public void testGetContextPath() {
 		request.setContextPath("/foo");
 		assertEquals("/foo", request.getContextPath());
 	}
 
+	@Test
 	public void testRequestParameters() {
 		assertTrue(context.getRequestParameterMap().isEmpty());
 	}
 
+	@Test
 	public void testGetAppAttribute() {
 		assertEquals("bar", context.getApplicationMap().get("aFoo"));
 	}
 
+	@Test
 	public void testGetSessionAttribute() {
 		assertEquals("bar", context.getSessionMap().get("sFoo"));
 	}
 
+	@Test
 	public void testGetRequestAttribute() {
 		assertEquals("bar", context.getRequestMap().get("rFoo"));
 	}
 
+	@Test
 	public void testGetNativeObjects() {
 		assertEquals(servletContext, context.getNativeContext());
 		assertEquals(request, context.getNativeRequest());
 		assertEquals(response, context.getNativeResponse());
 	}
 
+	@Test
 	public void testGetExecutionUrl() {
 		request.setRequestURI("/foo");
 		String url = context.getFlowExecutionUrl("foo", "e1s1");
 		assertEquals("/foo?execution=e1s1", url);
 	}
 
+	@Test
 	public void testNotAnAjaxRequest() {
 		assertFalse(context.isAjaxRequest());
 	}
 
+	@Test
 	public void testAjaxRequestAcceptHeader() {
 		context.setAjaxRequest(true);
 		assertTrue(context.isAjaxRequest());
 	}
 
+	@Test
 	public void testNotResponseCommitted() {
 		assertFalse(context.isResponseComplete());
 	}
 
+	@Test
 	public void testCommitExecutionRedirect() {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.getFlowExecutionRedirectRequested());
@@ -101,6 +119,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
+	@Test
 	public void testCommitFlowRedirect() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		assertTrue(context.getFlowDefinitionRedirectRequested());
@@ -110,6 +129,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertNotNull(context.getFlowRedirectFlowInput());
 	}
 
+	@Test
 	public void testCommitFlowRedirectWithInput() {
 		LocalAttributeMap<Object> input = new LocalAttributeMap<>();
 		context.requestFlowDefinitionRedirect("foo", input);
@@ -120,6 +140,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertEquals(input, context.getFlowRedirectFlowInput());
 	}
 
+	@Test
 	public void testCommitExternalRedirect() {
 		context.requestExternalRedirect("foo");
 		assertTrue(context.getExternalRedirectRequested());
@@ -129,6 +150,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
+	@Test
 	public void testCommitExecutionRedirectPopup() {
 		context.requestFlowExecutionRedirect();
 		context.requestRedirectInPopup();
@@ -139,6 +161,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
+	@Test
 	public void testCommitFlowRedirectPopup() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		context.requestRedirectInPopup();
@@ -149,6 +172,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseAllowed());
 	}
 
+	@Test
 	public void testCommitExternalRedirectPopup() {
 		context.requestExternalRedirect("foo");
 		context.requestRedirectInPopup();
@@ -158,6 +182,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseAllowed());
 	}
 
+	@Test
 	public void testRecordResponseComplete() {
 		context.recordResponseComplete();
 		assertTrue(context.isResponseComplete());
@@ -165,6 +190,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
+	@Test
 	public void testDoubleCommitResponse() {
 		context.recordResponseComplete();
 		try {
@@ -184,6 +210,7 @@ public class ServletExternalContextTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDoubleCommitResponseExecutionRedirectFirst() {
 		context.requestFlowExecutionRedirect();
 		try {
@@ -193,6 +220,7 @@ public class ServletExternalContextTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDoubleCommitResponseDefinitionRedirectFirst() {
 		context.requestFlowDefinitionRedirect("foo", null);
 		try {
@@ -202,6 +230,7 @@ public class ServletExternalContextTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDoubleCommitResponseExternalRedirectFirst() {
 		context.requestExternalRedirect("foo");
 		try {
@@ -211,6 +240,7 @@ public class ServletExternalContextTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRedirectInPopup() {
 		context.requestFlowExecutionRedirect();
 		assertTrue(context.isResponseComplete());
@@ -220,6 +250,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertTrue(context.getRedirectInPopup());
 	}
 
+	@Test
 	public void testRedirectInPopupNoRedirectRequested() {
 		try {
 			context.requestRedirectInPopup();
@@ -229,12 +260,14 @@ public class ServletExternalContextTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetResponseWriter() throws IOException {
 		Writer writer = context.getResponseWriter();
 		writer.append('t');
 		assertEquals("t", response.getContentAsString());
 	}
 
+	@Test
 	public void testGetResponseWriterResponseComplete() throws IOException {
 		context.recordResponseComplete();
 		try {

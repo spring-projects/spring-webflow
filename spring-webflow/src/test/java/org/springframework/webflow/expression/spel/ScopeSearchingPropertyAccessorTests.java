@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.webflow.engine.ViewState;
@@ -26,22 +29,25 @@ import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class ScopeSearchingPropertyAccessorTests extends TestCase {
+public class ScopeSearchingPropertyAccessorTests {
 
 	private ScopeSearchingPropertyAccessor accessor = new ScopeSearchingPropertyAccessor();
 
 	private MockRequestContext requestContext;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 	}
 
+	@Test
 	public void testGetSpecificTargetClasses() throws Exception {
 		Class<?>[] classes = accessor.getSpecificTargetClasses();
 		assertEquals(1, classes.length);
 		assertEquals(RequestContext.class, classes[0]);
 	}
 
+	@Test
 	public void testGetValue() throws Exception {
 		Object bean = new Object();
 		requestContext.getConversationScope().put("myBean", bean);

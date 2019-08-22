@@ -1,22 +1,27 @@
 package org.springframework.webflow.engine.builder;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
-public class FlowAssemblerTests extends TestCase {
+public class FlowAssemblerTests {
 	private FlowBuilder builder;
 	private FlowAssembler assembler;
 	private FlowBuilderContext builderContext;
 
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		builder = EasyMock.createMock(FlowBuilder.class);
 		builderContext = new MockFlowBuilderContext("search");
 		assembler = new FlowAssembler(builder, builderContext);
 	}
 
+	@Test
 	public void testAssembleFlow() {
 		builder.init(builderContext);
 		builder.dispose();
@@ -35,6 +40,7 @@ public class FlowAssemblerTests extends TestCase {
 		EasyMock.verify(builder);
 	}
 
+	@Test
 	public void testDisposeCalledOnException() {
 		builder.init(builderContext);
 		EasyMock.expectLastCall().andThrow(new IllegalArgumentException());

@@ -15,20 +15,22 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestContext;
 
 /**
  * Unit tests for {@link SuccessEventFactory}.
  */
-public class SuccessEventFactoryTests extends TestCase {
+public class SuccessEventFactoryTests {
 
 	private MockRequestContext context = new MockRequestContext();
 
 	private SuccessEventFactory factory = new SuccessEventFactory();
 
+	@Test
 	public void testDefaultAdaptionRules() {
 		Event result = factory.createResultEvent(this, "result", context);
 		assertEquals("success", result.getId());

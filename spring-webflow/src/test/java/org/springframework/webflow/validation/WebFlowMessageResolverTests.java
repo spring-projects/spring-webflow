@@ -1,10 +1,13 @@
 package org.springframework.webflow.validation;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class WebFlowMessageResolverTests extends TestCase {
+import org.junit.Test;
+
+public class WebFlowMessageResolverTests {
 	private WebFlowMessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
+	@Test
 	public void testResolveObjectMessageCodes() {
 		String[] codes = messageCodesResolver.resolveMessageCodes("required", "testBean");
 		assertEquals(2, codes.length);
@@ -12,6 +15,7 @@ public class WebFlowMessageResolverTests extends TestCase {
 		assertEquals("required", codes[1]);
 	}
 
+	@Test
 	public void testResolveObjectMessageCodesWithPrefix() {
 		messageCodesResolver.setPrefix("validation.");
 		String[] codes = messageCodesResolver.resolveMessageCodes("required", "testBean");
@@ -20,6 +24,7 @@ public class WebFlowMessageResolverTests extends TestCase {
 		assertEquals("validation.required", codes[1]);
 	}
 
+	@Test
 	public void testResolveFieldMessageCodes() {
 		String[] codes = messageCodesResolver.resolveMessageCodes("required", "testBean", "foo", String.class);
 		assertEquals(4, codes.length);
@@ -29,6 +34,7 @@ public class WebFlowMessageResolverTests extends TestCase {
 		assertEquals("required", codes[3]);
 	}
 
+	@Test
 	public void testResolveFieldMessageCodesKeyedField() {
 		String[] codes = messageCodesResolver.resolveMessageCodes("required", "testBean", "foo[0]", String.class);
 		assertEquals(6, codes.length);
@@ -40,6 +46,7 @@ public class WebFlowMessageResolverTests extends TestCase {
 		assertEquals("required", codes[5]);
 	}
 
+	@Test
 	public void testResolveFieldMessageCodesWithPrefix() {
 		messageCodesResolver.setPrefix("validation.");
 		String[] codes = messageCodesResolver.resolveMessageCodes("required", "testBean", "foo", String.class);

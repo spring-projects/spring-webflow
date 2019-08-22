@@ -15,10 +15,16 @@
  */
 package org.springframework.webflow.engine;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 
-import junit.framework.TestCase;
-
+import org.junit.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -46,7 +52,7 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * 
  * @author Keith Donald
  */
-public class FlowTests extends TestCase {
+public class FlowTests {
 
 	private Flow flow = createSimpleFlow();
 
@@ -59,6 +65,7 @@ public class FlowTests extends TestCase {
 		return flow;
 	}
 
+	@Test
 	public void testAddStates() {
 		Flow flow = new Flow("myFlow");
 		new EndState(flow, "myState1");
@@ -73,6 +80,7 @@ public class FlowTests extends TestCase {
 		assertEquals("Wrong state:", "myState2", flow.getState("myState2").getId());
 	}
 
+	@Test
 	public void testAddDuplicateState() {
 		Flow flow = new Flow("myFlow");
 		new EndState(flow, "myState1");
@@ -84,6 +92,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testAddSameStateTwice() {
 		Flow flow = new Flow("myFlow");
 		EndState state = new EndState(flow, "myState1");
@@ -96,6 +105,7 @@ public class FlowTests extends TestCase {
 		assertEquals("State count wrong:", 1, flow.getStateCount());
 	}
 
+	@Test
 	public void testAddStateAlreadyInOtherFlow() {
 		Flow otherFlow = new Flow("myOtherFlow");
 		State state = new EndState(otherFlow, "myState1");
@@ -108,6 +118,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetStateNoStartState() {
 		Flow flow = new Flow("myFlow");
 		try {
@@ -118,6 +129,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetStateNoSuchState() {
 		try {
 			flow.getState("myState3");
@@ -127,11 +139,13 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetTransitionableState() {
 		assertEquals("Wrong state:", "myState1", flow.getTransitionableState("myState1").getId());
 		assertEquals("Wrong state:", "myState1", flow.getState("myState1").getId());
 	}
 
+	@Test
 	public void testGetStateNoSuchTransitionableState() {
 		try {
 			flow.getTransitionableState("myState2");
@@ -146,6 +160,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetPossibleOutcomes() {
 		Flow flow = new Flow("myFlow");
 		new EndState(flow, "myState1");
@@ -154,6 +169,7 @@ public class FlowTests extends TestCase {
 		assertEquals("myState2", flow.getPossibleOutcomes()[1]);
 	}
 
+	@Test
 	public void testAddActions() {
 		flow.getStartActionList().add(new TestMultiAction());
 		flow.getStartActionList().add(new TestMultiAction());
@@ -162,18 +178,21 @@ public class FlowTests extends TestCase {
 		assertEquals(1, flow.getEndActionList().size());
 	}
 
+	@Test
 	public void testAddGlobalTransition() {
 		Transition t = new Transition(to("myState2"));
 		flow.getGlobalTransitionSet().add(t);
 		assertSame(t, flow.getGlobalTransitionSet().toArray()[1]);
 	}
 
+	@Test
 	public void testStart() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		flow.start(context, new LocalAttributeMap<>());
 		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
 	}
 
+	@Test
 	public void testStartWithoutStartState() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		try {
@@ -185,6 +204,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStartWithAction() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		TestAction action = new TestAction();
@@ -194,6 +214,7 @@ public class FlowTests extends TestCase {
 		assertEquals(1, action.getExecutionCount());
 	}
 
+	@Test
 	public void testStartWithVariables() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		flow.addVariable(new FlowVariable("var1", new VariableValueFactory() {
@@ -208,6 +229,7 @@ public class FlowTests extends TestCase {
 		context.getFlowScope().getRequired("var1", ArrayList.class);
 	}
 
+	@Test
 	public void testStartWithMapper() {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
@@ -223,6 +245,7 @@ public class FlowTests extends TestCase {
 		assertEquals("foo", context.getFlowScope().get("attr"));
 	}
 
+	@Test
 	public void testStartWithMapperButNoInput() {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
@@ -238,6 +261,7 @@ public class FlowTests extends TestCase {
 		assertNull(context.getFlowScope().get("attr"));
 	}
 
+	@Test
 	public void testOnEventNullCurrentState() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		Event event = new Event(this, "foo");
@@ -249,6 +273,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testOnEventInvalidCurrentState() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState2"));
@@ -262,6 +287,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testOnEvent() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
@@ -273,6 +299,7 @@ public class FlowTests extends TestCase {
 		assertTrue(!context.getFlowExecutionContext().isActive());
 	}
 
+	@Test
 	public void testOnEventGlobalTransition() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
@@ -284,6 +311,7 @@ public class FlowTests extends TestCase {
 		assertTrue(!context.getFlowExecutionContext().isActive());
 	}
 
+	@Test
 	public void testOnEventNoTransition() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
@@ -297,6 +325,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testResume() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		context.setCurrentState(flow.getStateInstance("myState1"));
@@ -304,6 +333,7 @@ public class FlowTests extends TestCase {
 		assertTrue(context.getFlowScope().getBoolean("renderCalled"));
 	}
 
+	@Test
 	public void testEnd() {
 		TestAction action = new TestAction();
 		flow.getEndActionList().add(action);
@@ -313,6 +343,7 @@ public class FlowTests extends TestCase {
 		assertEquals(1, action.getExecutionCount());
 	}
 
+	@Test
 	public void testEndWithOutputMapper() {
 		DefaultMapper attributeMapper = new DefaultMapper();
 		ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
@@ -328,6 +359,7 @@ public class FlowTests extends TestCase {
 		assertEquals("foo", sessionOutput.get("attr"));
 	}
 
+	@Test
 	public void testHandleException() {
 		flow.getExceptionHandlerSet().add(
 				new TransitionExecutingFlowExecutionExceptionHandler().add(TestException.class, "myState2"));
@@ -339,6 +371,7 @@ public class FlowTests extends TestCase {
 		assertFalse(context.getFlowExecutionContext().isActive());
 	}
 
+	@Test
 	public void testHandleExceptionNoMatch() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		FlowExecutionException e = new FlowExecutionException(flow.getId(), flow.getStartState().getId(), "Oops!",
@@ -350,6 +383,7 @@ public class FlowTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDestroy() {
 		GenericApplicationContext context = new GenericApplicationContext();
 		context.refresh();

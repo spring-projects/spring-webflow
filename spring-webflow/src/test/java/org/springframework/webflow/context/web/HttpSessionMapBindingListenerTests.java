@@ -15,11 +15,16 @@
  */
 package org.springframework.webflow.context.web;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.webflow.context.servlet.HttpSessionMap;
 import org.springframework.webflow.core.collection.AttributeMapBindingEvent;
@@ -30,18 +35,20 @@ import org.springframework.webflow.core.collection.AttributeMapBindingListener;
  * 
  * @author Erwin Vervaet
  */
-public class HttpSessionMapBindingListenerTests extends TestCase {
+public class HttpSessionMapBindingListenerTests {
 
 	private HttpServletRequest request;
 	private HttpSession session;
 	private TestAttributeMapBindingListener value;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		session = request.getSession(true);
 		value = new TestAttributeMapBindingListener();
 	}
 
+	@Test
 	public void testValueBoundUnBound() {
 		value.valueBoundEvent = null;
 		value.valueUnboundEvent = null;

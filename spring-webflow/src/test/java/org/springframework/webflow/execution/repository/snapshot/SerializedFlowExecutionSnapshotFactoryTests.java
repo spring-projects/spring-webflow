@@ -1,7 +1,12 @@
 package org.springframework.webflow.execution.repository.snapshot;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
@@ -11,11 +16,12 @@ import org.springframework.webflow.engine.impl.FlowExecutionImplFactory;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.test.MockExternalContext;
 
-public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
+public class SerializedFlowExecutionSnapshotFactoryTests {
 	private Flow flow;
 	private SerializedFlowExecutionSnapshotFactory factory;
 	private FlowExecutionImplFactory executionFactory;
 
+	@Before
 	public void setUp() {
 		flow = new Flow("myFlow");
 		new State(flow, "state") {
@@ -28,6 +34,7 @@ public class SerializedFlowExecutionSnapshotFactoryTests extends TestCase {
 		factory = new SerializedFlowExecutionSnapshotFactory(executionFactory, locator);
 	}
 
+	@Test
 	public void testCreateSnapshot() {
 		FlowExecutionImpl flowExecution = (FlowExecutionImpl) executionFactory.createFlowExecution(flow);
 		flowExecution.start(null, new MockExternalContext());

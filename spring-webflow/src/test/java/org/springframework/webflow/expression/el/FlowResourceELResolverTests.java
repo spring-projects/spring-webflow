@@ -1,5 +1,9 @@
 package org.springframework.webflow.expression.el;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -8,6 +12,8 @@ import javax.el.ELResolver;
 import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 
+import org.junit.After;
+import org.junit.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -18,16 +24,19 @@ import org.springframework.webflow.test.MockRequestContext;
 public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase {
 
 	@Override
+	@After
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public void testGetType_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
 		assertEquals(getBaseVariable() + " should have a type of MessageSource", MessageSource.class, context
 				.getELResolver().getType(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetType_ResolvableCode() {
 		StaticMessageSource ms = new StaticMessageSource();
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
@@ -37,6 +46,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 				context.getELResolver().getType(context, ms, "foo.bar"));
 	}
 
+	@Test
 	public void testGetType_InvalidCode() {
 		StaticMessageSource ms = new StaticMessageSource();
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
@@ -50,6 +60,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		}
 	}
 
+	@Test
 	public void testGetValue_BaseVariable() {
 		MockRequestContext requestContext = new MockRequestContext();
 		((Flow) requestContext.getActiveFlow()).setApplicationContext(new StaticWebApplicationContext());
@@ -59,6 +70,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 
 	}
 
+	@Test
 	public void testGetValue_ResolvableCode() {
 		StaticMessageSource ms = new StaticMessageSource();
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
@@ -68,6 +80,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 				context.getELResolver().getValue(context, ms, "foo.bar"));
 	}
 
+	@Test
 	public void testGetValue_InvalidCode() {
 		StaticMessageSource ms = new StaticMessageSource();
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
@@ -81,12 +94,14 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		}
 	}
 
+	@Test
 	public void testIsReadOnly_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
 		assertTrue("isReadOnly should return true for the base variable",
 				context.getELResolver().isReadOnly(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testIsReadOnly_MessageSourceBase() {
 		StaticMessageSource ms = new StaticMessageSource();
 
@@ -95,6 +110,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 				.isReadOnly(context, ms, "foo"));
 	}
 
+	@Test
 	public void testSetValue_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
 		try {
@@ -105,6 +121,7 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		}
 	}
 
+	@Test
 	public void testSetValue_MessageSourceBase() {
 		StaticMessageSource ms = new StaticMessageSource();
 		RequestContextHolder.setRequestContext(new MockRequestContext());

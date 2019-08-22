@@ -15,8 +15,15 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -41,7 +48,7 @@ import org.springframework.webflow.test.MockFlowExecutionKey;
 /**
  * Test case for {@link FlowExecutionImplFactory}.
  */
-public class FlowExecutionImplFactoryTests extends TestCase {
+public class FlowExecutionImplFactoryTests {
 
 	private FlowExecutionImplFactory factory = new FlowExecutionImplFactory();
 
@@ -57,11 +64,13 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 
 	private boolean removeAllSnapshotsCalled;
 
+	@Before
 	public void setUp() {
 		flowDefinition = new Flow("flow");
 		new EndState(flowDefinition, "end");
 	}
 
+	@Test
 	public void testCreate() {
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		assertSame(flowDefinition, execution.getDefinition());
@@ -69,6 +78,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		assertFalse(execution.isActive());
 	}
 
+	@Test
 	public void testCreateNullArgument() {
 		try {
 			factory.createFlowExecution(null);
@@ -78,6 +88,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testCreateWithExecutionAttributes() {
 		MutableAttributeMap<Object> attributes = new LocalAttributeMap<>();
 		attributes.put("foo", "bar");
@@ -87,6 +98,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		assertSame("Flow execution attributes are global", attributes.asMap(), execution.getAttributes().asMap());
 	}
 
+	@Test
 	public void testCreateWithExecutionListener() {
 		FlowExecutionListener listener1 = new FlowExecutionListener() {
 			public void sessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
@@ -100,6 +112,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		assertTrue(starting);
 	}
 
+	@Test
 	public void testCreateWithExecutionKeyFactory() {
 		State state = new State(flowDefinition, "state") {
 			protected void doEnter(RequestControlContext context) throws FlowExecutionException {
@@ -120,6 +133,7 @@ public class FlowExecutionImplFactoryTests extends TestCase {
 		assertNull(execution.getKey());
 	}
 
+	@Test
 	public void testRestoreExecutionState() {
 		FlowExecutionImpl flowExecution = (FlowExecutionImpl) factory.createFlowExecution(flowDefinition);
 		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<>();

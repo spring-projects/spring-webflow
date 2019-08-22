@@ -15,29 +15,37 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * Unit tests for {@link IfModel}.
  */
-public class IfModelTests extends TestCase {
+public class IfModelTests {
 
+	@Test
 	public void testMergeable() {
 		IfModel child = new IfModel("child", "childthen");
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		IfModel child = new IfModel("child", "childthen");
 		IfModel parent = new IfModel("parent", "parentthen");
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		IfModel child = new IfModel("child", "childthen");
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		IfModel child = new IfModel("child", "childthen");
 		IfModel parent = new IfModel("child", "parentthen");

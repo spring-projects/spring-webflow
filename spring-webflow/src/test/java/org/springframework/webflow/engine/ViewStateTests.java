@@ -15,8 +15,12 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.springframework.webflow.TestBean;
 import org.springframework.webflow.engine.support.ActionTransitionCriteria;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
@@ -31,8 +35,9 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * Tests that ViewState logic is correct.
  * @author Keith Donald
  */
-public class ViewStateTests extends TestCase {
+public class ViewStateTests {
 
+	@Test
 	public void testEnterViewStateRenderResponse() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -46,6 +51,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateRenderNotAllowed() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -60,6 +66,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateResponseAlreadyComplete() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -73,6 +80,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateRedirectResponseAlreadyComplete() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -86,6 +94,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateWithVariables() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -106,6 +115,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
+	@Test
 	public void testEnterViewStateWithLocalRedirect() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -119,6 +129,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateWithNoLocalRedirect() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -132,6 +143,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateRedirectInPopup() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -147,6 +159,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testEnterViewStateWithAlwaysRedirectOnPause() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -160,6 +173,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testResumeViewStateForRefresh() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -175,6 +189,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testResumeViewStateForRefreshResponseCompleteRecorded() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -193,6 +208,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testResumeViewStateRestoreVariables() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -215,6 +231,7 @@ public class ViewStateTests extends TestCase {
 		assertEquals("Restored", ((TestBean) context.getViewScope().get("foo")).datum1);
 	}
 
+	@Test
 	public void testResumeViewStateForEventWithTransitionFlowEnded() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -233,6 +250,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(testAction.isExecuted());
 	}
 
+	@Test
 	public void testResumeViewStateForEventWithTransitionStateExited() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -251,6 +269,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlowScope().contains("saveStateCalled"));
 	}
 
+	@Test
 	public void testResumeViewStateForEventWithTransitionStateExitedNoRedirect() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -269,6 +288,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlowScope().contains("saveStateCalled"));
 	}
 
+	@Test
 	public void testResumeViewStateForEventStateNotExitedNonAjax() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -293,6 +313,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains(View.USER_EVENT_STATE_ATTRIBUTE));
 	}
 
+	@Test
 	public void testResumeViewStateForEventStateNotExitedNonAjaxResponseNotAllowed() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -315,6 +336,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testResumeViewStateForEventStateNotExitedNonAjaxRedirectEnabled() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -339,6 +361,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getFlashScope().contains("foo"));
 	}
 
+	@Test
 	public void testResumeViewStateForEventStateNotExitedAjax() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -364,6 +387,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains(View.USER_EVENT_STATE_ATTRIBUTE));
 	}
 
+	@Test
 	public void testResumeViewStateForEventStateNoExitActionRecordedResponseComplete() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -395,6 +419,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getFlashScope().contains(View.USER_EVENT_STATE_ATTRIBUTE));
 	}
 
+	@Test
 	public void testResumeViewStateForEventStateNoExitActionRecordedExecutionRedirect() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -426,6 +451,7 @@ public class ViewStateTests extends TestCase {
 		assertEquals(StubViewFactory.USER_EVENT_STATE, context.getFlashScope().get(View.USER_EVENT_STATE_ATTRIBUTE));
 	}
 
+	@Test
 	public void testRedirectInSameStateOverridesAlwaysRedirectOnPause() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -443,6 +469,7 @@ public class ViewStateTests extends TestCase {
 		assertTrue(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
+	@Test
 	public void testEmbeddedModeOverridesRedirectInSameState() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -458,6 +485,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
+	@Test
 	public void testViewStateRedirectOverridesEmbeddedMode() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();
@@ -474,6 +502,7 @@ public class ViewStateTests extends TestCase {
 		assertFalse(context.getMockExternalContext().getFlowExecutionRedirectRequested());
 	}
 
+	@Test
 	public void testResumeViewStateForEventDestroyVariables() {
 		Flow flow = new Flow("myFlow");
 		StubViewFactory viewFactory = new StubViewFactory();

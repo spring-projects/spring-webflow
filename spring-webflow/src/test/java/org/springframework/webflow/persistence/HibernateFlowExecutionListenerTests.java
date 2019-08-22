@@ -15,10 +15,19 @@
  */
 package org.springframework.webflow.persistence;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import javax.sql.DataSource;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -27,18 +36,15 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.persistence.HibernateHandler.SessionCallback;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for {@link HibernateFlowExecutionListener}
  *
  * @author Ben Hale
  */
-public class HibernateFlowExecutionListenerTests extends TestCase {
+public class HibernateFlowExecutionListenerTests {
 
 	private HibernateHandler hibernate;
 
@@ -46,7 +52,8 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 
 	private HibernateFlowExecutionListener hibernateListener;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		DataSource dataSource = getDataSource();
 		populateDataBase(dataSource);
 		jdbcTemplate = new JdbcTemplate(dataSource);
@@ -54,6 +61,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		hibernateListener = new HibernateFlowExecutionListener(hibernate.getSessionFactory(), hibernate.getTransactionManager());
 	}
 
+	@Test
 	public void testSameSession() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
@@ -77,6 +85,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
+	@Test
 	public void testFlowNotAPersistenceContext() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();
@@ -84,6 +93,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
+	@Test
 	public void testFlowCommitsInSingleRequest() {
 		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
@@ -112,6 +122,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		return jdbcTemplate.queryForObject("select count(*) from T_BEAN", Integer.class);
 	}
 
+	@Test
 	public void testFlowCommitsAfterMultipleRequests() {
 		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
@@ -144,6 +155,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
+	@Test
 	public void testCancelEndState() {
 		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
@@ -166,6 +178,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
+	@Test
 	public void testNoCommitAttributeSetOnEndState() {
 		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
@@ -185,6 +198,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
+	@Test
 	public void testExceptionThrown() {
 		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
@@ -203,6 +217,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 
 	}
 
+	@Test
 	public void testExceptionThrownWithNothingBound() {
 		assertEquals("Table should only have one row", 1, getCount());
 		MockRequestContext context = new MockRequestContext();
@@ -213,6 +228,7 @@ public class HibernateFlowExecutionListenerTests extends TestCase {
 		assertSessionNotBound();
 	}
 
+	@Test
 	public void testLazyInitializedCollection() {
 		MockRequestContext context = new MockRequestContext();
 		MockFlowSession flowSession = new MockFlowSession();

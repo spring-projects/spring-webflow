@@ -15,8 +15,10 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import org.junit.Test;
 import org.springframework.webflow.action.DispatchMethodInvoker.MethodLookupException;
 import org.springframework.webflow.action.MultiAction.MethodResolver;
 import org.springframework.webflow.engine.StubViewFactory;
@@ -28,18 +30,20 @@ import org.springframework.webflow.test.MockRequestContext;
 /**
  * Unit tests for {@link MultiAction}.
  */
-public class MultiActionTests extends TestCase {
+public class MultiActionTests {
 
 	private TestMultiAction action = new TestMultiAction();
 
 	private MockRequestContext context = new MockRequestContext();
 
+	@Test
 	public void testDispatchWithMethodSignature() throws Exception {
 		context.getAttributeMap().put(AnnotatedAction.METHOD_ATTRIBUTE, "increment");
 		action.execute(context);
 		assertEquals(1, action.counter);
 	}
 
+	@Test
 	public void testDispatchWithBogusMethodSignature() throws Exception {
 		context.getAttributeMap().put(AnnotatedAction.METHOD_ATTRIBUTE, "bogus");
 		try {
@@ -50,6 +54,7 @@ public class MultiActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDispatchWithCurrentStateId() throws Exception {
 		MockFlowSession session = context.getMockFlowExecutionContext().getMockActiveSession();
 		session.setState(new ViewState(session.getDefinitionInternal(), "increment", new StubViewFactory()));
@@ -57,6 +62,7 @@ public class MultiActionTests extends TestCase {
 		assertEquals(1, action.counter);
 	}
 
+	@Test
 	public void testNoSuchMethodWithCurrentStateId() throws Exception {
 		try {
 			action.execute(context);
@@ -66,6 +72,7 @@ public class MultiActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testCannotResolveMethod() throws Exception {
 		try {
 			context.getMockFlowExecutionContext().getMockActiveSession().setState(null);
@@ -76,6 +83,7 @@ public class MultiActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testCustomMethodResolver() throws Exception {
 		MethodResolver methodResolver = context -> "increment";
 		action.setMethodResolver(methodResolver);
