@@ -13,7 +13,7 @@ import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 
 import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.web.context.support.StaticWebApplicationContext;

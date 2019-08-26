@@ -2,7 +2,7 @@ package org.springframework.webflow.validation;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WebFlowMessageResolverTests {
 	private WebFlowMessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();

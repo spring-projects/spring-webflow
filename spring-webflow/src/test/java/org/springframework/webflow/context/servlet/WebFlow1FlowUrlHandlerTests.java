@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;

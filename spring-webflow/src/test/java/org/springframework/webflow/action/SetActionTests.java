@@ -2,7 +2,7 @@ package org.springframework.webflow.action;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestContext;

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.ApplicationContext;

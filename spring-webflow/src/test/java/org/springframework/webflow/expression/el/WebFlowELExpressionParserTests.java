@@ -7,7 +7,7 @@ import java.security.Principal;
 import java.util.Locale;
 
 import org.apache.el.ExpressionFactoryImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.context.support.StaticApplicationContext;

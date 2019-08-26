@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link FlowModel}.

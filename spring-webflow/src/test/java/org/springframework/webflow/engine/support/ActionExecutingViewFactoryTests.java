@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.test.MockRequestContext;

@@ -20,7 +20,7 @@ import javax.faces.context.FacesContext;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;

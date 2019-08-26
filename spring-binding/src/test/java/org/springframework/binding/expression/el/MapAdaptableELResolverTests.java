@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.el.ELContext;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.collection.MapAdaptable;
 
 public class MapAdaptableELResolverTests {

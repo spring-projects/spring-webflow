@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MapAccessorTests {
 	private MapAccessor<String, Object> accessor;

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.Action;

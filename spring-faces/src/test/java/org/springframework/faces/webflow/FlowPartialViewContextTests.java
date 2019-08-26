@@ -10,7 +10,7 @@ import javax.faces.context.PartialViewContext;
 import javax.faces.context.PartialViewContextWrapper;
 
 import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;

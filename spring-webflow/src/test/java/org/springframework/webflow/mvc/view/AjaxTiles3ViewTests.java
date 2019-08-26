@@ -18,7 +18,7 @@ import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.wildcard.WildcardServletApplicationContext;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.ConversionExecutor;

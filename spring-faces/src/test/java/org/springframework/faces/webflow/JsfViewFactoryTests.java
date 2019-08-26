@@ -33,7 +33,7 @@ import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;

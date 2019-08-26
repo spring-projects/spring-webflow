@@ -2,7 +2,7 @@ package org.springframework.webflow.engine.model.builder.xml;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
 public class WebFlowEntityResolverTests {

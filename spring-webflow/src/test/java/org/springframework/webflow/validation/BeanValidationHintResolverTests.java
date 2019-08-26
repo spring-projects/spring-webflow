@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
 import javax.validation.groups.Default;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 
 /**

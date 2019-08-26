@@ -21,7 +21,7 @@ import javax.faces.event.ActionListener;
 import org.apache.myfaces.test.mock.MockFacesContext;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
 

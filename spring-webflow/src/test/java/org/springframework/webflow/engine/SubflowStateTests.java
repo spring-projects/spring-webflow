@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collections;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.support.AbstractGetValueExpression;
 import org.springframework.binding.mapping.impl.DefaultMappingResults;

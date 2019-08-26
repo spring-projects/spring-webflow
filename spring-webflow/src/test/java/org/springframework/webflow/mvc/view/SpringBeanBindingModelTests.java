@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import java.beans.PropertyEditor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser;
 

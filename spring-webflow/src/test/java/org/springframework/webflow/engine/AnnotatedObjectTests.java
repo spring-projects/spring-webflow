@@ -17,7 +17,7 @@ package org.springframework.webflow.engine;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.AnnotatedObject;
 
 public class AnnotatedObjectTests {

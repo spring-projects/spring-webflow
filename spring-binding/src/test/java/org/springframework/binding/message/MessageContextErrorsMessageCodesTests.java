@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.validation.MessageCodesResolver;
 

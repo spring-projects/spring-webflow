@@ -13,7 +13,7 @@ import java.util.List;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.context.ExternalContext;

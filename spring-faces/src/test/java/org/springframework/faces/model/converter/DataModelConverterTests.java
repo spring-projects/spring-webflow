@@ -12,7 +12,7 @@ import java.util.List;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.faces.model.SerializableListDataModel;
 

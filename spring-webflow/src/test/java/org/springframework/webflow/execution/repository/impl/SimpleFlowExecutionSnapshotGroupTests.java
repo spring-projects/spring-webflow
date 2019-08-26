@@ -6,7 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.io.Serializable;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 

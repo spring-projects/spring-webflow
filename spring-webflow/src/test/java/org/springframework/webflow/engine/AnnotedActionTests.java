@@ -18,7 +18,7 @@ package org.springframework.webflow.engine;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.AnnotatedAction;
 import org.springframework.webflow.execution.Event;

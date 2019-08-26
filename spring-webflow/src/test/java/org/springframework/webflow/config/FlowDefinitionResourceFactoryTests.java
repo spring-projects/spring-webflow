@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import java.net.MalformedURLException;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;

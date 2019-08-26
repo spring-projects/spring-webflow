@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link LocalAttributeMap}.

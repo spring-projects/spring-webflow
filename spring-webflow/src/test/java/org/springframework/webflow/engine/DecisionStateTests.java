@@ -18,7 +18,7 @@ package org.springframework.webflow.engine;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Event;

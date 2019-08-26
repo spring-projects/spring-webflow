@@ -6,7 +6,7 @@ import java.util.List;
 import javax.faces.model.DataModel;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionExecutor;
 
 public class FacesConversionServiceTests {

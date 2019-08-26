@@ -20,7 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;

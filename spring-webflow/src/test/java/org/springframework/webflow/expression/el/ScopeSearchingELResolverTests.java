@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.el.ELResolver;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockRequestContext;
 

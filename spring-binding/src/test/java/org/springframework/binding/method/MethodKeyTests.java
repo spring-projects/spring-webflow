@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Method;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Rob Harrop

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.TransitionCriteria;

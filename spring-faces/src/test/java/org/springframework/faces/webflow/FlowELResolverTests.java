@@ -12,7 +12,7 @@ import javax.el.ELContext;
 import org.apache.myfaces.test.el.MockELContext;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.converters.StringToObject;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;

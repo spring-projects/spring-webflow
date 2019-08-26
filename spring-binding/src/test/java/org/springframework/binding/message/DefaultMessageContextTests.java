@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticMessageSource;
 
 public class DefaultMessageContextTests {
