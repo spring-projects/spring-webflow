@@ -1,7 +1,7 @@
 package org.springframework.webflow.expression.el;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.security.Principal;
 import java.util.Locale;

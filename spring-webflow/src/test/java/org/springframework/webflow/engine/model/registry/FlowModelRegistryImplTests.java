@@ -1,7 +1,7 @@
 package org.springframework.webflow.engine.model.registry;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.BeforeEach;
