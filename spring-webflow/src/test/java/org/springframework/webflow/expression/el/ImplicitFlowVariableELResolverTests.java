@@ -2,7 +2,7 @@ package org.springframework.webflow.expression.el;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.security.Principal;

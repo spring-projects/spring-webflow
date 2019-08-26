@@ -17,7 +17,7 @@ package org.springframework.binding.convert.service;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Date;

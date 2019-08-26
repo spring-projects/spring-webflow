@@ -3,7 +3,7 @@ package org.springframework.webflow.executor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;

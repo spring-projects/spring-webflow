@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.action;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.BeforeEach;

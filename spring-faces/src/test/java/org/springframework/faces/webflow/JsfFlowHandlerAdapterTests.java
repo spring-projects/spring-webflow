@@ -4,7 +4,7 @@ import org.springframework.webflow.context.servlet.AjaxHandler;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
