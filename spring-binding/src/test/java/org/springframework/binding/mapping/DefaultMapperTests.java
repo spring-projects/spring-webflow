@@ -1,7 +1,7 @@
 package org.springframework.binding.mapping;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.Assert.assertSame;
 
 import java.util.HashMap;
