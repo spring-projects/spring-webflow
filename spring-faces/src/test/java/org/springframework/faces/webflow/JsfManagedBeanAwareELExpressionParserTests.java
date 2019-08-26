@@ -1,6 +1,6 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.el.ExpressionFactoryImpl;
 import org.junit.jupiter.api.AfterEach;
