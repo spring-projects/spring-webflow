@@ -7,7 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -40,7 +40,7 @@ public class XmlFlowModelBuilderTests {
 
 	private FlowModelRegistry registry;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
 		beanFactory.addBean("bean", new Object());

@@ -17,7 +17,7 @@ import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.wildcard.WildcardServletApplicationContext;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -38,7 +38,7 @@ public class AjaxTiles3ViewTests {
 	private MockServletContext servletContext;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		servletContext = new MockServletContext("/org/springframework/webflow/mvc/view/");

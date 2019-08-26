@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.EndStateModel;
@@ -19,7 +19,7 @@ public class DefaultFlowModelHolderTests {
 	private DefaultFlowModelHolder holder;
 	private FlowModelBuilder builder;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		builder = new SimpleFlowBuilder();
 		holder = new DefaultFlowModelHolder(builder);

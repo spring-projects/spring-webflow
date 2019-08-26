@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.AbstractAction;
@@ -52,7 +52,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 
 	TransitionableState state;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("myFlow");
 		state = new TransitionableState(flow, "state1") {

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockServletContext;
 
@@ -39,7 +39,7 @@ public class HttpServletContextMapTests {
 
 	private MockServletContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		context = new MockServletContext();
 		// a fresh MockServletContext seems to already contain an element;

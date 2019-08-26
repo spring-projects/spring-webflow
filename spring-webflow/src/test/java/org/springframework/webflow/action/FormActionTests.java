@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -88,7 +88,7 @@ public class FormActionTests {
 
 	private FormAction action;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		action = createFormAction("test");
 	}

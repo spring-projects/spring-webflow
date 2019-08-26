@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,7 +44,7 @@ public abstract class AbstractPersistenceContextPropagationTests {
 		return jdbcTemplate;
 	}
 
-	@Before
+	@BeforeEach
 	public final void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		DataSource dataSource = createDataSource();

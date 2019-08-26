@@ -21,7 +21,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.ActionExecutionException;
 import org.springframework.webflow.execution.ActionExecutor;
@@ -36,7 +36,7 @@ public class ActionExecutorTests {
 	private State state;
 	private Flow flow;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		flow = new Flow("myFlow");
 		state = new EndState(flow, "end");

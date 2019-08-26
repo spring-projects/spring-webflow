@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.converters.StringToObject;
 import org.springframework.binding.convert.service.DefaultConversionService;
@@ -36,7 +36,7 @@ public abstract class AbstractBindingModelTests {
 	TestBean testBean;
 	ExpressionParser expressionParser;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		testBean = new TestBean();
 		messages = new DefaultMessageContext();

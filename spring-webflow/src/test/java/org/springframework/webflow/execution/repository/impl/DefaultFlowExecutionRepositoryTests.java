@@ -9,7 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -41,7 +41,7 @@ public class DefaultFlowExecutionRepositoryTests {
 	private DefaultFlowExecutionRepository repository;
 	FlowExecutionImplFactory executionFactory = new FlowExecutionImplFactory();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		flow = new Flow("myFlow");
 		ViewState s1 = new ViewState(flow, "state", new StubViewFactory());

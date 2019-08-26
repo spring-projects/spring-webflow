@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.support.StaticMessageSource;
@@ -18,7 +18,7 @@ public class MessageContextErrorsTests {
 	private DefaultMessageContext context;
 	private MessageContextErrors errors;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		StaticMessageSource messageSource = new StaticMessageSource();
 		messageSource.addMessage("foo", Locale.getDefault(), "bar");

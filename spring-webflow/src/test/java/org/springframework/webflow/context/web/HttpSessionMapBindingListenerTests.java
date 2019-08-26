@@ -23,7 +23,7 @@ import static org.junit.Assert.assertSame;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.webflow.context.servlet.HttpSessionMap;
@@ -41,7 +41,7 @@ public class HttpSessionMapBindingListenerTests {
 	private HttpSession session;
 	private TestAttributeMapBindingListener value;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		session = request.getSession(true);

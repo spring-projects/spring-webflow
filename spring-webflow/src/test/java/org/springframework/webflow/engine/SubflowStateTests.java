@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.support.AbstractGetValueExpression;
@@ -45,7 +45,7 @@ public class SubflowStateTests {
 	private Flow subflow;
 	private MockRequestControlContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		parentFlow = new Flow("parent");
 		subflow = new Flow("child");

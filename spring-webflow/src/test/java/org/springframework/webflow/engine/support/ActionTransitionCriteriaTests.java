@@ -18,7 +18,7 @@ package org.springframework.webflow.engine.support;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.test.MockAction;
 import org.springframework.webflow.test.MockRequestContext;
@@ -29,7 +29,7 @@ public class ActionTransitionCriteriaTests {
 
 	private ActionTransitionCriteria criteria;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		action = new MockAction();
 		criteria = new ActionTransitionCriteria(action);

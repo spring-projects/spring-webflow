@@ -18,14 +18,14 @@ package org.springframework.webflow.action;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class DispatchMethodInvokerTests {
 
 	private MockClass mockClass;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		mockClass = new MockClass();
 	}

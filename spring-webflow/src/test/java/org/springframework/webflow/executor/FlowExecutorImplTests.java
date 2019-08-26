@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -34,7 +34,7 @@ public class FlowExecutorImplTests {
 	private FlowExecutionRepository repository;
 	private FlowExecutionLock lock;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		locator = EasyMock.createMock(FlowDefinitionLocator.class);
 		definition = EasyMock.createMock(FlowDefinition.class);

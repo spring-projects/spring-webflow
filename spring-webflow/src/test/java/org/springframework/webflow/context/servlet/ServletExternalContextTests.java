@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -44,7 +44,7 @@ public class ServletExternalContextTests {
 
 	private ServletExternalContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		servletContext = new MockServletContext();
 		servletContext.setAttribute("aFoo", "bar");

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 
@@ -34,7 +34,7 @@ public class MethodInvokerTests {
 
 	private MethodInvoker methodInvoker;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.methodInvoker = new MethodInvoker();
 	}

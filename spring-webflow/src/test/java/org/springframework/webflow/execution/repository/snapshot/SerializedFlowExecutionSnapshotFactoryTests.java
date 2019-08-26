@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.Flow;
@@ -21,7 +21,7 @@ public class SerializedFlowExecutionSnapshotFactoryTests {
 	private SerializedFlowExecutionSnapshotFactory factory;
 	private FlowExecutionImplFactory executionFactory;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("myFlow");
 		new State(flow, "state") {

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -25,7 +25,7 @@ import org.springframework.webflow.execution.FlowExecutionOutcome;
 public class FlowHandlerMappingTests {
 	private FlowHandlerMapping mapping = new FlowHandlerMapping();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		FlowDefinitionRegistryImpl registry = new FlowDefinitionRegistryImpl();
 		registry.registerFlowDefinition(new FlowDefinitionImpl());

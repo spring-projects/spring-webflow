@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -45,7 +45,7 @@ public class FlowHandlerAdapterTests {
 	private boolean handleExecutionOutcome;
 	private MockFlashMapManager flashMapManager = new MockFlashMapManager();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		flowExecutor = EasyMock.createMock(FlowExecutor.class);
 		flowHandlerAdapter = new FlowHandlerAdapter() {

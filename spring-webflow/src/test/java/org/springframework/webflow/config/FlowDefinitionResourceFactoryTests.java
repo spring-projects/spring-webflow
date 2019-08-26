@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -38,7 +38,7 @@ public class FlowDefinitionResourceFactoryTests {
 
 	private FlowDefinitionResourceFactory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		resourceLoader = new ServletContextResourceLoader(new MockServletContext());
 		factory = new FlowDefinitionResourceFactory();

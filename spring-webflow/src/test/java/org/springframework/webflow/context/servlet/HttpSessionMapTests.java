@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.util.WebUtils;
@@ -41,7 +41,7 @@ public class HttpSessionMapTests {
 
 	private MockHttpServletRequest request;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		tested = new HttpSessionMap(request);

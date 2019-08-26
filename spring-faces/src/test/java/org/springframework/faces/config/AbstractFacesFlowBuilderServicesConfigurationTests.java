@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
@@ -36,7 +36,7 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests {
 
 	protected final JSFMockHelper jsf = new JSFMockHelper();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsf.setUp();
 		this.context = initApplicationContext();

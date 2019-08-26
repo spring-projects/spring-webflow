@@ -27,7 +27,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.conversation.Conversation;
@@ -44,7 +44,7 @@ public class SessionBindingConversationManagerTests {
 
 	private SessionBindingConversationManager conversationManager;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		conversationManager = new SessionBindingConversationManager();
 	}

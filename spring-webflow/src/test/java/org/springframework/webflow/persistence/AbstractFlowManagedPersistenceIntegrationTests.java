@@ -2,7 +2,7 @@ package org.springframework.webflow.persistence;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -34,7 +34,7 @@ public abstract class AbstractFlowManagedPersistenceIntegrationTests {
 		return dataSource;
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		initDataSource();
 		populateDataBase();

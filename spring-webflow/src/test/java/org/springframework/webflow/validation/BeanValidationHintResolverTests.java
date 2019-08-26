@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
 
 import javax.validation.groups.Default;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 
@@ -34,7 +34,7 @@ public class BeanValidationHintResolverTests {
 
 	private BeanValidationHintResolver resolver;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.resolver = new BeanValidationHintResolver();
 	}

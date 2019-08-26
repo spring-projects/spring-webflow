@@ -11,7 +11,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.MockViewHandler;
@@ -28,7 +28,7 @@ public class JsfViewTests {
 
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.jsfMock.facesContext().getApplication().setViewHandler(new ResourceCheckingViewHandler());

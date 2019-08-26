@@ -32,7 +32,7 @@ import org.apache.el.ExpressionFactoryImpl;
 import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -77,7 +77,7 @@ public class JsfViewFactoryTests {
 
 	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		configureJsf();
 		this.extContext.setNativeContext(this.servletContext);

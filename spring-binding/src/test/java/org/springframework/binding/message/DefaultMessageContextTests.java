@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import java.io.Serializable;
 import java.util.Locale;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticMessageSource;
 
 public class DefaultMessageContextTests {
 	private DefaultMessageContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		StaticMessageSource messageSource = new StaticMessageSource();
 		messageSource.addMessage("message", Locale.getDefault(), "Hello world resolved!");

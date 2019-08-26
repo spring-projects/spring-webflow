@@ -20,7 +20,7 @@ import javax.faces.event.ActionListener;
 
 import org.apache.myfaces.test.mock.MockFacesContext;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
@@ -54,7 +54,7 @@ public class SelectionTrackingActionListenerTests {
 	 */
 	private final ActionListener selectionTrackingListener = new SelectionTrackingActionListener(this.delegateListener);
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMockHelper.setUp();
 		this.viewToTest = new UIViewRoot();

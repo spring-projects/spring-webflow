@@ -9,7 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -57,7 +57,7 @@ import org.springframework.webflow.test.MockRequestContext;
 public class FlowModelFlowBuilderTests {
 	private FlowModel model;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
 		beanFactory.addBean("bean", new Object());

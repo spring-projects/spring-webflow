@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +36,7 @@ public class LocalParameterMapTests {
 
 	private LocalParameterMap parameterMap;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("string", "A string");

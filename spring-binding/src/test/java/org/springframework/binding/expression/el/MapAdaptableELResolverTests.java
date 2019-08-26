@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.el.ELContext;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.collection.MapAdaptable;
 
@@ -16,7 +16,7 @@ public class MapAdaptableELResolverTests {
 
 	private ELContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		context = new DefaultELContext(new MapAdaptableELResolver(), null, null);
 	}

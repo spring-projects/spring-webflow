@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
@@ -16,7 +16,7 @@ import org.springframework.webflow.test.TestFlowBuilderServicesFactory;
 public class FlowRegistryFactoryBeanTests {
 	private FlowRegistryFactoryBean factoryBean;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		factoryBean = new FlowRegistryFactoryBean();
 	}

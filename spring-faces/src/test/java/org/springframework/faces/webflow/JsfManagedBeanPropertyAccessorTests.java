@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContextHolder;
@@ -35,7 +35,7 @@ public class JsfManagedBeanPropertyAccessorTests {
 
 	private MockRequestContext requestContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.requestContext = new MockRequestContext();

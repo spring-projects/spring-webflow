@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionExecutionException;
 import org.springframework.binding.convert.converters.StringToDate;
@@ -31,7 +31,7 @@ public class StaticConversionExecutorImplTests {
 
 	private StaticConversionExecutor conversionExecutor;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		StringToDate stringToDate = new StringToDate();
 		conversionExecutor = new StaticConversionExecutor(String.class, Date.class, stringToDate);

@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,7 +52,7 @@ public class HibernateFlowExecutionListenerTests {
 
 	private HibernateFlowExecutionListener hibernateListener;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		DataSource dataSource = getDataSource();
 		populateDataBase(dataSource);

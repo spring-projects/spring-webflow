@@ -20,7 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.expression.AccessException;
@@ -35,7 +35,7 @@ public class FlowVariablePropertyAccessorTests {
 
 	private MockRequestContext requestContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);

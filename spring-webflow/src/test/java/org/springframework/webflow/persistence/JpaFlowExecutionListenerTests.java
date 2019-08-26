@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,7 +33,7 @@ public class JpaFlowExecutionListenerTests {
 
 	private JdbcTemplate jdbcTemplate;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		DataSource dataSource = getDataSource();
 		populateDataBase(dataSource);

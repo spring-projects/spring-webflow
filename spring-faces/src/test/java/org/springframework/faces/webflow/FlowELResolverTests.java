@@ -11,7 +11,7 @@ import javax.el.ELContext;
 
 import org.apache.myfaces.test.el.MockELContext;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -34,7 +34,7 @@ public class FlowELResolverTests {
 
 	private final ELContext elContext = new MockELContext();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		RequestContextHolder.setRequestContext(this.requestContext);
 	}

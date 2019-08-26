@@ -4,7 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.apache.el.ExpressionFactoryImpl;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
@@ -21,7 +21,7 @@ public class JsfManagedBeanAwareELExpressionParserTests {
 
 	ExpressionParser parser;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		RequestContextHolder.setRequestContext(this.requestContext);

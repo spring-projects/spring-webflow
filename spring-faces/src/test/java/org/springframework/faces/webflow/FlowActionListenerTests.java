@@ -12,7 +12,7 @@ import javax.faces.event.ActionEvent;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.Flow;
@@ -28,7 +28,7 @@ public class FlowActionListenerTests {
 
 	RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 

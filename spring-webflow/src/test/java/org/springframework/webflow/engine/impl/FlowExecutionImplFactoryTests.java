@@ -22,7 +22,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -64,7 +64,7 @@ public class FlowExecutionImplFactoryTests {
 
 	private boolean removeAllSnapshotsCalled;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flowDefinition = new Flow("flow");
 		new EndState(flowDefinition, "end");

@@ -18,7 +18,7 @@ package org.springframework.webflow.action;
 import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
@@ -37,7 +37,7 @@ public class CompositeActionTests {
 
 	private Action actionMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		actionMock = EasyMock.createMock(Action.class);
 		Action[] actions = new Action[] { actionMock };

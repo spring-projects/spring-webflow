@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Map;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.faces.webflow.JsfResourceRequestHandler;
@@ -19,7 +19,7 @@ public abstract class AbstractResourcesConfigurationTests {
 
 	protected ApplicationContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.context = initApplicationContext();
 	}

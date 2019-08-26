@@ -18,7 +18,7 @@ import javax.faces.lifecycle.Lifecycle;
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
@@ -64,7 +64,7 @@ public class JsfViewTests {
 		}
 	};
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		this.jsfMock.setUp();

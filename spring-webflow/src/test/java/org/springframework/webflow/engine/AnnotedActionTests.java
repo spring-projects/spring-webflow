@@ -17,7 +17,7 @@ package org.springframework.webflow.engine;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.AnnotatedAction;
@@ -32,7 +32,7 @@ public class AnnotedActionTests {
 
 	private MockRequestContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		Flow flow = new Flow("myFlow");
 		context = new MockRequestContext(flow);

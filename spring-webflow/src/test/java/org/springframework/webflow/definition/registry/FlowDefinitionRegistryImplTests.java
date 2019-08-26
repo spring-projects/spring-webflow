@@ -21,7 +21,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -39,7 +39,7 @@ public class FlowDefinitionRegistryImplTests {
 
 	private BarFlow barFlow;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		fooFlow = new FooFlow();
 		barFlow = new BarFlow();

@@ -29,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -39,7 +39,7 @@ public class LocalAttributeMapTests {
 
 	private LocalAttributeMap<Object> attributeMap = new LocalAttributeMap<>();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		attributeMap.put("string", "A string");
 		attributeMap.put("integer", 12345);

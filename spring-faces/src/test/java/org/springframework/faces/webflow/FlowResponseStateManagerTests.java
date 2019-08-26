@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
@@ -28,7 +28,7 @@ public class FlowResponseStateManagerTests {
 	private FlowExecutionContext flowExecutionContext;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.webappContext = new StaticWebApplicationContext();

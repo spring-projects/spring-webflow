@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Locale;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
@@ -39,7 +39,7 @@ public class WebFlowSpringELExpressionParserTests {
 
 	private MockRequestContext requestContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);

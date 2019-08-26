@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionExecutionException;
@@ -33,7 +33,7 @@ public abstract class AbstractFlowBuilderServicesConfigurationTests {
 
 	protected FlowBuilderServices builderServices;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		context = initApplicationContext();
 	}

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,7 +36,7 @@ public class FlowControllerTests {
 	private MockHttpServletResponse response;
 	private ServletExternalContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		executor = EasyMock.createMock(FlowExecutor.class);
 		controller = new FlowController();

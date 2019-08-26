@@ -3,7 +3,7 @@ package org.springframework.webflow.config;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.conversation.Conversation;
@@ -23,7 +23,7 @@ public abstract class AbstractFlowExecutorConfigurationTests {
 
 	private ApplicationContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		context = initApplicationContext();
 	}

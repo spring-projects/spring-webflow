@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.FlowModel;
@@ -17,7 +17,7 @@ public class FlowModelRegistryImplTests {
 
 	private FlowModel barFlow;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		fooFlow = new FlowModel();
 		barFlow = new FlowModel();
