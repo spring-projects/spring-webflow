@@ -19,7 +19,7 @@ import javax.faces.event.ActionListener;
 
 
 import org.apache.myfaces.test.mock.MockFacesContext;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
@@ -65,7 +65,7 @@ public class SelectionTrackingActionListenerTests {
 		this.dataModel = new OneSelectionTrackingListDataModel<>(rows);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMockHelper.tearDown();
 	}

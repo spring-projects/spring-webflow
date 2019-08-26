@@ -18,7 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.easymock.EasyMock;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.DefaultMessageContext;
@@ -49,7 +49,7 @@ public class FlowFacesContextTests {
 		setupMessageContext();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsf.tearDown();
 	}

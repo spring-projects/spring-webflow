@@ -20,7 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -42,7 +42,7 @@ public class JsfManagedBeanPropertyAccessorTests {
 		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);

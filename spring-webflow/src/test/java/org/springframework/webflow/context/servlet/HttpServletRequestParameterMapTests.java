@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -44,7 +44,7 @@ public class HttpServletRequestParameterMapTests {
 		tested = new HttpServletRequestParameterMap(request);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		request = null;
 		tested = null;

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.engine.Flow;
@@ -36,7 +36,7 @@ public class TextToTransitionCriteriaTests {
 	private MockFlowBuilderContext serviceLocator = new MockFlowBuilderContext("flowId");
 	private TextToTransitionCriteria converter = new TextToTransitionCriteria(serviceLocator);
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}

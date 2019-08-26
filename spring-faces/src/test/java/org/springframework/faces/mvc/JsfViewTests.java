@@ -10,7 +10,7 @@ import java.util.Locale;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
@@ -40,7 +40,7 @@ public class JsfViewTests {
 		this.resolver.setApplicationContext(new StaticWebApplicationContext());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 	}

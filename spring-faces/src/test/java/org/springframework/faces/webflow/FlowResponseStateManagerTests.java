@@ -6,7 +6,7 @@ import static org.junit.Assert.assertSame;
 import java.io.IOException;
 
 import org.easymock.EasyMock;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -41,7 +41,7 @@ public class FlowResponseStateManagerTests {
 		this.responseStateManager = new FlowResponseStateManager(null);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.webappContext.close();
 		this.jsfMock.tearDown();

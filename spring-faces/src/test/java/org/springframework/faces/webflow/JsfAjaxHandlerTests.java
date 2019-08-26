@@ -3,7 +3,7 @@ package org.springframework.faces.webflow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -22,7 +22,7 @@ public class JsfAjaxHandlerTests {
 		this.ajaxHandler.setApplicationContext(webappContext);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 	}

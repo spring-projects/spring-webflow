@@ -1,6 +1,6 @@
 package org.springframework.faces.config;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -21,7 +21,7 @@ public class ResourcesBeanDefinitionParserTests extends AbstractResourcesConfigu
 	}
 
 	@Override
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		super.tearDown();
 		this.jsfMockHelper.tearDown();

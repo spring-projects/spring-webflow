@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionException;
@@ -44,7 +44,7 @@ public abstract class AbstractFacesFlowBuilderServicesConfigurationTests {
 
 	protected abstract ApplicationContext initApplicationContext();
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsf.tearDown();
 	}

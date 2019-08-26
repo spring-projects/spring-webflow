@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 import javax.el.ELContext;
 
 import org.apache.myfaces.test.el.MockELContext;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
@@ -39,7 +39,7 @@ public class FlowELResolverTests {
 		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}

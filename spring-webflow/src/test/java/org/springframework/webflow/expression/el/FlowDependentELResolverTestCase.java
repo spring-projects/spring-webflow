@@ -7,7 +7,7 @@ import java.util.List;
 import javax.el.ELContext;
 import javax.el.ELResolver;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.el.DefaultELContext;
@@ -26,7 +26,7 @@ public abstract class FlowDependentELResolverTestCase {
 		context = new DefaultELContext(new DefaultELResolver(getCustomResolvers()), null, null);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}

@@ -26,7 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.ExternalContextHolder;
@@ -49,7 +49,7 @@ public class SessionBindingConversationManagerTests {
 		conversationManager = new SessionBindingConversationManager();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		ExternalContextHolder.setExternalContext(null);
 	}

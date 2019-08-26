@@ -18,7 +18,7 @@ import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.easymock.EasyMock;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.apache.el.ExpressionFactoryImpl;
@@ -58,7 +58,7 @@ public class JsfFinalResponseActionTests {
 		configureJsf();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);

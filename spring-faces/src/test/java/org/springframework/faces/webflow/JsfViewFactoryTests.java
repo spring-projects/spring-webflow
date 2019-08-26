@@ -31,7 +31,7 @@ import javax.faces.lifecycle.Lifecycle;
 import org.apache.el.ExpressionFactoryImpl;
 import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.ExpressionParser;
@@ -90,7 +90,7 @@ public class JsfViewFactoryTests {
 				new LocalParameterMap(new HashMap<>()));
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);

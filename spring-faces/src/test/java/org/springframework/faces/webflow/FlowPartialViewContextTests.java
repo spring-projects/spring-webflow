@@ -9,7 +9,7 @@ import java.util.List;
 import javax.faces.context.PartialViewContext;
 import javax.faces.context.PartialViewContextWrapper;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
@@ -18,7 +18,7 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowPartialViewContextTests {
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		RequestContextHolder.setRequestContext(null);
 	}

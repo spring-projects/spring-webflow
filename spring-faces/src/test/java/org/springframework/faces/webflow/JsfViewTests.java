@@ -17,7 +17,7 @@ import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.easymock.EasyMock;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -95,7 +95,7 @@ public class JsfViewTests {
 		this.view = new JsfView(viewToRender, this.jsfMock.lifecycle(), this.context);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);

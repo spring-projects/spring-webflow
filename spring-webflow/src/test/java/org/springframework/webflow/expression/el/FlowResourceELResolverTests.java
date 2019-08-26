@@ -12,7 +12,7 @@ import javax.el.ELResolver;
 import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.StaticMessageSource;
@@ -24,7 +24,7 @@ import org.springframework.webflow.test.MockRequestContext;
 public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase {
 
 	@Override
-	@After
+	@AfterEach
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}
