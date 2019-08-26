@@ -1,13 +1,13 @@
 package org.springframework.webflow.context.servlet;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -16,7 +16,7 @@ public class AbstractAjaxHandlerTests {
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();

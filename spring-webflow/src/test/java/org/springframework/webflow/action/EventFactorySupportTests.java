@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.action;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.Event;
 
 /**
@@ -31,7 +31,7 @@ public class EventFactorySupportTests {
 
 	private Object source = new Object();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 	}
 

@@ -1,8 +1,8 @@
 package org.springframework.webflow.mvc.view;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +17,8 @@ import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.Request;
 import org.apache.tiles.request.servlet.ServletRequest;
 import org.apache.tiles.request.servlet.wildcard.WildcardServletApplicationContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -38,7 +38,7 @@ public class AjaxTiles3ViewTests {
 	private MockServletContext servletContext;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		servletContext = new MockServletContext("/org/springframework/webflow/mvc/view/");
@@ -153,7 +153,7 @@ public class AjaxTiles3ViewTests {
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap<>(), request, response);
-		assertTrue("Multiple fragments should result in include, not forward", response.getIncludedUrls().size() == 2);
+		assertTrue(response.getIncludedUrls().size() == 2, "Multiple fragments should result in include, not forward");
 		assertEquals("/WEB-INF/search.jsp", response.getIncludedUrls().get(0));
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrls().get(1));
 	}

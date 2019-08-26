@@ -1,8 +1,8 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,9 +17,9 @@ import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
@@ -64,7 +64,7 @@ public class JsfViewTests {
 		}
 	};
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		this.jsfMock.setUp();
@@ -95,7 +95,7 @@ public class JsfViewTests {
 		this.view = new JsfView(viewToRender, this.jsfMock.lifecycle(), this.context);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
@@ -156,8 +156,8 @@ public class JsfViewTests {
 
 		restoredView.processUserEvent();
 
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
+		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertTrue(((NoEventLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
 	}
 
 	/**
@@ -182,9 +182,9 @@ public class JsfViewTests {
 
 		restoredView.processUserEvent();
 
-		assertTrue("No event was signaled,", restoredView.hasFlowEvent());
-		assertEquals("Event should be " + this.event, this.event, restoredView.getFlowEvent().getId());
-		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
+		assertTrue(restoredView.hasFlowEvent(), "No event was signaled,");
+		assertEquals(this.event, restoredView.getFlowEvent().getId(), "Event should be " + this.event);
+		assertTrue(((EventSignalingLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
 	}
 
 	@Test
@@ -198,7 +198,7 @@ public class JsfViewTests {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
-		assertFalse("No user event should be queued", createdView.userEventQueued());
+		assertFalse(createdView.userEventQueued(), "No user event should be queued");
 	}
 
 	@Test
@@ -211,7 +211,7 @@ public class JsfViewTests {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
-		assertTrue("User event should be queued", createdView.userEventQueued());
+		assertTrue(createdView.userEventQueued(), "User event should be queued");
 	}
 
 	private class ExceptionalViewHandler extends MockViewHandler {
@@ -229,7 +229,7 @@ public class JsfViewTests {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			this.executed = true;
 		}
@@ -244,7 +244,7 @@ public class JsfViewTests {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			JsfViewTests.this.extContext.getRequestMap().put(JsfView.EVENT_KEY, JsfViewTests.this.event);
 			this.executed = true;

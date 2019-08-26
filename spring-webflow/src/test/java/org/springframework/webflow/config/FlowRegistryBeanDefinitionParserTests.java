@@ -1,12 +1,12 @@
 package org.springframework.webflow.config;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.ApplicationContext;

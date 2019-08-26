@@ -1,12 +1,12 @@
 package org.springframework.webflow.execution.repository.snapshot;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.RequestControlContext;
@@ -21,7 +21,7 @@ public class SerializedFlowExecutionSnapshotFactoryTests {
 	private SerializedFlowExecutionSnapshotFactory factory;
 	private FlowExecutionImplFactory executionFactory;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("myFlow");
 		new State(flow, "state") {

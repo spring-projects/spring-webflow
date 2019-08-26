@@ -15,16 +15,16 @@
  */
 package org.springframework.webflow.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -70,14 +70,14 @@ public class FlowTests {
 		Flow flow = new Flow("myFlow");
 		new EndState(flow, "myState1");
 		new EndState(flow, "myState2");
-		assertEquals("Wrong start state:", "myState1", flow.getStartState().getId());
-		assertEquals("State count wrong:", 2, flow.getStateCount());
+		assertEquals("myState1", flow.getStartState().getId(), "Wrong start state:");
+		assertEquals(2, flow.getStateCount(), "State count wrong:");
 		assertTrue(flow.containsState("myState1"));
 		assertTrue(flow.containsState("myState2"));
 		State state = flow.getStateInstance("myState1");
-		assertEquals("Wrong flow:", flow.getId(), state.getFlow().getId());
-		assertEquals("Wrong state:", "myState1", flow.getState("myState1").getId());
-		assertEquals("Wrong state:", "myState2", flow.getState("myState2").getId());
+		assertEquals(flow.getId(), state.getFlow().getId(), "Wrong flow:");
+		assertEquals("myState1", flow.getState("myState1").getId(), "Wrong state:");
+		assertEquals("myState2", flow.getState("myState2").getId(), "Wrong state:");
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class FlowTests {
 		} catch (IllegalArgumentException e) {
 
 		}
-		assertEquals("State count wrong:", 1, flow.getStateCount());
+		assertEquals(1, flow.getStateCount(), "State count wrong:");
 	}
 
 	@Test
@@ -141,8 +141,8 @@ public class FlowTests {
 
 	@Test
 	public void testGetTransitionableState() {
-		assertEquals("Wrong state:", "myState1", flow.getTransitionableState("myState1").getId());
-		assertEquals("Wrong state:", "myState1", flow.getState("myState1").getId());
+		assertEquals("myState1", flow.getTransitionableState("myState1").getId(), "Wrong state:");
+		assertEquals("myState1", flow.getState("myState1").getId(), "Wrong state:");
 	}
 
 	@Test
@@ -189,7 +189,7 @@ public class FlowTests {
 	public void testStart() {
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		flow.start(context, new LocalAttributeMap<>());
-		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
+		assertEquals("myState1", context.getCurrentState().getId(), "Wrong start state");
 	}
 
 	@Test
@@ -210,7 +210,7 @@ public class FlowTests {
 		TestAction action = new TestAction();
 		flow.getStartActionList().add(action);
 		flow.start(context, new LocalAttributeMap<>());
-		assertEquals("Wrong start state", "myState1", context.getCurrentState().getId());
+		assertEquals("myState1", context.getCurrentState().getId(), "Wrong start state");
 		assertEquals(1, action.getExecutionCount());
 	}
 

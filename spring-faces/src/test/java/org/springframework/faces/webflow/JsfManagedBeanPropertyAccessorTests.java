@@ -15,14 +15,14 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockRequestContext;
@@ -35,14 +35,14 @@ public class JsfManagedBeanPropertyAccessorTests {
 
 	private MockRequestContext requestContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
@@ -90,7 +90,7 @@ public class JsfManagedBeanPropertyAccessorTests {
 
 		MutableAttributeMap<Object> map = this.requestContext.getExternalContext().getRequestMap();
 		this.accessor.write(null, null, "myJsfBean", jsfBean1);
-		assertNull("Write occurs only if bean is present in the map", map.get("myJsfBean"));
+		assertNull(map.get("myJsfBean"), "Write occurs only if bean is present in the map");
 
 		map.put("myJsfBean", jsfBean1);
 		this.accessor.write(null, null, "myJsfBean", jsfBean2);

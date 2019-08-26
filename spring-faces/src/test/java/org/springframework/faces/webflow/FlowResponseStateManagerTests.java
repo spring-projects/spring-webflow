@@ -1,14 +1,14 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.io.IOException;
 
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
@@ -28,7 +28,7 @@ public class FlowResponseStateManagerTests {
 	private FlowExecutionContext flowExecutionContext;
 
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.webappContext = new StaticWebApplicationContext();
@@ -41,7 +41,7 @@ public class FlowResponseStateManagerTests {
 		this.responseStateManager = new FlowResponseStateManager(null);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.webappContext.close();
 		this.jsfMock.tearDown();

@@ -1,10 +1,10 @@
 package org.springframework.webflow.mvc.servlet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -45,7 +45,7 @@ public class FlowHandlerAdapterTests {
 	private boolean handleExecutionOutcome;
 	private MockFlashMapManager flashMapManager = new MockFlashMapManager();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		flowExecutor = EasyMock.createMock(FlowExecutor.class);
 		flowHandlerAdapter = new FlowHandlerAdapter() {

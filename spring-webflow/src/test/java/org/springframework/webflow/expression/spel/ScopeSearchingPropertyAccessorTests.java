@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.webflow.engine.ViewState;
@@ -35,7 +35,7 @@ public class ScopeSearchingPropertyAccessorTests {
 
 	private MockRequestContext requestContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 	}

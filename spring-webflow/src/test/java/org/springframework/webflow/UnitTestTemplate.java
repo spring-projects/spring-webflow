@@ -15,25 +15,25 @@
  */
 package org.springframework.webflow;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Keith likes to have these little cut & paste examples in the source repositories. If only he knew the power of code
  * templates in Eclipse...
  */
-public class UnitTestTemplate {
+class UnitTestTemplate {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 	}
 
 	@Test
-	public void testScenario1() {
+	void scenario1() {
 	}
 
 	@Test
-	public void testScenario2() {
+	void scenario2() {
 	}
 
 }

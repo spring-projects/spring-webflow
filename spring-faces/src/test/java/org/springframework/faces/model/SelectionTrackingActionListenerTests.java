@@ -1,8 +1,8 @@
 package org.springframework.faces.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ import javax.faces.event.ActionListener;
 
 
 import org.apache.myfaces.test.mock.MockFacesContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
 
@@ -54,7 +54,7 @@ public class SelectionTrackingActionListenerTests {
 	 */
 	private final ActionListener selectionTrackingListener = new SelectionTrackingActionListener(this.delegateListener);
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMockHelper.setUp();
 		this.viewToTest = new UIViewRoot();
@@ -65,7 +65,7 @@ public class SelectionTrackingActionListenerTests {
 		this.dataModel = new OneSelectionTrackingListDataModel<>(rows);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMockHelper.tearDown();
 	}

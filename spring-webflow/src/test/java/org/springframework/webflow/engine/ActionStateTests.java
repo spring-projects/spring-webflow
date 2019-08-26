@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Action;
@@ -36,7 +36,7 @@ public class ActionStateTests {
 	private ActionState state;
 	private MockRequestControlContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("myFlow");
 		state = new ActionState(flow, "actionState");

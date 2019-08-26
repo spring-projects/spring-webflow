@@ -1,22 +1,22 @@
 package org.springframework.binding.expression.el;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.el.ELContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.collection.MapAdaptable;
 
 public class MapAdaptableELResolverTests {
 
 	private ELContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		context = new DefaultELContext(new MapAdaptableELResolver(), null, null);
 	}

@@ -1,11 +1,11 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,9 +31,9 @@ import javax.faces.lifecycle.Lifecycle;
 import org.apache.el.ExpressionFactoryImpl;
 import org.apache.myfaces.test.mock.MockApplication20;
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -77,7 +77,7 @@ public class JsfViewFactoryTests {
 
 	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		configureJsf();
 		this.extContext.setNativeContext(this.servletContext);
@@ -90,7 +90,7 @@ public class JsfViewFactoryTests {
 				new LocalParameterMap(new HashMap<>()));
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
@@ -127,10 +127,10 @@ public class JsfViewFactoryTests {
 
 		View newView = this.factory.getView(this.context);
 
-		assertNotNull("A View was not created", newView);
-		assertTrue("A JsfView was expected", newView instanceof JsfView);
-		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
+		assertNotNull(newView, "A View was not created");
+		assertTrue(newView instanceof JsfView, "A JsfView was expected");
+		assertEquals(VIEW_ID, ((JsfView) newView).getViewRoot().getViewId(), "View name did not match");
+		assertFalse(newView.hasFlowEvent(), "An unexpected event was signaled,");
 	}
 
 	/**
@@ -159,12 +159,12 @@ public class JsfViewFactoryTests {
 
 		View restoredView = this.factory.getView(this.context);
 
-		assertNotNull("A View was not restored", restoredView);
-		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
-		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertTrue("The input component's valid flag was not reset", input.isValid());
-		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
+		assertNotNull(restoredView, "A View was not restored");
+		assertTrue(restoredView instanceof JsfView, "A JsfView was expected");
+		assertEquals(VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId(), "View name did not match");
+		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertTrue(input.isValid(), "The input component's valid flag was not reset");
+		assertTrue(existingRoot.isPostRestoreStateEventSeen(), "The PostRestoreViewEvent was not seen");
 	}
 
 	/**
@@ -207,13 +207,13 @@ public class JsfViewFactoryTests {
 
 		View restoredView = this.factory.getView(this.context);
 
-		assertNotNull("A View was not restored", restoredView);
-		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
-		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertSame("The UIInput binding was not restored properly", input, testBean.getInput());
-		assertSame("The faceted UIOutput binding was not restored properly", output, testBean.getOutput());
-		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
+		assertNotNull(restoredView, "A View was not restored");
+		assertTrue(restoredView instanceof JsfView, "A JsfView was expected");
+		assertEquals(VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId(), "View name did not match");
+		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertSame(input, testBean.getInput(), "The UIInput binding was not restored properly");
+		assertSame(output, testBean.getOutput(), "The faceted UIOutput binding was not restored properly");
+		assertTrue(existingRoot.isPostRestoreStateEventSeen(), "The PostRestoreViewEvent was not seen");
 	}
 
 	/**
@@ -243,12 +243,12 @@ public class JsfViewFactoryTests {
 
 		View restoredView = this.factory.getView(this.context);
 
-		assertNotNull("A View was not restored", restoredView);
-		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
-		assertTrue("An ViewRoot was not set", ((JsfView) restoredView).getViewRoot() != null);
-		assertEquals("View name did not match", VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId());
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertTrue("The PostRestoreViewEvent was not seen", existingRoot.isPostRestoreStateEventSeen());
+		assertNotNull(restoredView, "A View was not restored");
+		assertTrue(restoredView instanceof JsfView, "A JsfView was expected");
+		assertTrue(((JsfView) restoredView).getViewRoot() != null, "An ViewRoot was not set");
+		assertEquals(VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId(), "View name did not match");
+		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertTrue(existingRoot.isPostRestoreStateEventSeen(), "The PostRestoreViewEvent was not seen");
 	}
 
 	/**
@@ -270,12 +270,12 @@ public class JsfViewFactoryTests {
 
 		View newView = this.factory.getView(this.context);
 
-		assertNotNull("A View was not created", newView);
-		assertTrue("A JsfView was expected", newView instanceof JsfView);
-		assertEquals("View name did not match", VIEW_ID, ((JsfView) newView).getViewRoot().getViewId());
-		assertSame("View root was not the third party instance", newRoot, ((JsfView) newView).getViewRoot());
-		assertFalse("An unexpected event was signaled,", newView.hasFlowEvent());
-		assertTrue("The PostRestoreViewEvent was not seen", newRoot.isPostRestoreStateEventSeen());
+		assertNotNull(newView, "A View was not created");
+		assertTrue(newView instanceof JsfView, "A JsfView was expected");
+		assertEquals(VIEW_ID, ((JsfView) newView).getViewRoot().getViewId(), "View name did not match");
+		assertSame(newRoot, ((JsfView) newView).getViewRoot(), "View root was not the third party instance");
+		assertFalse(newView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertTrue(newRoot.isPostRestoreStateEventSeen(), "The PostRestoreViewEvent was not seen");
 	}
 
 	@Test
@@ -297,9 +297,9 @@ public class JsfViewFactoryTests {
 		this.factory.getView(this.context);
 		ExceptionEventAwareMockApplication application = (ExceptionEventAwareMockApplication) FlowFacesContext
 				.getCurrentInstance().getApplication();
-		assertNotNull("Expected exception event", application.getExceptionQueuedEventContext());
-		assertSame("Expected same exception", existingRoot.getAbortProcessingException(), application
-				.getExceptionQueuedEventContext().getException());
+		assertNotNull(application.getExceptionQueuedEventContext(), "Expected exception event");
+		assertSame(existingRoot.getAbortProcessingException(),
+				application.getExceptionQueuedEventContext().getException(), "Expected same exception");
 	}
 
 	private class NoExecutionLifecycle extends FlowLifecycle {
@@ -319,15 +319,15 @@ public class JsfViewFactoryTests {
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 
@@ -393,7 +393,7 @@ public class JsfViewFactoryTests {
 
 		public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
 			if (event instanceof PostRestoreStateEvent) {
-				assertSame("Component did not match", this, event.getComponent());
+				assertSame(this, event.getComponent(), "Component did not match");
 				this.postRestoreStateEventSeen = true;
 				if (this.throwOnPostRestoreStateEvent) {
 					this.abortProcessingException = new AbortProcessingException();

@@ -15,14 +15,14 @@
  */
 package org.springframework.webflow.persistence;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.sql.DataSource;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -44,7 +44,7 @@ public abstract class AbstractPersistenceContextPropagationTests {
 		return jdbcTemplate;
 	}
 
-	@Before
+	@BeforeEach
 	public final void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		DataSource dataSource = createDataSource();
@@ -79,8 +79,8 @@ public abstract class AbstractPersistenceContextPropagationTests {
 		getListener().sessionStarting(new MockRequestContext(), childSession, null);
 		assertSessionBound();
 		assertSessionInScope(childSession);
-		assertSame("Parent PersistenceContext should be re-used", parentSession.getScope().get("persistenceContext"),
-				childSession.getScope().get("persistenceContext"));
+		assertSame(parentSession.getScope().get("persistenceContext"),
+				childSession.getScope().get("persistenceContext"), "Parent PersistenceContext should be re-used");
 	}
 
 	@Test

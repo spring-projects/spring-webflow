@@ -1,17 +1,17 @@
 package org.springframework.binding.collection;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MapAccessorTests {
 	private MapAccessor<String, Object> accessor;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("string", "hello");

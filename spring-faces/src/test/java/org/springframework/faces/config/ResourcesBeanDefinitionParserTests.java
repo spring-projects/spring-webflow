@@ -1,7 +1,7 @@
 package org.springframework.faces.config;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.faces.webflow.JSFMockHelper;
@@ -14,14 +14,14 @@ public class ResourcesBeanDefinitionParserTests extends AbstractResourcesConfigu
 	private final JSFMockHelper jsfMockHelper = new JSFMockHelper();
 
 	@Override
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMockHelper.setUp();
 		super.setUp();
 	}
 
 	@Override
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		super.tearDown();
 		this.jsfMockHelper.tearDown();

@@ -1,11 +1,11 @@
 package org.springframework.webflow.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
@@ -18,7 +18,7 @@ public abstract class AbstractFlowRegistryConfigurationTests {
 
 	protected FlowDefinitionRegistry registry;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.context = initApplicationContext();
 		this.registry = (FlowDefinitionRegistry) context.getBean("flowRegistry");

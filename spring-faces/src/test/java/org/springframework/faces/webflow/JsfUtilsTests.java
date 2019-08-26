@@ -19,7 +19,7 @@ import org.apache.myfaces.test.mock.MockFacesContextFactory;
 import org.apache.myfaces.test.mock.MockRenderKitFactory;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JsfUtilsTests extends AbstractJsfTestCase {
 

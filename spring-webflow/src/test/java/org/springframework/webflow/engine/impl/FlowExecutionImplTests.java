@@ -15,15 +15,15 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -446,11 +446,11 @@ public class FlowExecutionImplTests {
 
 		MockExternalContext context = new MockExternalContext();
 		execution.start(null, context);
-		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+		assertNull(RequestContextHolder.getRequestContext(), "RequestContext was not released");
 
 		context = new MockExternalContext();
 		execution.resume(context);
-		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+		assertNull(RequestContextHolder.getRequestContext(), "RequestContext was not released");
 
 	}
 

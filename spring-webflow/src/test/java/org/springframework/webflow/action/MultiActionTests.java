@@ -15,10 +15,10 @@
  */
 package org.springframework.webflow.action;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.DispatchMethodInvoker.MethodLookupException;
 import org.springframework.webflow.action.MultiAction.MethodResolver;
 import org.springframework.webflow.engine.StubViewFactory;

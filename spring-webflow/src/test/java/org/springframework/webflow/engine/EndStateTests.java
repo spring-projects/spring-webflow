@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
@@ -52,7 +52,7 @@ public class EndStateTests {
 		EndState state = new EndState(flow, "end");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
-		assertFalse("Active", context.getFlowExecutionContext().isActive());
+		assertFalse(context.getFlowExecutionContext().isActive(), "Active");
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class EndStateTests {
 		MockRequestControlContext context = new MockRequestControlContext(new MockFlowExecutionContext(session));
 		state.enter(context);
 
-		assertFalse("Active", context.getFlowExecutionContext().isActive());
+		assertFalse(context.getFlowExecutionContext().isActive(), "Active");
 	}
 
 	protected static TransitionCriteria on(String event) {

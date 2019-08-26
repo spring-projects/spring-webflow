@@ -1,7 +1,7 @@
 package org.springframework.binding.expression.el;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
@@ -12,8 +12,8 @@ import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
 
 import org.apache.el.ExpressionFactoryImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
@@ -25,7 +25,7 @@ public class ELExpressionParserTests {
 
 	private ELExpressionParser parser = new ELExpressionParser(new ExpressionFactoryImpl());
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		parser.putContextFactory(TestBean.class, new TestELContextFactory());
 	}

@@ -15,16 +15,16 @@
  */
 package org.springframework.webflow.context.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.webflow.context.servlet.HttpSessionMap;
 import org.springframework.webflow.core.collection.AttributeMapBindingEvent;
@@ -41,7 +41,7 @@ public class HttpSessionMapBindingListenerTests {
 	private HttpSession session;
 	private TestAttributeMapBindingListener value;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		session = request.getSession(true);

@@ -1,8 +1,8 @@
 package org.springframework.faces.mvc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -10,9 +10,9 @@ import java.util.Locale;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.faces.webflow.MockViewHandler;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -28,7 +28,7 @@ public class JsfViewTests {
 
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.jsfMock.facesContext().getApplication().setViewHandler(new ResourceCheckingViewHandler());
@@ -40,7 +40,7 @@ public class JsfViewTests {
 		this.resolver.setApplicationContext(new StaticWebApplicationContext());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 	}

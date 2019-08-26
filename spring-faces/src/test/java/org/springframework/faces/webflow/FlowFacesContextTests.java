@@ -1,9 +1,9 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,9 +18,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
@@ -41,7 +41,7 @@ public class FlowFacesContextTests {
 	MessageContext prepopulatedMessageContext;
 
 	@SuppressWarnings("cast")
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsf.setUp();
 		this.requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
@@ -49,7 +49,7 @@ public class FlowFacesContextTests {
 		setupMessageContext();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsf.tearDown();
 	}
@@ -67,7 +67,7 @@ public class FlowFacesContextTests {
 
 		this.facesContext.addMessage("foo", new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "bar"));
 
-		assertEquals("Message count is incorrect", 1, this.messageContext.getAllMessages().length);
+		assertEquals(1, this.messageContext.getAllMessages().length, "Message count is incorrect");
 		Message message = this.messageContext.getMessagesBySource(new FacesMessageSource("foo"))[0];
 		assertEquals("foo : bar", message.getText());
 	}
@@ -119,7 +119,7 @@ public class FlowFacesContextTests {
 		this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "bar"));
 		this.facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "zoo", "zar"));
 
-		assertEquals("Message count is incorrect", 2, this.messageContext.getAllMessages().length);
+		assertEquals(2, this.messageContext.getAllMessages().length, "Message count is incorrect");
 		Message[] messages = this.messageContext.getMessagesBySource(new FacesMessageSource(null));
 		assertEquals("foo : bar", messages[0].getText());
 		assertEquals("zoo : zar", messages[1].getText());
@@ -137,7 +137,7 @@ public class FlowFacesContextTests {
 			assertNotNull(i.next());
 			iterationCount++;
 		}
-		assertEquals("There should be 6 messages to iterate", 6, iterationCount);
+		assertEquals(6, iterationCount, "There should be 6 messages to iterate");
 	}
 
 	@Test
@@ -220,7 +220,7 @@ public class FlowFacesContextTests {
 		Iterator<String> i = this.facesContext.getClientIdsWithMessages();
 		while (i.hasNext()) {
 			String clientId = i.next();
-			assertEquals("Client id not expected", expectedOrderedIds.get(iterationCount), clientId);
+			assertEquals(expectedOrderedIds.get(iterationCount), clientId, "Client id not expected");
 			iterationCount++;
 		}
 		assertEquals(3, iterationCount);

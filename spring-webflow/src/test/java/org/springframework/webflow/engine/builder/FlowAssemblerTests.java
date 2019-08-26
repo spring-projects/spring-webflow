@@ -1,11 +1,11 @@
 package org.springframework.webflow.engine.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
@@ -14,7 +14,7 @@ public class FlowAssemblerTests {
 	private FlowAssembler assembler;
 	private FlowBuilderContext builderContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		builder = EasyMock.createMock(FlowBuilder.class);
 		builderContext = new MockFlowBuilderContext("search");

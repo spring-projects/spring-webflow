@@ -15,12 +15,12 @@
  */
 package org.springframework.webflow.engine.support;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -52,7 +52,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 
 	TransitionableState state;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("myFlow");
 		state = new TransitionableState(flow, "state1") {
@@ -69,10 +69,10 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 		handler.add(TestException.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new Exception());
-		assertFalse("Shouldn't handle exception", handler.canHandle(e));
+		assertFalse(handler.canHandle(e), "Shouldn't handle exception");
 	}
 
 	@Test
@@ -81,9 +81,9 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 		handler.add(Exception.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new RuntimeException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
 		FlowExecution execution = factory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
-		assertTrue("Should have ended", !execution.isActive());
+		assertTrue(!execution.isActive(), "Should have ended");
 	}
 
 	@Test

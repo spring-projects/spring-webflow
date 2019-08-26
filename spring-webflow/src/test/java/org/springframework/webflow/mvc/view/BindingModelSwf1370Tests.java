@@ -1,12 +1,12 @@
 package org.springframework.webflow.mvc.view;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.message.DefaultMessageContext;
@@ -24,7 +24,7 @@ public class BindingModelSwf1370Tests {
 	private ConverterRegistry converterRegistry;
 	private WebFlowSpringELExpressionParser expressionParser;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		conversionService = new DefaultConversionService();
 		expressionParser = new WebFlowSpringELExpressionParser(new SpelExpressionParser(), conversionService);

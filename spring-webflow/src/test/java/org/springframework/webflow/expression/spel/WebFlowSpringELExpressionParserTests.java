@@ -15,13 +15,13 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -39,13 +39,13 @@ public class WebFlowSpringELExpressionParserTests {
 
 	private MockRequestContext requestContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		RequestContextHolder.setRequestContext(null);
 	}

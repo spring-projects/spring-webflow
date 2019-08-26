@@ -15,12 +15,12 @@
  */
 package org.springframework.webflow.config;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.MalformedURLException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -38,7 +38,7 @@ public class FlowDefinitionResourceFactoryTests {
 
 	private FlowDefinitionResourceFactory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		resourceLoader = new ServletContextResourceLoader(new MockServletContext());
 		factory = new FlowDefinitionResourceFactory();

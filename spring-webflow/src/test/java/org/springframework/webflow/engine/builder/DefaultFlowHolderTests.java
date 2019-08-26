@@ -1,9 +1,9 @@
 package org.springframework.webflow.engine.builder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -17,7 +17,7 @@ public class DefaultFlowHolderTests {
 	private DefaultFlowHolder holder;
 	private FlowAssembler assembler;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		MockFlowBuilderContext context = new MockFlowBuilderContext("flowId");
 		context.getFlowBuilderServices().setApplicationContext(new StaticApplicationContext());

@@ -5,14 +5,14 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionExecutor;
 
 public class FacesConversionServiceTests {
 	private FacesConversionService service;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.service = new FacesConversionService();
 	}

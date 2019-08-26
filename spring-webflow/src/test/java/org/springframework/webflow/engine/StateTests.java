@@ -15,12 +15,12 @@
  */
 package org.springframework.webflow.engine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestControlContext;
@@ -40,7 +40,7 @@ public class StateTests {
 
 	private boolean handled;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("flow");
 		state = new State(flow, "myState") {

@@ -3,8 +3,8 @@ package org.springframework.webflow.config;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.StubViewFactory;
@@ -17,7 +17,7 @@ import org.springframework.webflow.execution.factory.StaticFlowExecutionListener
 public class FlowExecutorFactoryBeanTests {
 	private FlowExecutorFactoryBean factoryBean;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		factoryBean = new FlowExecutorFactoryBean();
 	}

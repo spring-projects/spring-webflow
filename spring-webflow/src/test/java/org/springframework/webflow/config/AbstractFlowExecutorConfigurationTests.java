@@ -1,10 +1,10 @@
 package org.springframework.webflow.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -23,7 +23,7 @@ public abstract class AbstractFlowExecutorConfigurationTests {
 
 	private ApplicationContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		context = initApplicationContext();
 	}

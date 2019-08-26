@@ -1,11 +1,11 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 
 public class JsfAjaxHandlerTests {
@@ -13,7 +13,7 @@ public class JsfAjaxHandlerTests {
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 	private JsfAjaxHandler ajaxHandler;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		StaticWebApplicationContext webappContext = new StaticWebApplicationContext();
@@ -22,7 +22,7 @@ public class JsfAjaxHandlerTests {
 		this.ajaxHandler.setApplicationContext(webappContext);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 	}

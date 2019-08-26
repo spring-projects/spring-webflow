@@ -3,11 +3,11 @@ package org.springframework.faces.webflow;
 import org.springframework.webflow.context.servlet.AjaxHandler;
 import org.springframework.webflow.context.servlet.DefaultAjaxHandler;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.context.ExternalContext;
@@ -20,7 +20,7 @@ public class JsfFlowHandlerAdapterTests {
 
 	private JsfFlowHandlerAdapter handlerAdapter;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		StaticWebApplicationContext context = new StaticWebApplicationContext();
 		context.setServletContext(new MockServletContext());

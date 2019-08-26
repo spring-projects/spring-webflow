@@ -1,13 +1,13 @@
 package org.springframework.binding.message;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.StaticMessageSource;
 
@@ -16,7 +16,7 @@ public class MessageBuilderTests {
 	private Locale locale = Locale.getDefault();
 	private MessageBuilder builder = new MessageBuilder();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		messageSource.addMessage("foo", locale, "bar");
 		messageSource.addMessage("bar", locale, "{0}");

@@ -15,16 +15,16 @@
  */
 package org.springframework.webflow.context.servlet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockServletContext;
 
 /**
@@ -39,7 +39,7 @@ public class HttpServletContextMapTests {
 
 	private MockServletContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		context = new MockServletContext();
 		// a fresh MockServletContext seems to already contain an element;
@@ -49,7 +49,7 @@ public class HttpServletContextMapTests {
 		tested.put("SomeKey", "SomeValue");
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		context = null;
 		tested = null;
@@ -58,24 +58,24 @@ public class HttpServletContextMapTests {
 	@Test
 	public void testIsEmpty() {
 		tested.remove("SomeKey");
-		assertEquals("size,", 0, tested.size());
-		assertEquals("isEmpty,", true, tested.isEmpty());
+		assertEquals(0, tested.size(), "size,");
+		assertEquals(true, tested.isEmpty(), "isEmpty,");
 	}
 
 	@Test
 	public void testSizeAddOne() {
-		assertEquals("size,", 1, tested.size());
+		assertEquals(1, tested.size(), "size,");
 	}
 
 	@Test
 	public void testSizeAddTwo() {
 		tested.put("SomeOtherKey", "SomeOtherValue");
-		assertEquals("size,", 2, tested.size());
+		assertEquals(2, tested.size(), "size,");
 	}
 
 	@Test
 	public void testContainsKey() {
-		assertEquals("containsKey,", true, tested.containsKey("SomeKey"));
+		assertEquals(true, tested.containsKey("SomeKey"), "containsKey,");
 	}
 
 	@Test
@@ -85,23 +85,23 @@ public class HttpServletContextMapTests {
 
 	@Test
 	public void testGet() {
-		assertEquals("get,", "SomeValue", tested.get("SomeKey"));
+		assertEquals("SomeValue", tested.get("SomeKey"), "get,");
 	}
 
 	@Test
 	public void testPut() {
 		Object old = tested.put("SomeKey", "SomeNewValue");
 
-		assertEquals("old value,", "SomeValue", old);
-		assertEquals("new value,", "SomeNewValue", tested.get("SomeKey"));
+		assertEquals("SomeValue", old, "old value,");
+		assertEquals("SomeNewValue", tested.get("SomeKey"), "new value,");
 	}
 
 	@Test
 	public void testRemove() {
 		Object old = tested.remove("SomeKey");
 
-		assertEquals("old value,", "SomeValue", old);
-		assertNull("should be gone", tested.get("SomeKey"));
+		assertEquals("SomeValue", old, "old value,");
+		assertNull(tested.get("SomeKey"), "should be gone");
 	}
 
 	@Test

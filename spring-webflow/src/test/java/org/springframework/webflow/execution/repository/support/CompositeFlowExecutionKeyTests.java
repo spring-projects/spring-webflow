@@ -15,9 +15,9 @@
  */
 package org.springframework.webflow.execution.repository.support;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.conversation.impl.SimpleConversationId;
 
 public class CompositeFlowExecutionKeyTests {

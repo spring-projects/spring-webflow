@@ -1,7 +1,7 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.apache.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -53,12 +53,12 @@ public class JsfFinalResponseActionTests {
 
 	ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		configureJsf();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
@@ -116,7 +116,7 @@ public class JsfFinalResponseActionTests {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			this.executed = true;
 		}
@@ -129,15 +129,15 @@ public class JsfFinalResponseActionTests {
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 

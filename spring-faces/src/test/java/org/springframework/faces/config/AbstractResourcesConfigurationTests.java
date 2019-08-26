@@ -1,15 +1,15 @@
 package org.springframework.faces.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.faces.webflow.JsfResourceRequestHandler;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
@@ -19,14 +19,14 @@ public abstract class AbstractResourcesConfigurationTests {
 
 	protected ApplicationContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.context = initApplicationContext();
 	}
 
 	protected abstract ApplicationContext initApplicationContext();
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 	}
 

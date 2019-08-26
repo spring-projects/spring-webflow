@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.action;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -37,7 +37,7 @@ public class CompositeActionTests {
 
 	private Action actionMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		actionMock = EasyMock.createMock(Action.class);
 		Action[] actions = new Action[] { actionMock };
@@ -76,7 +76,7 @@ public class CompositeActionTests {
 		EasyMock.replay(actionMock);
 		Event result = tested.doExecute(mockRequestContext);
 		EasyMock.verify(actionMock);
-		assertEquals("Expecting success since no check is performed if null result,", "success", result.getId());
+		assertEquals("success", result.getId(), "Expecting success since no check is performed if null result,");
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class CompositeActionTests {
 						return new Event(this, "bar");
 					}
 				});
-		assertEquals("Result of last executed action should be returned", "bar", ca.execute(new MockRequestContext())
-				.getId());
+		assertEquals("bar", ca.execute(new MockRequestContext()).getId(),
+				"Result of last executed action should be returned");
 	}
 }

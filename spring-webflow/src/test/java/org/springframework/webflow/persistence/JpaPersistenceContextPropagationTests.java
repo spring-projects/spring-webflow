@@ -1,8 +1,8 @@
 package org.springframework.webflow.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,11 +53,9 @@ public class JpaPersistenceContextPropagationTests extends AbstractPersistenceCo
 			em.persist(new TestBean(rowCount++, "Keith Donald"));
 		}
 		if (!isCommited) {
-			assertEquals("Nothing should be committed yet", 1,
-					getCount());
+			assertEquals(1, getCount(), "Nothing should be committed yet");
 		} else {
-			assertEquals("All rows should be committed", rowCount,
-					getCount());
+			assertEquals(rowCount, getCount(), "All rows should be committed");
 		}
 	}
 

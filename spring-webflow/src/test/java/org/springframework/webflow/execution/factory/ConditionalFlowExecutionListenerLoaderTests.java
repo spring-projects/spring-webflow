@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
@@ -31,7 +31,7 @@ public class ConditionalFlowExecutionListenerLoaderTests {
 	private FlowExecutionListenerCriteriaFactory criteriaFactory;
 	private ConditionalFlowExecutionListenerLoader loader;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		loader = new ConditionalFlowExecutionListenerLoader();
 		criteriaFactory = new FlowExecutionListenerCriteriaFactory();

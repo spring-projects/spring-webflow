@@ -15,20 +15,20 @@
  */
 package org.springframework.webflow.conversation.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -44,12 +44,12 @@ public class SessionBindingConversationManagerTests {
 
 	private SessionBindingConversationManager conversationManager;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		conversationManager = new SessionBindingConversationManager();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		ExternalContextHolder.setExternalContext(null);
 	}

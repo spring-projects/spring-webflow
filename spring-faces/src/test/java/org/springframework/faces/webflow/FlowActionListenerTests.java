@@ -1,8 +1,8 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.el.ELContext;
 import javax.el.MethodExpression;
@@ -11,9 +11,9 @@ import javax.faces.component.UICommand;
 import javax.faces.event.ActionEvent;
 
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
@@ -28,7 +28,7 @@ public class FlowActionListenerTests {
 
 	RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 
@@ -40,7 +40,7 @@ public class FlowActionListenerTests {
 		EasyMock.replay(this.context);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
@@ -57,10 +57,10 @@ public class FlowActionListenerTests {
 
 		this.listener.processAction(event);
 
-		assertTrue("The event was not signaled",
-				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
-		assertEquals("The event should be " + outcome, outcome,
-				this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
+		assertTrue(this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY),
+				"The event was not signaled");
+		assertEquals(outcome, this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY),
+				"The event should be " + outcome);
 	}
 
 	@Test
@@ -74,8 +74,8 @@ public class FlowActionListenerTests {
 
 		this.listener.processAction(event);
 
-		assertFalse("An unexpected event was signaled",
-				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
+		assertFalse(this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY),
+				"An unexpected event was signaled");
 	}
 
 	private class MethodExpressionStub extends MethodExpression {

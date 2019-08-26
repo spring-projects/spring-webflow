@@ -15,11 +15,11 @@
  */
 package org.springframework.webflow.engine.support;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.Action;
@@ -38,7 +38,7 @@ public class TransitionCriteriaChainTests {
 	private TransitionCriteriaChain chain;
 	private MockRequestContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		chain = new TransitionCriteriaChain();
 		context = new MockRequestContext();

@@ -15,16 +15,16 @@
  */
 package org.springframework.webflow.action;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -88,7 +88,7 @@ public class FormActionTests {
 
 	private FormAction action;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		action = createFormAction("test");
 	}
@@ -368,8 +368,8 @@ public class FormActionTests {
 
 		assertTrue(formObject instanceof OtherTestBean);
 		assertSame(freshBean, formObject);
-		assertTrue("Expected OtherTestBean, but was " + errors.getTarget().getClass(),
-				errors.getTarget() instanceof OtherTestBean);
+		assertTrue(errors.getTarget() instanceof OtherTestBean,
+				"Expected OtherTestBean, but was " + errors.getTarget().getClass());
 		assertSame(formObject, errors.getTarget());
 	}
 

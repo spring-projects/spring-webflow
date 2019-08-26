@@ -15,15 +15,15 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -64,7 +64,7 @@ public class FlowExecutionImplFactoryTests {
 
 	private boolean removeAllSnapshotsCalled;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		flowDefinition = new Flow("flow");
 		new EndState(flowDefinition, "end");
@@ -95,7 +95,7 @@ public class FlowExecutionImplFactoryTests {
 		factory.setExecutionAttributes(attributes);
 		FlowExecution execution = factory.createFlowExecution(flowDefinition);
 		assertEquals(attributes, execution.getAttributes());
-		assertSame("Flow execution attributes are global", attributes.asMap(), execution.getAttributes().asMap());
+		assertSame(attributes.asMap(), execution.getAttributes().asMap(), "Flow execution attributes are global");
 	}
 
 	@Test
@@ -155,8 +155,8 @@ public class FlowExecutionImplFactoryTests {
 		flowExecution.getFlowSessions().add(session1);
 		flowExecution.getFlowSessions().add(session2);
 		factory.restoreFlowExecution(flowExecution, flowDefinition, flowExecutionKey, conversationScope, locator);
-		assertSame("Flow execution attributes are global", flowExecution.getAttributes().asMap(),
-				executionAttributes.asMap());
+		assertSame(flowExecution.getAttributes().asMap(), executionAttributes.asMap(),
+				"Flow execution attributes are global");
 		assertEquals(1, flowExecution.getListeners().length);
 		assertSame(listener, flowExecution.getListeners()[0]);
 		assertSame(flowExecutionKey, flowExecution.getKey());

@@ -1,8 +1,8 @@
 package org.springframework.webflow.expression.el;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,8 @@ import javax.el.ELResolver;
 import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.web.context.support.StaticWebApplicationContext;
@@ -24,7 +24,7 @@ import org.springframework.webflow.test.MockRequestContext;
 public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase {
 
 	@Override
-	@After
+	@AfterEach
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
 	}
@@ -32,8 +32,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 	@Test
 	public void testGetType_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertEquals(getBaseVariable() + " should have a type of MessageSource", MessageSource.class, context
-				.getELResolver().getType(context, null, getBaseVariable()));
+		assertEquals(MessageSource.class, context.getELResolver().getType(context, null, getBaseVariable()),
+				getBaseVariable() + " should have a type of MessageSource");
 	}
 
 	@Test
@@ -42,8 +42,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
 
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertEquals("Message should resolve to a type of String", String.class,
-				context.getELResolver().getType(context, ms, "foo.bar"));
+		assertEquals(String.class, context.getELResolver().getType(context, ms, "foo.bar"),
+				"Message should resolve to a type of String");
 	}
 
 	@Test
@@ -65,8 +65,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		MockRequestContext requestContext = new MockRequestContext();
 		((Flow) requestContext.getActiveFlow()).setApplicationContext(new StaticWebApplicationContext());
 		RequestContextHolder.setRequestContext(requestContext);
-		assertTrue(getBaseVariable() + " should resolve to an instance of MessageSource", context.getELResolver()
-				.getValue(context, null, getBaseVariable()) instanceof MessageSource);
+		assertTrue(context.getELResolver().getValue(context, null, getBaseVariable()) instanceof MessageSource,
+				getBaseVariable() + " should resolve to an instance of MessageSource");
 
 	}
 
@@ -76,8 +76,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		ms.addMessage("foo.bar", Locale.getDefault(), "hello");
 
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertEquals("Message should resolve to a valid message value", "hello",
-				context.getELResolver().getValue(context, ms, "foo.bar"));
+		assertEquals("hello", context.getELResolver().getValue(context, ms, "foo.bar"),
+				"Message should resolve to a valid message value");
 	}
 
 	@Test
@@ -97,8 +97,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 	@Test
 	public void testIsReadOnly_BaseVariable() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue("isReadOnly should return true for the base variable",
-				context.getELResolver().isReadOnly(context, null, getBaseVariable()));
+		assertTrue(context.getELResolver().isReadOnly(context, null, getBaseVariable()),
+				"isReadOnly should return true for the base variable");
 	}
 
 	@Test
@@ -106,8 +106,8 @@ public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase
 		StaticMessageSource ms = new StaticMessageSource();
 
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		assertTrue("isReadOnly should return true when the base is a MessageSource", context.getELResolver()
-				.isReadOnly(context, ms, "foo"));
+		assertTrue(context.getELResolver().isReadOnly(context, ms, "foo"),
+				"isReadOnly should return true when the base is a MessageSource");
 	}
 
 	@Test

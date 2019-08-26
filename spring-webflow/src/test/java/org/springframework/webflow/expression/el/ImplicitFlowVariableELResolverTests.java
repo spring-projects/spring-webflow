@@ -1,9 +1,9 @@
 package org.springframework.webflow.expression.el;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.context.ExternalContext;
