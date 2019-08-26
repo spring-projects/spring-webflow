@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.junit.jupiter.api.BeforeEach;

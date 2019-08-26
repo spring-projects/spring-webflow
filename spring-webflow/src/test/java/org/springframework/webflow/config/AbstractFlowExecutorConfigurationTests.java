@@ -1,6 +1,6 @@
 package org.springframework.webflow.config;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.BeforeEach;

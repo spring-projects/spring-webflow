@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.action;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.BeforeEach;

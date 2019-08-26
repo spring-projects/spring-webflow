@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.Flow;
