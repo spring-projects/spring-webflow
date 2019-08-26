@@ -16,7 +16,7 @@
 package org.springframework.webflow.action;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.DispatchMethodInvoker.MethodLookupException;
