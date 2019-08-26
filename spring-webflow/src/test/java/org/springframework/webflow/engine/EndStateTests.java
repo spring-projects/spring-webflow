@@ -52,7 +52,7 @@ public class EndStateTests {
 		EndState state = new EndState(flow, "end");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
-		assertFalse("Active", context.getFlowExecutionContext().isActive());
+		assertFalse(context.getFlowExecutionContext().isActive(), "Active");
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class EndStateTests {
 		MockRequestControlContext context = new MockRequestControlContext(new MockFlowExecutionContext(session));
 		state.enter(context);
 
-		assertFalse("Active", context.getFlowExecutionContext().isActive());
+		assertFalse(context.getFlowExecutionContext().isActive(), "Active");
 	}
 
 	protected static TransitionCriteria on(String event) {

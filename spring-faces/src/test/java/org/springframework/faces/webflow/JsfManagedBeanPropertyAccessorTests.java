@@ -90,7 +90,7 @@ public class JsfManagedBeanPropertyAccessorTests {
 
 		MutableAttributeMap<Object> map = this.requestContext.getExternalContext().getRequestMap();
 		this.accessor.write(null, null, "myJsfBean", jsfBean1);
-		assertNull("Write occurs only if bean is present in the map", map.get("myJsfBean"));
+		assertNull(map.get("myJsfBean"), "Write occurs only if bean is present in the map");
 
 		map.put("myJsfBean", jsfBean1);
 		this.accessor.write(null, null, "myJsfBean", jsfBean2);

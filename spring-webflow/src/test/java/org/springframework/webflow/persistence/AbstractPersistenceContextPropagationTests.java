@@ -79,8 +79,8 @@ public abstract class AbstractPersistenceContextPropagationTests {
 		getListener().sessionStarting(new MockRequestContext(), childSession, null);
 		assertSessionBound();
 		assertSessionInScope(childSession);
-		assertSame("Parent PersistenceContext should be re-used", parentSession.getScope().get("persistenceContext"),
-				childSession.getScope().get("persistenceContext"));
+		assertSame(parentSession.getScope().get("persistenceContext"),
+				childSession.getScope().get("persistenceContext"), "Parent PersistenceContext should be re-used");
 	}
 
 	@Test

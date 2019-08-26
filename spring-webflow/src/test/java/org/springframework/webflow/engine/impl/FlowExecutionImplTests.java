@@ -446,11 +446,11 @@ public class FlowExecutionImplTests {
 
 		MockExternalContext context = new MockExternalContext();
 		execution.start(null, context);
-		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+		assertNull(RequestContextHolder.getRequestContext(), "RequestContext was not released");
 
 		context = new MockExternalContext();
 		execution.resume(context);
-		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+		assertNull(RequestContextHolder.getRequestContext(), "RequestContext was not released");
 
 	}
 

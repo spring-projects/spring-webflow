@@ -47,7 +47,7 @@ public class TextToTransitionCriteriaTests {
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
+		assertTrue(criterion.test(ctx), "Criterion should evaluate to true");
 		assertSame(WildcardTransitionCriteria.INSTANCE,
 				converter.convertSourceToTargetClass("*", TransitionCriteria.class));
 		assertSame(WildcardTransitionCriteria.INSTANCE,
@@ -62,7 +62,7 @@ public class TextToTransitionCriteriaTests {
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
+		assertTrue(criterion.test(ctx), "Criterion should evaluate to true");
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class TextToTransitionCriteriaTests {
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
+		assertTrue(criterion.test(ctx), "Criterion should evaluate to true");
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class TextToTransitionCriteriaTests {
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass(expression,
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
-		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
+		assertFalse(criterion.test(ctx), "Criterion should evaluate to false");
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class TextToTransitionCriteriaTests {
 				TransitionCriteria.class);
 		MockRequestContext ctx = getRequestContext();
 		ctx.setCurrentEvent(new Event(this, "7"));
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
+		assertTrue(criterion.test(ctx), "Criterion should evaluate to true");
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class TextToTransitionCriteriaTests {
 				TransitionCriteria.class);
 		MockRequestContext ctx = getRequestContext();
 		ctx.setCurrentEvent(new Event(this, "submit"));
-		assertTrue("Criterion should evaluate to true", criterion.test(ctx));
+		assertTrue(criterion.test(ctx), "Criterion should evaluate to true");
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class TextToTransitionCriteriaTests {
 		TransitionCriteria criterion = (TransitionCriteria) converter.convertSourceToTargetClass("doesnt matter",
 				TransitionCriteria.class);
 		RequestContext ctx = getRequestContext();
-		assertFalse("Criterion should evaluate to false", criterion.test(ctx));
+		assertFalse(criterion.test(ctx), "Criterion should evaluate to false");
 	}
 
 	private MockRequestContext getRequestContext() {

@@ -79,8 +79,8 @@ public class HttpServletRequestMapTests {
 		request.removeAttribute("javax.servlet.context.tempdir");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertTrue("More elements", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertTrue(names.hasNext(), "More elements");
 		String name = names.next();
 		assertEquals("Some key", name);
 	}

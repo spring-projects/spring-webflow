@@ -156,8 +156,8 @@ public class JsfViewTests {
 
 		restoredView.processUserEvent();
 
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
+		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertTrue(((NoEventLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
 	}
 
 	/**
@@ -182,9 +182,9 @@ public class JsfViewTests {
 
 		restoredView.processUserEvent();
 
-		assertTrue("No event was signaled,", restoredView.hasFlowEvent());
-		assertEquals("Event should be " + this.event, this.event, restoredView.getFlowEvent().getId());
-		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
+		assertTrue(restoredView.hasFlowEvent(), "No event was signaled,");
+		assertEquals(this.event, restoredView.getFlowEvent().getId(), "Event should be " + this.event);
+		assertTrue(((EventSignalingLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
 	}
 
 	@Test
@@ -198,7 +198,7 @@ public class JsfViewTests {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
-		assertFalse("No user event should be queued", createdView.userEventQueued());
+		assertFalse(createdView.userEventQueued(), "No user event should be queued");
 	}
 
 	@Test
@@ -211,7 +211,7 @@ public class JsfViewTests {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
-		assertTrue("User event should be queued", createdView.userEventQueued());
+		assertTrue(createdView.userEventQueued(), "User event should be queued");
 	}
 
 	private class ExceptionalViewHandler extends MockViewHandler {
@@ -229,7 +229,7 @@ public class JsfViewTests {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			this.executed = true;
 		}
@@ -244,7 +244,7 @@ public class JsfViewTests {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			JsfViewTests.this.extContext.getRequestMap().put(JsfView.EVENT_KEY, JsfViewTests.this.event);
 			this.executed = true;

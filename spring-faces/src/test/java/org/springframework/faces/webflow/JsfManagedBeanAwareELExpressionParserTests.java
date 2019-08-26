@@ -40,6 +40,6 @@ public class JsfManagedBeanAwareELExpressionParserTests {
 		this.jsfMock.externalContext().getRequestMap().put("myJsfBean", new Object());
 		Expression expr = this.parser.parseExpression("myJsfBean", new FluentParserContext().evaluate(RequestContext.class));
 		Object result = expr.getValue(this.requestContext);
-		assertNotNull("The JSF Bean should not be null.", result);
+		assertNotNull(result, "The JSF Bean should not be null.");
 	}
 }

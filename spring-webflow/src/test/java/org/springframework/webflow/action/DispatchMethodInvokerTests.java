@@ -34,21 +34,21 @@ public class DispatchMethodInvokerTests {
 	public void testInvokeWithExplicitParameters() throws Exception {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, Object.class);
 		invoker.invoke("argumentMethod", "testValue");
-		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
+		assertTrue(mockClass.getMethodCalled(), "Method should have been called successfully");
 	}
 
 	@Test
 	public void testInvokeWithAssignableParameters() throws Exception {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, String.class);
 		invoker.invoke("argumentMethod", "testValue");
-		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
+		assertTrue(mockClass.getMethodCalled(), "Method should have been called successfully");
 	}
 
 	@Test
 	public void testInvokeWithNoParameters() throws Exception {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass);
 		invoker.invoke("noArgumentMethod");
-		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
+		assertTrue(mockClass.getMethodCalled(), "Method should have been called successfully");
 	}
 
 	@Test

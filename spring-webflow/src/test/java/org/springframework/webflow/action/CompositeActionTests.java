@@ -76,7 +76,7 @@ public class CompositeActionTests {
 		EasyMock.replay(actionMock);
 		Event result = tested.doExecute(mockRequestContext);
 		EasyMock.verify(actionMock);
-		assertEquals("Expecting success since no check is performed if null result,", "success", result.getId());
+		assertEquals("success", result.getId(), "Expecting success since no check is performed if null result,");
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class CompositeActionTests {
 						return new Event(this, "bar");
 					}
 				});
-		assertEquals("Result of last executed action should be returned", "bar", ca.execute(new MockRequestContext())
-				.getId());
+		assertEquals("bar", ca.execute(new MockRequestContext()).getId(),
+				"Result of last executed action should be returned");
 	}
 }

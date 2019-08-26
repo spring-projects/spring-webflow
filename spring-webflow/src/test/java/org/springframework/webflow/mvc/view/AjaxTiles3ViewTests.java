@@ -153,7 +153,7 @@ public class AjaxTiles3ViewTests {
 		ajaxTilesView.setUrl("search");
 		ajaxTilesView.afterPropertiesSet();
 		ajaxTilesView.renderMergedOutputModel(new HashMap<>(), request, response);
-		assertTrue("Multiple fragments should result in include, not forward", response.getIncludedUrls().size() == 2);
+		assertTrue(response.getIncludedUrls().size() == 2, "Multiple fragments should result in include, not forward");
 		assertEquals("/WEB-INF/search.jsp", response.getIncludedUrls().get(0));
 		assertEquals("/WEB-INF/searchNavigation.jsp", response.getIncludedUrls().get(1));
 	}

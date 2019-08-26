@@ -57,10 +57,10 @@ public class FlowActionListenerTests {
 
 		this.listener.processAction(event);
 
-		assertTrue("The event was not signaled",
-				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
-		assertEquals("The event should be " + outcome, outcome,
-				this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
+		assertTrue(this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY),
+				"The event was not signaled");
+		assertEquals(outcome, this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY),
+				"The event should be " + outcome);
 	}
 
 	@Test
@@ -74,8 +74,8 @@ public class FlowActionListenerTests {
 
 		this.listener.processAction(event);
 
-		assertFalse("An unexpected event was signaled",
-				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
+		assertFalse(this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY),
+				"An unexpected event was signaled");
 	}
 
 	private class MethodExpressionStub extends MethodExpression {

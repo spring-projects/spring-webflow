@@ -368,8 +368,8 @@ public class FormActionTests {
 
 		assertTrue(formObject instanceof OtherTestBean);
 		assertSame(freshBean, formObject);
-		assertTrue("Expected OtherTestBean, but was " + errors.getTarget().getClass(),
-				errors.getTarget() instanceof OtherTestBean);
+		assertTrue(errors.getTarget() instanceof OtherTestBean,
+				"Expected OtherTestBean, but was " + errors.getTarget().getClass());
 		assertSame(formObject, errors.getTarget());
 	}
 

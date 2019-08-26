@@ -69,10 +69,10 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 		handler.add(TestException.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new Exception());
-		assertFalse("Shouldn't handle exception", handler.canHandle(e));
+		assertFalse(handler.canHandle(e), "Shouldn't handle exception");
 	}
 
 	@Test
@@ -81,9 +81,9 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 		handler.add(Exception.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new RuntimeException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
 		FlowExecution execution = factory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
-		assertTrue("Should have ended", !execution.isActive());
+		assertTrue(!execution.isActive(), "Should have ended");
 	}
 
 	@Test

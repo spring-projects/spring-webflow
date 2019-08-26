@@ -86,8 +86,8 @@ public class HttpServletRequestParameterMapTests {
 		request.setParameter("Some param", "Some value");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertTrue("More elements", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertTrue(names.hasNext(), "More elements");
 		String name = names.next();
 		assertEquals("Some param", name);
 	}

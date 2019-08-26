@@ -45,9 +45,9 @@ public class HibernatePersistenceContextPropagationTests extends AbstractPersist
 			hibernate.templateSave(new TestBean(rowCount++, "Keith Donald"));
 		}
 		if (!isCommited) {
-			assertEquals("Nothing should be committed yet", 1, getCount());
+			assertEquals(1, getCount(), "Nothing should be committed yet");
 		} else {
-			assertEquals("All rows should be committed", rowCount, getCount());
+			assertEquals(rowCount, getCount(), "All rows should be committed");
 		}
 	}
 

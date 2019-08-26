@@ -66,7 +66,7 @@ public class HttpSessionMapTests {
 		request.setSession(null);
 		// perform test
 		Object result = tested.getAttribute("Some key");
-		assertNull("No value expected", result);
+		assertNull(result, "No value expected");
 	}
 
 	@Test
@@ -97,8 +97,8 @@ public class HttpSessionMapTests {
 		request.getSession().setAttribute("Some key", "Some value");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertTrue("More elements", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertTrue(names.hasNext(), "More elements");
 		String name = names.next();
 		assertEquals("Some key", name);
 	}
@@ -108,8 +108,8 @@ public class HttpSessionMapTests {
 		request.setSession(null);
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertFalse("No elements expected", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertFalse(names.hasNext(), "No elements expected");
 	}
 
 	@Test

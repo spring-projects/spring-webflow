@@ -116,7 +116,7 @@ public class JsfFinalResponseActionTests {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			this.executed = true;
 		}
@@ -129,15 +129,15 @@ public class JsfFinalResponseActionTests {
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 
