@@ -16,7 +16,7 @@
 package org.springframework.webflow.engine.builder.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.TargetStateResolver;

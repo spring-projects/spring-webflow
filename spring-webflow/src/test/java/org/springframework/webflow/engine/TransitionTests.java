@@ -16,7 +16,7 @@
 package org.springframework.webflow.engine;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
