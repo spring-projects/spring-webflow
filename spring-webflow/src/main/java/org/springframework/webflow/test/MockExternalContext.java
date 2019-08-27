@@ -370,7 +370,7 @@ public class MockExternalContext implements ExternalContext {
 	 * @param responseAllowed true or false
 	 */
 	public void setResponseAllowed(boolean responseAllowed) {
-		this.responseAllowed = Boolean.valueOf(responseAllowed);
+		this.responseAllowed = responseAllowed;
 	}
 
 	/**

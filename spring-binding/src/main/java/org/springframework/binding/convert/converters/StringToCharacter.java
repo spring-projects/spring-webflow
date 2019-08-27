@@ -22,7 +22,7 @@ public class StringToCharacter extends StringToObject {
 	}
 
 	protected Object toObject(String string, Class<?> targetClass) {
-		return new Character(string.charAt(0));
+		return string.charAt(0);
 	}
 
 	protected String toString(Object object) {
