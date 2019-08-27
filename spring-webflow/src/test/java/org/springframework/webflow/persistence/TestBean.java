@@ -37,7 +37,7 @@ public class TestBean {
 	}
 
 	public TestBean(long id, String name) {
-		this.entityId = new Long(id);
+		this.entityId = id;
 		this.name = name;
 	}
 
