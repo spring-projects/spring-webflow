@@ -73,10 +73,8 @@ public class ScopeSearchingPropertyAccessorTests extends TestCase {
 
 	protected void initView(MockRequestContext requestContext) {
 		((MockFlowSession) requestContext.getFlowExecutionContext().getActiveSession()).setState(new ViewState(
-				requestContext.getRootFlow(), "view", new ViewFactory() {
-					public View getView(RequestContext context) {
-						throw new UnsupportedOperationException("Not implemented");
-					}
+				requestContext.getRootFlow(), "view", context -> {
+					throw new UnsupportedOperationException("Not implemented");
 				}));
 	}
 

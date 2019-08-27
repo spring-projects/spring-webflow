@@ -230,12 +230,8 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 */
 	public List<FacesMessage> getMessageList(final String clientId) {
 		final FacesMessageSource source = new FacesMessageSource(clientId);
-		Message[] messages = this.context.getMessageContext().getMessagesByCriteria(new MessageCriteria() {
-			public boolean test(Message message) {
-				return ObjectUtils.nullSafeEquals(message.getSource(), source)
-						|| ObjectUtils.nullSafeEquals(message.getSource(), clientId);
-			}
-		});
+		Message[] messages = this.context.getMessageContext().getMessagesByCriteria(message -> ObjectUtils.nullSafeEquals(message.getSource(), source)
+				|| ObjectUtils.nullSafeEquals(message.getSource(), clientId));
 		return asFacesMessages(messages);
 	}
 

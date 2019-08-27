@@ -50,21 +50,9 @@ public class FlowVariablePropertyAccessor implements PropertyAccessor {
 	private static Map<String, FlowVariableAccessor> variables = new HashMap<>();
 
 	static {
-		variables.put("currentUser", new FlowVariableAccessor() {
-			public Object getVariable() {
-				return RequestContextHolder.getRequestContext().getExternalContext().getCurrentUser();
-			}
-		});
-		variables.put("flowRequestContext", new FlowVariableAccessor() {
-			public Object getVariable() {
-				return RequestContextHolder.getRequestContext();
-			}
-		});
-		variables.put("resourceBundle", new FlowVariableAccessor() {
-			public Object getVariable() {
-				return RequestContextHolder.getRequestContext().getActiveFlow().getApplicationContext();
-			}
-		});
+		variables.put("currentUser", () -> RequestContextHolder.getRequestContext().getExternalContext().getCurrentUser());
+		variables.put("flowRequestContext", () -> RequestContextHolder.getRequestContext());
+		variables.put("resourceBundle", () -> RequestContextHolder.getRequestContext().getActiveFlow().getApplicationContext());
 	}
 
 	public Class<?>[] getSpecificTargetClasses() {
