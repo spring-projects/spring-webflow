@@ -45,7 +45,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 
 	@SuppressWarnings("serial")
 	private Map<Object, List<Message>> sourceMessages = new AbstractCachingMapDecorator<Object, List<Message>>(
-			new LinkedHashMap<Object, List<Message>>()) {
+			new LinkedHashMap<>()) {
 
 		protected List<Message> create(Object source) {
 			return new ArrayList<>();
@@ -130,7 +130,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	// implementing state manageable message context
 
 	public Serializable createMessagesMemento() {
-		return new LinkedHashMap<Object, List<Message>>(sourceMessages);
+		return new LinkedHashMap<>(sourceMessages);
 	}
 
 	@SuppressWarnings("unchecked")

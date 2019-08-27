@@ -52,7 +52,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 
 	private final ActionListener delegate;
 
-	private final Map<Class<?>, Method> valueMethodCache = new ConcurrentHashMap<Class<?>, Method>(256);
+	private final Map<Class<?>, Method> valueMethodCache = new ConcurrentHashMap<>(256);
 
 
 	public SelectionTrackingActionListener(ActionListener delegate) {

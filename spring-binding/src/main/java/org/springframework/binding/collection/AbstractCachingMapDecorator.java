@@ -68,7 +68,7 @@ public abstract class AbstractCachingMapDecorator<K, V> implements Map<K, V>, Se
 	 * @param size the initial cache size
 	 */
 	public AbstractCachingMapDecorator(boolean weak, int size) {
-		Map<K, Object> internalMap = weak ? new WeakHashMap<K, Object> (size) : new HashMap<>(size);
+		Map<K, Object> internalMap = weak ? new WeakHashMap<>(size) : new HashMap<>(size);
 		this.targetMap = Collections.synchronizedMap(internalMap);
 		this.synchronize = true;
 		this.weak = weak;

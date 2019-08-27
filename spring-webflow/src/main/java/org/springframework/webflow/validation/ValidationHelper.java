@@ -357,7 +357,7 @@ public class ValidationHelper {
 	private Method findValidationMethod(Object model, Object validator, String methodName, Class<?> context) {
 		Class<?> modelClass = AopUtils.getTargetClass(model);
 
-		List<Class<?>> modelSearchClasses = new ArrayList<Class<?>>();
+		List<Class<?>> modelSearchClasses = new ArrayList<>();
 		while (modelClass != null) {
 			modelSearchClasses.add(modelClass);
 			modelClass = modelClass.getSuperclass();
