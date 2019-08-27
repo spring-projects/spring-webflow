@@ -168,13 +168,10 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 	 */
 	protected byte[] serialize(FlowExecution flowExecution) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		try {
+		try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
 			oos.writeObject(flowExecution);
 			oos.flush();
 			return baos.toByteArray();
-		} finally {
-			oos.close();
 		}
 	}
 
@@ -189,11 +186,8 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 	 */
 	protected FlowExecution deserialize(byte[] data, ClassLoader classLoader) throws IOException,
 			ClassNotFoundException {
-		ObjectInputStream ois = new ConfigurableObjectInputStream(new ByteArrayInputStream(data), classLoader);
-		try {
+		try (ObjectInputStream ois = new ConfigurableObjectInputStream(new ByteArrayInputStream(data), classLoader)) {
 			return (FlowExecution) ois.readObject();
-		} finally {
-			ois.close();
 		}
 	}
 
@@ -203,12 +197,9 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 	 */
 	protected byte[] compress(byte[] dataToCompress) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		GZIPOutputStream gzipos = new GZIPOutputStream(baos);
-		try {
+		try (GZIPOutputStream gzipos = new GZIPOutputStream(baos)) {
 			gzipos.write(dataToCompress);
 			gzipos.flush();
-		} finally {
-			gzipos.close();
 		}
 		return baos.toByteArray();
 	}
