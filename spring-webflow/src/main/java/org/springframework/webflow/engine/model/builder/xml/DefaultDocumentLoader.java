@@ -93,9 +93,7 @@ public class DefaultDocumentLoader implements DocumentLoader {
 	}
 
 	public Document loadDocument(Resource resource) throws IOException, ParserConfigurationException, SAXException {
-		InputStream is = null;
-		try {
-			is = resource.getInputStream();
+		try (InputStream is = resource.getInputStream()) {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(isValidating());
 			factory.setNamespaceAware(true);
@@ -111,10 +109,6 @@ public class DefaultDocumentLoader implements DocumentLoader {
 			docBuilder.setErrorHandler(new SimpleSaxErrorHandler(logger));
 			docBuilder.setEntityResolver(getEntityResolver());
 			return docBuilder.parse(is);
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
 	}
 }
