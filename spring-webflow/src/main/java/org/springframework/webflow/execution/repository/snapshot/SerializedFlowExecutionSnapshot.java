@@ -231,7 +231,7 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 	private static class ConfigurableObjectInputStream extends ObjectInputStream {
 
 		/* Temporary workaround for SPR-???? */
-		private static final HashMap<String, Class<?>> PRIMITIVE_CLASSES = new HashMap<String, Class<?>>(8, 1.0F);
+		private static final HashMap<String, Class<?>> PRIMITIVE_CLASSES = new HashMap<>(8, 1.0F);
 		static {
 			PRIMITIVE_CLASSES.put("boolean", boolean.class);
 			PRIMITIVE_CLASSES.put("byte", byte.class);

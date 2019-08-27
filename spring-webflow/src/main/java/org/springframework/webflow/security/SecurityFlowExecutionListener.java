@@ -107,7 +107,7 @@ public class SecurityFlowExecutionListener implements FlowExecutionListener {
 	}
 
 	private AbstractAccessDecisionManager createManager(SecurityRule rule) {
-		List<AccessDecisionVoter<? extends Object>> voters = new ArrayList<AccessDecisionVoter<? extends Object>>();
+		List<AccessDecisionVoter<? extends Object>> voters = new ArrayList<>();
 		voters.add(new RoleVoter());
 		if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
 			return new AffirmativeBased(voters);

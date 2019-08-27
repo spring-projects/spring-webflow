@@ -46,7 +46,7 @@ public class ELExpressionParser implements ExpressionParser {
 
 	private ExpressionFactory expressionFactory;
 
-	private Map<Class<?>, ELContextFactory> contextFactories = new HashMap<Class<?>, ELContextFactory>();
+	private Map<Class<?>, ELContextFactory> contextFactories = new HashMap<>();
 
 	private ConversionService conversionService = new DefaultConversionService();
 
