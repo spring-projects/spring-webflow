@@ -134,8 +134,7 @@ public class ConversationContainer implements Serializable {
 	 * Remove identified conversation from this container.
 	 */
 	public synchronized void removeConversation(ConversationId id) {
-		for (Iterator<ContainedConversation> it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = it.next();
+		for (ContainedConversation conversation : conversations) {
 			if (conversation.getId().equals(id)) {
 				conversations.remove(conversation);
 				break;

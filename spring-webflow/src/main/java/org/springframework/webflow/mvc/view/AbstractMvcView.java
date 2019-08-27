@@ -547,8 +547,8 @@ public abstract class AbstractMvcView implements View {
 		if (!beanWrapper.isReadableProperty(propertyNames.get(0))) {
 			return false;
 		}
-		for (int i=0; i < propertyNames.size(); i++) {
-			if (!SourceVersion.isName(propertyNames.get(i))) {
+		for (String propertyName : propertyNames) {
+			if (!SourceVersion.isName(propertyName)) {
 				return false;
 			}
 		}

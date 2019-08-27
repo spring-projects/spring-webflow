@@ -338,8 +338,8 @@ public class FlowFacesContext extends FacesContextWrapper {
 			String detail = (String) ois.readObject();
 			int severityOrdinal = ois.readInt();
 			FacesMessage.Severity severity = FacesMessage.SEVERITY_INFO;
-			for (Iterator<?> iterator = FacesMessage.VALUES.iterator(); iterator.hasNext();) {
-				FacesMessage.Severity value = (FacesMessage.Severity) iterator.next();
+			for (Object o : FacesMessage.VALUES) {
+				FacesMessage.Severity value = (FacesMessage.Severity) o;
 				if (value.getOrdinal() == severityOrdinal) {
 					severity = value;
 				}
