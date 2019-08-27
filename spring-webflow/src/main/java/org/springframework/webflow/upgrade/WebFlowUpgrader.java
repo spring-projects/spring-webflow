@@ -63,9 +63,7 @@ public class WebFlowUpgrader {
 			Source source = new StreamSource(flowResource.getInputStream());
 			Result result = new StreamResult(output);
 			transform(source, result);
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (TransformerException | IOException e) {
 			e.printStackTrace();
 		}
 		return output.toString();

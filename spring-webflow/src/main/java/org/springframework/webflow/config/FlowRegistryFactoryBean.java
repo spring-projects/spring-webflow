@@ -289,11 +289,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 					flowRegistry, flowBuilderServices);
 			FlowAssembler assembler = new FlowAssembler(builder, builderContext);
 			return assembler.assembleFlow();
-		} catch (IllegalArgumentException e) {
-			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
-		} catch (InstantiationException e) {
-			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
-		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | InstantiationException e) {
 			throw new FlowDefinitionConstructionException(builderInfo.getId(), e);
 		}
 	}
