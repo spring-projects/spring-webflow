@@ -230,18 +230,14 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 
 	public void testIsReadOnly_AllVars() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		Iterator<String> i = vars.iterator();
-		while (i.hasNext()) {
-			String var = i.next();
+		for (String var : vars) {
 			assertTrue(context.getELResolver().isReadOnly(context, null, var));
 		}
 	}
 
 	public void testSetValue_AllVars() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		Iterator<String> i = vars.iterator();
-		while (i.hasNext()) {
-			String var = i.next();
+		for (String var : vars) {
 			try {
 				context.getELResolver().setValue(context, null, var, new Object());
 				fail("setValue should not be allowed");
