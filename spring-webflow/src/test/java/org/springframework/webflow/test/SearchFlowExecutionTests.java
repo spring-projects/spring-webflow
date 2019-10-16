@@ -15,11 +15,12 @@
  */
 package org.springframework.webflow.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.binding.mapping.Mapper;
-import org.springframework.binding.mapping.MappingResults;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
 import org.springframework.webflow.context.ExternalContext;
@@ -37,12 +38,14 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		return resourceFactory.createClassPathResource("search-flow.xml", getClass());
 	}
 
+	@Test
 	public void testStartFlow() {
 		ExternalContext context = new MockExternalContext();
 		startFlow(null, context);
 		assertCurrentStateEquals("enterCriteria");
 	}
 
+	@Test
 	public void testCriteriaSubmitSuccess() {
 		startFlow(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();
@@ -54,6 +57,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		assertResponseWrittenEquals("searchResults", context);
 	}
 
+	@Test
 	public void testNewSearch() {
 		startFlow(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();
@@ -69,6 +73,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 		assertResponseWrittenEquals("searchCriteria", context);
 	}
 
+	@Test
 	public void testSelectValidResult() {
 		startFlow(null, new MockExternalContext());
 		MockExternalContext context = new MockExternalContext();

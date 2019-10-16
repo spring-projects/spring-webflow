@@ -1,18 +1,20 @@
 package org.springframework.webflow.context.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.LinkedHashMap;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 
-public class DefaultFlowUrlHandlerTests extends TestCase {
+public class DefaultFlowUrlHandlerTests {
 	private DefaultFlowUrlHandler urlHandler = new DefaultFlowUrlHandler();
 
 	private MockHttpServletRequest request = new MockHttpServletRequest();
 
+	@Test
 	public void testGetFlowId() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -21,6 +23,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("foo", urlHandler.getFlowId(request));
 	}
 
+	@Test
 	public void testGetFlowIdNoPathInfo() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app/foo.htm");
@@ -29,12 +32,14 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("app/foo", urlHandler.getFlowId(request));
 	}
 
+	@Test
 	public void testGetFlowIdOnlyContextPath() {
 		request.setContextPath("/springtravel");
 		request.setRequestURI("/springtravel");
 		assertEquals("springtravel", urlHandler.getFlowId(request));
 	}
 
+	@Test
 	public void testGetFlowExecutionKey() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -44,6 +49,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("12345", urlHandler.getFlowExecutionKey(request));
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrl() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -53,6 +59,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/bookHotel", url);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlNoPathInfo() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app/foo.htm");
@@ -61,6 +68,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/foo.htm", url);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlContextPathOnly() {
 		request.setContextPath("/springtravel");
 		request.setRequestURI("/springtravel");
@@ -68,6 +76,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel", url);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlEmptyInput() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -77,6 +86,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/bookHotel", url);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlWithFlowInput() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -91,6 +101,7 @@ public class DefaultFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/bookHotel?foo=bar&bar=needs+encoding&baz=1&boop=", url);
 	}
 
+	@Test
 	public void testCreateFlowExecutionUrl() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");

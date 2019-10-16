@@ -15,8 +15,13 @@
  */
 package org.springframework.binding.method;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 
 /**
@@ -25,14 +30,16 @@ import org.springframework.binding.expression.support.StaticExpression;
  * @author Erwin Vervaet
  * @author Jeremy Grelle
  */
-public class MethodInvokerTests extends TestCase {
+public class MethodInvokerTests {
 
 	private MethodInvoker methodInvoker;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		this.methodInvoker = new MethodInvoker();
 	}
 
+	@Test
 	public void testInvocationTargetException() {
 		try {
 			methodInvoker.invoke(new MethodSignature("test"), new TestObject(), null);
@@ -43,6 +50,7 @@ public class MethodInvokerTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testInvalidMethod() {
 		try {
 			methodInvoker.invoke(new MethodSignature("bogus"), new TestObject(), null);
@@ -52,6 +60,7 @@ public class MethodInvokerTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBeanArg() {
 		Parameters parameters = new Parameters();
 		Bean bean = new Bean();
@@ -60,6 +69,7 @@ public class MethodInvokerTests extends TestCase {
 		assertSame(bean, methodInvoker.invoke(method, new TestObject(), null));
 	}
 
+	@Test
 	public void testPrimitiveArg() {
 		Parameters parameters = new Parameters();
 		parameters.add(new Parameter(Boolean.class, new StaticExpression(true)));

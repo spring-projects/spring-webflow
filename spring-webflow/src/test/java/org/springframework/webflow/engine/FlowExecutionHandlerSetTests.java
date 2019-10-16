@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 import org.springframework.webflow.test.MockRequestControlContext;
 
@@ -25,12 +28,13 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * 
  * @author Erwin Vervaet
  */
-public class FlowExecutionHandlerSetTests extends TestCase {
+public class FlowExecutionHandlerSetTests {
 
 	Flow flow = new Flow("myFlow");
 	MockRequestControlContext context = new MockRequestControlContext(flow);
 	boolean handled;
 
+	@Test
 	public void testHandleException() {
 		FlowExecutionExceptionHandlerSet handlerSet = new FlowExecutionExceptionHandlerSet();
 		handlerSet.add(new TestStateExceptionHandler(NullPointerException.class, "null"));

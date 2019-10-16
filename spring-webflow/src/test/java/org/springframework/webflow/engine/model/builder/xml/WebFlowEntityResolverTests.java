@@ -1,13 +1,15 @@
 package org.springframework.webflow.engine.model.builder.xml;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
-public class WebFlowEntityResolverTests extends TestCase {
+public class WebFlowEntityResolverTests {
 
 	private static final String PUBLIC_ID = "http://www.springframework.org/schema/webflow";
 
+	@Test
 	public void testResolve24() {
 		WebFlowEntityResolver resolver = new WebFlowEntityResolver();
 		InputSource source = resolver.resolveEntity(PUBLIC_ID,
@@ -15,6 +17,7 @@ public class WebFlowEntityResolverTests extends TestCase {
 		assertNotNull(source);
 	}
 
+	@Test
 	public void testResolve20() {
 		WebFlowEntityResolver resolver = new WebFlowEntityResolver();
 		InputSource source = resolver.resolveEntity(PUBLIC_ID,
@@ -22,6 +25,7 @@ public class WebFlowEntityResolverTests extends TestCase {
 		assertNotNull(source);
 	}
 
+	@Test
 	public void testResolveLatest() {
 		WebFlowEntityResolver resolver = new WebFlowEntityResolver();
 		InputSource source = resolver.resolveEntity(PUBLIC_ID,

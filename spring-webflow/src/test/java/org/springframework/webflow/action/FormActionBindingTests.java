@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -32,7 +35,7 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Erwin Vervaet
  */
-public class FormActionBindingTests extends TestCase {
+public class FormActionBindingTests {
 
 	public static class TestBean {
 
@@ -48,6 +51,7 @@ public class FormActionBindingTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMessageCodesOnBindFailure() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setPathInfo("/fooFlow");
@@ -72,6 +76,7 @@ public class FormActionBindingTests extends TestCase {
 		assertEquals(1, formActionErrors.getFieldErrorCount("prop"));
 	}
 
+	@Test
 	public void testFieldBinding() throws Exception {
 		FormAction formAction = new FormAction() {
 			protected Object createFormObject(RequestContext context) {

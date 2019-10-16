@@ -15,15 +15,17 @@
  */
 package org.springframework.webflow.context.servlet;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-public class FilenameFlowUrlHandlerTests extends TestCase {
+public class FilenameFlowUrlHandlerTests {
 
 	private DefaultFlowUrlHandler urlHandler = new FilenameFlowUrlHandler();
 	private MockHttpServletRequest request = new MockHttpServletRequest();
 
+	@Test
 	public void testGetFlowId() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -32,6 +34,7 @@ public class FilenameFlowUrlHandlerTests extends TestCase {
 		assertEquals("foo", urlHandler.getFlowId(request));
 	}
 
+	@Test
 	public void testGetFlowIdNoPathInfo() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app/foo.htm");
@@ -40,12 +43,14 @@ public class FilenameFlowUrlHandlerTests extends TestCase {
 		assertEquals("foo", urlHandler.getFlowId(request));
 	}
 
+	@Test
 	public void testGetFlowIdOnlyContextPath() {
 		request.setContextPath("/springtravel");
 		request.setRequestURI("/springtravel");
 		assertEquals("", urlHandler.getFlowId(request));
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlWithPathInfo() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -55,6 +60,7 @@ public class FilenameFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/bar", flowDefUrl);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlWithPathInfoNestedPath() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -64,6 +70,7 @@ public class FilenameFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/nestedPath/bar", flowDefUrl);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlWithPathInfoNestedPathAndFileExtension() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/app");
@@ -73,6 +80,7 @@ public class FilenameFlowUrlHandlerTests extends TestCase {
 		assertEquals("/springtravel/app/nestedPath/bar.flow", flowDefUrl);
 	}
 
+	@Test
 	public void testCreateFlowDefinitionUrlWithServletPathAndFileExtension() {
 		request.setContextPath("/springtravel");
 		request.setServletPath("/nestedPath/foo.flow");

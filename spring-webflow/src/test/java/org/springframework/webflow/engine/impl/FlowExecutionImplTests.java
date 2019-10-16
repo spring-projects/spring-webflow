@@ -15,8 +15,15 @@
  */
 package org.springframework.webflow.engine.impl;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.definition.FlowDefinition;
@@ -46,9 +53,10 @@ import org.springframework.webflow.test.MockFlowExecutionKeyFactory;
  * @author Ben Hale
  * @author Jeremy Grelle
  */
-public class FlowExecutionImplTests extends TestCase {
+public class FlowExecutionImplTests {
 
 
+	@Test
 	public void testStartAndEnd() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
@@ -85,6 +93,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(0, mockListener.getFlowNestingLevel());
 	}
 
+	@Test
 	public void testStartAndEndSavedMessages() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
@@ -106,6 +115,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertNotNull(execution.getFlashScope().get("messagesMemento"));
 	}
 
+	@Test
 	public void testStartAndPause() {
 		Flow flow = new Flow("flow");
 		new State(flow, "state") {
@@ -123,6 +133,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(1, mockListener.getPausedCount());
 	}
 
+	@Test
 	public void testStartWithNullInputMap() {
 		Flow flow = new Flow("flow");
 		new State(flow, "state") {
@@ -145,6 +156,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(1, mockListener.getPausedCount());
 	}
 
+	@Test
 	public void testStartExceptionThrownBeforeFirstSessionCreated() {
 		Flow flow = new Flow("flow");
 		flow.getExceptionHandlerSet().add(new FlowExecutionExceptionHandler() {
@@ -181,6 +193,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStartExceptionThrownByState() {
 		Flow flow = new Flow("flow");
 		State state = new State(flow, "state") {
@@ -200,6 +213,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStartFlowExecutionExceptionThrownByState() {
 		Flow flow = new Flow("flow");
 		final FlowExecutionException e = new FlowExecutionException("flow", "state", "Oops");
@@ -219,6 +233,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStartExceptionThrownByStateHandledByFlowExceptionHandler() {
 		Flow flow = new Flow("flow");
 		StubFlowExecutionExceptionHandler exceptionHandler = new StubFlowExecutionExceptionHandler();
@@ -236,6 +251,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertTrue(exceptionHandler.getHandled());
 	}
 
+	@Test
 	public void testStartExceptionThrownByStateHandledByStateExceptionHandler() {
 		Flow flow = new Flow("flow");
 		flow.getExceptionHandlerSet().add(new StubFlowExecutionExceptionHandler());
@@ -254,6 +270,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertTrue(exceptionHandler.getHandled());
 	}
 
+	@Test
 	public void testExceptionHandledByNestedExceptionHandler() {
 		Flow flow = new Flow("flow");
 		ExceptionThrowingExceptionHandler exceptionHandler = new ExceptionThrowingExceptionHandler(true);
@@ -270,6 +287,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(2, exceptionHandler.getHandleCount());
 	}
 
+	@Test
 	public void testStartCannotCallTwice() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
@@ -284,6 +302,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testResume() {
 		Flow flow = new Flow("flow");
 		new ViewState(flow, "view", new StubViewFactory());
@@ -300,6 +319,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(2, mockListener.getPausedCount());
 	}
 
+	@Test
 	public void testResumeNotAViewState() {
 		Flow flow = new Flow("flow");
 		new State(flow, "state") {
@@ -323,6 +343,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testResumeAfterEnding() {
 		Flow flow = new Flow("flow");
 		new EndState(flow, "end");
@@ -337,6 +358,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testResumeException() {
 		Flow flow = new Flow("flow");
 		ViewState state = new ViewState(flow, "view", new StubViewFactory()) {
@@ -362,6 +384,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testResumeFlowExecutionException() {
 		Flow flow = new Flow("flow");
 		ViewState state = new ViewState(flow, "view", new StubViewFactory()) {
@@ -387,6 +410,7 @@ public class FlowExecutionImplTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExecuteTransition() {
 		Flow flow = new Flow("flow");
 		ViewState state = new ViewState(flow, "view", new StubViewFactory()) {
@@ -409,6 +433,7 @@ public class FlowExecutionImplTests extends TestCase {
 		assertEquals(1, mockListener.getTransitionExecutingCount());
 	}
 
+	@Test
 	public void testRequestContextManagedOnStartAndResume() {
 		Flow flow = new Flow("flow");
 		new ViewState(flow, "view", new StubViewFactory()) {
@@ -421,11 +446,11 @@ public class FlowExecutionImplTests extends TestCase {
 
 		MockExternalContext context = new MockExternalContext();
 		execution.start(null, context);
-		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+		assertNull(RequestContextHolder.getRequestContext(), "RequestContext was not released");
 
 		context = new MockExternalContext();
 		execution.resume(context);
-		assertNull("RequestContext was not released", RequestContextHolder.getRequestContext());
+		assertNull(RequestContextHolder.getRequestContext(), "RequestContext was not released");
 
 	}
 

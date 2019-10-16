@@ -1,12 +1,13 @@
 package org.springframework.webflow.security;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,8 +25,9 @@ import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class SecurityFlowExecutionListenerTests extends TestCase {
+public class SecurityFlowExecutionListenerTests {
 
+	@Test
 	public void testSessionCreatingNoSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
@@ -33,6 +35,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.sessionCreating(context, definition);
 	}
 
+	@Test
 	public void testSessionCreatingWithSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
@@ -43,6 +46,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.sessionCreating(context, flow);
 	}
 
+	@Test
 	public void testStateEnteringNoSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
@@ -51,6 +55,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.stateEntering(context, state);
 	}
 
+	@Test
 	public void testStateEnteringWithSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
@@ -62,6 +67,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.stateEntering(context, state);
 	}
 
+	@Test
 	public void testTransitionExecutingNoSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
@@ -69,6 +75,7 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.transitionExecuting(context, transition);
 	}
 
+	@Test
 	public void testTransitionExecutingWithSecurity() {
 		SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
 		RequestContext context = new MockRequestContext();
@@ -79,11 +86,13 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		listener.transitionExecuting(context, transition);
 	}
 
+	@Test
 	public void testDecideAnyAuthorized() {
 		configureSecurityContext();
 		new SecurityFlowExecutionListener().decide(getSecurityRuleAnyAuthorized(), this);
 	}
 
+	@Test
 	public void testDecideAnyDenied() {
 		configureSecurityContext();
 		try {
@@ -94,11 +103,13 @@ public class SecurityFlowExecutionListenerTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDecideAllAuthorized() {
 		configureSecurityContext();
 		new SecurityFlowExecutionListener().decide(getSecurityRuleAllAuthorized(), this);
 	}
 
+	@Test
 	public void testDecideAllDenied() {
 		configureSecurityContext();
 		try {

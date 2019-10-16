@@ -15,18 +15,21 @@
  */
 package org.springframework.binding.method;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link MethodInvocationException}.
  * 
  * @author Erwin Vervaet
  */
-public class MethodInvocationExceptionTests extends TestCase {
+public class MethodInvocationExceptionTests {
 
+	@Test
 	public void testGetTargetException() {
 		// runtime exception
 		IllegalArgumentException iae = new IllegalArgumentException("test");

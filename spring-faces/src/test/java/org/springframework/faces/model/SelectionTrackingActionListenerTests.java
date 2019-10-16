@@ -1,5 +1,9 @@
 package org.springframework.faces.model;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +17,17 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
-import junit.framework.TestCase;
 
 import org.apache.myfaces.test.mock.MockFacesContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.faces.facelets.component.UIRepeat;
 
-public class SelectionTrackingActionListenerTests extends TestCase {
+public class SelectionTrackingActionListenerTests {
 
 	/**
 	 * JSF Mock Helper
@@ -48,6 +54,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	 */
 	private final ActionListener selectionTrackingListener = new SelectionTrackingActionListener(this.delegateListener);
 
+	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsfMockHelper.setUp();
 		this.viewToTest = new UIViewRoot();
@@ -58,10 +65,12 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		this.dataModel = new OneSelectionTrackingListDataModel<>(rows);
 	}
 
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws Exception {
 		this.jsfMockHelper.tearDown();
 	}
 
+	@Test
 	public void testProcessActionWithUIData() {
 
 		UIData dataTable = new UIData();
@@ -86,6 +95,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 		assertTrue(this.dataModel.getSelectedRow() != this.dataModel.getRowData());
 	}
 
+	@Test
 	public void testProcessActionWithUIRepeat() {
 
 		UIRepeat uiRepeat = new UIRepeat();

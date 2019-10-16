@@ -1,21 +1,26 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javax.el.ELContext;
 import javax.el.MethodExpression;
 import javax.el.MethodInfo;
 import javax.faces.component.UICommand;
 import javax.faces.event.ActionEvent;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
-public class FlowActionListenerTests extends TestCase {
+public class FlowActionListenerTests {
 
 	FlowActionListener listener;
 
@@ -23,7 +28,8 @@ public class FlowActionListenerTests extends TestCase {
 
 	RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 
 		this.listener = new FlowActionListener(this.jsfMock.application().getActionListener());
@@ -34,12 +40,13 @@ public class FlowActionListenerTests extends TestCase {
 		EasyMock.replay(this.context);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public final void testProcessAction() {
 
 		String outcome = "foo";
@@ -50,12 +57,13 @@ public class FlowActionListenerTests extends TestCase {
 
 		this.listener.processAction(event);
 
-		assertTrue("The event was not signaled",
-				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
-		assertEquals("The event should be " + outcome, outcome,
-				this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY));
+		assertTrue(this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY),
+				"The event was not signaled");
+		assertEquals(outcome, this.jsfMock.externalContext().getRequestMap().get(JsfView.EVENT_KEY),
+				"The event should be " + outcome);
 	}
 
+	@Test
 	public final void testProcessAction_NullOutcome() {
 
 		String outcome = null;
@@ -66,8 +74,8 @@ public class FlowActionListenerTests extends TestCase {
 
 		this.listener.processAction(event);
 
-		assertFalse("An unexpected event was signaled",
-				this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY));
+		assertFalse(this.jsfMock.externalContext().getRequestMap().containsKey(JsfView.EVENT_KEY),
+				"An unexpected event was signaled");
 	}
 
 	private class MethodExpressionStub extends MethodExpression {

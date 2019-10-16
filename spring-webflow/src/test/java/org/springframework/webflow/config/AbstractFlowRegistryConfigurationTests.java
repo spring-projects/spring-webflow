@@ -1,19 +1,24 @@
 package org.springframework.webflow.config;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.definition.registry.NoSuchFlowDefinitionException;
 
-public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
+public abstract class AbstractFlowRegistryConfigurationTests {
 
 	protected ApplicationContext context;
 
 	protected FlowDefinitionRegistry registry;
 
+	@BeforeEach
 	public void setUp() {
 		this.context = initApplicationContext();
 		this.registry = (FlowDefinitionRegistry) context.getBean("flowRegistry");
@@ -22,6 +27,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 	protected abstract ApplicationContext initApplicationContext();
 
 
+	@Test
 	public void testRegistryFlowLocationsPopulated() {
 		FlowDefinition flow = registry.getFlowDefinition("flow");
 		assertEquals("flow", flow.getId());
@@ -29,6 +35,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		assertEquals(2, flow.getAttributes().get("bar"));
 	}
 
+	@Test
 	public void testRegistryFlowLocationPatternsPopulated() {
 		FlowDefinition flow1 = registry.getFlowDefinition("flow1");
 		assertEquals("flow1", flow1.getId());
@@ -36,16 +43,19 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		assertEquals("flow2", flow2.getId());
 	}
 
+	@Test
 	public void testRegistryFlowBuildersPopulated() {
 		FlowDefinition foo = registry.getFlowDefinition("foo");
 		assertEquals("foo", foo.getId());
 	}
 
+	@Test
 	public void testRegistryFlowBuildersPopulatedWithId() {
 		FlowDefinition foo = registry.getFlowDefinition("foo2");
 		assertEquals("foo2", foo.getId());
 	}
 
+	@Test
 	public void testRegistryFlowBuildersPopulatedWithAttributes() {
 		FlowDefinition foo3 = registry.getFlowDefinition("foo3");
 		assertEquals("foo3", foo3.getId());
@@ -53,6 +63,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		assertEquals(2, foo3.getAttributes().get("bar"));
 	}
 
+	@Test
 	public void testNoSuchFlow() {
 		try {
 			registry.getFlowDefinition("not there");
@@ -61,6 +72,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBogusPath() {
 		try {
 			registry.getFlowDefinition("bogus");
@@ -69,6 +81,7 @@ public abstract class AbstractFlowRegistryConfigurationTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParent() {
 		assertNotNull(registry.getParent());
 		assertEquals("parentFlow", registry.getParent().getFlowDefinition("parentFlow").getId());

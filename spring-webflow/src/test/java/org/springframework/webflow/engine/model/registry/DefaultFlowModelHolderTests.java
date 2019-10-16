@@ -1,10 +1,13 @@
 package org.springframework.webflow.engine.model.registry;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Collections;
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.engine.model.EndStateModel;
 import org.springframework.webflow.engine.model.FlowModel;
@@ -12,21 +15,24 @@ import org.springframework.webflow.engine.model.builder.DefaultFlowModelHolder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilder;
 import org.springframework.webflow.engine.model.builder.FlowModelBuilderException;
 
-public class DefaultFlowModelHolderTests extends TestCase {
+public class DefaultFlowModelHolderTests {
 	private DefaultFlowModelHolder holder;
 	private FlowModelBuilder builder;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		builder = new SimpleFlowBuilder();
 		holder = new DefaultFlowModelHolder(builder);
 	}
 
+	@Test
 	public void testGetFlowDefinition() {
 		FlowModel flow = holder.getFlowModel();
 		assertNull(flow.getStartStateId());
 		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
+	@Test
 	public void testGetFlowDefinitionWithChangesRefreshed() {
 		FlowModel flow = holder.getFlowModel();
 		holder.refresh();

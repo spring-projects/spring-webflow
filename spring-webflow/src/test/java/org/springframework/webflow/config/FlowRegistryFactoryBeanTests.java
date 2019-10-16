@@ -1,24 +1,32 @@
 package org.springframework.webflow.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.test.TestFlowBuilderServicesFactory;
 
-public class FlowRegistryFactoryBeanTests extends TestCase {
+public class FlowRegistryFactoryBeanTests {
 	private FlowRegistryFactoryBean factoryBean;
 
+	@BeforeEach
 	public void setUp() {
 		factoryBean = new FlowRegistryFactoryBean();
 	}
 
+	@AfterEach
 	public void tearDown() throws Exception {
 		factoryBean.destroy();
 	}
 
+	@Test
 	public void testGetFlowRegistry() throws Exception {
 		HashSet<FlowElementAttribute> attributes = new HashSet<>();
 		attributes.add(new FlowElementAttribute("foo", "bar", null));
@@ -40,6 +48,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 		assertEquals("flow2", def.getId());
 	}
 
+	@Test
 	public void testGetFlowRegistryGeneratedFlowId() throws Exception {
 		FlowLocation location1 = new FlowLocation(null, "org/springframework/webflow/config/flow.xml", null);
 		FlowLocation[] flowLocations = new FlowLocation[] { location1 };
@@ -53,6 +62,7 @@ public class FlowRegistryFactoryBeanTests extends TestCase {
 		assertTrue(def.getAttributes().isEmpty());
 	}
 
+	@Test
 	public void testGetFlowRegistryCustomFlowServices() throws Exception {
 		FlowLocation location1 = new FlowLocation(null, "org/springframework/webflow/config/flow.xml", null);
 		FlowLocation[] flowLocations = new FlowLocation[] { location1 };

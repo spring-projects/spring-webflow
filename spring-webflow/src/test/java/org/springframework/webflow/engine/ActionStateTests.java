@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.engine.support.MockTransitionCriteria;
 import org.springframework.webflow.execution.Action;
@@ -27,12 +30,13 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * Tests ActionState behavior
  * @author Keith Donald
  */
-public class ActionStateTests extends TestCase {
+public class ActionStateTests {
 
 	private Flow flow;
 	private ActionState state;
 	private MockRequestControlContext context;
 
+	@BeforeEach
 	public void setUp() {
 		flow = new Flow("myFlow");
 		state = new ActionState(flow, "actionState");
@@ -40,6 +44,7 @@ public class ActionStateTests extends TestCase {
 		context = new MockRequestControlContext(flow);
 	}
 
+	@Test
 	public void testExecuteSingleAction() {
 		state.getActionList().add(new TestAction());
 		state.getTransitionSet().add(new Transition(on("success"), to("finish")));
@@ -47,6 +52,7 @@ public class ActionStateTests extends TestCase {
 		assertEquals(1, ((TestAction) state.getActionList().get(0)).getExecutionCount());
 	}
 
+	@Test
 	public void testExecuteNothing() {
 		try {
 			state.enter(context);
@@ -56,6 +62,7 @@ public class ActionStateTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExecuteActionCannotHandleResultEvent() {
 		state.getActionList().add(new TestAction());
 		try {
@@ -66,6 +73,7 @@ public class ActionStateTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExecuteActionChain() {
 		state.getActionList().add(new TestAction("not mapped result"));
 		state.getActionList().add(new TestAction(null));

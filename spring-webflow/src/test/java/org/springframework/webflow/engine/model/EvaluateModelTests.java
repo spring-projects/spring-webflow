@@ -15,13 +15,16 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link EvaluateModel}.
  */
-public class EvaluateModelTests extends TestCase {
+public class EvaluateModelTests {
 
+	@Test
 	public void testNotMergeable() {
 		EvaluateModel child = new EvaluateModel("name");
 		assertFalse(child.isMergeableWith(child));

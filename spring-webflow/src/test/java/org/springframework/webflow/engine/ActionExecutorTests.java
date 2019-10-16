@@ -15,8 +15,14 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.ActionExecutionException;
 import org.springframework.webflow.execution.ActionExecutor;
 import org.springframework.webflow.execution.Event;
@@ -24,18 +30,20 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class ActionExecutorTests extends TestCase {
+public class ActionExecutorTests {
 
 	private MockRequestContext context;
 	private State state;
 	private Flow flow;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		flow = new Flow("myFlow");
 		state = new EndState(flow, "end");
 		context = new MockRequestContext(flow);
 	}
 
+	@Test
 	public void testExecuteAction() {
 		TestAction action = new TestAction();
 		Event result = ActionExecutor.execute(action, context);
@@ -43,6 +51,7 @@ public class ActionExecutorTests extends TestCase {
 		assertEquals("success", result.getId());
 	}
 
+	@Test
 	public void testExecuteActionInState() {
 		context.getMockFlowExecutionContext().getMockActiveSession().setState(state);
 		TestAction action = new TestAction();
@@ -51,6 +60,7 @@ public class ActionExecutorTests extends TestCase {
 		assertEquals("success", result.getId());
 	}
 
+	@Test
 	public void testExecuteActionWithException() {
 		TestAction action = new TestAction() {
 			protected Event doExecute(RequestContext context) throws Exception {
@@ -68,6 +78,7 @@ public class ActionExecutorTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testExecuteActionInStateWithException() {
 		context.getMockFlowExecutionContext().getMockActiveSession().setState(state);
 		TestAction action = new TestAction() {

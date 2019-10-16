@@ -1,13 +1,18 @@
 package org.springframework.webflow.mvc.view;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.beans.PropertyEditor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.converters.StringToObject;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.Expression;
@@ -23,7 +28,7 @@ import org.springframework.webflow.TestBean;
 import org.springframework.webflow.engine.builder.BinderConfiguration;
 import org.springframework.webflow.engine.builder.BinderConfiguration.Binding;
 
-public abstract class AbstractBindingModelTests extends TestCase {
+public abstract class AbstractBindingModelTests {
 
 	BindingModel model;
 	DefaultMessageContext messages;
@@ -31,6 +36,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 	TestBean testBean;
 	ExpressionParser expressionParser;
 
+	@BeforeEach
 	public void setUp() {
 		testBean = new TestBean();
 		messages = new DefaultMessageContext();
@@ -41,6 +47,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 
 	protected abstract ExpressionParser getExpressionParser();
 
+	@Test
 	public void testInitialState() {
 		assertEquals(0, model.getErrorCount());
 		assertEquals(0, model.getFieldErrorCount());
@@ -52,21 +59,25 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals(String.class, model.getFieldType("datum1"));
 	}
 
+	@Test
 	public void testGetValue() {
 		testBean.datum1 = "test";
 		assertEquals("test", model.getFieldValue("datum1"));
 	}
 
+	@Test
 	public void testGetConvertedValue() {
 		testBean.datum2 = 3;
 		assertEquals("3", model.getFieldValue("datum2"));
 	}
 
+	@Test
 	public void testGetRawValue() {
 		testBean.datum2 = 3;
 		assertEquals(3, model.getRawFieldValue("datum2"));
 	}
 
+	@Test
 	public void testGetFieldValueConvertedWithCustomConverter() {
 		testBean.datum2 = 3;
 		conversionService.addConverter("customConverter", new StringToObject(Integer.class) {
@@ -84,6 +95,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals("$3", model.getFieldValue("datum2"));
 	}
 
+	@Test
 	public void testGetFieldValueError() {
 		Map<String, String> source = new HashMap<>();
 		source.put("datum2", "bogus");
@@ -110,6 +122,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals(0, model.getFieldErrorCount());
 	}
 
+	@Test
 	public void testGetFieldError() {
 		messages.addMessage(new MessageBuilder().source("datum2").error().defaultText("Error").build());
 		assertEquals(1, model.getErrorCount());
@@ -129,6 +142,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals(error, error2);
 	}
 
+	@Test
 	public void testGetFieldErrorsWildcard() {
 		messages.addMessage(new MessageBuilder().source("datum2").error().defaultText("Error").build());
 		assertEquals(1, model.getFieldErrorCount("da*"));
@@ -139,6 +153,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals("Error", error.getDefaultMessage());
 	}
 
+	@Test
 	public void testFindPropertyEditor() {
 		PropertyEditor editor = model.findEditor("datum2", Integer.class);
 		assertNotNull(editor);
@@ -146,6 +161,7 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		assertEquals("0", editor.getAsText());
 	}
 
+	@Test
 	public void testNestedPath() {
 		model = new BindingModel("nestedPathBean", new NestedPathBean(), expressionParser, conversionService, messages);
 		model.pushNestedPath("nestedBean");

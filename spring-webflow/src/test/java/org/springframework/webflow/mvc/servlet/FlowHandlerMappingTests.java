@@ -1,10 +1,15 @@
 package org.springframework.webflow.mvc.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
@@ -17,9 +22,10 @@ import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistryImpl;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
 
-public class FlowHandlerMappingTests extends TestCase {
+public class FlowHandlerMappingTests {
 	private FlowHandlerMapping mapping = new FlowHandlerMapping();
 
+	@BeforeEach
 	public void setUp() {
 		FlowDefinitionRegistryImpl registry = new FlowDefinitionRegistryImpl();
 		registry.registerFlowDefinition(new FlowDefinitionImpl());
@@ -31,6 +37,7 @@ public class FlowHandlerMappingTests extends TestCase {
 		mapping.setApplicationContext(context);
 	}
 
+	@Test
 	public void testGetHandler() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setContextPath("/springtravel");
@@ -43,6 +50,7 @@ public class FlowHandlerMappingTests extends TestCase {
 		assertEquals("flow", handler.getFlowId());
 	}
 
+	@Test
 	public void testGetHandlerCustomFlowHandler() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setContextPath("/springtravel");
@@ -57,6 +65,7 @@ public class FlowHandlerMappingTests extends TestCase {
 		assertTrue(handler instanceof CustomFlowHandler);
 	}
 
+	@Test
 	public void testGetHandlerNoHandler() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setContextPath("/springtravel");
@@ -68,6 +77,7 @@ public class FlowHandlerMappingTests extends TestCase {
 		assertNull(chain);
 	}
 
+	@Test
 	public void testGetHandlerNullFlowId() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		HandlerExecutionChain chain = mapping.getHandler(request);

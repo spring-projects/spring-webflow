@@ -2,13 +2,13 @@ package org.springframework.binding.message;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.validation.MessageCodesResolver;
 
-public class MessageContextErrorsMessageCodesTests extends TestCase {
+public class MessageContextErrorsMessageCodesTests {
 
 	private DefaultMessageContext context;
 
@@ -18,8 +18,8 @@ public class MessageContextErrorsMessageCodesTests extends TestCase {
 
 	private MessageCodesResolver resolver;
 
-	@Override
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		StaticMessageSource messageSource = new StaticMessageSource();
 		messageSource.addMessage(errorCode, Locale.getDefault(), "doesntmatter");
 		context = new DefaultMessageContext(messageSource);
@@ -27,6 +27,7 @@ public class MessageContextErrorsMessageCodesTests extends TestCase {
 		resolver = EasyMock.createMock(MessageCodesResolver.class);
 	}
 
+	@Test
 	public void testRejectUsesObjectName() {
 		EasyMock.expect(resolver.resolveMessageCodes(errorCode, objectName)).andReturn(new String[] {});
 		EasyMock.replay(resolver);
@@ -38,6 +39,7 @@ public class MessageContextErrorsMessageCodesTests extends TestCase {
 		EasyMock.verify(resolver);
 	}
 
+	@Test
 	public void testRejectValueUsesObjectName() {
 		EasyMock.expect(resolver.resolveMessageCodes(errorCode, objectName, "field", null)).andReturn(new String[] {});
 		EasyMock.replay(resolver);
@@ -48,6 +50,7 @@ public class MessageContextErrorsMessageCodesTests extends TestCase {
 		EasyMock.verify(resolver);
 	}
 
+	@Test
 	public void testRejectValueEmptyField() {
 		EasyMock.expect(resolver.resolveMessageCodes(errorCode, objectName)).andReturn(new String[] {});
 		EasyMock.replay(resolver);

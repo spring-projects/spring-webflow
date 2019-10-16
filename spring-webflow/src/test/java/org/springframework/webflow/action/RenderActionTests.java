@@ -1,14 +1,17 @@
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class RenderActionTests extends TestCase {
+public class RenderActionTests {
+	@Test
 	public void testRenderAction() throws Exception {
 		StaticExpression name = new StaticExpression("frag1");
 		StaticExpression name2 = new StaticExpression("frag2");
@@ -21,6 +24,7 @@ public class RenderActionTests extends TestCase {
 		assertEquals("frag2", fragments[1]);
 	}
 
+	@Test
 	public void testIllegalNullArg() {
 		try {
 			new RenderAction((Expression[]) null);
@@ -30,6 +34,7 @@ public class RenderActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testIllegalEmptyArg() {
 		try {
 			new RenderAction();

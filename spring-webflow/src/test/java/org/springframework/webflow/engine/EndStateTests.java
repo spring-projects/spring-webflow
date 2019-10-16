@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
@@ -41,16 +44,18 @@ import org.springframework.webflow.test.MockRequestControlContext;
  * Tests EndState behavior.
  * @author Keith Donald
  */
-public class EndStateTests extends TestCase {
+public class EndStateTests {
 
+	@Test
 	public void testEnterEndStateTerminateFlowExecution() {
 		Flow flow = new Flow("myFlow");
 		EndState state = new EndState(flow, "end");
 		MockRequestControlContext context = new MockRequestControlContext(flow);
 		state.enter(context);
-		assertFalse("Active", context.getFlowExecutionContext().isActive());
+		assertFalse(context.getFlowExecutionContext().isActive(), "Active");
 	}
 
+	@Test
 	public void testEnterEndStateWithFinalResponseRenderer() {
 		Flow flow = new Flow("myFlow");
 		EndState state = new EndState(flow, "end");
@@ -61,6 +66,7 @@ public class EndStateTests extends TestCase {
 		assertTrue(action.executeCalled);
 	}
 
+	@Test
 	public void testEnterEndStateWithFinalResponseRendererResponseAlreadyComplete() {
 		Flow flow = new Flow("myFlow");
 		EndState state = new EndState(flow, "end");
@@ -72,6 +78,7 @@ public class EndStateTests extends TestCase {
 		assertFalse(action.executeCalled);
 	}
 
+	@Test
 	public void testEnterEndStateWithOutputMapper() {
 		Flow flow = new Flow("myFlow") {
 			@SuppressWarnings("unused")
@@ -92,6 +99,7 @@ public class EndStateTests extends TestCase {
 		state.enter(context);
 	}
 
+	@Test
 	public void testEnterEndStateTerminateFlowSession() {
 		final Flow subflow = new Flow("mySubflow");
 		EndState state = new EndState(subflow, "end");
@@ -113,7 +121,7 @@ public class EndStateTests extends TestCase {
 		MockRequestControlContext context = new MockRequestControlContext(new MockFlowExecutionContext(session));
 		state.enter(context);
 
-		assertFalse("Active", context.getFlowExecutionContext().isActive());
+		assertFalse(context.getFlowExecutionContext().isActive(), "Active");
 	}
 
 	protected static TransitionCriteria on(String event) {

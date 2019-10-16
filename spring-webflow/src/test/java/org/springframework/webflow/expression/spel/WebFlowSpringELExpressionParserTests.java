@@ -15,10 +15,13 @@
  */
 package org.springframework.webflow.expression.spel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -30,23 +33,24 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class WebFlowSpringELExpressionParserTests extends TestCase {
+public class WebFlowSpringELExpressionParserTests {
 
 	private ExpressionParser parser = new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 
 	private MockRequestContext requestContext;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public void testResourceBundleRead() {
 		MockExternalContext externalContext = (MockExternalContext) requestContext.getExternalContext();
 		externalContext.setLocale(Locale.ENGLISH);

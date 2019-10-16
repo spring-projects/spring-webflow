@@ -1,15 +1,23 @@
 package org.springframework.webflow.expression.el;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.el.ELResolver;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockRequestContext;
 
 public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCase {
 
+	@Test
 	public void testGetType_RequestScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -18,6 +26,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertEquals(MyBean.class, context.getELResolver().getType(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetType_FlashScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -26,6 +35,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertEquals(MyBean.class, context.getELResolver().getType(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetType_ViewScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -36,6 +46,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertEquals(MyBean.class, context.getELResolver().getType(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetType_FlowScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -44,6 +55,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertEquals(MyBean.class, context.getELResolver().getType(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetType_ConversationScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -52,6 +64,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertEquals(MyBean.class, context.getELResolver().getType(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetType_NotFound() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
@@ -59,6 +72,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertFalse(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testGetValue_RequestScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -67,6 +81,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertSame(foo, context.getELResolver().getValue(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetValue_FlashScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -75,6 +90,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertSame(foo, context.getELResolver().getValue(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetValue_ViewScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -84,6 +100,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertSame(foo, context.getELResolver().getValue(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetValue_FlowScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -92,6 +109,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertSame(foo, context.getELResolver().getValue(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetValue_ConversationScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -100,6 +118,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertSame(foo, context.getELResolver().getValue(context, null, getBaseVariable()));
 	}
 
+	@Test
 	public void testGetValue_NotFound() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
@@ -107,6 +126,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertFalse(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testIsReadOnly_RequestScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -116,6 +136,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testIsReadOnly_FlashScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -125,6 +146,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testIsReadOnly_ViewScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -135,6 +157,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testIsReadOnly_FlowScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -144,6 +167,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testIsReadOnly_ConversationScope() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();
@@ -153,6 +177,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testIsReadOnly_NotFound() {
 		MockRequestContext requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
@@ -160,6 +185,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertFalse(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testSetValue_RequestScope() {
 		MyBean foo1 = new MyBean();
 		MyBean foo2 = new MyBean();
@@ -171,6 +197,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testSetValue_FlashScope() {
 		MyBean foo1 = new MyBean();
 		MyBean foo2 = new MyBean();
@@ -182,6 +209,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testSetValue_ViewScope() {
 		MyBean foo1 = new MyBean();
 		MyBean foo2 = new MyBean();
@@ -194,6 +222,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testSetValue_FlowScope() {
 		MyBean foo1 = new MyBean();
 		MyBean foo2 = new MyBean();
@@ -205,6 +234,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testSetValue_ConversationScope() {
 		MyBean foo1 = new MyBean();
 		MyBean foo2 = new MyBean();
@@ -216,6 +246,7 @@ public class ScopeSearchingELResolverTests extends FlowDependentELResolverTestCa
 		assertTrue(context.isPropertyResolved());
 	}
 
+	@Test
 	public void testSetValue_NotFound() {
 		MyBean foo = new MyBean();
 		MockRequestContext requestContext = new MockRequestContext();

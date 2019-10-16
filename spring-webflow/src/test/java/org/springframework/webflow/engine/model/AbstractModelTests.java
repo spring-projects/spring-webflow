@@ -15,15 +15,20 @@
  */
 package org.springframework.webflow.engine.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link AbstractModel}.
  */
-public class AbstractModelTests extends TestCase {
+public class AbstractModelTests {
 
+	@Test
 	public void testStringMerge() {
 		AbstractModel obj = new PersistenceContextModel();
 		String child = "child";
@@ -31,6 +36,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("child", obj.merge(child, parent));
 	}
 
+	@Test
 	public void testStringMergeNullParent() {
 		AbstractModel obj = new PersistenceContextModel();
 		String child = "child";
@@ -38,6 +44,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("child", obj.merge(child, parent));
 	}
 
+	@Test
 	public void testStringMergeNullChild() {
 		AbstractModel obj = new PersistenceContextModel();
 		String child = null;
@@ -45,6 +52,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("parent", obj.merge(child, parent));
 	}
 
+	@Test
 	public void testStringMergeNulls() {
 		AbstractModel obj = new PersistenceContextModel();
 		String child = null;
@@ -52,6 +60,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals(null, obj.merge(child, parent));
 	}
 
+	@Test
 	public void testMergeModel() {
 		AttributeModel parent = new AttributeModel("foo", "bar");
 		AttributeModel child = new AttributeModel("foo", null);
@@ -60,6 +69,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("bar", child.getValue());
 	}
 
+	@Test
 	public void testMergeParentCreateCopy() {
 		AttributeModel parent = new AttributeModel("foo", "bar");
 		AttributeModel child = null;
@@ -69,6 +79,7 @@ public class AbstractModelTests extends TestCase {
 		assertNotSame(parent, child);
 	}
 
+	@Test
 	public void testListMergeAddAtEndFalse() {
 		LinkedList<SecuredModel> child = new LinkedList<>();
 		child.add(new SecuredModel("1"));
@@ -88,6 +99,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("foo", result.get(2).getMatch());
 	}
 
+	@Test
 	public void testListMergeAddAtEndTrue() {
 		LinkedList<SecuredModel> child = new LinkedList<>();
 		child.add(new SecuredModel("1"));
@@ -107,6 +119,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("foo", result.get(1).getMatch());
 	}
 
+	@Test
 	public void testListMergeNullParent() {
 		AbstractModel obj = new PersistenceContextModel();
 		LinkedList<SecuredModel> child = new LinkedList<>();
@@ -117,6 +130,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("1", result.get(0).getAttributes());
 	}
 
+	@Test
 	public void testListMergeNullChild() {
 		LinkedList<SecuredModel> child = null;
 		LinkedList<SecuredModel> parent = new LinkedList<>();
@@ -128,6 +142,7 @@ public class AbstractModelTests extends TestCase {
 		assertNotSame(parent.get(0), result.get(0));
 	}
 
+	@Test
 	public void testListMergeNulls() {
 		AbstractModel obj = new PersistenceContextModel();
 		LinkedList<Model> child = null;
@@ -136,6 +151,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals(null, result);
 	}
 
+	@Test
 	public void testCopyModel() {
 		AttributeModel model = new AttributeModel("foo", "bar");
 		FlowModel m = new FlowModel();
@@ -144,6 +160,7 @@ public class AbstractModelTests extends TestCase {
 		assertEquals("bar", copy.getValue());
 	}
 
+	@Test
 	public void testCopyModelNull() {
 		FlowModel m = new FlowModel();
 		AttributeModel copy = (AttributeModel) m.copy(null);

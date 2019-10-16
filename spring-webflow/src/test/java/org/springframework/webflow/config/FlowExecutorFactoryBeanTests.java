@@ -3,12 +3,8 @@ package org.springframework.webflow.config;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
-import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
-import org.springframework.webflow.definition.registry.NoSuchFlowDefinitionException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.EndState;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.StubViewFactory;
@@ -18,13 +14,15 @@ import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.factory.StaticFlowExecutionListenerLoader;
 
-public class FlowExecutorFactoryBeanTests extends TestCase {
+public class FlowExecutorFactoryBeanTests {
 	private FlowExecutorFactoryBean factoryBean;
 
+	@BeforeEach
 	public void setUp() {
 		factoryBean = new FlowExecutorFactoryBean();
 	}
 
+	@Test
 	public void testGetFlowExecutorNoPropertiesSet() throws Exception {
 		try {
 			factoryBean.afterPropertiesSet();
@@ -33,6 +31,7 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetFlowExecutorBasicConfig() throws Exception {
 		factoryBean.setFlowDefinitionLocator(id -> {
 			Flow flow = new Flow(id);
@@ -45,6 +44,7 @@ public class FlowExecutorFactoryBeanTests extends TestCase {
 		factoryBean.getObject();
 	}
 
+	@Test
 	public void testGetFlowExecutorOptionsSpecified() throws Exception {
 		factoryBean.setFlowDefinitionLocator(id -> {
 			Flow flow = new Flow(id);

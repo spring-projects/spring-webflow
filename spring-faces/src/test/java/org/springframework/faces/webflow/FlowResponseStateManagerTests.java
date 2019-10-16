@@ -1,10 +1,14 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
@@ -12,7 +16,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
-public class FlowResponseStateManagerTests extends TestCase {
+public class FlowResponseStateManagerTests {
 
 	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
@@ -24,7 +28,8 @@ public class FlowResponseStateManagerTests extends TestCase {
 	private FlowExecutionContext flowExecutionContext;
 
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		this.jsfMock.setUp();
 		this.webappContext = new StaticWebApplicationContext();
 		this.webappContext.setServletContext(this.jsfMock.servletContext());
@@ -36,17 +41,14 @@ public class FlowResponseStateManagerTests extends TestCase {
 		this.responseStateManager = new FlowResponseStateManager(null);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		this.webappContext.close();
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
-	public void testname() {
-
-	}
-
+	@Test
 	public void testWriteFlowSerializedView() throws IOException {
 		EasyMock.expect(this.flowExecutionContext.getKey()).andReturn(new MockFlowExecutionKey("e1s1"));
 		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<>();
@@ -64,6 +66,7 @@ public class FlowResponseStateManagerTests extends TestCase {
 		EasyMock.verify(this.flowExecutionContext, this.requestContext);
 	}
 
+	@Test
 	public void testGetState() {
 		Object state = new Object();
 

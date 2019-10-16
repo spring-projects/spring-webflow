@@ -15,24 +15,29 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.FlowExecutionListener;
 
 /**
  * Unit tests for {@link ConditionalFlowExecutionListenerLoader}.
  */
-public class ConditionalFlowExecutionListenerLoaderTests extends TestCase {
+public class ConditionalFlowExecutionListenerLoaderTests {
 
 	private FlowExecutionListenerCriteriaFactory criteriaFactory;
 	private ConditionalFlowExecutionListenerLoader loader;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		loader = new ConditionalFlowExecutionListenerLoader();
 		criteriaFactory = new FlowExecutionListenerCriteriaFactory();
 	}
 
+	@Test
 	public void testAddConditionalListener() {
 		FlowExecutionListener listener = new FlowExecutionListener() {};
 		loader.addListener(listener, criteriaFactory.allFlows());
@@ -42,6 +47,7 @@ public class ConditionalFlowExecutionListenerLoaderTests extends TestCase {
 		assertSame(listener, listeners[0]);
 	}
 
+	@Test
 	public void testAddMultipleListeners() {
 		FlowExecutionListener listener1 = new FlowExecutionListener() {};
 		FlowExecutionListener listener2 = new FlowExecutionListener() {};
@@ -54,6 +60,7 @@ public class ConditionalFlowExecutionListenerLoaderTests extends TestCase {
 		assertSame(listener2, listeners[1]);
 	}
 
+	@Test
 	public void testAddListenerButNoMatch() {
 		FlowExecutionListener listener = new FlowExecutionListener() {};
 		loader.addListener(listener, criteriaFactory.flow("bar"));

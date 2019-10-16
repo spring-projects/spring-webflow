@@ -15,28 +15,32 @@
  */
 package org.springframework.webflow.execution.factory;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.Flow;
 
 /**
  * Unit tests for {@link FlowExecutionListenerCriteriaFactory}.
  */
-public class FlowExecutionListenerCriteriaFactoryTests extends TestCase {
+public class FlowExecutionListenerCriteriaFactoryTests {
 
 	private FlowExecutionListenerCriteriaFactory factory = new FlowExecutionListenerCriteriaFactory();
 
+	@Test
 	public void testAllFlows() {
 		FlowExecutionListenerCriteria c = factory.allFlows();
 		assertEquals(true, c.appliesTo(new Flow("foo")));
 	}
 
+	@Test
 	public void testFlowMatch() {
 		FlowExecutionListenerCriteria c = factory.flow("foo");
 		assertEquals(true, c.appliesTo(new Flow("foo")));
 		assertEquals(false, c.appliesTo(new Flow("baz")));
 	}
 
+	@Test
 	public void testMultipleFlowMatch() {
 		FlowExecutionListenerCriteria c = factory.flows("foo", "bar");
 		assertEquals(true, c.appliesTo(new Flow("foo")));

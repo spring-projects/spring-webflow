@@ -1,5 +1,9 @@
 package org.springframework.webflow.mvc.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,8 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -19,12 +22,13 @@ import org.springframework.webflow.mvc.view.AbstractMvcView;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class ServletMvcViewTests extends TestCase {
+public class ServletMvcViewTests {
 
 	private boolean renderCalled;
 
 	private Map<String, ?> model;
 
+	@Test
 	public void testRender() throws Exception {
 		MockRequestContext context = new MockRequestContext();
 		context.getRequestScope().put("foo", "bar");

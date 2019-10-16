@@ -15,8 +15,12 @@
  */
 package org.springframework.webflow.engine.support;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.TestException;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -42,13 +46,14 @@ import org.springframework.webflow.execution.factory.StaticFlowExecutionListener
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
-public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestCase {
+public class TransitionExecutingFlowExecutionExceptionHandlerTests {
 
 	Flow flow;
 
 	TransitionableState state;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		flow = new Flow("myFlow");
 		state = new TransitionableState(flow, "state1") {
 			protected void doEnter(RequestControlContext context) {
@@ -58,27 +63,30 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		state.getTransitionSet().add(new Transition(toState("end")));
 	}
 
+	@Test
 	public void testTransitionExecutorHandlesExceptionExactMatch() {
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new Exception());
-		assertFalse("Shouldn't handle exception", handler.canHandle(e));
+		assertFalse(handler.canHandle(e), "Shouldn't handle exception");
 	}
 
+	@Test
 	public void testTransitionExecutorHandlesExceptionSuperclassMatch() {
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(Exception.class, "state");
 		FlowExecutionException e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops",
 				new TestException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 		e = new FlowExecutionException(state.getOwner().getId(), state.getId(), "Oops", new RuntimeException());
-		assertTrue("Doesn't handle state exception", handler.canHandle(e));
+		assertTrue(handler.canHandle(e), "Doesn't handle state exception");
 	}
 
+	@Test
 	public void testFlowStateExceptionHandlingTransition() {
 		new EndState(flow, "end");
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
@@ -96,9 +104,10 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		factory.setExecutionListenerLoader(new StaticFlowExecutionListenerLoader(listener));
 		FlowExecution execution = factory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
-		assertTrue("Should have ended", !execution.isActive());
+		assertTrue(!execution.isActive(), "Should have ended");
 	}
 
+	@Test
 	public void testStateExceptionHandlingTransitionNoSuchState() {
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
 		handler.add(TestException.class, "end");
@@ -111,6 +120,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		}
 	}
 
+	@Test
 	public void testStateExceptionHandlingRethrow() {
 		FlowExecution execution = new FlowExecutionImplFactory().createFlowExecution(flow);
 		try {
@@ -121,6 +131,7 @@ public class TransitionExecutingFlowExecutionExceptionHandlerTests extends TestC
 		}
 	}
 
+	@Test
 	public void testStateExceptionHandlingExceptionInEndState() {
 		FlowBuilder builder = new AbstractFlowBuilder() {
 			public void buildStates() throws FlowBuilderException {

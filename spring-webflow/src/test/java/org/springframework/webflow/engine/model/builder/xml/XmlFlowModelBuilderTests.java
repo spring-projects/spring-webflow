@@ -1,7 +1,14 @@
 package org.springframework.webflow.engine.model.builder.xml;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.validation.BindingResult;
@@ -29,16 +36,18 @@ import org.springframework.webflow.execution.factory.StaticFlowExecutionListener
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 
-public class XmlFlowModelBuilderTests extends TestCase {
+public class XmlFlowModelBuilderTests {
 
 	private FlowModelRegistry registry;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
 		beanFactory.addBean("bean", new Object());
 		registry = new FlowModelRegistryImpl();
 	}
 
+	@Test
 	public void testBuildFlowWithEndState() {
 		ClassPathResource resource = new ClassPathResource("flow-endstate.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -49,6 +58,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
+	@Test
 	public void testBuildFlowWithDefaultStartState() {
 		ClassPathResource resource = new ClassPathResource("flow-startstate-default.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -59,6 +69,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("end", flow.getStates().get(0).getId());
 	}
 
+	@Test
 	public void testBuildFlowWithStartStateAttribute() {
 		ClassPathResource resource = new ClassPathResource("flow-startstate-attribute.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -68,6 +79,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("end", flow.getStartStateId());
 	}
 
+	@Test
 	public void testCustomFlowAttribute() {
 		ClassPathResource resource = new ClassPathResource("flow-custom-attribute.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -78,6 +90,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("number", flow.getAttributes().get(1).getName());
 	}
 
+	@Test
 	public void testPersistenceContextFlow() {
 		ClassPathResource resource = new ClassPathResource("flow-persistencecontext.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -87,6 +100,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertNotNull(flow.getPersistenceContext());
 	}
 
+	@Test
 	public void testFlowSecured() {
 		ClassPathResource resource = new ClassPathResource("flow-secured.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -98,6 +112,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("ROLE_USER", secured.getAttributes());
 	}
 
+	@Test
 	public void testFlowSecuredState() {
 		ClassPathResource resource = new ClassPathResource("flow-secured-state.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -109,6 +124,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("ROLE_USER", secured.getAttributes());
 	}
 
+	@Test
 	public void testFlowSecuredTransition() {
 		ClassPathResource resource = new ClassPathResource("flow-secured-transition.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -120,6 +136,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("ROLE_USER", secured.getAttributes());
 	}
 
+	@Test
 	public void testFlowVariable() {
 		ClassPathResource resource = new ClassPathResource("flow-var.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -130,6 +147,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("conversation-foo", flow.getVars().get(1).getName());
 	}
 
+	@Test
 	public void testViewStateVariable() {
 		ClassPathResource resource = new ClassPathResource("flow-viewstate-var.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -139,6 +157,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("foo", ((ViewStateModel) flow.getStates().get(0)).getVars().get(0).getName());
 	}
 
+	@Test
 	public void testViewStateModelBinding() {
 		ClassPathResource resource = new ClassPathResource("flow-viewstate-model-binding.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -152,6 +171,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("customConverter", model.getBinder().getBindings().get(0).getConverter());
 	}
 
+	@Test
 	public void testViewStateRedirect() {
 		ClassPathResource resource = new ClassPathResource("flow-viewstate-redirect.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -161,6 +181,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("true", ((ViewStateModel) flow.getStates().get(0)).getRedirect());
 	}
 
+	@Test
 	public void testViewStatePopup() {
 		ClassPathResource resource = new ClassPathResource("flow-viewstate-popup.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -170,6 +191,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("true", ((ViewStateModel) flow.getStates().get(0)).getPopup());
 	}
 
+	@Test
 	public void testMerge() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-parent.xml", getClass());
@@ -183,6 +205,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("view", flow.getStates().get(0).getId());
 	}
 
+	@Test
 	public void testMergeParentNotFound() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-parent.xml", getClass());
@@ -198,6 +221,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testEvaluateAction() {
 		ClassPathResource resource = new ClassPathResource("flow-action-evaluate-action.xml", getClass());
 		FlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -207,6 +231,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals(4, flow.getOnStartActions().size());
 	}
 
+	@Test
 	public void testStateMerge() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
@@ -219,6 +244,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("otherview", ((ViewStateModel) flow.getStates().get(0)).getView());
 	}
 
+	@Test
 	public void testStateMergeInvalidParentSyntax() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-invalid-parent-syntax.xml",
 				getClass());
@@ -235,6 +261,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStateMergeParentFlowNotFound() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
@@ -250,6 +277,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStateMergeParentStateNotFound() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-empty.xml", getClass());
@@ -265,6 +293,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testStateMergeParentStateIncompatable() {
 		ClassPathResource resourceChild = new ClassPathResource("flow-inheritance-state-child-alt.xml", getClass());
 		ClassPathResource resourceParent = new ClassPathResource("flow-inheritance-state-parent.xml", getClass());
@@ -280,6 +309,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseFlowExceptionHandler() {
 		ClassPathResource res = new ClassPathResource("flow-exception-handler.xml", getClass());
 		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(res);
@@ -293,6 +323,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertEquals("foo6", model.getStateById("state5").getExceptionHandlers().get(0).getBean());
 	}
 
+	@Test
 	public void testFormActionValidatorMethod() {
 		ClassPathResource resource = new ClassPathResource("flow-formaction-validatormethod.xml", getClass());
 		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(resource, registry);
@@ -328,6 +359,7 @@ public class XmlFlowModelBuilderTests extends TestCase {
 		assertTrue(((TestBeanValidator) action.getValidator()).getInvoked());
 	}
 
+	@Test
 	public void testParsedFlowValidationHints() {
 		ClassPathResource res = new ClassPathResource("flow-validation-hints.xml", getClass());
 		XmlFlowModelBuilder builder = new XmlFlowModelBuilder(res);

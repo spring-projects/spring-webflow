@@ -15,10 +15,14 @@
  */
 package org.springframework.webflow.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -30,7 +34,7 @@ import org.springframework.webflow.execution.FlowSession;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
-public abstract class AbstractPersistenceContextPropagationTests extends TestCase {
+public abstract class AbstractPersistenceContextPropagationTests {
 
 	private MockRequestContext requestContext;
 
@@ -40,7 +44,8 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 		return jdbcTemplate;
 	}
 
-	protected final void setUp() throws Exception {
+	@BeforeEach
+	public final void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		DataSource dataSource = createDataSource();
 		jdbcTemplate = new JdbcTemplate(dataSource);
@@ -48,6 +53,7 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 		setUpResources(dataSource);
 	}
 
+	@Test
 	public void testSessionStarting_NoPc_ParentPc() {
 		MockFlowSession parentSession = newFlowSession(true, null);
 		MockFlowSession childSession = newFlowSession(false, parentSession);
@@ -61,6 +67,7 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 		assertSessionNotInScope(childSession);
 	}
 
+	@Test
 	public void testSessionStarting_Pc_ParentPc() {
 		MockFlowSession parentSession = newFlowSession(true, null);
 		MockFlowSession childSession = newFlowSession(true, parentSession);
@@ -72,10 +79,11 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 		getListener().sessionStarting(new MockRequestContext(), childSession, null);
 		assertSessionBound();
 		assertSessionInScope(childSession);
-		assertSame("Parent PersistenceContext should be re-used", parentSession.getScope().get("persistenceContext"),
-				childSession.getScope().get("persistenceContext"));
+		assertSame(parentSession.getScope().get("persistenceContext"),
+				childSession.getScope().get("persistenceContext"), "Parent PersistenceContext should be re-used");
 	}
 
+	@Test
 	public void testSessionEnd_Pc_NoParentPc() {
 		MockFlowSession parentSession = newFlowSession(false, null);
 		MockFlowSession childSession = newFlowSession(true, parentSession);
@@ -97,6 +105,7 @@ public abstract class AbstractPersistenceContextPropagationTests extends TestCas
 		assertCommitState(false, true);
 	}
 
+	@Test
 	public void testSessionEnd_Pc_ParentPc() {
 		MockFlowSession parentSession = newFlowSession(true, null);
 		MockFlowSession childSession = newFlowSession(true, parentSession);

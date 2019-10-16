@@ -15,9 +15,11 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.easymock.EasyMock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -29,19 +31,20 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Ulrik Sandberg
  */
-public class CompositeActionTests extends TestCase {
+public class CompositeActionTests {
 
 	private CompositeAction tested;
 
 	private Action actionMock;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 		actionMock = EasyMock.createMock(Action.class);
 		Action[] actions = new Action[] { actionMock };
 		tested = new CompositeAction(actions);
 	}
 
+	@Test
 	public void testDoExecute() throws Exception {
 		MockRequestContext mockRequestContext = new MockRequestContext();
 		LocalAttributeMap<Object> attributes = new LocalAttributeMap<>();
@@ -54,6 +57,7 @@ public class CompositeActionTests extends TestCase {
 		assertEquals(1, result.getAttributes().size());
 	}
 
+	@Test
 	public void testDoExecuteWithError() throws Exception {
 		tested.setStopOnError(true);
 		MockRequestContext mockRequestContext = new MockRequestContext();
@@ -64,6 +68,7 @@ public class CompositeActionTests extends TestCase {
 		assertEquals("error", result.getId());
 	}
 
+	@Test
 	public void testDoExecuteWithNullResult() throws Exception {
 		tested.setStopOnError(true);
 		MockRequestContext mockRequestContext = new MockRequestContext();
@@ -71,9 +76,10 @@ public class CompositeActionTests extends TestCase {
 		EasyMock.replay(actionMock);
 		Event result = tested.doExecute(mockRequestContext);
 		EasyMock.verify(actionMock);
-		assertEquals("Expecting success since no check is performed if null result,", "success", result.getId());
+		assertEquals("success", result.getId(), "Expecting success since no check is performed if null result,");
 	}
 
+	@Test
 	public void testMultipleActions() throws Exception {
 		CompositeAction ca = new CompositeAction(
 				new Action() {
@@ -86,7 +92,7 @@ public class CompositeActionTests extends TestCase {
 						return new Event(this, "bar");
 					}
 				});
-		assertEquals("Result of last executed action should be returned", "bar", ca.execute(new MockRequestContext())
-				.getId());
+		assertEquals("bar", ca.execute(new MockRequestContext()).getId(),
+				"Result of last executed action should be returned");
 	}
 }

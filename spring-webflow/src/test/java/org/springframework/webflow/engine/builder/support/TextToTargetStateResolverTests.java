@@ -15,21 +15,21 @@
  */
 package org.springframework.webflow.engine.builder.support;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.TargetStateResolver;
 import org.springframework.webflow.engine.Transition;
 import org.springframework.webflow.test.MockFlowBuilderContext;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class TextToTargetStateResolverTests extends TestCase {
+public class TextToTargetStateResolverTests {
 
 	private MockFlowBuilderContext serviceLocator = new MockFlowBuilderContext("flowId");
 	private TextToTargetStateResolver converter = new TextToTargetStateResolver(serviceLocator);
 
-	public void setUp() {
-	}
-
+	@Test
 	public void testStatic() throws Exception {
 		String expression = "mockState";
 		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
@@ -39,6 +39,7 @@ public class TextToTargetStateResolverTests extends TestCase {
 		assertEquals("mockState", resolver.resolveTargetState(transition, null, context).getId());
 	}
 
+	@Test
 	public void testDynamic() throws Exception {
 		String expression = "#{flowScope.lastState}";
 		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
@@ -49,6 +50,7 @@ public class TextToTargetStateResolverTests extends TestCase {
 		assertEquals("mockState", resolver.resolveTargetState(transition, null, context).getId());
 	}
 
+	@Test
 	public void testNull() throws Exception {
 		String expression = null;
 		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,
@@ -56,6 +58,7 @@ public class TextToTargetStateResolverTests extends TestCase {
 		assertNull(resolver);
 	}
 
+	@Test
 	public void testEmpty() throws Exception {
 		String expression = "";
 		TargetStateResolver resolver = (TargetStateResolver) converter.convertSourceToTargetClass(expression,

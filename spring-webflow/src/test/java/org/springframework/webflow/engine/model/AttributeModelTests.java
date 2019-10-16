@@ -15,29 +15,37 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link AttributeModel}.
  */
-public class AttributeModelTests extends TestCase {
+public class AttributeModelTests {
 
+	@Test
 	public void testMergeable() {
 		AttributeModel child = new AttributeModel("child", "value");
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		AttributeModel child = new AttributeModel("child", "value");
 		AttributeModel parent = new AttributeModel("parent", "value");
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		AttributeModel child = new AttributeModel("child", "value");
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		AttributeModel child = new AttributeModel("child", "childvalue");
 		AttributeModel parent = new AttributeModel("child", "childvalue");

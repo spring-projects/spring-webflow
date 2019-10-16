@@ -1,7 +1,12 @@
 package org.springframework.webflow.config;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.binding.expression.spel.SpringELExpressionParser;
 import org.springframework.context.ApplicationContext;
@@ -15,6 +20,7 @@ public class FlowRegistryBeanDefinitionParserTests extends AbstractFlowRegistryC
 		return new ClassPathXmlApplicationContext("org/springframework/webflow/config/flow-registry.xml");
 	}
 
+	@Test
 	public void testDefaultFlowBuilderServices() {
 		Map<String, FlowBuilderServices> flowBuilderServicesBeans = context.getBeansOfType(FlowBuilderServices.class);
 		assertTrue(flowBuilderServicesBeans.size() > 0);

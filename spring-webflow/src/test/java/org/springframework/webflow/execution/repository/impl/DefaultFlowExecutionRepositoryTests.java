@@ -1,10 +1,16 @@
 package org.springframework.webflow.execution.repository.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
 import org.springframework.webflow.conversation.ConversationId;
@@ -13,10 +19,7 @@ import org.springframework.webflow.conversation.ConversationParameters;
 import org.springframework.webflow.conversation.NoSuchConversationException;
 import org.springframework.webflow.conversation.impl.BadlyFormattedConversationIdException;
 import org.springframework.webflow.conversation.impl.SimpleConversationId;
-import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.definition.registry.FlowDefinitionConstructionException;
 import org.springframework.webflow.definition.registry.FlowDefinitionLocator;
-import org.springframework.webflow.definition.registry.NoSuchFlowDefinitionException;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.StubViewFactory;
 import org.springframework.webflow.engine.Transition;
@@ -32,13 +35,14 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
 import org.springframework.webflow.execution.repository.snapshot.SerializedFlowExecutionSnapshotFactory;
 import org.springframework.webflow.test.MockExternalContext;
 
-public class DefaultFlowExecutionRepositoryTests extends TestCase {
+public class DefaultFlowExecutionRepositoryTests {
 	private Flow flow;
 	private ConversationManager conversationManager;
 	private DefaultFlowExecutionRepository repository;
 	FlowExecutionImplFactory executionFactory = new FlowExecutionImplFactory();
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		flow = new Flow("myFlow");
 		ViewState s1 = new ViewState(flow, "state", new StubViewFactory());
 		s1.getTransitionSet().add(new Transition(new DefaultTargetStateResolver("state2")));
@@ -52,12 +56,14 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		executionFactory.setExecutionKeyFactory(repository);
 	}
 
+	@Test
 	public void testParseFlowExecutionKey() {
 		String key = "e12345s54321";
 		FlowExecutionKey k = repository.parseFlowExecutionKey(key);
 		assertEquals(key, k.toString());
 	}
 
+	@Test
 	public void testParseBadlyFormattedFlowExecutionKey() {
 		String key = "e12345";
 		try {
@@ -69,6 +75,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testParseBadlyFormattedFlowExecutionKeyBadContinuationId() {
 		String key = "c12345vaaaa";
 		try {
@@ -80,6 +87,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetLock() {
 		FlowExecutionKey key = repository.parseFlowExecutionKey("e12345s54321");
 		FlowExecutionLock lock = repository.getLock(key);
@@ -87,6 +95,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		lock.unlock();
 	}
 
+	@Test
 	public void testGetLockNoSuchFlowExecution() {
 		FlowExecutionKey key = repository.parseFlowExecutionKey("e99999s54321");
 		try {
@@ -97,6 +106,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPutFlowExecution() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -109,6 +119,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		assertEquals(execution.getActiveSession().getState().getId(), execution2.getActiveSession().getState().getId());
 	}
 
+	@Test
 	public void testPutFlowExecutionNextSnapshotId() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -126,6 +137,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		assertNotSame(execution.getKey(), execution2.getKey());
 	}
 
+	@Test
 	public void testPutFlowExecutionNoKeyAssigned() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		try {
@@ -136,6 +148,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveFlowExecution() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -150,6 +163,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveKeyNotSet() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		try {
@@ -160,6 +174,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveNoSuchFlowExecution() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -172,6 +187,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetKey() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		assertEquals("e12345s1", repository.getKey(execution).toString());
@@ -179,6 +195,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		assertEquals("e12345s3", repository.getKey(execution).toString());
 	}
 
+	@Test
 	public void testUpdate() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -189,6 +206,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		assertEquals("bar", execution2.getActiveSession().getScope().get("foo"));
 	}
 
+	@Test
 	public void testRemove() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -202,6 +220,7 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveAll() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		execution.start(null, new MockExternalContext());
@@ -216,16 +235,19 @@ public class DefaultFlowExecutionRepositoryTests extends TestCase {
 
 	}
 
+	@Test
 	public void testUpdateNothingToDo() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		repository.updateFlowExecutionSnapshot(execution);
 	}
 
+	@Test
 	public void testRemoveNothingToDo() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		repository.removeFlowExecutionSnapshot(execution);
 	}
 
+	@Test
 	public void testRemoveAllSnapshotsNothingToDo() {
 		FlowExecution execution = executionFactory.createFlowExecution(flow);
 		repository.removeAllFlowExecutionSnapshots(execution);

@@ -15,28 +15,34 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.Event;
 
 /**
  * Unit tests for {@link EventFactorySupport}.
  */
-public class EventFactorySupportTests extends TestCase {
+public class EventFactorySupportTests {
 
 	private EventFactorySupport support = new EventFactorySupport();
 
 	private Object source = new Object();
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 	}
 
+	@Test
 	public void testSuccess() {
 		Event e = support.success(source);
 		assertEquals("success", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testSuccessWithResult() {
 		Object result = new Object();
 		Event e = support.success(source, result);
@@ -45,12 +51,14 @@ public class EventFactorySupportTests extends TestCase {
 		assertSame(result, e.getAttributes().get("result"));
 	}
 
+	@Test
 	public void testError() {
 		Event e = support.error(source);
 		assertEquals("error", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testErrorWithException() {
 		Exception ex = new Exception();
 		Event e = support.error(source, ex);
@@ -59,36 +67,42 @@ public class EventFactorySupportTests extends TestCase {
 		assertSame(ex, e.getAttributes().get("exception"));
 	}
 
+	@Test
 	public void testYes() {
 		Event e = support.yes(source);
 		assertEquals("yes", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testNo() {
 		Event e = support.no(source);
 		assertEquals("no", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testBooleanTrueEvent() {
 		Event e = support.event(source, true);
 		assertEquals("yes", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testBooleanFalseEvent() {
 		Event e = support.event(source, false);
 		assertEquals("no", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testEvent() {
 		Event e = support.event(source, "no");
 		assertEquals("no", e.getId());
 		assertSame(source, e.getSource());
 	}
 
+	@Test
 	public void testEventWithAttrs() {
 		Event e = support.event(source, "no", "foo", "bar");
 		assertEquals("no", e.getId());

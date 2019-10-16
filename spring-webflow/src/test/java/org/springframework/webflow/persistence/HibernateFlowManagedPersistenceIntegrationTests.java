@@ -1,5 +1,8 @@
 package org.springframework.webflow.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import javax.sql.DataSource;
 
 import org.hibernate.Session;

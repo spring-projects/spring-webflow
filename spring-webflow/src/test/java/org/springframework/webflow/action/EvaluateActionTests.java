@@ -15,8 +15,9 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.test.MockRequestContext;
@@ -25,8 +26,9 @@ import org.springframework.webflow.test.MockRequestContext;
  * Unit tests for {@link EvaluateAction}.
  * @author Jeremy Grelle
  */
-public class EvaluateActionTests extends TestCase {
+public class EvaluateActionTests {
 
+	@Test
 	public void testEvaluateExpressionNoResultExposer() throws Exception {
 		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), null);
 		MockRequestContext context = new MockRequestContext();
@@ -34,6 +36,7 @@ public class EvaluateActionTests extends TestCase {
 		assertEquals("bar", result.getId());
 	}
 
+	@Test
 	public void testEvaluateExpressionEmptyStringResult() throws Exception {
 		EvaluateAction action = new EvaluateAction(new StaticExpression(""), null);
 		MockRequestContext context = new MockRequestContext();
@@ -41,6 +44,7 @@ public class EvaluateActionTests extends TestCase {
 		assertEquals("null", result.getId());
 	}
 
+	@Test
 	public void testEvaluateExpressionNullResult() throws Exception {
 		EvaluateAction action = new EvaluateAction(new StaticExpression(null), null);
 		MockRequestContext context = new MockRequestContext();
@@ -48,6 +52,7 @@ public class EvaluateActionTests extends TestCase {
 		assertEquals("success", result.getId());
 	}
 
+	@Test
 	public void testEvaluateExpressionResultExposer() throws Exception {
 		StaticExpression resultExpression = new StaticExpression("");
 		EvaluateAction action = new EvaluateAction(new StaticExpression("bar"), resultExpression);

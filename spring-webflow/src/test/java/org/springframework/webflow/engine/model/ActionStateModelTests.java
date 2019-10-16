@@ -15,31 +15,40 @@
  */
 package org.springframework.webflow.engine.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link ActionStateModel}.
  */
-public class ActionStateModelTests extends TestCase {
+public class ActionStateModelTests {
 
+	@Test
 	public void testMergeable() {
 		ActionStateModel child = new ActionStateModel("child");
 		assertTrue(child.isMergeableWith(child));
 	}
 
+	@Test
 	public void testNotMergeable() {
 		ActionStateModel child = new ActionStateModel("child");
 		ActionStateModel parent = new ActionStateModel("parent");
 		assertFalse(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		ActionStateModel child = new ActionStateModel("child");
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMerge() {
 		ActionStateModel child = new ActionStateModel("child");
 		ActionStateModel parent = new ActionStateModel("parent");

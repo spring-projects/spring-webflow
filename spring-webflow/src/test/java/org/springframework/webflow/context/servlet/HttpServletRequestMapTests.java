@@ -15,10 +15,16 @@
  */
 package org.springframework.webflow.context.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
@@ -26,24 +32,25 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  * @author Ulrik Sandberg
  */
-public class HttpServletRequestMapTests extends TestCase {
+public class HttpServletRequestMapTests {
 
 	private HttpServletRequestMap tested;
 
 	private MockHttpServletRequest request;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		tested = new HttpServletRequestMap(request);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		request = null;
 		tested = null;
 	}
 
+	@Test
 	public void testGetAttribute() {
 		request.setAttribute("Some key", "Some value");
 		// perform test
@@ -51,12 +58,14 @@ public class HttpServletRequestMapTests extends TestCase {
 		assertEquals("Some value", result);
 	}
 
+	@Test
 	public void testSetAttribute() {
 		// perform test
 		tested.setAttribute("Some key", "Some value");
 		assertEquals("Some value", request.getAttribute("Some key"));
 	}
 
+	@Test
 	public void testRemoveAttribute() {
 		request.setAttribute("Some key", "Some value");
 		// perform test
@@ -64,13 +73,14 @@ public class HttpServletRequestMapTests extends TestCase {
 		assertNull(request.getAttribute("Some key"));
 	}
 
+	@Test
 	public void testGetAttributeNames() {
 		request.setAttribute("Some key", "Some value");
 		request.removeAttribute("javax.servlet.context.tempdir");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertTrue("More elements", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertTrue(names.hasNext(), "More elements");
 		String name = names.next();
 		assertEquals("Some key", name);
 	}

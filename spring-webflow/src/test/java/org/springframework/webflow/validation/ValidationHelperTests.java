@@ -15,8 +15,12 @@
  */
 package org.springframework.webflow.validation;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.validation.ValidationContext;
@@ -34,7 +38,7 @@ import org.springframework.webflow.test.MockRequestControlContext;
 /**
  * Unit test for {@link ValidationHelper}
  */
-public class ValidationHelperTests extends TestCase {
+public class ValidationHelperTests {
 
 	private MockRequestControlContext requestContext;
 
@@ -45,13 +49,15 @@ public class ValidationHelperTests extends TestCase {
 	private DefaultMessageCodesResolver codesResolver;
 
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		requestContext = new MockRequestControlContext();
 		eventId = "userEvent";
 		modelName = "model";
 		codesResolver = new DefaultMessageCodesResolver();
 	}
 
+	@Test
 	public void testValidateWithMessageContext() {
 		Object model = new StubModelMessageContext();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null, null, null);
@@ -62,6 +68,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(0, messages.getMessagesBySource("validationcontext").length);
 	}
 
+	@Test
 	public void testValidateWithValidationContext() {
 		Object model = new StubModelValidationContext();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
@@ -72,6 +79,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(1, messages.getMessagesBySource("validationcontext").length);
 	}
 
+	@Test
 	public void testValidateWithMessageContextForBeanValidator() {
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("modelValidator", StubModelMessageContext.class);
@@ -84,6 +92,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(1, messages.getMessagesBySource("messagecontext-external").length);
 	}
 
+	@Test
 	public void testValidateWithValidationContextForBeanValidator() {
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("modelValidator", StubModelValidationContext.class);
@@ -96,6 +105,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(1, messages.getMessagesBySource("validationcontext-external").length);
 	}
 
+	@Test
 	public void testValidateWithErrorsForBeanValidator() {
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("modelValidator", StubModelErrors.class);
@@ -108,6 +118,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(1, messages.getMessagesBySource("errors-external").length);
 	}
 
+	@Test
 	public void testValidateWithErrorsForBeanValidatorOverridden() {
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("modelValidator", StubModelErrorsOverridden.class);
@@ -120,6 +131,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(1, messages.getMessagesBySource("validationcontext-external").length);
 	}
 
+	@Test
 	public void testStateAndFallbackModelValidationMethodInvoked() {
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
@@ -131,6 +143,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(model.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackModelValidationMethodInvoked() {
 		Model model = new Model();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
@@ -142,6 +155,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(model.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackErrorsModelValidationMethodInvoked() {
 		ErrorsModel model = new ErrorsModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
@@ -153,6 +167,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(model.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackModelErrorsValidationMethodInvoked() {
 		ErrorsModel model = new ErrorsModel();
 		ValidationHelper helper = new ValidationHelper(model, requestContext, eventId, modelName, null,
@@ -164,6 +179,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(model.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackValidatorInvoked() {
 		ModelValidator validator = new ModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -180,6 +196,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackValidatorInvokedForSubclass() {
 		ModelValidator validator = new ModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -196,6 +213,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackValidatorInvoked() {
 		ModelValidator validator = new ModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -212,6 +230,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackValidatorInvokedForSubclass() {
 		ModelValidator validator = new ModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -228,6 +247,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackLegacyValidatorInvoked() {
 		LegacyModelValidator validator = new LegacyModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -244,6 +264,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackLegacyValidatorInvokedForSubclass() {
 		LegacyModelValidator validator = new LegacyModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -260,6 +281,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackLegacyValidatorInvoked() {
 		LegacyModelValidator validator = new LegacyModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -276,6 +298,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackErrorsValidatorInvoked() {
 		ErrorsModelValidator validator = new ErrorsModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -292,6 +315,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testStateAndFallbackErrorsValidatorInvokedForSubclass() {
 		ErrorsModelValidator validator = new ErrorsModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -308,6 +332,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackErrorsValidatorInvoked() {
 		ErrorsModelValidator validator = new ErrorsModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -324,6 +349,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testFallbackErrorsValidatorInvokedForSubclass() {
 		ErrorsModelValidator validator = new ErrorsModelValidator();
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
@@ -340,6 +366,7 @@ public class ValidationHelperTests extends TestCase {
 		assertTrue(validator.fallbackInvoked);
 	}
 
+	@Test
 	public void testSmartValidatorWithClassHint() {
 		ViewState state = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		state.getAttributes().put("validationHints", new StaticExpression(new Object[] { Model.State1.class }));
@@ -357,6 +384,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(Model.State1.class, validator.hints[0]);
 	}
 
+	@Test
 	public void testSmartValidatorWithHintResolution() {
 		ViewState state = new ViewState(requestContext.getRootFlow(), "state2", new StubViewFactory());
 		state.getAttributes().put("validationHints", new StaticExpression("State1"));
@@ -374,6 +402,7 @@ public class ValidationHelperTests extends TestCase {
 		assertEquals(Model.State1.class, validator.hints[0]);
 	}
 
+	@Test
 	public void testSmartValidatorWithHintOnTransition() {
 		Transition transition = new Transition();
 		transition.setMatchingCriteria(new DefaultTransitionCriteria(new StaticExpression(eventId)));

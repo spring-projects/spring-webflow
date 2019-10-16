@@ -15,17 +15,21 @@
  */
 package org.springframework.webflow.engine;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.FlowExecutionException;
-import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
 
-public class TransitionTests extends TestCase {
+public class TransitionTests {
 
 	private boolean exitCalled;
 
+	@Test
 	public void testExecuteTransitionFromState() {
 		Flow flow = new Flow("flow");
 		final TransitionableState source = new TransitionableState(flow, "state 1") {
@@ -53,6 +57,7 @@ public class TransitionTests extends TestCase {
 		assertSame(target, context.getCurrentState());
 	}
 
+	@Test
 	public void testExecuteTransitionWithNullSourceState() {
 		Flow flow = new Flow("flow");
 		final TransitionableState target = new TransitionableState(flow, "state 2") {
@@ -70,6 +75,7 @@ public class TransitionTests extends TestCase {
 		assertSame(target, context.getCurrentState());
 	}
 
+	@Test
 	public void testExecuteTransitionNullTargetState() {
 		Flow flow = new Flow("flow");
 		final TransitionableState source = new TransitionableState(flow, "state 1") {
@@ -90,6 +96,7 @@ public class TransitionTests extends TestCase {
 		assertSame(source, context.getCurrentState());
 	}
 
+	@Test
 	public void testExecuteTransitionNullTargetStateResolver() {
 		Flow flow = new Flow("flow");
 		final TransitionableState source = new TransitionableState(flow, "state 1") {
@@ -109,6 +116,7 @@ public class TransitionTests extends TestCase {
 		assertSame(source, context.getCurrentState());
 	}
 
+	@Test
 	public void testTransitionExecutionRefused() {
 		Flow flow = new Flow("flow");
 		final TransitionableState source = new TransitionableState(flow, "state 1") {

@@ -1,13 +1,16 @@
 package org.springframework.webflow.execution.repository.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 
-public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
+public class SimpleFlowExecutionSnapshotGroupTests {
 
 	private SimpleFlowExecutionSnapshotGroup group = new SimpleFlowExecutionSnapshotGroup();
 
@@ -23,18 +26,21 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 
 	};
 
+	@Test
 	public void testInitialState() {
 		assertEquals(0, group.getSnapshotCount());
 		assertEquals(-1, group.getMaxSnapshots());
 		assertEquals(1, group.nextSnapshotId());
 	}
 
+	@Test
 	public void testGetSnapshot() {
 		Serializable id = group.nextSnapshotId();
 		group.addSnapshot(id, snapshot);
 		assertSame(snapshot, group.getSnapshot(id));
 	}
 
+	@Test
 	public void testGetSnapshotNotFound() {
 		try {
 			group.getSnapshot(group.nextSnapshotId());
@@ -44,11 +50,13 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNextSnapshotId() {
 		assertEquals(1, group.nextSnapshotId());
 		assertEquals(2, group.nextSnapshotId());
 	}
 
+	@Test
 	public void testAddMaximumReached() {
 		group.setMaxSnapshots(2);
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
@@ -63,6 +71,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveSnapshot() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
 		group.addSnapshot(group.nextSnapshotId(), snapshot2);
@@ -77,6 +86,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveAllSnapshots() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
 		group.addSnapshot(group.nextSnapshotId(), snapshot2);
@@ -85,12 +95,14 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		assertEquals(0, group.getSnapshotCount());
 	}
 
+	@Test
 	public void testUpdateSnapshot() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
 		group.updateSnapshot(1, snapshot2);
 		assertSame(snapshot2, group.getSnapshot(1));
 	}
 
+	@Test
 	public void testRemoveSnapshotDoesNotExist() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
 		group.removeSnapshot(1);
@@ -99,6 +111,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		assertEquals(0, group.getSnapshotCount());
 	}
 
+	@Test
 	public void testRemoveSnapshotsDoesNotExist() {
 		group.addSnapshot(group.nextSnapshotId(), snapshot);
 		group.removeAllSnapshots();
@@ -107,6 +120,7 @@ public class SimpleFlowExecutionSnapshotGroupTests extends TestCase {
 		assertEquals(0, group.getSnapshotCount());
 	}
 
+	@Test
 	public void testUpdateSnapshotDoesNotExist() {
 		assertEquals(0, group.getSnapshotCount());
 		group.updateSnapshot(1, snapshot2);

@@ -15,13 +15,16 @@
  */
 package org.springframework.webflow.engine.model;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link RenderModel}.
  */
-public class RenderModelTests extends TestCase {
+public class RenderModelTests {
 
+	@Test
 	public void testNotMergeable() {
 		RenderModel child = new RenderModel("child");
 		assertFalse(child.isMergeableWith(child));

@@ -5,17 +5,19 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionExecutor;
 
-public class FacesConversionServiceTests extends TestCase {
+public class FacesConversionServiceTests {
 	private FacesConversionService service;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		this.service = new FacesConversionService();
 	}
 
+	@Test
 	public void testGetAbstractType() {
 		ConversionExecutor executor = this.service.getConversionExecutor(List.class, DataModel.class);
 		ArrayList<Object> list = new ArrayList<>();

@@ -15,10 +15,14 @@
  */
 package org.springframework.webflow.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import javax.validation.groups.Default;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.execution.FlowExecutionException;
 
 /**
@@ -26,14 +30,16 @@ import org.springframework.webflow.execution.FlowExecutionException;
  *
  * @author Rossen Stoyanchev
  */
-public class BeanValidationHintResolverTests extends TestCase {
+public class BeanValidationHintResolverTests {
 
 	private BeanValidationHintResolver resolver;
 
+	@BeforeEach
 	public void setUp() {
 		this.resolver = new BeanValidationHintResolver();
 	}
 
+	@Test
 	public void testResolveFullyQualifiedClassNameHint() {
 		String[] hints = new String[] { this.getClass().getName() };
 		Class<?>[] resolvedHints = this.resolver.resolveValidationHints(null, "flowId", "state1", hints);
@@ -43,6 +49,7 @@ public class BeanValidationHintResolverTests extends TestCase {
 		assertEquals(this.getClass(), resolvedHints[0]);
 	}
 
+	@Test
 	public void testResolveInnterTypeHints() {
 		String[] hints = new String[] {"default", "state1", "state2"};
 		Class<?>[] resolvedHints = this.resolver.resolveValidationHints(new TestModel(), "flowId", "state1", hints);
@@ -54,6 +61,7 @@ public class BeanValidationHintResolverTests extends TestCase {
 		assertEquals(TestModel.State2.class, resolvedHints[2]);
 	}
 
+	@Test
 	public void testResolveHintNoMatch() {
 		try {
 			this.resolver.resolveValidationHints(null, "flowId", "state1", new String[] { "foo" });

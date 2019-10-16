@@ -15,13 +15,20 @@
  */
 package org.springframework.webflow.conversation.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationException;
@@ -33,18 +40,21 @@ import org.springframework.webflow.test.MockExternalContext;
 /**
  * Unit tests for {@link SessionBindingConversationManager}.
  */
-public class SessionBindingConversationManagerTests extends TestCase {
+public class SessionBindingConversationManagerTests {
 
 	private SessionBindingConversationManager conversationManager;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		conversationManager = new SessionBindingConversationManager();
 	}
 
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws Exception {
 		ExternalContextHolder.setExternalContext(null);
 	}
 
+	@Test
 	public void testConversationLifeCycle() {
 		ExternalContextHolder.setExternalContext(new MockExternalContext());
 		Conversation conversation = conversationManager.beginConversation(new ConversationParameters("test", "test",
@@ -61,6 +71,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNoPassivation() {
 		ExternalContextHolder.setExternalContext(new MockExternalContext());
 		Conversation conversation = conversationManager.beginConversation(new ConversationParameters("test", "test",
@@ -78,6 +89,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		conversation2.unlock();
 	}
 
+	@Test
 	public void testPassivation() throws Exception {
 		MockExternalContext externalContext = new MockExternalContext();
 		ExternalContextHolder.setExternalContext(externalContext);
@@ -105,6 +117,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		conversation.unlock();
 	}
 
+	@Test
 	public void testMaxConversations() {
 		conversationManager.setMaxConversations(2);
 		ExternalContextHolder.setExternalContext(new MockExternalContext());
@@ -129,6 +142,7 @@ public class SessionBindingConversationManagerTests extends TestCase {
 		assertNotNull(conversationManager.getConversation(conversation3.getId()));
 	}
 
+	@Test
 	public void testCustomSessionKey() {
 		conversationManager.setSessionKey("foo");
 		MockExternalContext context = new MockExternalContext();

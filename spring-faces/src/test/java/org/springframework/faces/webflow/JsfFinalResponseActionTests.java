@@ -1,5 +1,8 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +17,10 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.apache.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
@@ -31,7 +35,7 @@ import org.springframework.webflow.execution.View;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
 
-public class JsfFinalResponseActionTests extends TestCase {
+public class JsfFinalResponseActionTests {
 
 	private static final String VIEW_ID = "/testView.xhtml";
 
@@ -49,12 +53,13 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		configureJsf();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
@@ -82,6 +87,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 				new LocalParameterMap(new HashMap<>()));
 	}
 
+	@Test
 	public void testRender() throws Exception {
 
 		UIViewRoot newRoot = new UIViewRoot();
@@ -110,7 +116,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			this.executed = true;
 		}
@@ -123,15 +129,15 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
-			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					this.phaseCallbacks.contains(phaseCallback));
+			assertFalse(this.phaseCallbacks.contains(phaseCallback),
+					"Phase callback " + phaseCallback + " already executed.");
 			this.phaseCallbacks.add(phaseCallback);
 		}
 

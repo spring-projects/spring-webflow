@@ -1,8 +1,13 @@
 package org.springframework.webflow.executor;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.easymock.EasyMock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.context.ExternalContextHolder;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -18,7 +23,7 @@ import org.springframework.webflow.test.GeneratedFlowExecutionKey;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
-public class FlowExecutorImplTests extends TestCase {
+public class FlowExecutorImplTests {
 	private FlowExecutor flowExecutor;
 
 	// mocks
@@ -29,7 +34,8 @@ public class FlowExecutorImplTests extends TestCase {
 	private FlowExecutionRepository repository;
 	private FlowExecutionLock lock;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		locator = EasyMock.createMock(FlowDefinitionLocator.class);
 		definition = EasyMock.createMock(FlowDefinition.class);
 		factory = EasyMock.createMock(FlowExecutionFactory.class);
@@ -40,6 +46,7 @@ public class FlowExecutorImplTests extends TestCase {
 		flowExecutor = new FlowExecutorImpl(locator, factory, repository);
 	}
 
+	@Test
 	public void testLaunchFlowExecution() {
 		String flowId = "foo";
 		MutableAttributeMap<Object> input = null;
@@ -78,6 +85,7 @@ public class FlowExecutorImplTests extends TestCase {
 		verifyMocks();
 	}
 
+	@Test
 	public void testLaunchFlowExecutionEndsAfterProcessing() {
 		String flowId = "foo";
 		MutableAttributeMap<Object> input = null;
@@ -107,6 +115,7 @@ public class FlowExecutorImplTests extends TestCase {
 		verifyMocks();
 	}
 
+	@Test
 	public void testResumeFlowExecution() {
 		String flowExecutionKey = "12345";
 		MockExternalContext context = new MockExternalContext();
@@ -144,6 +153,7 @@ public class FlowExecutorImplTests extends TestCase {
 
 	}
 
+	@Test
 	public void testResumeFlowExecutionEndsAfterProcessing() {
 		String flowExecutionKey = "12345";
 		MockExternalContext context = new MockExternalContext();

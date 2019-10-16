@@ -15,8 +15,13 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.expression.AccessException;
 import org.springframework.webflow.engine.Flow;
@@ -24,13 +29,14 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockRequestContext;
 
-public class FlowVariablePropertyAccessorTests extends TestCase {
+public class FlowVariablePropertyAccessorTests {
 
 	private FlowVariablePropertyAccessor accessor = new FlowVariablePropertyAccessor();
 
 	private MockRequestContext requestContext;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		requestContext = new MockRequestContext();
 		RequestContextHolder.setRequestContext(requestContext);
 	}
@@ -39,11 +45,13 @@ public class FlowVariablePropertyAccessorTests extends TestCase {
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public void testFlowRequestContext() throws Exception {
 		assertTrue(accessor.canRead(null, null, "flowRequestContext"));
 		assertEquals(requestContext, accessor.read(null, null, "flowRequestContext").getValue());
 	}
 
+	@Test
 	public void testCurrentUser() throws Exception {
 		MockExternalContext externalContext = (MockExternalContext) requestContext.getExternalContext();
 		externalContext.setCurrentUser("joe");
@@ -51,6 +59,7 @@ public class FlowVariablePropertyAccessorTests extends TestCase {
 		assertEquals(externalContext.getCurrentUser(), accessor.read(null, null, "currentUser").getValue());
 	}
 
+	@Test
 	public void testResourceBundle() throws Exception {
 		Flow flow = (Flow) requestContext.getActiveFlow();
 		flow.setApplicationContext(new StaticApplicationContext());
@@ -60,6 +69,7 @@ public class FlowVariablePropertyAccessorTests extends TestCase {
 				.read(null, null, "resourceBundle").getValue());
 	}
 
+	@Test
 	public void testWrite() throws Exception {
 		assertFalse(accessor.canWrite(null, null, "anyName"));
 		try {

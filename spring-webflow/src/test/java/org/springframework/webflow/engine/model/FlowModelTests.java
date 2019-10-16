@@ -15,27 +15,35 @@
  */
 package org.springframework.webflow.engine.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link FlowModel}.
  */
-public class FlowModelTests extends TestCase {
+public class FlowModelTests {
 
+	@Test
 	public void testMergeable() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
 		assertTrue(child.isMergeableWith(parent));
 	}
 
+	@Test
 	public void testNotMergeableWithNull() {
 		FlowModel child = new FlowModel();
 		assertFalse(child.isMergeableWith(null));
 	}
 
+	@Test
 	public void testMergeAttributes() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
@@ -55,6 +63,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals("type2", child.getAttributes().get(1).getType());
 	}
 
+	@Test
 	public void testMergeSecured() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
@@ -66,6 +75,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals("all", child.getSecured().getMatch());
 	}
 
+	@Test
 	public void testMergePersistenceContext() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
@@ -74,6 +84,7 @@ public class FlowModelTests extends TestCase {
 		assertNotNull(child.getPersistenceContext());
 	}
 
+	@Test
 	public void testMergeVars() {
 		FlowModel parent = new FlowModel();
 		parent.setVars(asList(new VarModel("name", "value")));
@@ -86,6 +97,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals("value2", child.getVars().get(0).getClassName());
 	}
 
+	@Test
 	public void testMergeMappings() {
 		FlowModel child = new FlowModel();
 		FlowModel parent = new FlowModel();
@@ -113,6 +125,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals(3, child.getInputs().size());
 	}
 
+	@Test
 	public void testMergeOnStart() {
 		FlowModel child = new FlowModel();
 		child.setOnStartActions(asList(new EvaluateModel("expression"), new RenderModel(
@@ -130,6 +143,7 @@ public class FlowModelTests extends TestCase {
 		assertNotNull(((EvaluateModel) child.getOnStartActions().get(0)).getResult());
 	}
 
+	@Test
 	public void testMergeStates() {
 		FlowModel child = new FlowModel();
 		child.setStates(asList(new ViewStateModel("view"), new EndStateModel("end")));
@@ -145,6 +159,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals("jsp", ((ViewStateModel) child.getStates().get(0)).getView());
 	}
 
+	@Test
 	public void testMergeGlobalTransitions() {
 		FlowModel child = new FlowModel();
 		TransitionModel transition1 = new TransitionModel();
@@ -166,6 +181,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals("theend", child.getGlobalTransitions().get(0).getTo());
 	}
 
+	@Test
 	public void testMergeOnEnd() {
 		FlowModel child = new FlowModel();
 		child.setOnEndActions(asList(new EvaluateModel("expression"), new RenderModel("expression"),
@@ -182,6 +198,7 @@ public class FlowModelTests extends TestCase {
 		assertNotNull(((EvaluateModel) child.getOnEndActions().get(0)).getResult());
 	}
 
+	@Test
 	public void testMergeExceptionHandlers() {
 		FlowModel child = new FlowModel();
 		child.setExceptionHandlers(asList(new ExceptionHandlerModel("bean1"),
@@ -194,6 +211,7 @@ public class FlowModelTests extends TestCase {
 		assertEquals(4, child.getExceptionHandlers().size());
 	}
 
+	@Test
 	public void testMergeBeanImports() {
 		FlowModel child = new FlowModel();
 		child.setBeanImports(asList(new BeanImportModel("path1"), new BeanImportModel("path2")));

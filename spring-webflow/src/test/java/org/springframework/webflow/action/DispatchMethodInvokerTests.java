@@ -15,34 +15,43 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class DispatchMethodInvokerTests extends TestCase {
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class DispatchMethodInvokerTests {
 
 	private MockClass mockClass;
 
-	protected void setUp() {
+	@BeforeEach
+	public void setUp() {
 		mockClass = new MockClass();
 	}
 
+	@Test
 	public void testInvokeWithExplicitParameters() throws Exception {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, Object.class);
 		invoker.invoke("argumentMethod", "testValue");
-		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
+		assertTrue(mockClass.getMethodCalled(), "Method should have been called successfully");
 	}
 
+	@Test
 	public void testInvokeWithAssignableParameters() throws Exception {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, String.class);
 		invoker.invoke("argumentMethod", "testValue");
-		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
+		assertTrue(mockClass.getMethodCalled(), "Method should have been called successfully");
 	}
 
+	@Test
 	public void testInvokeWithNoParameters() throws Exception {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass);
 		invoker.invoke("noArgumentMethod");
-		assertTrue("Method should have been called successfully", mockClass.getMethodCalled());
+		assertTrue(mockClass.getMethodCalled(), "Method should have been called successfully");
 	}
 
+	@Test
 	public void testInvokeWithException() {
 		DispatchMethodInvoker invoker = new DispatchMethodInvoker(mockClass, Object.class);
 		try {

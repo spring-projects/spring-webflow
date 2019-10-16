@@ -19,6 +19,7 @@ import org.apache.myfaces.test.mock.MockFacesContextFactory;
 import org.apache.myfaces.test.mock.MockRenderKitFactory;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
+import org.junit.jupiter.api.Test;
 
 public class JsfUtilsTests extends AbstractJsfTestCase {
 
@@ -26,6 +27,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		super(name);
 	}
 
+	@Test
 	public void testBeforeListenersCalledInForwardOrder() {
 		List<OrderVerifyingPhaseListener> list = new ArrayList<>();
 		MockLifecycle lifecycle = new MockLifecycle();
@@ -41,6 +43,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		assertEquals(listener3, list.get(2));
 	}
 
+	@Test
 	public void testAfterListenersCalledInReverseOrder() {
 		List<OrderVerifyingPhaseListener> list = new ArrayList<>();
 		MockLifecycle lifecycle = new MockLifecycle();
@@ -56,6 +59,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		assertEquals(listener1, list.get(2));
 	}
 
+	@Test
 	public void testGetFactory() {
 		// Not testing all but at least test the mocked factories
 		assertTrue(JsfUtils.findFactory(ApplicationFactory.class) instanceof MockApplicationFactory);
@@ -64,6 +68,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		assertTrue(JsfUtils.findFactory(RenderKitFactory.class) instanceof MockRenderKitFactory);
 	}
 
+	@Test
 	public void testGetUnknowFactory() {
 		try {
 			JsfUtils.findFactory(InputStream.class);

@@ -15,8 +15,11 @@
  */
 package org.springframework.webflow.engine.support;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.engine.TransitionCriteria;
 import org.springframework.webflow.execution.Action;
@@ -30,20 +33,23 @@ import org.springframework.webflow.test.MockRequestContext;
  * 
  * @author Erwin Vervaet
  */
-public class TransitionCriteriaChainTests extends TestCase {
+public class TransitionCriteriaChainTests {
 
 	private TransitionCriteriaChain chain;
 	private MockRequestContext context;
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 		chain = new TransitionCriteriaChain();
 		context = new MockRequestContext();
 	}
 
+	@Test
 	public void testEmptyChain() {
 		assertTrue(chain.test(context));
 	}
 
+	@Test
 	public void testAllTrue() {
 		TestTransitionCriteria criteria1 = new TestTransitionCriteria(true);
 		TestTransitionCriteria criteria2 = new TestTransitionCriteria(true);
@@ -57,6 +63,7 @@ public class TransitionCriteriaChainTests extends TestCase {
 		assertTrue(criteria3.tested);
 	}
 
+	@Test
 	public void testWithFalse() {
 		TestTransitionCriteria criteria1 = new TestTransitionCriteria(true);
 		TestTransitionCriteria criteria2 = new TestTransitionCriteria(false);
@@ -70,11 +77,13 @@ public class TransitionCriteriaChainTests extends TestCase {
 		assertFalse(criteria3.tested);
 	}
 
+	@Test
 	public void testCriteriaChainForNoActions() {
 		TransitionCriteria actionChain = TransitionCriteriaChain.criteriaChainFor((Action[]) null);
 		assertTrue(actionChain.test(context));
 	}
 
+	@Test
 	public void testCriteriaChainForActions() {
 		AnnotatedAction[] actions = new AnnotatedAction[] { new AnnotatedAction(new TestAction(true)),
 				new AnnotatedAction(new TestAction(false)) };

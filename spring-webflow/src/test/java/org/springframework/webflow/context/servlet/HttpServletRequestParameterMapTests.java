@@ -15,10 +15,16 @@
  */
 package org.springframework.webflow.context.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
@@ -26,24 +32,25 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * 
  * @author Ulrik Sandberg
  */
-public class HttpServletRequestParameterMapTests extends TestCase {
+public class HttpServletRequestParameterMapTests {
 
 	private HttpServletRequestParameterMap tested;
 
 	private MockHttpServletRequest request;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		tested = new HttpServletRequestParameterMap(request);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		request = null;
 		tested = null;
 	}
 
+	@Test
 	public void testGetAttribute() {
 		request.setParameter("Some param", "Some value");
 		// perform test
@@ -51,6 +58,7 @@ public class HttpServletRequestParameterMapTests extends TestCase {
 		assertEquals("Some value", result);
 	}
 
+	@Test
 	public void testSetAttribute() {
 		// perform test
 		try {
@@ -61,6 +69,7 @@ public class HttpServletRequestParameterMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testRemoveAttribute() {
 		request.setParameter("Some param", "Some value");
 		// perform test
@@ -72,12 +81,13 @@ public class HttpServletRequestParameterMapTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testGetAttributeNames() {
 		request.setParameter("Some param", "Some value");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertTrue("More elements", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertTrue(names.hasNext(), "More elements");
 		String name = names.next();
 		assertEquals("Some param", name);
 	}

@@ -73,6 +73,7 @@ configure(subprojects.findAll {
 		hibernate5Version     = "5.2.17.Final"
 		tiles3Version         = "3.0.8"
 		log4jVersion          = "2.11.1"
+		junit5Version         = "5.5.1"
 	}
 
 	configurations.all {
@@ -95,9 +96,7 @@ configure(subprojects.findAll {
 		compile("org.springframework:spring-core:$springVersion")
 		compile("org.springframework:spring-expression:$springVersion")
 		compileOnly("javax.el:javax.el-api:3.0.1-b04")
-		testCompile("junit:junit:4.12") {
-			exclude group:'org.hamcrest', module:'hamcrest-core'
-		}
+		testCompile("org.junit.jupiter:junit-jupiter:${junit5Version}")
 		testCompile("org.hamcrest:hamcrest-all:1.3")
 		testCompile("org.easymock:easymock:3.5.1")
 		testCompile("org.apache.tomcat:tomcat-jasper-el:8.5.27")
@@ -157,7 +156,7 @@ project("spring-webflow") {
 		optional("org.apache.tiles:tiles-extras:$tiles3Version") {
 			exclude group: "org.springframework", module: "spring-web"
 		}
-		provided("junit:junit:3.8.2")
+		provided("junit:junit:4.12")
 		testCompile("org.springframework:spring-aop:$springVersion")
 		testCompile("org.springframework:spring-jdbc:$springVersion")
 		testCompile("org.springframework:spring-test:$springVersion")

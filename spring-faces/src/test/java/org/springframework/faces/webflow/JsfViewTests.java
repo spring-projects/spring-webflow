@@ -1,5 +1,9 @@
 package org.springframework.faces.webflow;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import javax.faces.FacesException;
@@ -11,10 +15,11 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 
-import junit.framework.TestCase;
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.easymock.EasyMock;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionContext;
 import org.springframework.webflow.execution.FlowExecutionKey;
@@ -23,7 +28,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockParameterMap;
 
-public class JsfViewTests extends TestCase {
+public class JsfViewTests {
 
 	private static final String VIEW_ID = "testView.xhtml";
 
@@ -59,7 +64,8 @@ public class JsfViewTests extends TestCase {
 		}
 	};
 
-	protected void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() throws Exception {
 
 		this.jsfMock.setUp();
 		this.jsfMock.facesContext().getApplication().setViewHandler(new MockViewHandler());
@@ -89,17 +95,19 @@ public class JsfViewTests extends TestCase {
 		this.view = new JsfView(viewToRender, this.jsfMock.lifecycle(), this.context);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
+	@Test
 	public final void testSaveState() {
 		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 		this.view.saveState();
 	}
 
+	@Test
 	public final void testRender() throws IOException {
 
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
@@ -110,6 +118,7 @@ public class JsfViewTests extends TestCase {
 		this.view.render();
 	}
 
+	@Test
 	public final void testRenderException() {
 
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
@@ -128,6 +137,7 @@ public class JsfViewTests extends TestCase {
 	/**
 	 * View already exists in view scope and must be restored and the lifecycle executed, no event signaled
 	 */
+	@Test
 	public final void testProcessUserEvent_Restored_NoEvent() {
 
 		EasyMock.expect(this.flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
@@ -146,13 +156,14 @@ public class JsfViewTests extends TestCase {
 
 		restoredView.processUserEvent();
 
-		assertFalse("An unexpected event was signaled,", restoredView.hasFlowEvent());
-		assertTrue("The lifecycle should have been invoked", ((NoEventLifecycle) lifecycle).executed);
+		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
+		assertTrue(((NoEventLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
 	}
 
 	/**
 	 * View already exists in view scope and must be restored and the lifecycle executed, an event is signaled
 	 */
+	@Test
 	public final void testProcessUserEvent_Restored_EventSignaled() {
 
 		EasyMock.expect(this.flashScope.getBoolean(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY))).andStubReturn(
@@ -171,11 +182,12 @@ public class JsfViewTests extends TestCase {
 
 		restoredView.processUserEvent();
 
-		assertTrue("No event was signaled,", restoredView.hasFlowEvent());
-		assertEquals("Event should be " + this.event, this.event, restoredView.getFlowEvent().getId());
-		assertTrue("The lifecycle should have been invoked", ((EventSignalingLifecycle) lifecycle).executed);
+		assertTrue(restoredView.hasFlowEvent(), "No event was signaled,");
+		assertEquals(this.event, restoredView.getFlowEvent().getId(), "Event should be " + this.event);
+		assertTrue(((EventSignalingLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
 	}
 
+	@Test
 	public final void testUserEventQueued_GETRefresh() {
 
 		MockParameterMap requestParameterMap = new MockParameterMap();
@@ -186,9 +198,10 @@ public class JsfViewTests extends TestCase {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
-		assertFalse("No user event should be queued", createdView.userEventQueued());
+		assertFalse(createdView.userEventQueued(), "No user event should be queued");
 	}
 
+	@Test
 	public final void testUserEventQueued_FormSubmitted() {
 
 		this.jsfMock.request().addParameter("execution", "e1s1");
@@ -198,7 +211,7 @@ public class JsfViewTests extends TestCase {
 
 		JsfView createdView = new JsfView(new UIViewRoot(), this.jsfMock.lifecycle(), this.context);
 
-		assertTrue("User event should be queued", createdView.userEventQueued());
+		assertTrue(createdView.userEventQueued(), "User event should be queued");
 	}
 
 	private class ExceptionalViewHandler extends MockViewHandler {
@@ -216,7 +229,7 @@ public class JsfViewTests extends TestCase {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			this.executed = true;
 		}
@@ -231,7 +244,7 @@ public class JsfViewTests extends TestCase {
 		}
 
 		public void execute(FacesContext context) throws FacesException {
-			assertFalse("Lifecycle executed more than once", this.executed);
+			assertFalse(this.executed, "Lifecycle executed more than once");
 			super.execute(context);
 			JsfViewTests.this.extContext.getRequestMap().put(JsfView.EVENT_KEY, JsfViewTests.this.event);
 			this.executed = true;

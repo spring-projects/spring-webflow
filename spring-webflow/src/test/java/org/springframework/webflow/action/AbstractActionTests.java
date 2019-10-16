@@ -15,8 +15,13 @@
  */
 package org.springframework.webflow.action;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
@@ -26,15 +31,17 @@ import org.springframework.webflow.test.MockRequestContext;
 /**
  * Unit tests for {@link AbstractAction}.
  */
-public class AbstractActionTests extends TestCase {
+public class AbstractActionTests {
 
 	private TestAbstractAction action = new TestAbstractAction();
 
+	@Test
 	public void testInitCallback() throws Exception {
 		action.afterPropertiesSet();
 		assertTrue(action.initialized);
 	}
 
+	@Test
 	public void testInitCallbackWithException() throws Exception {
 		action = new TestAbstractAction() {
 			protected void initAction() {
@@ -49,6 +56,7 @@ public class AbstractActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNormalExecute() throws Exception {
 		action = new TestAbstractAction() {
 			protected Event doExecute(RequestContext context) {
@@ -60,6 +68,7 @@ public class AbstractActionTests extends TestCase {
 		assertTrue(result.getAttributes().size() == 0);
 	}
 
+	@Test
 	public void testExceptionalExecute() throws Exception {
 		try {
 			action.execute(new MockRequestContext());
@@ -69,6 +78,7 @@ public class AbstractActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testPreExecuteShortCircuit() throws Exception {
 		action = new TestAbstractAction() {
 			protected Event doPreExecute(RequestContext context) {
@@ -79,6 +89,7 @@ public class AbstractActionTests extends TestCase {
 		assertEquals("success", result.getId());
 	}
 
+	@Test
 	public void testPostExecuteCalled() throws Exception {
 		testNormalExecute();
 		assertTrue(action.postExecuteCalled);
@@ -102,11 +113,13 @@ public class AbstractActionTests extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSuccess() {
 		Event event = action.success();
 		assertEquals(action.getEventFactorySupport().getSuccessEventId(), event.getId());
 	}
 
+	@Test
 	public void testSuccessResult() {
 		Object o = new Object();
 		Event event = action.success(o);
@@ -114,11 +127,13 @@ public class AbstractActionTests extends TestCase {
 		assertSame(o, event.getAttributes().get(action.getEventFactorySupport().getResultAttributeName()));
 	}
 
+	@Test
 	public void testError() {
 		Event event = action.error();
 		assertEquals(action.getEventFactorySupport().getErrorEventId(), event.getId());
 	}
 
+	@Test
 	public void testErrorException() {
 		IllegalArgumentException e = new IllegalArgumentException("woops");
 		Event event = action.error(e);
@@ -126,37 +141,44 @@ public class AbstractActionTests extends TestCase {
 		assertSame(e, event.getAttributes().get(action.getEventFactorySupport().getExceptionAttributeName()));
 	}
 
+	@Test
 	public void testYes() {
 		Event event = action.yes();
 		assertEquals(action.getEventFactorySupport().getYesEventId(), event.getId());
 	}
 
+	@Test
 	public void testNo() {
 		Event event = action.no();
 		assertEquals(action.getEventFactorySupport().getNoEventId(), event.getId());
 	}
 
+	@Test
 	public void testTrueResult() {
 		Event event = action.result(true);
 		assertEquals(action.getEventFactorySupport().getYesEventId(), event.getId());
 	}
 
+	@Test
 	public void testFalseResult() {
 		Event event = action.result(false);
 		assertEquals(action.getEventFactorySupport().getNoEventId(), event.getId());
 	}
 
+	@Test
 	public void testCustomResult() {
 		Event event = action.result("custom");
 		assertEquals("custom", event.getId());
 	}
 
+	@Test
 	public void testCustomResultObject() {
 		Event event = action.result("custom", "result", "value");
 		assertEquals("custom", event.getId());
 		assertEquals("value", event.getAttributes().getString("result"));
 	}
 
+	@Test
 	public void testCustomResultCollection() {
 		LocalAttributeMap<Object> collection = new LocalAttributeMap<>();
 		collection.put("result", "value");

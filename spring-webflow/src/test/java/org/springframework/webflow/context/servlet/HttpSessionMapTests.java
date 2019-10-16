@@ -15,10 +15,18 @@
  */
 package org.springframework.webflow.context.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.util.WebUtils;
 
@@ -27,24 +35,25 @@ import org.springframework.web.util.WebUtils;
  * 
  * @author Ulrik Sandberg
  */
-public class HttpSessionMapTests extends TestCase {
+public class HttpSessionMapTests {
 
 	private HttpSessionMap tested;
 
 	private MockHttpServletRequest request;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@BeforeEach
+	public void setUp() throws Exception {
 		request = new MockHttpServletRequest();
 		tested = new HttpSessionMap(request);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@AfterEach
+	public void tearDown() throws Exception {
 		request = null;
 		tested = null;
 	}
 
+	@Test
 	public void testGetAttribute() {
 		request.getSession().setAttribute("Some key", "Some value");
 		// perform test
@@ -52,19 +61,22 @@ public class HttpSessionMapTests extends TestCase {
 		assertEquals("Some value", result);
 	}
 
+	@Test
 	public void testGetAttributeNullSession() {
 		request.setSession(null);
 		// perform test
 		Object result = tested.getAttribute("Some key");
-		assertNull("No value expected", result);
+		assertNull(result, "No value expected");
 	}
 
+	@Test
 	public void testSetAttribute() {
 		// perform test
 		tested.setAttribute("Some key", "Some value");
 		assertEquals("Some value", request.getSession().getAttribute("Some key"));
 	}
 
+	@Test
 	public void testRemoveAttribute() {
 		request.getSession().setAttribute("Some key", "Some value");
 		// perform test
@@ -72,6 +84,7 @@ public class HttpSessionMapTests extends TestCase {
 		assertNull(request.getSession().getAttribute("Some key"));
 	}
 
+	@Test
 	public void testRemoveAttributeNullSession() {
 		request.setSession(null);
 		// perform test
@@ -79,29 +92,33 @@ public class HttpSessionMapTests extends TestCase {
 		assertNull(request.getSession().getAttribute("Some key"));
 	}
 
+	@Test
 	public void testGetAttributeNames() {
 		request.getSession().setAttribute("Some key", "Some value");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertTrue("More elements", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertTrue(names.hasNext(), "More elements");
 		String name = names.next();
 		assertEquals("Some key", name);
 	}
 
+	@Test
 	public void testGetAttributeNamesNullSession() {
 		request.setSession(null);
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
-		assertNotNull("Null result unexpected", names);
-		assertFalse("No elements expected", names.hasNext());
+		assertNotNull(names, "Null result unexpected");
+		assertFalse(names.hasNext(), "No elements expected");
 	}
 
+	@Test
 	public void testGetSessionAsMutex() {
 		Object mutex = tested.getMutex();
 		assertSame(mutex, request.getSession());
 	}
 
+	@Test
 	public void testGetSessionMutex() {
 		Object object = new Object();
 		request.getSession().setAttribute(WebUtils.SESSION_MUTEX_ATTRIBUTE, object);

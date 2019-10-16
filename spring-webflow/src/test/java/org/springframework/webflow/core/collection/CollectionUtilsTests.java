@@ -15,13 +15,16 @@
  */
 package org.springframework.webflow.core.collection;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link CollectionUtils}.
  */
-public class CollectionUtilsTests extends TestCase {
+public class CollectionUtilsTests {
 
+	@Test
 	public void testSingleEntryMap() {
 		AttributeMap<Object> map1 = CollectionUtils.singleEntryMap("foo", "bar");
 		AttributeMap<Object> map2 = CollectionUtils.singleEntryMap("foo", "bar");
