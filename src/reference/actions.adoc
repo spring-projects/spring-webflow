@@ -1,0 +1,523 @@
+[[_actions]]
+== Executing Actions
+
+This chapter shows you how to use the `action-state` element to control the execution of an action at a point within a flow.
+It also shows how to use the `decision-state` element to make a flow routing decision.
+Finally, several examples of invoking actions from the various points possible within a flow are discussed.
+
+[[_action_state]]
+=== Defining Action States
+
+You can use the `action-state` element when you wish to invoke an action and then transition to another state based on the action's outcomem, as follows:
+
+====
+[source,xml]
+----
+<action-state id="moreAnswersNeeded">
+	<evaluate expression="interview.moreAnswersNeeded()" />
+	<transition on="yes" to="answerQuestions" />
+	<transition on="no" to="finish" />
+</action-state>
+----
+====
+
+The following example shows an interview flow that uses the preceding `action-state` above to determine if more answers are needed to complete the interview:
+
+====
+[source,xml]
+----
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						  https://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+	<on-start>
+		<evaluate expression="interviewFactory.createInterview()" result="flowScope.interview" />
+	</on-start>
+
+	<view-state id="answerQuestions" model="questionSet">
+		<on-entry>
+			<evaluate expression="interview.getNextQuestionSet()" result="viewScope.questionSet" />
+		</on-entry>
+		<transition on="submitAnswers" to="moreAnswersNeeded">
+			<evaluate expression="interview.recordAnswers(questionSet)" />
+		</transition>
+	</view-state>
+
+	<action-state id="moreAnswersNeeded">
+		<evaluate expression="interview.moreAnswersNeeded()" />
+		<transition on="yes" to="answerQuestions" />
+		<transition on="no" to="finish" />
+	</action-state>
+
+	<end-state id="finish" />
+
+</flow>
+----
+====
+
+After the execution of each action, the `action-state` checks the result to see if it matches a declared transition to another state.
+That means that, if more than one action is configured, they are executed in an ordered chain until one returns a single result event that matches a state transition out of the action-state while the rest are ignored.
+This is a form of the "`Chain of Responsibility`" (CoR) pattern.
+
+The result of an action's execution is typically the criteria for a transition out of this state.
+You can also test additional information in the current `RequestContext` as part of custom transitional criteria that allow for sophisticated transition expressions that reason on contextual state.
+
+Note also that an `action-state` (as any other state) can have more on-entry actions that are executed as a list from start to end.
+
+[[_decision_state]]
+=== Defining Decision States
+
+You can use the `decision-state` element as an alternative to the `action-state` to make a routing decision using a convenient if-else syntax.
+The following example shows the `moreAnswersNeeded` state (from the example in the preceding section) now implemented as a decision state instead of an action-state:
+
+====
+[source,xml]
+----
+<decision-state id="moreAnswersNeeded">
+	<if test="interview.moreAnswersNeeded()" then="answerQuestions" else="finish" />
+</decision-state>
+----
+====
+
+[[_action_outcome_events]]
+=== Action Outcome Event Mappings
+
+Actions often invoke methods on plain Java objects.
+When called from `action-state` and `decision-state` elements, these method return values that can be used to drive state transitions.
+Since transitions are triggered by events, a method return value must first be mapped to an `Event` object.
+The following table describes how common return value types are mapped to `Event` objects:
+
+.Action method return value to event id mappings
+[cols="1,1", options="header"]
+|===
+| Method return type
+| Mapped Event identifier expression
+
+|`java.lang.String`
+|The `String` value
+
+|`java.lang.Boolean`
+|yes (for `true`), no (for `false`)
+
+|`java.lang.Enum`
+|the `Enum` name
+
+|any other type
+|success
+|===
+
+The following example invokes a method that returns a boolean value:
+
+====
+[source,xml]
+----
+<action-state id="moreAnswersNeeded">
+	<evaluate expression="interview.moreAnswersNeeded()" />
+	<transition on="yes" to="answerQuestions" />
+	<transition on="no" to="finish" />
+</action-state>
+----
+====
+
+=== Action Implementations
+
+While writing action code as POJO logic is the most common, there are several other action implementation options.
+Sometimes, you need to write action code that needs access to the flow context.
+You can always invoke a POJO and pass it the `flowRequestContext` as an EL variable.
+Alternatively, you may implement the `Action` interface or extend from the `MultiAction` base class.
+These options provide stronger type safety when you have a natural coupling between your action code and Spring Web Flow APIs.
+The following sections show examples of each of these approaches.
+
+==== Invoking a POJO action
+
+The following example shows how to invoke a POJO action:
+
+====
+[source,xml]
+----
+<evaluate expression="pojoAction.method(flowRequestContext)" />
+----
+
+[source,java]
+----
+public class PojoAction {
+	public String method(RequestContext context) {
+		...
+	}
+}
+----
+====
+
+==== Invoking a Custom Action Implementation
+
+The following example shows how to invoke a custom action implementation:
+
+====
+[source,xml]
+----
+<evaluate expression="customAction" />
+----
+
+[source,java]
+----
+public class CustomAction implements Action {
+	public Event execute(RequestContext context) {
+		...
+	}
+}
+----
+====
+
+==== Invoking a `MultiAction` Implementation
+
+The following example shows how to invoke a `MultiAction` implementation:
+
+====
+[source,xml]
+----
+<evaluate expression="multiAction.actionMethod1" />
+----
+
+[source,java]
+----
+public class CustomMultiAction extends MultiAction {
+	public Event actionMethod1(RequestContext context) {
+		...
+	}
+
+	public Event actionMethod2(RequestContext context) {
+		...
+	}
+
+	...
+}
+----
+====
+
+=== Action Exceptions
+
+Actions often invoke services that encapsulate complex business logic.
+These services may throw business exceptions that the action code should handle.
+
+==== Handling a Business Exception with a POJO Action
+
+The following example invokes an action that catches a business exception, adds an error message to the context, and returns a result event identifier.
+The result is treated as a flow event to which the calling flow can then respond.
+
+====
+[source,xml]
+----
+<evaluate expression="bookingAction.makeBooking(booking, flowRequestContext)" />
+----
+
+[source,java]
+----
+public class BookingAction {
+	public String makeBooking(Booking booking, RequestContext context) {
+	   try {
+		   BookingConfirmation confirmation = bookingService.make(booking);
+		   context.getFlowScope().put("confirmation", confirmation);
+		   return "success";
+	   } catch (RoomNotAvailableException e) {
+		   context.addMessage(new MessageBuilder().error().
+			   .defaultText("No room is available at this hotel").build());
+		   return "error";
+	   }
+	}
+}
+----
+====
+
+==== Handling a Business Exception with a `MultiAction`
+
+The following example is functionally equivalent to the example in the previous section but is implemented as a `MultiAction` instead of a POJO action.
+The `MultiAction` requires its action methods to be of the signature `Event ${methodName}(RequestContext)`, providing stronger type safety, while a POJO action allows for more freedom.
+
+====
+[source,xml]
+----
+<evaluate expression="bookingAction.makeBooking" />
+----
+
+[source,java]
+----
+public class BookingAction extends MultiAction {
+public Event makeBooking(RequestContext context) {
+	   try {
+		   Booking booking = (Booking) context.getFlowScope().get("booking");
+		   BookingConfirmation confirmation = bookingService.make(booking);
+		   context.getFlowScope().put("confirmation", confirmation);
+		   return success();
+	   } catch (RoomNotAvailableException e) {
+		   context.getMessageContext().addMessage(new MessageBuilder().error().
+			   .defaultText("No room is available at this hotel").build());
+		   return error();
+	   }
+}
+}
+----
+====
+
+==== Using an `exception-handler` Element
+
+In general, it is recommended to catch exceptions in actions and return result events that drive standard transitions.
+You can also add an `exception-handler` sub-element to any state type with a `bean` attribute that references a bean of type `FlowExecutionExceptionHandler`.
+This is an advanced option that, if used incorrectly, can leave the flow execution in an invalid state.
+Consider the built-in `TransitionExecutingFlowExecutionExceptionHandler` as an example of a correct implementation.
+
+[[_action_examples]]
+=== Other Action Examples
+
+The remainder of this chapter shows other ways to use actions.
+
+[[_action_on_start]]
+==== The `on-start` Element
+
+The following example shows an action that creates a new `Booking` object by invoking a method on a service:
+
+====
+[source,xml]
+----
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						  https://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+	<input name="hotelId" />
+
+	<on-start>
+		<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
+				  result="flowScope.booking" />
+	</on-start>
+
+</flow>
+----
+====
+
+[[_action_on_state_entry]]
+==== The `on-entry` Element
+
+The following example shows a state entry action that sets the special `fragments` variable that causes the `view-state` to render a partial fragment of its view:
+
+====
+[source,xml]
+----
+<view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true">
+	<on-entry>
+		<render fragments="hotelSearchForm" />
+	</on-entry>
+</view-state>
+----
+====
+
+[[_action_on_state_exit]]
+==== The `on-exit` Element
+
+The following example shows a state exit action that releases a lock on a record being edited:
+
+====
+[source,xml]
+----
+<view-state id="editOrder">
+	<on-entry>
+		<evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
+				  result="viewScope.order" />
+	</on-entry>
+	<transition on="save" to="finish">
+		<evaluate expression="orderService.update(order, currentUser)" />
+	</transition>
+	<on-exit>
+		<evaluate expression="orderService.releaseLock(order, currentUser)" />
+	</on-exit>
+</view-state>
+----
+====
+
+==== The `on-end` Element
+
+The following example shows object locking behavior that is equivalent to the example in the preceding section using flow start and end actions:
+
+====
+[source,xml]
+----
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.springframework.org/schema/webflow
+						  https://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+	<input name="orderId" />
+
+	<on-start>
+		<evaluate expression="orderService.selectForUpdate(orderId, currentUser)"
+				  result="flowScope.order" />
+	</on-start>
+
+	<view-state id="editOrder">
+		<transition on="save" to="finish">
+			<evaluate expression="orderService.update(order, currentUser)" />
+		</transition>
+	</view-state>
+
+	<on-end>
+		<evaluate expression="orderService.releaseLock(order, currentUser)" />
+	</on-end>
+
+</flow>
+----
+====
+
+[[_action_on_render]]
+==== The `on-render` Element
+
+The following example shows a render action that loads a list of hotels to display before the view is rendered:
+
+====
+[source,xml]
+----
+<view-state id="reviewHotels">
+	<on-render>
+		<evaluate expression="bookingService.findHotels(searchCriteria)"
+				  result="viewScope.hotels" result-type="dataModel" />
+	</on-render>
+	<transition on="select" to="reviewHotel">
+		<set name="flowScope.hotel" value="hotels.selectedRow" />
+	</transition>
+</view-state>
+----
+====
+
+[[_action_on_transition]]
+==== The `on-transition` Element
+
+The following example shows a transition action that adds a sub-flow outcome event attribute to a collection:
+
+====
+[source,xml]
+----
+<subflow-state id="addGuest" subflow="createGuest">
+	<transition on="guestCreated" to="reviewBooking">
+		<evaluate expression="booking.guestList.add(currentEvent.attributes.newGuest)" />
+	</transition>
+</subfow-state>
+----
+====
+
+==== Named Actions
+
+The following example shows how to execute a chain of actions in an `action-state`.
+The name of each action becomes a qualifier for the action's result event.
+
+====
+[source,xml]
+----
+<action-state id="doTwoThings">
+	<evaluate expression="service.thingOne()">
+		<attribute name="name" value="thingOne" />
+	</evaluate>
+	<evaluate expression="service.thingTwo()">
+		<attribute name="name" value="thingTwo" />
+	</evaluate>
+	<transition on="thingTwo.success" to="showResults" />
+</action-state>
+----
+====
+
+In this example, the flow transitions to `showResults` when `thingTwo` completes successfully.
+
+==== Streaming Actions
+
+Sometimes, an Action needs to stream a custom response back to the client.
+An example might be a flow that renders a PDF document when handling a print event.
+This can be achieved by having the action stream the content and then record a status of `Response Complete` status on the `ExternalContext`.
+The `responseComplete` flag tells the pausing `view-state` not to render the response because another object has taken care of it.
+The following action shows such an action:
+
+====
+[source,xml]
+----
+
+<view-state id="reviewItinerary">
+	<transition on="print">
+		<evaluate expression="printBoardingPassAction" />
+	</transition>
+</view-state>
+----
+
+[source,java]
+----
+public class PrintBoardingPassAction extends AbstractAction {
+	public Event doExecute(RequestContext context) {
+		// stream PDF content here...
+		// - Access HttpServletResponse by calling context.getExternalContext().getNativeResponse();
+		// - Mark response complete by calling context.getExternalContext().recordResponseComplete();
+		return success();
+	}
+}
+----
+====
+
+In this example, when the print event is raised, the flow calls the `printBoardingPassAction` method.
+The action renders the PDF and then marks the response as complete.
+
+[[_file_upload]]
+==== Handling File Uploads
+
+Another common task is to use Web Flow to handle multipart file uploads in combination with Spring MVC's `MultipartResolver`.
+Once the resolver is set up correctly https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart[as described here] and the submitting HTML form is configured with `enctype="multipart/form-data"`, you can easily handle the file upload in a transition action.
+
+NOTE: The file upload example shown in the next listing is not relevant when you use Web Flow with JSF.
+See <<_spring_faces_file_upload>> for details of how to upload files using JSF.
+
+Consider the form in the following listing:
+
+====
+[source,xml]
+----
+<form:form modelAttribute="fileUploadHandler" enctype="multipart/form-data">
+	Select file: <input type="file" name="file"/>
+	<input type="submit" name="_eventId_upload" value="Upload" />
+</form:form>
+----
+====
+
+Then consider the backing object for handling the upload:
+
+====
+[source,java]
+----
+package org.springframework.webflow.samples.booking;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class FileUploadHandler {
+
+	private transient MultipartFile file;
+
+	public void processFile() {
+		//Do something with the MultipartFile here
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
+}
+----
+====
+
+You can process the upload by using a transition action, as follows:
+
+====
+[source,xml]
+----
+<view-state id="uploadFile" model="uploadFileHandler">
+	<var name="fileUploadHandler" class="org.springframework.webflow.samples.booking.FileUploadHandler" />
+	<transition on="upload" to="finish" >
+		<evaluate expression="fileUploadHandler.processFile()"/>
+	</transition>
+	<transition on="cancel" to="finish" bind="false"/>
+</view-state>
+----
+====
+
+The `MultipartFile` is bound to the `FileUploadHandler` bean as part of the normal form-binding process so that it is available to process during the execution of the transition action.

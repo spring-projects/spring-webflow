@@ -1,0 +1,139 @@
+== Flow Inheritance
+
+Flow inheritance lets one flow inherit the configuration of another flow.
+Inheritance can occur at both the flow and state levels.
+A common use case is for a parent flow to define global transitions and exception handlers, and then each child flow can inherit those settings.
+
+In order for a parent flow to be found, it must be added to the `flow-registry` like any other flow.
+
+[[_flow_inheritance_java_comparison]]
+=== Is Flow Inheritance Similar to Java Inheritance?
+
+Flow inheritance is similar to Java inheritance in that elements defined in a parent are exposed through the child.
+However, there are key differences.
+
+A child flow cannot override an element from a parent flow.
+Similar elements between the parent and child flows are merged.
+Unique elements in the parent flow are added to the child.
+
+A child flow can inherit from multiple parent flows.
+Java inheritance is limited to a single class.
+
+[[_flow_inheritance_levels]]
+=== Types of Flow Inheritance
+
+Spring Web Flow has two types of inheritance:
+
+* <<_flow_inheritance_level_flow>>
+* <<_flow_inheritance_level_state>>
+
+[[_flow_inheritance_level_flow]]
+==== Flow-level Inheritance
+
+Flow level inheritance is defined by the `parent` attribute on the `flow` element.
+The attribute contains a comma separated list of flow identifiers to inherit from.
+The child flow will inherit from each parent in the order it is listed adding elements and content to the resulting flow.
+The resulting flow from the first merge will be considered the child in the second merge, and so on.
+
+[source,xml]
+----
+
+<flow parent="common-transitions, common-states">
+----
+
+[[_flow_inheritance_level_state]]
+=== State-level Inheritance
+
+State level inheritance is similar to flow level inheritance, except only one state inherits from the parent, instead of the entire flow.
+
+Unlike flow inheritance, only a single parent is allowed.
+Additionally, the identifier of the flow state to inherit from must also be defined.
+The identifiers for the flow and the state within that flow are separated by a `#` character.
+
+The parent and child states must be of the same type.
+For instance, a view-state cannot inherit from an end-state, only another view-state.
+
+====
+[source,xml]
+----
+<view-state id="child-state" parent="parent-flow#parent-view-state">
+----
+====
+
+NOTE: The intent for flow-level inheritance is to define common states to be added to and shared among multiple flow definitions, while the intent for state-level inheritance is to extend from and merge with a single parent state.
+Flow-level inheritance is a good fit for composition and multiple inheritance, but, at the state level you can still only inherit from a single parent state.
+
+[[_flow_inheritance_abstract]]
+=== Abstract Flows
+
+Often, parent flows are not designed to be run directly.
+In order to protect these flows from running, they can be marked as `abstract`.
+If an abstract flow attempts to run, a `FlowBuilderException` is thrown.
+
+====
+[source,xml]
+----
+<flow abstract="true">
+----
+====
+
+[[_flow_inheritance_algorithm]]
+=== Inheritance Algorithm
+
+When a child flow inherits from its parent,  the parent and child are merged together to create a new flow.
+There are rules for every element in the Web Flow definition language that govern how that particular element is merged.
+
+There are two types of elements: _mergeable_ and _non-mergeable_.
+Mergeable elements always attempt to merge together if the elements are similar.
+Non-mergeable elements in a parent or child flow are always contained in the resulting flow intact.
+They are not modified as part of the merge process.
+
+NOTE: Paths to external resources in the parent flow should be absolute.
+Relative paths break when the two flows are merged unless the parent and child flow are in the same directory.
+Once merged, all relative paths in the parent flow become relative to the child flow.
+
+[[_flow_inheritance_algorithm_mergeable]]
+==== Mergeable Elements
+
+If the elements are of the same type and their keyed attribute is identical, the content of the parent element is merged with the child element.
+The merge algorithm continues to merge each sub-element of the merging parent and child.
+Otherwise, the parent element is added as a new element to the child.
+
+In most cases, the added elements from a parent flow are added after elements in the child flow.
+Exceptions to this rule include action elements (`evaluate`, `render`, and `set`) that are added at the beginning.
+This allows for the results of parent actions to be used by child actions.
+
+The mergeable elements are:
+
+* `action-state`: Merges on the ID
+* `attribute`: Merges on the name
+* `decision-state`: ID
+* `end-state`: ID
+* `flow`: Always merges
+* `if`: Test
+* `on-end`: Always merges
+* `on-entry`: Always merges
+* `on-exit`: Always merges
+* `on-render`: Always merges
+* `on-start`: Always merges
+* `input`: Merges on the name
+* `output`: Merges on the name
+* `secured`: Merges on the attributes
+* `subflow-state`: Merges on the ID
+* `transition`: Merges on and on-exception
+// TODO There's a word missing between "on" and "and"
+* `view-state`: Merges on the id
+
+
+[[_flow_inheritance_nonmergeable]]
+==== Non-mergeable Elements
+
+The non-mergeable elements are:
+
+* `bean-import`
+* `evaluate`
+* `exception-handler`
+* `persistence-context`
+* `render`
+* `set`
+* `var`

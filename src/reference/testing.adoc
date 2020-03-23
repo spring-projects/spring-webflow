@@ -1,0 +1,157 @@
+[[_testing]]
+== Testing Flows
+
+This chapter shows you how to test flows.
+
+[[_extending_abstractflowexecutiontest]]
+=== Extending `AbstractXmlFlowExecutionTests`
+
+To test the execution of a XML-based flow definition, you must extend `AbstractXmlFlowExecutionTests`, as follows:
+
+====
+[source,java]
+----
+public class BookingFlowExecutionTests extends AbstractXmlFlowExecutionTests {
+
+}
+----
+====
+
+[[_override_getresource]]
+=== Specifying the Path to the Flow to Test
+
+At a minimum, you must override `getResource(FlowDefinitionResourceFactory)` to return the path to the flow you wish to test, as follows:
+
+====
+[source,java]
+----
+@Override
+protected FlowDefinitionResource getResource(FlowDefinitionResourceFactory resourceFactory) {
+	return resourceFactory.createFileResource("src/main/webapp/WEB-INF/hotels/booking/booking.xml");
+}
+----
+====
+
+[[_override_configureflowbuildercontext]]
+=== Registering Flow Dependencies
+
+If your flow has dependencies on externally managed services, you must also override `configureFlowBuilderContext(MockFlowBuilderContext)` to register stubs or mocks of those services, as follows:
+
+====
+[source,java]
+----
+@Override
+protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
+	builderContext.registerBean("bookingService", new StubBookingService());
+}
+----
+====
+
+If your flow extends from another flow or has states that extend other states, you must also override `getModelResources(FlowDefinitionResourceFactory)` to return the path to the parent flows, as follows:
+
+====
+[source,java]
+----
+@Override
+protected FlowDefinitionResource[] getModelResources(FlowDefinitionResourceFactory resourceFactory) {
+	return new FlowDefinitionResource[] {
+		resourceFactory.createFileResource("src/main/webapp/WEB-INF/common/common.xml")
+	};
+}
+----
+====
+
+[[_testing_flowstartup]]
+=== Testing Flow Startup
+
+The following exampel shows how to have your first test exercise the startup of your flow:
+
+====
+[source,java]
+----
+public void testStartBookingFlow() {
+
+	Booking booking = createTestBooking();
+
+	MutableAttributeMap input = new LocalAttributeMap();
+	input.put("hotelId", "1");
+	MockExternalContext context = new MockExternalContext();
+	context.setCurrentUser("keith");
+	startFlow(input, context);
+
+	assertCurrentStateEquals("enterBookingDetails");
+	assertTrue(getRequiredFlowAttribute("booking") instanceof Booking);
+}
+----
+====
+
+Assertions generally verify that the flow is in the state you expect.
+
+[[_testing_flowevents]]
+=== Testing Flow Event Handling
+
+You can define additional tests to exercise flow event-handling behavior.
+You goal should be to exercise all paths through the flow.
+You can use the convenient `setCurrentState(String)` method to jump to the flow state where you wish to begin your test, as follows
+
+====
+[source,java]
+----
+public void testEnterBookingDetails_Proceed() {
+
+	setCurrentState("enterBookingDetails");
+
+	getFlowScope().put("booking", createTestBooking());
+
+	MockExternalContext context = new MockExternalContext();
+	context.setEventId("proceed");
+	resumeFlow(context);
+
+	assertCurrentStateEquals("reviewBooking");
+}
+----
+====
+
+[[_testing_mockingsubflows]]
+=== Mocking a Sub-flow
+
+To test calling a sub-flow, you can register a mock implementation of the sub-flow that asserts input was passed in correctly and returns the correct outcome for your test scenario, as follows:
+
+====
+[source,java]
+----
+public void testBookHotel() {
+
+	setCurrentState("reviewHotel");
+
+	Hotel hotel = new Hotel();
+	hotel.setId(1L);
+	hotel.setName("Jameson Inn");
+	getFlowScope().put("hotel", hotel);
+
+	getFlowDefinitionRegistry().registerFlowDefinition(createMockBookingSubflow());
+
+	MockExternalContext context = new MockExternalContext();
+	context.setEventId("book");
+	resumeFlow(context);
+
+	// verify flow ends on 'bookingConfirmed'
+	assertFlowExecutionEnded();
+	assertFlowExecutionOutcomeEquals("finish");
+}
+
+public Flow createMockBookingSubflow() {
+	Flow mockBookingFlow = new Flow("booking");
+	mockBookingFlow.setInputMapper(new Mapper() {
+		public MappingResults map(Object source, Object target) {
+			// assert that 1L was passed in as input
+			assertEquals(1L, ((AttributeMap) source).get("hotelId"));
+			return null;
+		}
+	});
+	// immediately return the bookingConfirmed outcome so the caller can respond
+	new EndState(mockBookingFlow, "bookingConfirmed");
+	return mockBookingFlow;
+}
+----
+====

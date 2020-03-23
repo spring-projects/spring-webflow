@@ -5,7 +5,8 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
 		classpath("io.spring.gradle:spring-io-plugin:0.0.8.RELEASE")
-		classpath("io.spring.gradle:docbook-reference-plugin:0.3.1")
+		classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2")
+		classpath "org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16"
 	}
 }
 
@@ -203,11 +204,78 @@ project("spring-js-resources") {
 configure(rootProject) {
 	description = "Spring Web Flow"
 
-	apply plugin: "docbook-reference"
+	repositories {
+		maven { url "https://repo.spring.io/plugins-release" }
+	}
 
-	reference {
-		sourceDir = file("src/reference")
-		pdfFilename = "spring-webflow-reference.pdf"
+	configurations {
+		docs
+	}
+
+	ext {
+		docResourcesVersion = "0.2.0.RELEASE"
+	}
+
+	dependencies {
+		docs "io.spring.docresources:spring-doc-resources:${docResourcesVersion}@zip"
+	}
+
+	task prepareAsciidocBuild(type: Sync) {
+		dependsOn configurations.docs
+		// copy doc resources
+		from {
+			configurations.docs.collect { zipTree(it) }
+		}
+		// and doc sources
+		from "src/reference/"
+		// to a build directory of your choice
+		into "$buildDir/asciidoc/build"
+	}
+
+	apply plugin: 'org.asciidoctor.convert'
+
+	task('makePDF', type: org.asciidoctor.gradle.AsciidoctorTask) {
+		dependsOn prepareAsciidocBuild
+		backends 'pdf'
+		sourceDir "$buildDir/asciidoc/build"
+		sources {
+			include 'index.adoc'
+		}
+		options doctype: 'book', eruby: 'erubis'
+		logDocuments = true
+		attributes 'icons': 'font',
+			'sectanchors': '',
+			'toc': '',
+			'source-highlighter' : 'coderay',
+			revnumber: project.version
+	}
+
+	asciidoctor {
+		dependsOn makePDF
+		// run asciidoctor from that directory
+		sourceDir "$buildDir/asciidoc/build"
+		sources {
+			include 'index.adoc'
+		}
+		resources {
+			from(sourceDir) {
+				include 'images/*', 'css/**', 'js/**'
+			}
+		}
+		logDocuments = true
+		backends = ["html5"]
+		options doctype: 'book', eruby: 'erubis'
+		attributes  'docinfo': 'shared',
+			// use provided stylesheet
+			stylesdir: "css/",
+			stylesheet: 'spring.css',
+			'linkcss': true,
+			'icons': 'font',
+			// use provided highlighter
+			'source-highlighter=highlight.js',
+			'highlightjsdir=js/highlight',
+			'highlightjs-theme=github',
+			revnumber: project.version
 	}
 
 	// don"t publish the default jar for the root project
@@ -245,7 +313,16 @@ configure(rootProject) {
 			into "api"
 		}
 
-		from (reference) {
+		from (asciidoctor) {
+			include "*.html"
+			include "css/**"
+			include "js/**"
+			include "images/**"
+			into "reference"
+		}
+
+		from (makePDF) {
+			include "*.pdf"
 			into "reference"
 		}
 	}

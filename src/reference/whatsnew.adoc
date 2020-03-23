@@ -1,0 +1,266 @@
+[[_whatsnew]]
+== What's New
+
+This section covers the changes that have been included in the last few versions:
+
+* <<_whatsnew_swf_250>>
+* <<_whatsnew_swf_240>>
+* <<_whatsnew_swf_230>>
+* <<_whatsnew_swf_220>>
+
+[[_whatsnew_swf_250]]
+=== Spring Web Flow 2.5
+
+This release provides an upgrade path to Spring Framework 5 that in turn requires Java 8+, Servlet 3.1, Hibernate 5, Tiles 3.
+See the https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-5.x[Spring Framework wiki]			for more details.
+The https://github.com/spring-projects/spring-webflow-samples[samples repository] has been upgraded to Spring Web Flow 2.5.
+
+As of 2.5, there is no longer a `spring-js` module.
+The classes from that module have been kept but moved to new packages in the `spring-webflow` module.
+The `spring-js-resources` module is available as an optional module that you explicitly include.
+
+This release requires JSF 2.2 or higher.
+
+[[_whatsnew_swf_240]]
+=== Spring Web Flow 2.4
+
+This release requires JDK 1.6.
+
+[[_whatsnew_swf_java_config]]
+==== Java-based Configuration
+
+Spring Web Flow now supports a Java-based alternative for its system configuration.
+See the updated <<_system_setup>>.
+
+See the https://github.com/spring-projects/spring-webflow-samples/tree/master/booking-mvc[booking-mvc] and https://github.com/spring-projects/spring-webflow-samples/tree/master/booking-faces[booking-faces] samples that have been updated to use all Java configuration.
+
+[[_whatsnew_swf_mvcflash]]
+==== Spring MVC Flash Scope Integration
+
+When a flow ends, it can now redirect to a Spring MVC controller after saving attributes in Spring MVC's flash scope for the controller to access.
+
+See <<_spring_mvc_flash_output>>.
+
+[[_whatsnew_partial_validation]]
+==== Partial JSR-303 Bean Validation
+
+A flow definition can apply partial validation on the model through the validation-hints attribute supported on view state and transition elements.
+
+See <<_view_validation_jsr303_partial>>.
+
+[[_whatsnew_hibernate4]]
+==== Hibernate Support
+
+`HibernateFlowExecutionListener` now supports Hibernate 4 in addition to Hibernate 3.
+
+As of 2.4.4, `HibernateFlowExecutionListener` also works with Hibernate 5.
+
+[[_whatsnew_tiles3]]
+==== Tiles 3 Support
+
+`AjaxTilesView` now supports Tiles 3 in addition to Tiles 2.2.
+
+[[_whatsnew_swf_jsf20]]
+==== Minimum JSF 2.0 Requirement
+
+Java ServerFaces version 1.2 and earlier are no longer supported by Spring Web Flow.
+If you have not done so already, you need to upgrade to JSF 2.0 or later.
+In addition, the Spring Faces components that were previously provided with JSF 1.2 for progressive AJAX enhancements have been removed in this release.
+
+See <<_spring_faces_upgrade_from_swf23>>.
+
+[[_whatsnew_swf_jsf20_portlet]]
+==== Portlet API 2.0 and JSF 2.0 support
+
+The internal Portlet integration introduced in Spring Web Flow 2.2 has been upgraded for JSF 2.0 compatibility.
+Some of the more advanced JSF 2.0 features, such as partial state saving, are not supported in a Portlet environment.
+However, existing applications can now upgrade to the minimum required JSF version.
+Upgraded projects need to ensure that the `<faces:resources>` elements is included as part of their Spring configuration.
+
+[[_whatsnew_deprecation]]
+==== Deprecations
+
+This release deprecates `Spring.js`.
+The deprecation includes the entire `spring-js-resources` module, including `Spring.js` and `Spring-Dojo.js` and the bundled Dojo and CSS Framework.
+Also deprecated is the `SpringJavascriptAjaxHandler` from the `spring-js` module.
+The rest of `spring-js` (for example, `AjaxHandler`` and `AjaxTilesView`), will be folded into `spring-webflow` in a future release.
+
+OGNL support is now deprecated.
+
+[[_whatsnew_swf_230]]
+=== Spring Web Flow 2.3
+
+Version 2.3 includes changes to the following topics:
+
+* <<_whatsnew_swf_embedded_flow>>
+* <<_whatsnew_jsr303>>
+* <<_whatsnew_pc_propagation>>
+* <<_whatsnew_portlet_resource_requests>>
+* <<_whatsnew_conversation_manager>>
+* <<_whatsnew_redirect_in_same_state>>
+* <<_whatsnew_samples>>
+
+[[_whatsnew_swf_embedded_flow]]
+==== Embedding A Flow On A Page
+
+By default, Web Flow does a client-side redirect upon entering every view state.
+That makes it impossible to embed a flow on a page or within a modal dialog and execute more than one view state without causing a full-page refresh.
+Web Flow now supports launching a flow in "`embedded`" mode.
+In this mode, a flow can transition to other view states without a client-side redirect during Ajax requests.
+See <<_spring_mvc_embedded_flow>> and <<_spring_faces_embedded_mode>>.
+
+[[_whatsnew_jsr303]]
+==== Support For JSR-303 Bean Validation
+
+Support for the JSR-303 Bean Validation API is now available, building on equivalent support available in Spring MVC.
+See <<_view_validate>> for more details.
+
+[[_whatsnew_pc_propagation]]
+==== Flow-Managed Persistence Context Propagation
+
+Starting with Web Flow 2.3, a flow managed `PersistenceContext` is automatically extended (propagated) to sub-flows, assuming the sub-flow also has the feature enabled as well.
+See <<_flow_managed_persistence_propagation>>.
+
+[[_whatsnew_portlet_resource_requests]]
+==== Portlet 2.0 Resource Requests
+
+Support for Portlet 2.0 resource requests has now been added, enabling Ajax requests with partial rendering.
+URLs for such requests can be prepared with the `<portlet:resourceURL>` tag in JSP pages.
+Server-side processing is similar to combining an action and a render request in a single request.
+Unlike a render request, the response from a resource request includes content from the target portlet only.
+
+[[_whatsnew_conversation_manager]]
+==== Custom ConversationManager
+
+The `<flow-execution-repository>` element now provides a conversation-manager attribute that accepts a reference to a `ConversationManager` instance.
+
+[[_whatsnew_redirect_in_same_state]]
+==== Redirect In Same State
+
+By default, Web Flow does a client-side redirect when remaining in the same view state as long as the current request is not an Ajax request.
+This is useful after form validation failure.
+Hitting Refresh or Back does not result in browser warnings.
+Hence, this behavior is usually desirable.
+However, a new flow execution attribute makes it possible to disable it, and that may also be necessary in some cases specific to JSF applications.
+See <<_spring_faces_redirect_in_same_state>>.
+
+[[_whatsnew_samples]]
+==== Samples
+
+The process for building the samples included with the distribution has been simplified.
+Maven can be used to build all samples in one step.
+Eclipse settings include source code references to simplify debugging.
+
+You can access additional samples as follows:
+
+====
+[source,xml]
+----
+mkdir spring-samples
+cd spring-samples
+svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
+cd webflow-primefaces-showcase
+mvn package
+# import into Eclipse
+----
+[source,xml]
+----
+mkdir spring-samples
+cd spring-samples
+svn co https://src.springframework.org/svn/spring-samples/webflow-showcase
+cd webflow-showcase
+mvn package
+# import into Eclipse
+----
+====
+
+[[_whatsnew_swf_220]]
+=== Spring Web Flow 2.2
+
+Version 2.3 includes changes to the following topics:
+
+* <<_whatsnew_jsf2>>
+* <<_whatsnew_sec>>
+* <<_whatsnew_versions>>
+* <<_whatsnew_jsf_portlet>>
+
+[[_whatsnew_jsf2]]
+==== JSF 2 Support
+
+Building on version 2.1, Spring Web Flow version 2.2 adds support for core JSF 2 features.
+The following features that were not supported in 2.1 are now available:
+
+* Partial state saving
+* JSF 2 resource request handling
+* JSF 2 Ajax requests
+
+At this point, support for JSF 2 is considered comprehensive although not it does not cover every JSF 2 feature.
+The excluded items are mostly features that overlap with the core value that Web Flow provides, such as those relating to navigation and state management.
+
+See <<_spring_faces_webflow_config>> for important configuration changes.
+Note that partial state saving is only supported with Sun Mojarra 2.0.3 or later.
+It is not yet supported with Apache MyFaces.
+This is due to the fact MyFaces was not as easy to customize with regards to how component state is stored.
+We will work with Apache MyFaces to provide this support.
+In the meantime, you need to use the `javax.faces.PARTIAL_STATE_SAVING` context parameter in `web.xml` to disable partial state saving with Apache MyFaces.
+
+===== Travel Sample With the PrimeFaces Components
+
+The main Spring Travel sample that demonstrates Spring Web Flow and JSF support is now built on JSF 2 and components from the PrimeFaces component library.
+See the booking-faces sample in the distribution.
+
+You can find additional samples at the Spring Web Flow - Prime Faces https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase[Showcase], an SVN repository within the https://src.springframework.org/svn/spring-samples[spring-samples] repository.
+You can use the following commands to check out and build:
+
+====
+[source]
+----
+svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
+cd webflow-primefaces-showcase
+mvn package
+----
+====
+
+[[_whatsnew_sec]]
+==== Spring Security Facelets Tag Library
+
+A new Spring Security tag library is available for use with with JSF 2.0 or with JSF 1.2 Facelets views.
+It provides an `<authorize>` tag as well as several EL functions.
+See <<_spring_faces_security_taglib>> for more details.
+
+[[_whatsnew_versions]]
+==== Spring JavaScript Updates
+
+A number of changes have been made to the Spring JavaScript library.
+
+===== Deprecated `ResourcesServlet`
+
+Starting with Spring 3.0.4, the Spring Framework includes a replacement for `ResourcesServlet`.
+See the Spring Framework documentation for details on the custom MVC namespace -- specifically, the new https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-static-resources[`resources`]element.
+
+===== Dojo 1.5 and dojox
+
+The bundled custom Dojo build is upgraded to version 1.5.
+It now includes `dojox`.
+
+Note that applications are generally encouraged to prepare their own custom Dojo build for optimized performance, depending on what parts of Dojo are commonly used together.
+For examples, see the https://src.springframework.org/svn/spring-webflow/branches/spring-webflow-2.2-maintenance/spring-js-resources/scripts/dojo[scripts] used by Spring Web Flow to prepare its own custom Dojo build.
+
+===== Two Spring JS Artifacts
+
+The `spring-js` artifact has been split in two. The new artifact (`spring-js-resources`) contains client side resource (`.js`, `.css`, and so on), while the existing artifact (`spring-js`) contains server-side Java code only.
+
+Applications preparing their own custom Dojo build have an option now to avoid including `spring-js-resources` and put `Spring.js` and `Spring-Dojo.js` directly under the root of their web application.
+
+===== Client resources moved into META-INF/web-resources
+
+Bundled client resources (`.js`, `.css`, and so on) have been moved to `META-INF/web-resources` from their previous location under `META-INF`.
+This change is transparent for applications but results in simpler and safer configuration when using the new resource handling mechanism available in Spring 3.0.4.
+
+[[_whatsnew_jsf_portlet]]
+==== JSF Portlet Support
+
+In previous versions of Spring Web Flow, support for JSF Portlets relied on a Portlet Bridge for JSF implementation and was considered experimental.
+Spring Web Flow 2.2 adds support for JSF Portlets based on its own internal Portlet integration targeting Portlet API 2.0 and JSF 1.2 environments.
+See <<_portlet_jsf>> for more details.
+The Spring Web Flow Travel JSF Portlets sample has been successfully tested on the Apache Pluto portal container.

@@ -1,0 +1,367 @@
+[[_spring_mvc]]
+== Spring MVC Integration
+
+This chapter shows how to integrate Web Flow into a Spring MVC web application.
+The `booking-mvc` sample application is a good reference for Spring MVC with Web Flow.
+This application is a simplified travel site that lets users search for and book hotel rooms.
+
+[[_spring_mvc_config_web.xml]]
+=== Configuring `web.xml`
+
+The first step to using Spring MVC is to configure the `DispatcherServlet` in `web.xml`.
+You typically do this once per web application.
+
+The following example maps all requests that begin with `/spring/` to `DispatcherServlet`.
+An `init-param`	is used to provide the `contextConfigLocation`.
+This is the configuration file for the web application.
+
+====
+[source,xml]
+----
+<servlet>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	<init-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/web-application-config.xml</param-value>
+	</init-param>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+	<url-pattern>/spring/*</url-pattern>
+</servlet-mapping>
+----
+====
+
+[[_spring_mvc_config_spring_url_mapping]]
+=== Dispatching to Flows
+
+`DispatcherServlet` maps requests for application resources to handlers.
+A flow is one type of handler.
+
+==== Registering `FlowHandlerAdapter`
+
+The first step to dispatching requests to flows is to enable flow handling within Spring MVC.
+To do so, install the `FlowHandlerAdapter`, as follows:
+
+====
+[source,xml]
+----
+<!-- Enables FlowHandler URL mapping -->
+<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+	<property name="flowExecutor" ref="flowExecutor" />
+</bean>
+----
+====
+
+==== Defining Flow Mappings
+
+Once flow handling is enabled, the next step is to map specific application resources to your flows.
+The simplest way to do this is to define a `FlowHandlerMapping`, as follows:
+
+====
+[source,xml]
+----
+<!-- Maps request paths to flows in the flowRegistry;
+	e.g. a path of /hotels/booking looks for a flow with id "hotels/booking" -->
+<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+	<property name="flowRegistry" ref="flowRegistry"/>
+	<property name="order" value="0"/>
+</bean>
+----
+====
+
+Configuring this mapping lets the `Dispatcher` map application resource paths to flows in a flow registry.
+For example, accessing the `/hotels/booking` resource path would result in a registry query for the flow with an ID of `hotels/booking`.
+If a flow with that ID is found, that flow handles the request.
+If no flow is found, the next handler mapping in the dispatcher's ordered chain is queried or a `noHandlerFound` response is returned.
+
+==== Flow-handling Workflow
+
+When a valid flow mapping is found, the `FlowHandlerAdapter` figures out whether to start a new execution of that flow or resume an existing execution based on information present the HTTP request.
+The adapter employs a number of defaults related to starting and resuming flow executions:
+
+* HTTP request parameters are made available in the input map of all starting flow executions.
+* When a flow execution ends without sending a final response, the default handler tries to start a new execution in the same request.
+* Unhandled exceptions are propagated to the `Dispatcher`, unless the exception is a `NoSuchFlowExecutionException`. The default handler tries to recover from a `NoSuchFlowExecutionException` by starting over with a new execution.
+
+See the API documentation for `FlowHandlerAdapter` for more information.
+You may override these defaults by subclassing or by implementing your own `FlowHandler`, as discussed in the next section.
+
+[[_spring_mvc_config_flow_handlers]]
+=== Implementing custom FlowHandlers
+
+`FlowHandler` is the extension point that can be used to customize how flows are executed in a HTTP servlet environment.
+A `FlowHandler` is used by the `FlowHandlerAdapter`	and is responsible for:
+
+* Returning the `id` of a flow definition to execute
+* Creating the input to pass new executions of that flow as they are started
+* Handling outcomes returned by executions of that flow as they end
+* Handling any exceptions thrown by executions of that flow as they occur
+
+These responsibilities are illustrated in the definition of the `org.springframework.mvc.servlet.FlowHandler` interface:
+
+====
+[source,java]
+----
+public interface FlowHandler {
+
+	public String getFlowId();
+
+	public MutableAttributeMap createExecutionInputMap(HttpServletRequest request);
+
+	public String handleExecutionOutcome(FlowExecutionOutcome outcome,
+		HttpServletRequest request, HttpServletResponse response);
+
+	public String handleException(FlowException e,
+		HttpServletRequest request, HttpServletResponse response);
+}
+----
+====
+
+To implement a `FlowHandler`, subclass ``AbstractFlowHandler``.
+All these operations are optional. If you do not implement them, the defaults apply.
+You need only override the methods that you need.
+Specifically, you should:
+
+* Override `getFlowId(HttpServletRequest)` when the ID of your flow cannot be directly derived from the HTTP request. By default, the ID of the flow to execute is derived from the `pathInfo` portion of the request URI. For example, `http://localhost/app/hotels/booking?hotelId=1` results in a flow ID of `hotels/booking` by default.
+* Override `createExecutionInputMap(HttpServletRequest)` when you need fine-grained control over extracting flow input parameters from the `HttpServletRequest`. By default, all request parameters are treated as flow input parameters.
+* Override `handleExecutionOutcome` when you need to handle specific flow execution outcomes in a custom manner. The default behavior sends a redirect to the ended flow's URL to restart a new execution of the flow.
+* Override `handleException` when you need fine-grained control over unhandled flow exceptions. The default behavior attempts to restart the flow when a client attempts to access an ended or expired flow execution. Any other exception is re-thrown to the Spring MVC `ExceptionResolver` infrastructure by default.
+
+[[_spring_mvc_flow_handler_example]]
+==== Example `FlowHandler`
+
+A common interaction pattern between Spring MVC and Web Flow is for a flow to redirect to a `@Controller` when it ends.
+FlowHandler instances let this be done without coupling the flow definition itself with a specific controller URL.
+The following example `FlowHandler` redirects to a Spring MVC Controller:
+
+====
+[source,java]
+----
+public class BookingFlowHandler extends AbstractFlowHandler {
+	public String handleExecutionOutcome(FlowExecutionOutcome outcome,
+										HttpServletRequest request, HttpServletResponse response) {
+		if (outcome.getId().equals("bookingConfirmed")) {
+			return "/booking/show?bookingId=" + outcome.getOutput().get("bookingId");
+		} else {
+			return "/hotels/index";
+		}
+	}
+}
+----
+====
+
+Since this handler needs only to handle flow execution outcomes in a custom manner, nothing else is overridden.
+The `bookingConfirmed` outcome results in a redirect to show the new booking.
+Any other outcome redirects back to the hotel's index page.
+
+==== Deploying a Custom `FlowHandler`
+
+To install a custom `FlowHandler`, you need to deploy it as a bean.
+The bean name must match the ID of the flow to which the handler should apply.
+The following example creates a bean that matches the `hotels/booking` flow:
+
+====
+[source,xml]
+----
+<bean name="hotels/booking" class="org.springframework.webflow.samples.booking.BookingFlowHandler" />
+----
+====
+
+With this configuration, accessing the resource `/hotels/booking` launches the `hotels/booking` flow by using the custom `BookingFlowHandler`.
+When the booking flow ends, the `FlowHandler` processes the flow execution outcome and redirects to the appropriate controller.
+
+[[_spring_mvc_flow_handler_redirects]]
+==== `FlowHandler` Redirects
+
+A `FlowHandler` that handles a `FlowExecutionOutcome` or `FlowException` returns a `String` to indicate the resource to which to redirect after handling.
+In the example shown in the previous section, the `BookingFlowHandler` redirects to the `booking/show` resource URI for `bookingConfirmed` outcomes and to the `hotels/index` resource URI for all other outcomes.
+
+By default, returned resource locations are relative to the current servlet mapping.
+This allows for a flow handler to redirect to other controllers in the application by using relative paths.
+In addition, explicit redirect prefixes are supported for cases where more control is needed.
+
+The explicit redirect prefixes supported are:
+
+* `servletRelative:`: Redirect to a resource relative to the current servlet
+* `contextRelative:`: Redirect to a resource relative to the current web application context path
+* `serverRelative:`: Redirect to a resource relative to the server root
+* `http://` or `https://`: Redirect to a fully-qualified resource URI
+
+These same redirect prefixes are also supported within a flow definition when you use the `externalRedirect:` directive in conjunction with a `view-state` or an `end-state` -- for example, `view="externalRedirect:https://springframework.org"`.
+
+[[_spring_mvc_config_spring_view_resolution]]
+=== View Resolution
+
+Unless otherwise specified, Web Flow maps selected view identifiers to files located within the flow's working directory.
+For existing Spring MVC and Web Flow applications, an external `ViewResolver`	is likely already handling this mapping for you.
+Therefore, to continue using that resolver and to avoid having to change how your existing flow views are packaged, you can configure Web Flow as follows:
+
+====
+[source,xml]
+----
+<webflow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+	<webflow:location path="/WEB-INF/hotels/booking/booking.xml" />
+</webflow:flow-registry>
+
+<webflow:flow-builder-services id="flowBuilderServices" view-factory-creator="mvcViewFactoryCreator"/>
+
+<bean id="mvcViewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+	<property name="viewResolvers" ref="myExistingViewResolverToUseForFlows"/>
+</bean>
+----
+====
+
+`MvcViewFactoryCreator` is the factory that lets you configure how the Spring MVC view system is used inside Spring Web Flow.
+You can use it to configure existing `ViewResolver` instances as well as other services, such as a custom `MessageCodesResolver`.
+You may also let data binding use Spring MVC's native BeanWrapper by setting the `useSpringBinding` flag to `true`.
+This is an alternative to using the Unified EL for view-to-model data binding.
+See the JavaDoc API of this class for more information.
+
+[[_spring_mvc_resuming_on_event]]
+=== Signaling an Event from a View
+
+When a flow enters a `view-state`, it pauses, redirects the user to its execution URL, and waits for a user event to resume.
+Events are generally signaled by activating buttons, links, or other user interface commands.
+How events are decoded server-side is specific to the view technology in use.
+This section shows how to trigger events from HTML-based views generated by templating engines such as JSP, Velocity, or Freemarker.
+
+[[_webflow_event_named_html_button]]
+==== Using a Named HTML Button to Signal an Event
+
+The following example shows two buttons on the same form that signal `proceed` and `cancel` events when clicked, respectively:
+
+====
+[source,xml]
+----
+<input type="submit" name="_eventId_proceed" value="Proceed" />
+<input type="submit" name="_eventId_cancel" value="Cancel" />
+----
+====
+
+When a button is pressed, Web Flow finds a request parameter name beginning with `\_eventId_` and treats the remaining substring as the event ID.
+So in this example, submitting `\_eventId_proceed` becomes `proceed`.
+This style should be considered when there are several different events that can be signaled from the same form.
+
+[[_webflow_event_hidden_parameter]]
+==== Using a Hidden HTML Form Parameter to Signal an Event
+
+The following example shows a form that signals the `proceed` event when submitted:
+
+====
+[source,xml]
+----
+<input type="submit" value="Proceed" />
+<input type="hidden" name="_eventId" value="proceed" />
+----
+====
+
+Here, Web Flow simply detects the special `\_eventId` parameter and uses its value as the event ID.
+This style should only be considered when there is one event that can be signaled on the form.
+
+[[_webflow_event_link]]
+==== Using a HTML Link to Signal an Event
+
+The following example shows a link that signals the `cancel` event when activated:
+
+====
+[source,xml]
+----
+<a href="${flowExecutionUrl}&_eventId=cancel">Cancel</a>
+----
+====
+
+Firing an event results in an HTTP request being sent back to the server.
+On the server-side, the flow handles decoding the event from within its current `view-state`.
+How this decoding process works is specific to the view implementation.
+Recall that a Spring MVC view implementation looks for a request parameter named ``\_eventId``.
+If no `\_eventId` parameter is found, the view looks for a parameter that starts with `\_eventId_` and uses the remaining substring as the event ID.
+If neither cases exist, no flow event is triggered.
+
+[[_spring_mvc_embedded_flow]]
+=== Embedding A Flow On A Page
+
+By default, when a flow enters a view state, it performs a client-side redirect before rendering the view.
+This approach is known as `POST-REDIRECT-GET`.
+It has the advantage of separating the form processing for one view from the rendering of the next view.
+As a result, the browser Back and Refresh buttons work seamlessly without causing any browser warnings.
+
+Normally, the client-side redirect is transparent from a user's perspective.
+However, there are situations where `POST-REDIRECT-GET` may not bring the same benefits.
+For example, a flow may be embedded on a page and driven by Ajax requests refreshing only the area of the page that belongs to the flow.
+Not only is it unnecessary to use client-side redirects in this case, it is also not the desired behavior with regards to keeping the surrounding content of the page intact.
+
+The <<_spring_js_ajax>> section explains how to do partial rendering during Ajax requests.
+The focus of this section is to explain how to control flow execution redirect behavior during Ajax requests.
+To indicate that a flow should run in "`page embedded`" mode, append an extra parameter when launching the flow, as follows:
+
+====
+[source,xml]
+----
+/hotels/booking?mode=embedded
+----
+====
+
+When launched in "`page embedded`" mode, a flow does not issue flow execution redirects during Ajax requests.
+The `mode=embedded` parameter needs to be passed only when launching the flow.
+Your only other concern is to use Ajax requests and to render only the content required to update the portion of the page displaying the flow.
+
+[[_spring_mvc_embedded_flow_alternatives]]
+==== Embedded Mode Vs Default Redirect Behavior
+
+By default, Web Flow does a client-side redirect upon entering every view state.
+However, if you remain in the same view state (for example, a transition without a `to` attribute), during an Ajax request, there is no client-side redirect.
+This behavior should be quite familiar to Spring Web Flow users.
+It is appropriate for a top-level flow that supports the browser back button while still taking advantage of Ajax and partial rendering for use cases where you remain in the same view such as form validation, paging trough search results, and others.
+However transitions to a new view state are always followed with a client-side redirect.
+That makes it impossible to embed a flow on a page or within a modal dialog and execute more than one view state without causing a full-page refresh.
+Hence, if your use case requires embedding a flow, you can launch it in "`embedded`" mode.
+
+[[_spring_mvc_embedded_flow_examples]]
+==== Embedded Flow Examples
+
+For examples of a flow embedded on a page and within a modal dialog, see to the webflow-showcase project.
+You can check out the source code locally, build it as you would a Maven project, and import it into Eclipse, as follows:
+
+====
+[source,xml]
+----
+cd some-directory
+svn co https://src.springframework.org/svn/spring-samples/webflow-showcase
+cd webflow-showcase
+mvn package
+# import into Eclipse
+----
+====
+
+[[_spring_mvc_flash_output]]
+=== Saving Flow Output to MVC Flash Scope
+
+You can automatically save Flow output to MVC flash scope when an `end-state`		performs an internal redirect.
+This is particularly useful when displaying a summary screen at the end of a flow.
+For backwards compatibility, this feature is disabled by default.
+To enable it, set `saveOutputToFlashScopeOnRedirect` on your `FlowHandlerAdapter` to `true`, as follows:
+
+====
+[source,xml]
+----
+<!-- Enables FlowHandler URL mapping -->
+<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+	<property name="flowExecutor" ref="flowExecutor" />
+	<property name="saveOutputToFlashScopeOnRedirect" value="true" />
+</bean>
+----
+====
+
+The following example adds `confirmationNumber` to the MVC flash scope before redirecting to the `summary` screen.
+
+====
+[source,xml]
+----
+<end-state id="finish" view="externalRedirect:summary">
+	<output name="confirmationNumber" value="booking.confirmationNumber" />
+</end-state>
+----
+====

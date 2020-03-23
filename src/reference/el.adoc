@@ -1,0 +1,402 @@
+[[_el]]
+== Expression Language (EL)
+
+Web Flow uses EL to access its data model and to invoke actions.
+This chapter should familiarize you with EL syntax, configuration, and special EL variables you can reference from your flow definition.
+
+EL is used for many things within a flow, including:
+
+* Accessing client data, such as declaring flow inputs or referencing request parameters.
+* Accessing data in Web Flow's `RequestContext`, such as `flowScope` or `currentEvent`.
+* Invoking methods on Spring-managed objects through actions.
+* Resolving expressions, such as state transition criteria, sub-flow ids, and view names.
+
+EL is also used to bind form parameters to model objects and, reversely, to render formatted form fields from the properties of a model object.
+That, however, does not apply when using Web Flow with JSF.
+In that case, the standard JSF component lifecyle applies.
+
+[[_el_types]]
+=== Expression Types
+
+An important concept to understand is there are two types of expressions in Web Flow:
+
+* <<_el_types_eval>>
+* <<_el_types_template>>
+
+[[_el_types_eval]]
+==== Standard Expressions
+
+The first and most common type of expression is the _standard expression_.
+Such expressions are evaluated directly by the EL and need not be enclosed in delimiters, such as `\#{}`.
+The following example shows such a standard expression:
+
+====
+[source,xml]
+----
+<evaluate expression="searchCriteria.nextPage()" />
+----
+====
+
+The preceding expression is a standard expression that invokes the `nextPage` method on the `searchCriteria` variable when evaluated.
+If you try to enclose this expression in a special delimiter (such as `\#{}`), you get an `IllegalArgumentException`.
+In this context, the delimiter is seen as redundant.
+The only acceptable value for the `expression` attribute is a single expression string.
+
+[[_el_types_template]]
+==== Template Expressions
+
+The second type of expression is a _template expression_.
+A template expression allows mixing of literal text with one or more standard expressions.
+Each standard expression block is explicitly surrounded with the `\#{}` delimiters.
+The following example shows a template expression:
+
+====
+[source,xml]
+----
+<view-state id="error" view="error-#{externalContext.locale}.xhtml" />
+----
+====
+
+The preceding expression is a template expression.
+The result of evaluation is a string that concatenates literal text such as `error-` and `.xhtml` with the result of evaluating `externalContext.locale`.
+You need explicit delimiters here to demarcate standard expression blocks within the template.
+
+[NOTE]
+====
+See the Web Flow XML schema for a complete listing of those XML attributes that accept standard expressions and those that accept template expressions.
+You can also use F2 in Eclipse (or equivalent shortcuts in other IDEs) to access available documentation when typing out specific flow definition attributes.
+====
+
+[[_el_language_choices]]
+=== EL Implementations
+
+Spring Web Flow supports the following EL (Expression Language) implementations:
+
+* <<_el_spring_el>>
+* <<_el_unified_el>>
+
+[[_el_spring_el]]
+==== Spring EL
+
+Web Flow uses the https://docs.spring.io/spring/docs/current/spring-framework-reference/html/expressions.html[Spring Expression Language] (Spring EL). Spring EL was created to provide a single, well-supported expression language for use across all the products in the Spring portfolio.
+It is distributed as a separate jar (`org.springframework.expression`) in the Spring Framework.
+
+[[_el_unified_el]]
+==== Unified EL
+
+Use of the https://en.wikipedia.org/wiki/Unified_Expression_Language[Unified EL] also implies a dependency on `el-api`, although that is typically provided by your web container.
+Although Spring EL is the default and recommended expression language to use, you can replace it with Unified EL if you wish to do so.
+To do so, you need the following Spring configuration to plug in the `WebFlowELExpressionParser` to the `flow-builder-services`:
+
+====
+[source,xml]
+----
+<webflow:flow-builder-services expression-parser="expressionParser"/>
+
+<bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
+    <constructor-arg>
+        <bean class="org.jboss.el.ExpressionFactoryImpl" />
+    </constructor-arg>
+</bean>
+----
+====
+
+Note that, if your application registers custom converters, it is important to ensure `WebFlowELExpressionParser` is configured with the conversion service that has those custom converters, as follows:
+
+====
+[source,xml]
+----
+<webflow:flow-builder-services expression-parser="expressionParser" conversion-service="conversionService"/>
+
+<bean id="expressionParser" class="org.springframework.webflow.expression.el.WebFlowELExpressionParser">
+    <constructor-arg>
+        <bean class="org.jboss.el.ExpressionFactoryImpl" />
+    </constructor-arg>
+    <property name="conversionService" ref="conversionService"/>
+</bean>
+
+<bean id="conversionService" class="somepackage.ApplicationConversionService"/>
+----
+====
+
+=== EL Portability
+
+In general, you will find Spring EL and Unified EL to have a very similar syntax.
+
+However, Spring El has some advantages.
+For example, Spring EL is closely integrated with the type conversion of Spring 3, and that lets you take full advantage of its features.
+Specifically, the automatic detection of generic types as well as the use of formatting annotations is currently supported only with Spring EL.
+
+Keep in mind the following minor changes when upgrading to Spring EL from Unified EL:
+
+* Expressions delineated with `${}` in flow definitions must be changed to `\#{}` (note the leading backspace character).
+* Expressions that test the current event (such as `\#{currentEvent == 'submit'}`) must be changed to `\#{currentEvent.id == 'submit'}` (note the addition of the `id`).
+* Resolving properties (such as `\#{currentUser.name}`) may cause a `NullPointerException` without any checks such as `\#{currentUser != null ? currentUser.name : null}`. A much better alternative is the safe navigation operator: `\#{currentUser?.name}`.
+
+For more information on Spring EL syntax, see the https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions[Language Reference] section in the Spring Documentation.
+
+[[_el_variables]]
+=== Special EL Variables
+
+There are several implicit variables you may reference from within a flow.
+
+Keep in mind this general rule:
+You should use variables that refer to data scopes (`flowScope`, `viewScope`, `requestScope`, and so on) only when you assign a new variable to one of the scopes.
+
+For example, when assigning the result of the call to `bookingService.findHotels(searchCriteria)` to a new variable called `hotels`, you must prefix it with a scope variable in order to let Web Flow know where you want it stored.
+The following example shows how to do so:
+
+====
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" ... >
+
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
+
+	<view-state id="reviewHotels">
+		<on-render>
+			<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+		</on-render>
+	</view-state>
+
+</flow>
+----
+====
+
+However, when setting an existing variable (such as `searchCriteria` in the following example), you should reference the variable directly without prefixing it with any scope variables, as follows:
+
+====
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" ... >
+
+	<var name="searchCriteria" class="org.springframework.webflow.samples.booking.SearchCriteria" />
+
+	<view-state id="reviewHotels">
+		<transition on="sort">
+			<set name="searchCriteria.sortBy" value="requestParameters.sortBy" />
+		</transition>
+	</view-state>
+
+</flow>
+----
+====
+
+The following is the list of implicit variables you can reference within a flow definition:
+
+* <<_el_variable_flowscope>>
+* <<_el_variable_viewscope>>
+* <<_el_variable_requestscope>>
+* <<_el_variable_flashscope>>
+* <<_el_variable_conversationscope>>
+* <<_el_variable_requestparameters>>
+* <<_el_variable_currentevent>>
+* <<_el_variable_currentuser>>
+* <<_el_variable_messagecontext>>
+* <<_el_variable_resourcebundle>>
+* <<_el_variable_requestcontext>>
+* <<_el_variable_flowexecutioncontext>>
+* <<_el_variable_flowexecutionurl>>
+* <<_el_variable_externalcontext>>
+
+[[_el_variable_flowscope]]
+==== The `flowScope` Variable
+
+You can use the `flowScope` to assign a flow variable.
+Flow scope gets allocated when a flow starts and destroyed when the flow ends.
+With the default implementation, any objects stored in flow scope need to be serializable.
+The following listing defines a `flowScope` variable:
+
+====
+[source,xml]
+----
+<evaluate expression="searchService.findHotel(hotelId)" result="flowScope.hotel" />
+----
+====
+
+[[_el_variable_viewscope]]
+==== The `viewScope` Variable
+
+You can use the `viewScope` to assign a view variable.
+View scope gets allocated when a `view-state` is entered and destroyed when the state exits.
+View scope is referenceable _only_ from within a `view-state`.
+With the default implementation, any objects stored in view scope need to be serializable.
+The following listing defines a `viewScope` variable:
+
+====
+[source,xml]
+----
+<on-render>
+    <evaluate expression="searchService.findHotels(searchCriteria)" result="viewScope.hotels"
+              result-type="dataModel" />
+</on-render>
+----
+====
+
+[[_el_variable_requestscope]]
+==== The `requestScope` Variable
+
+You can use `requestScope` to assign a request variable.
+Request scope gets allocated when a flow is called and destroyed when the flow returns.
+The following listing defines a `requestScope` variable:
+
+====
+[source,xml]
+----
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />
+----
+====
+
+[[_el_variable_flashscope]]
+==== The `flashScope` Variable
+
+You can use `flashScope` to assign a flash variable.
+Flash scope gets allocated when a flow starts, cleared after every view render, and destroyed when the flow ends.
+With the default implementation, any objects stored in flash scope need to be serializable.
+The following listing defines a `flashScope` variable:
+
+====
+[source,xml]
+----
+<set name="flashScope.statusMessage" value="'Booking confirmed'" />
+----
+====
+
+[[_el_variable_conversationscope]]
+==== The `conversationScope` Variable
+
+You can use `conversationScope` to assign a conversation variable.
+Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
+Conversation scope is shared by a top-level flow and all of its sub-flows.
+With the default implementation, conversation scoped objects are stored in the HTTP session and should generally be serializable to account for typical session replication.
+The following listing defines a `conversationScope` variable:
+
+====
+[source,xml]
+----
+<evaluate expression="searchService.findHotel(hotelId)" result="conversationScope.hotel" />
+----
+====
+
+[[_el_variable_requestparameters]]
+==== The `requestParameters` Variable
+
+You can use `requestParameters` to access a client request parameter, as follows:
+
+====
+[source,xml]
+----
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />
+----
+====
+
+[[_el_variable_currentevent]]
+==== The `currentEvent` Variable
+
+You can use `currentEvent` to access attributes of the current `Event`, as follows:
+
+====
+[source,xml]
+----
+<evaluate expression="booking.guests.add(currentEvent.attributes.guest)" />
+----
+====
+
+[[_el_variable_currentuser]]
+==== The `currentUser` Variable
+
+You can use `currentUser` to access the authenticated `Principal`, as follows:
+
+====
+[source,xml]
+----
+<evaluate expression="bookingService.createBooking(hotelId, currentUser.name)"
+          result="flowScope.booking" />
+----
+====
+
+[[_el_variable_messagecontext]]
+==== The `messageContext` Variable
+
+You can use `messageContext` to access a context to retrieve and create flow execution messages, including error and success messages.
+See the `MessageContext` Javadocs for more information.
+The following example uses the `messageContext` variable:
+
+====
+[source,xml]
+----
+<evaluate expression="bookingValidator.validate(booking, messageContext)" />
+----
+====
+
+[[_el_variable_resourcebundle]]
+==== The `resourceBundle` Variable
+
+You can use `resourceBundle` to access a message resource, as follows:
+
+====
+[source,xml]
+----
+<set name="flashScope.successMessage" value="resourceBundle.successMessage" />
+----
+====
+
+[[_el_variable_requestcontext]]
+==== The `flowRequestContext` Variable
+
+You can use the `flowRequestContext` variable to access the `RequestContext` API, which is a representation of the current flow request.
+See the API Javadocs for more information.
+
+[[_el_variable_flowexecutioncontext]]
+==== The `flowExecutionContext` Variable
+
+You can use the `flowExecutionContext` variable to access the `FlowExecutionContext` API, which is a representation of the current flow state.
+See the API Javadocs for more information.
+
+[[_el_variable_flowexecutionurl]]
+==== The `flowExecutionUrl` Variable
+
+You can use the `flowExecutionUrl` variable to access the context-relative URI for the current flow execution view-state.
+
+[[_el_variable_externalcontext]]
+==== The `externalContext` Variable
+
+You can use the `externalContext` variable to access the client environment, including user session attributes.
+See the `ExternalContext` API JavaDocs for more information.
+The following example uses the `externalContext` variable:
+
+====
+[source,xml]
+----
+<evaluate expression="searchService.suggestHotels(externalContext.sessionMap.userProfile)"
+          result="viewScope.hotels" />
+----
+====
+
+[[_el_scope_searching]]
+=== Scope Searching Algorithm
+
+As mentioned <<_el_variables,earlier>> in this section, when assigning a variable in one of the flow scopes, referencing that scope is required.
+The following example shows how to do so:
+
+====
+[source,xml]
+----
+<set name="requestScope.hotelId" value="requestParameters.id" type="long" />
+----
+====
+
+When you are merely accessing a variable in one of the scopes, referencing the scope is optional, as follows:
+
+====
+[source,xml]
+----
+<evaluate expression="entityManager.persist(booking)" />
+----
+====
+
+When no scope is specified, as in the use of `booking` shown earlier, a scope searching algorithm is used.
+The algorithm looks in the request, flash, view, flow, and conversation scopes for the variable.
+If no such variable is found, an `EvaluationException` is thrown.
