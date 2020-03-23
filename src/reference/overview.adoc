@@ -1,0 +1,107 @@
+[[_manual_overview]]
+== Overview
+
+This guide covers all aspects of Spring Web Flow.
+It covers implementing flows in end-user applications and working with the feature set.
+It also covers extending the framework and the overall architectural model.
+
+[[_system_requirements]]
+=== What Web Flow Requires to Run
+
+Java 1.8 or higher.
+
+Spring 5.0 or higher.
+
+=== Resources
+
+You can ask questions and interact on StackOverflow by using the designated tags.
+See https://spring.io/questions[Spring at StackOverflow].
+
+You can report bugs and make requests by using the https://jira.spring.io[Spring Issue Tracker].
+
+You can submit pull requests and work with the source code.
+See https://github.com/spring-projects/spring-webflow[Web Flow on Github].
+
+[[_jars_mvn_central]]
+=== Accessing Web Flow artifacts from Maven Central
+
+Each jar in the Web Flow distribution is available in the https://search.maven.org[Maven Central Repository].
+This lets you easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
+
+To access Web Flow jars from Maven Central, declare the following dependency in your pom:
+
+====
+[source,xml]
+----
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-webflow</artifactId>
+    <version>x.y.z.RELEASE</version>
+</dependency>
+----
+====
+
+If you use JavaServer Faces, declare the following dependency in your pom (includes the `spring-binding`, `spring-webflow` transitive dependencies):
+
+====
+[source,xml]
+----
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-faces</artifactId>
+    <version>x.y.z.RELEASE</version>
+</dependency>
+----
+====
+
+=== Accessing Nightly Builds and Milestone Releases
+
+Nightly snapshots of Web Flow development branches are available by using Maven.
+These snapshot builds are useful for testing out fixes you depend on in advance of the next release and provide a convenient way for you to provide feedback about whether a fix meets your needs.
+
+==== Accessing Snapshots and Milestones with Maven
+
+For milestones and snapshots, you need to use the Spring Snapshot repository.
+Add the following repository to your Maven pom.xml:
+
+====
+[source,xml]
+----
+
+<repository>
+    <id>spring</id>
+    <name>Spring Repository</name>
+    <url>https://repo.spring.io/snapshot</url>
+</repository>
+----
+====
+
+Then you need to declare the following dependency:
+
+====
+[source,xml]
+----
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-webflow</artifactId>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
+</dependency>
+----
+====
+
+Also, if you use JSF, you need to add the following dependency:
+
+====
+[source,xml]
+----
+
+<dependency>
+    <groupId>org.springframework.webflow</groupId>
+    <artifactId>spring-faces</artifactId>
+    <version>x.y.z.BUILD-SNAPSHOT</version>
+</dependency>
+----
+====

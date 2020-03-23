@@ -1,0 +1,82 @@
+== Flow Managed Persistence
+
+Most applications access data in some way.
+Many modify data shared by multiple users and, therefore, require transactional data access properties.
+They often transform relational data sets into domain objects to support application processing.
+Web Flow offers "`flow managed persistence`", where a flow can create, commit, and close an object persistence context for you.
+Web Flow integrates both Hibernate and JPA object-persistence technologies.
+
+Apart from flow-managed persistence, there is the pattern of fully encapsulating `PersistenceContext` management within the service layer of your application.
+In that case, the web layer does not get involved with persistence.
+Instead, it works entirely with detached objects that are passed to and returned by your service layer.
+This chapter focuses on flow-managed persistence, exploring how and when to use this feature.
+
+[[_flowscopedpersistencecontext]]
+=== Flow-scoped `PersistenceContext`
+
+This pattern creates a `PersistenceContext` in `flowScope` on flow startup, uses that context for data access during the course of flow execution, and commits changes made to persistent entities at the end.
+This pattern provides isolation of intermediate edits by committing changes to the database only at the end of flow execution.
+This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
+To support saving and restarting the progress of a flow over an extended period of time, a durable store for flow state must be used.
+If a save and restart capability is not required, standard HTTP session-based storage of the flow state is sufficient.
+In that case, session expiration or termination before commit could potentially result in changes being lost.
+
+To use the flow-scoped `PersistenceContext` pattern, first mark your flow as a `persistence-context`, as follows:
+
+====
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          https://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+    <persistence-context />
+
+</flow>
+----
+====
+
+Then configure the correct `FlowExecutionListener` to apply this pattern to your flow.
+If using Hibernate, register the `HibernateFlowExecutionListener`.
+If using JPA, register the `JpaFlowExecutionListener`.
+The following example uses JPA:
+
+====
+[source,xml]
+----
+<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+    <webflow:flow-execution-listeners>
+        <webflow:listener ref="jpaFlowExecutionListener" />
+    </webflow:flow-execution-listeners>
+</webflow:flow-executor>
+
+<bean id="jpaFlowExecutionListener"
+      class="org.springframework.webflow.persistence.JpaFlowExecutionListener">
+    <constructor-arg ref="entityManagerFactory" />
+    <constructor-arg ref="transactionManager" />
+</bean>
+----
+====
+
+To trigger a commit at the end, annotate your `end-state` element with the commit attribute, as follows:
+
+====
+[source,xml]
+----
+<end-state id="bookingConfirmed" commit="true" />
+----
+====
+
+That is it.
+When your flow starts, the listener handles allocating a new `EntityManager` in `flowScope`.
+You can reference this `EntityManager` at anytime from within your flow by using the special `persistenceContext` variable.
+In addition, any data access that occurs when you use a Spring-managed data access object automatically uses this `EntityManager`.
+Such data access operations should always run non-transactionally or in read-only transactions to maintain isolation of intermediate edits.
+
+[[_flow_managed_persistence_propagation]]
+=== Flow Managed Persistence And Sub-Flows
+
+A flow managed `PersistenceContext` is automatically extended (propagated) to sub-flows, assuming each sub-flow also has the `<perstistence-context/>` variable.
+When a sub-flow re-uses the `PersistenceContext` started by its parent, it ignores commit flags when an end state is reached, thereby deferring the final decision (to commit or not) to its parent.

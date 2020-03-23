@@ -1,0 +1,186 @@
+[[_flow_security]]
+== Securing Flows
+
+Security is an important concept for any application.
+End users should not be able to access any portion of a site simply by guessing the URL.
+Areas of a site that are sensitive must ensure that only authorized requests are processed.
+Spring Security is a proven security platform that can integrate with your application at multiple levels.
+This section focuses on securing flow execution.
+
+[[_flow_security_how_to]]
+=== How Do I Secure a Flow?
+
+Securing a flow is a three step process:
+
+. Configure Spring Security with authentication and authorization rules.
+. Annotate the flow definition with the secured element to define the security rules.
+. Add the `SecurityFlowExecutionListener` to process the security rules.
+
+Each of these steps must be completed or flow security rules are not applied.
+
+[[_flow_security_secured_element]]
+=== The `secured` Element
+
+The `secured` element designates that its containing element should apply the authorization check before fully entering.
+This may not occur more than once per stage of the flow execution that is secured.
+
+Three phases of a flow can be secured: flows, states, and transitions.
+In each case, the syntax for the `secured` element is identical.
+The `secured` element is located inside the element it secures.
+For example, to secure a state, the secured element occurs directly inside that state, as follows:
+
+====
+[source,xml]
+----
+<view-state id="secured-view">
+    <secured attributes="ROLE_USER" />
+    ...
+</view-state>
+----
+====
+
+[[_flow_security_secured_element_attributes]]
+==== Security Attributes
+
+The `attributes` attribute is a comma separated list of Spring Security authorization attributes.
+Often, these are specific security roles.
+The attributes are compared against the user's granted attributes by a Spring Security access decision manager.
+
+====
+[source,xml]
+----
+<secured attributes="ROLE_USER" />
+----
+====
+
+By default, a role-based access-decision manager is used to determine if the user is allowed access.
+This needs to be overridden if your application is not using authorization roles.
+
+[[_flow_security_secured_element_match]]
+==== Matching Type
+
+There are two types of matching available: `any` and `all`.
+`any` allows access if at least one of the required security attributes is granted to the user.
+`all` allows access only if each of the required security attributes is granted to the user.
+
+====
+[source,xml]
+----
+<secured attributes="ROLE_USER, ROLE_ANONYMOUS" match="any" />
+----
+====
+
+This attribute is optional.
+If not defined, the default value is `any`.
+
+The `match` attribute is respected only if the default access decision manager is used.
+
+[[_flow_security_listener]]
+=== The `SecurityFlowExecutionListener`
+
+Defining security rules in the flow by themselves does not protect the flow.
+A `SecurityFlowExecutionListener` must also be defined in the webflow configuration and applied to the flow executor, as follows:
+
+====
+[source,xml]
+----
+<webflow:flow-executor id="flowExecutor" flow-registry="flowRegistry">
+    <webflow:flow-execution-listeners>
+        <webflow:listener ref="securityFlowExecutionListener" />
+    </webflow:flow-execution-listeners>
+</webflow:flow-executor>
+
+<bean id="securityFlowExecutionListener"
+      class="org.springframework.webflow.security.SecurityFlowExecutionListener" />
+----
+====
+
+If access is denied to a portion of the application, an `AccessDeniedException` is thrown.
+This exception is later caught by Spring Security and used to prompt the user to authenticate.
+It is important that this exception be allowed to travel up the execution stack uninhibited.
+Otherwise, the end user may not be prompted to authenticate.
+
+[[_flow_security_listener_adm]]
+==== Custom Access Decision Managers
+
+If your application uses authorities that are not role-based, you need to configure a custom `AccessDecisionManager`.
+You can override the default decision manager by setting the `accessDecisionManager` property on the security listener.
+See the https://docs.spring.io/spring-security/site/docs/current/reference/html5/[Spring Security reference documentation] to learn more about decision managers.
+The following example defines a custom access decision manager:
+
+====
+[source,xml]
+----
+<bean id="securityFlowExecutionListener"
+      class="org.springframework.webflow.security.SecurityFlowExecutionListener">
+    <property name="accessDecisionManager" ref="myCustomAccessDecisionManager" />
+</bean>
+----
+====
+
+[[_flow_security_configuration]]
+=== Configuring Spring Security
+
+Spring Security has robust configuration options available.
+As every application and environment has its own security requirements, the https://docs.spring.io/spring-security/site/docs/current/reference/html5/[Spring Security reference documentation] is the best place to learn the available options.
+
+Both the `booking-faces` and `booking-mvc` sample applications are configured to use Spring Security.
+Configuration is needed at both the Spring and the `web.xml` levels.
+
+[[_flow_security_configuration_spring]]
+==== Spring Configuration
+
+The Spring configuration defines `http` specifics (such as protected URLs and login/logout mechanics) and the `authentication-provider`.
+For the sample applications, a local authentication provider is configured.
+The following example configures Spring Security for a web flow:
+
+====
+[source,xml]
+----
+
+<security:http auto-config="true">
+    <security:form-login login-page="/spring/login"
+                         login-processing-url="/spring/loginProcess"
+                         default-target-url="/spring/main"
+                         authentication-failure-url="/spring/login?login_error=1" />
+    <security:logout logout-url="/spring/logout" logout-success-url="/spring/logout-success" />
+</security:http>
+
+<security:authentication-provider>
+    <security:password-encoder hash="md5" />
+    <security:user-service>
+        <security:user name="keith" password="417c7382b16c395bc25b5da1398cf076"
+                       authorities="ROLE_USER,ROLE_SUPERVISOR" />
+        <security:user name="erwin" password="12430911a8af075c6f41c6976af22b09"
+                       authorities="ROLE_USER,ROLE_SUPERVISOR" />
+        <security:user name="jeremy" password="57c6cbff0d421449be820763f03139eb"
+                       authorities="ROLE_USER" />
+        <security:user name="scott" password="942f2339bf50796de535a384f0d1af3e"
+                       authorities="ROLE_USER" />
+    </security:user-service>
+</security:authentication-provider>
+----
+====
+
+[[_flow_security_configuration_web]]
+==== `web.xml` Configuration
+
+In the `web.xml` file, a `filter` is defined to intercept all requests.
+This filter listens for login/logout requests and processes them accordingly.
+It will also catch `AccesDeniedException` instances and redirect the user to the login page.
+The follwoing example defines such filters:
+
+====
+[source,xml]
+----
+<filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+----
+====

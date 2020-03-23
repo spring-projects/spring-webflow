@@ -1,0 +1,55 @@
+= Spring Web Flow Reference Guide
+Keith Donald, Erwin Vervaet, Jeremy Grelle, Scott Andrews, Rossen Stoyanchev, Phillip Webb, Jay Bryant
+:revnumber: {revnumber}
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+
+:sectnums!:
+
+[preface]
+== Preface
+
+Many web applications require the same sequence of steps to execute in different contexts.
+Often, these sequences are merely components of a larger task the user is trying to accomplish.
+Such a reusable sequence is called a flow.
+
+Consider a typical shopping cart application.
+User registration, login, and cart checkout are all examples of flows that can be invoked from several places in this type of application.
+
+Spring Web Flow is the module of Spring for implementing flows.
+The Web Flow engine plugs into the Spring Web MVC platform and enables declarative flow definition.
+This reference guide shows you how to use and extend Spring Web Flow.
+
+:sectnums:
+
+include::overview.adoc[]
+
+include::whatsnew.adoc[]
+
+include::defining-flows.adoc[]
+
+include::el.adoc[]
+
+include::views.adoc[]
+
+include::actions.adoc[]
+
+include::flow-managed-persistence.adoc[]
+
+include::flow-security.adoc[]
+
+include::flow-inheritance.adoc[]
+
+include::system-setup.adoc[]
+
+include::spring-mvc.adoc[]
+
+include::spring-js.adoc[]
+
+include::spring-faces.adoc[]
+
+include::testing.adoc[]
+
+include::flow-definition-field-mappings.adoc[]
