@@ -213,7 +213,7 @@ configure(rootProject) {
 	}
 
 	ext {
-		docResourcesVersion = "0.2.0.RELEASE"
+		docResourcesVersion = "0.2.1.RELEASE"
 	}
 
 	dependencies {
