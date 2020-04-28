@@ -64,11 +64,6 @@ Generate Eclipse settings and then manually import projects:
 ./import-into-eclipse.sh
 ````
 
-To run tests against the Spring IO Platform (and Hibernate 5):
-````
-./gradlew clean springIoCheck -PJDK8_HOME=<<your-jdk8-home>> -PplatformVersion=2.1.0.BUILD-SNAPSHOT
-````
-
 The Spring Framework and Spring Web Flow use a very similar build system. For this reason the following [Gradle build FAQ](https://github.com/SpringSource/spring-framework/wiki/Gradle-build-and-release-FAQ) would be a very useful read.
 
 # Contributing

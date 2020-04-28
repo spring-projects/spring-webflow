@@ -4,7 +4,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
-		classpath("io.spring.gradle:spring-io-plugin:0.0.8.RELEASE")
 		classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2")
 		classpath "org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16"
 	}
@@ -50,22 +49,6 @@ subprojects { subproject ->
 
 configure(subprojects.findAll {
 		it.name != "spring-build-src" && it.name != "spring-js-resources"}) { subproject ->
-
-	if (project.hasProperty('platformVersion')) {
-		apply plugin: 'spring-io'
-
-		repositories {
-			maven { url "https://repo.spring.io/libs-snapshot" }
-		}
-
-		dependencyManagement {
-			springIoTestRuntime {
-				imports {
-					mavenBom "io.spring.platform:platform-bom:${platformVersion}"
-				}
-			}
-		}
-	}
 
 	subproject.ext {
 		springVersion         = "5.1.7.RELEASE"
