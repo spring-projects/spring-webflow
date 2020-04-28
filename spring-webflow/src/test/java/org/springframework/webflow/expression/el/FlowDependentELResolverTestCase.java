@@ -1,15 +1,14 @@
 package org.springframework.webflow.expression.el;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import java.util.List;
+
 import javax.el.ELContext;
 import javax.el.ELResolver;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.binding.expression.el.DefaultELContext;
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.webflow.engine.ViewState;
@@ -17,12 +16,16 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 public abstract class FlowDependentELResolverTestCase {
 
 	protected ELContext context;
 
 	@BeforeEach
 	public void setUp() {
+		RequestContextHolder.setRequestContext(null);
 		context = new DefaultELContext(new DefaultELResolver(getCustomResolvers()), null, null);
 	}
 

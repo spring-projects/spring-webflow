@@ -89,9 +89,11 @@ configure(subprojects.findAll {
 		testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 	}
 
-	tasks.withType(Test).all {
+	test {
+		useJUnitPlatform()
+		include(["**/*Tests.class", "**/*Test.class"])
 		systemProperty("java.awt.headless", "true")
-		include "**/*Tests.class"
+		systemProperty("testGroups", project.properties.get("testGroups"))
 	}
 
 	javadoc {

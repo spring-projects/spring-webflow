@@ -23,7 +23,6 @@ import org.springframework.webflow.test.MockRequestContext;
 
 public class FlowResourceELResolverTests extends FlowDependentELResolverTestCase {
 
-	@Override
 	@AfterEach
 	public void tearDown() {
 		RequestContextHolder.setRequestContext(null);
