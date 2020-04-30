@@ -1,1 +1,14 @@
 description = "Spring Binding"
+
+dependencies {
+	compile("org.springframework:spring-context")
+
+	compileOnly("javax.el:javax.el-api")
+	testCompile("org.junit.jupiter:junit-jupiter")
+	testCompile("org.hamcrest:hamcrest")
+	testCompile("org.easymock:easymock")
+	testCompile("org.apache.tomcat:tomcat-jasper-el")
+	testRuntime("org.apache.logging.log4j:log4j-core")
+	testRuntime("org.apache.logging.log4j:log4j-slf4j-impl")
+	testRuntime("org.apache.logging.log4j:log4j-jul")
+}
