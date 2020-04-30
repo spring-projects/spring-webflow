@@ -25,7 +25,7 @@ def customizePom(pom, gradleProject) {
 			url = "https://github.com/spring-projects/spring-webflow"
 			organization {
 				name = "Spring IO"
-				url = "https://projects.spring.io/spring-webflow"
+				url = "https://spring.io/projects/spring-webflow"
 			}
 			licenses {
 				license {
