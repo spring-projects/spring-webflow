@@ -3,7 +3,6 @@ buildscript {
 		maven { url "https://repo.spring.io/plugins-release" }
 	}
 	dependencies {
-		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
 		classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2")
 		classpath "org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16"
 	}
@@ -24,9 +23,9 @@ ext {
 allprojects {
 	group = "org.springframework.webflow"
 
-	apply plugin: "io.spring.dependency-management"
-	apply plugin: "propdeps"
 	apply plugin: "java"
+	apply plugin: "io.spring.dependency-management"
+	apply plugin: "org.springframework.build.optional-dependencies"
 	apply from: "${rootProject.projectDir}/ide.gradle"
 
 	dependencyManagement {
@@ -72,9 +71,7 @@ allprojects {
 			}
 			dependency "org.slf4j:slf4j-api:1.7.30"
 
-			dependency("junit:junit:4.13") {
-				exclude group: "org.hamcrest", name: "hamcrest-core"
-			}
+			dependency("junit:junit:4.13")
 			dependency "org.easymock:easymock:4.2"
 			dependency "org.hamcrest:hamcrest:2.1"
 			dependency "org.apache.tomcat:tomcat-jasper-el:9.0.34"
