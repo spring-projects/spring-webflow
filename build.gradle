@@ -142,12 +142,12 @@ configure(javaProjects) { javaProject ->
 	}
 
 	task sourcesJar(type: Jar, dependsOn:classes) {
-		classifier = "sources"
+		archiveClassifier = "sources"
 		from sourceSets.main.allJava
 	}
 
 	task javadocJar(type: Jar) {
-		classifier = "javadoc"
+		archiveClassifier = "javadoc"
 		from javadoc
 	}
 
@@ -261,9 +261,9 @@ configure(rootProject) {
 
 	task docsZip(type: Zip) {
 		group = "Distribution"
-		baseName = "spring-webflow"
-		classifier = "docs"
-		description = "Builds -${classifier} archive containing api and reference " +
+		archiveBaseName = "spring-webflow"
+		archiveClassifier = "docs"
+		description = "Builds -${archiveClassifier} archive containing api and reference " +
 			"for deployment at static.springframework.org/spring-webflow/docs."
 
 		from (api) {
@@ -286,9 +286,9 @@ configure(rootProject) {
 
 	task schemaZip(type: Zip) {
 		group = "Distribution"
-		baseName = "spring-webflow"
-		classifier = "schema"
-		description = "Builds -${classifier} archive containing all " +
+		archiveBaseName = "spring-webflow"
+		archiveClassifier = "schema"
+		description = "Builds -${archiveClassifier} archive containing all " +
 			"XSDs for deployment at static.springframework.org/schema."
 
 		subprojects.each { subproject ->
@@ -322,12 +322,12 @@ configure(rootProject) {
 
 	task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
 		group = "Distribution"
-		baseName = "spring-webflow"
-		classifier = "dist"
-		description = "Builds -${classifier} archive, containing all jars and docs, " +
+		archiveBaseName = "spring-webflow"
+		archiveClassifier = "dist"
+		description = "Builds -${archiveClassifier} archive, containing all jars and docs, " +
 					  "suitable for community download page."
 
-		def baseDir = "${baseName}-${project.version}"
+		def baseDir = "${archiveBaseName}-${project.version}"
 
 		from("src/dist") {
 			include "notice.txt"
@@ -342,11 +342,11 @@ configure(rootProject) {
 			expand(version: project.version)
 		}
 
-		from(zipTree(docsZip.archivePath)) {
+		from(zipTree(docsZip.archiveFile)) {
 			into "${baseDir}/docs"
 		}
 
-		from(zipTree(schemaZip.archivePath)) {
+		from(zipTree(schemaZip.archiveFile)) {
 			into "${baseDir}/schema"
 		}
 
