@@ -1,0 +1,18 @@
+description = "Spring Faces"
+
+dependencies {
+	compile(project(":spring-binding"))
+	compile(project(":spring-webflow"))
+	compile("org.springframework:spring-web:$springVersion")
+	compile("org.springframework:spring-webmvc:$springVersion")
+	provided("javax.servlet:javax.servlet-api:$servletVersion")
+	provided("com.sun.faces:jsf-api:2.2.16")
+	provided("com.sun.faces:jsf-impl:2.2.16")
+	provided("org.apache.myfaces.core:myfaces-impl:2.2.12")
+	optional("com.sun.facelets:jsf-facelets:1.1.14")
+	optional("org.springframework.security:spring-security-core:$springSecurityVersion")
+	optional("org.springframework.security:spring-security-web:$springSecurityVersion")
+	optional("org.springframework.security:spring-security-taglibs:$springSecurityVersion")
+	testCompile("org.apache.myfaces.test:myfaces-test22:1.0.8")
+	testCompile("org.springframework:spring-test:$springVersion")
+}
