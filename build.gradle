@@ -158,6 +158,7 @@ configure(rootProject) {
 
 	task('makePDF', type: org.asciidoctor.gradle.AsciidoctorTask) {
 		dependsOn prepareAsciidocBuild
+		onlyIf { !project.version.endsWith("SNAPSHOT") }
 		backends 'pdf'
 		sourceDir "$buildDir/asciidoc/build"
 		sources {
