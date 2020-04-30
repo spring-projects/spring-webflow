@@ -1,3 +1,5 @@
+description = "Spring JS Resources"
+
 configurations {
     shrinksafe
 }
@@ -38,5 +40,9 @@ void minify(fileName) {
             }
         }
     }
+}
+
+jar {
+	dependsOn prepareResources
 }
 

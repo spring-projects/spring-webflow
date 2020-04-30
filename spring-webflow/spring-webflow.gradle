@@ -1,0 +1,30 @@
+description = "Spring Web Flow"
+
+dependencies {
+	compile(project(":spring-binding"))
+	compile("org.springframework:spring-web:$springVersion")
+	compile("org.springframework:spring-webmvc:$springVersion")
+	provided("javax.servlet:javax.servlet-api:$servletVersion")
+	optional("org.hibernate:hibernate-core:$hibernate5Version")
+	optional("org.springframework.security:spring-security-core:$springSecurityVersion")
+	optional("org.springframework:spring-orm:$springVersion")
+	optional("org.springframework:spring-tx:$springVersion")
+	optional("org.apache.tiles:tiles-api:$tiles3Version")
+	optional("org.apache.tiles:tiles-core:$tiles3Version")
+	optional("org.apache.tiles:tiles-servlet:$tiles3Version")
+	optional("org.apache.tiles:tiles-jsp:$tiles3Version")
+	optional("org.apache.tiles:tiles-el:$tiles3Version")
+	optional("org.apache.tiles:tiles-extras:$tiles3Version") {
+		exclude group: "org.springframework", module: "spring-web"
+	}
+	provided("junit:junit:4.12")
+	testCompile("org.springframework:spring-aop:$springVersion")
+	testCompile("org.springframework:spring-jdbc:$springVersion")
+	testCompile("org.springframework:spring-test:$springVersion")
+	testCompile("javax.validation:validation-api:2.0.1.Final")
+	testCompile("org.hibernate:hibernate-entitymanager:$hibernate5Version")
+	testCompile("org.hibernate:hibernate-validator:6.1.4.Final")
+	testCompile("org.hsqldb:hsqldb:2.5.0")
+	testCompile("javax.servlet.jsp:javax.servlet.jsp-api:2.3.2-b02")
+	testCompile("javax.servlet:jstl:1.2")
+}
