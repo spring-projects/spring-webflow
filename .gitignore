@@ -7,7 +7,9 @@ build.sh
 integration-repo
 ivy-cache
 .gradle
-build
+/build
+buildSrc/build
+/spring-*/build
 target
 
 # Eclipse metadata
