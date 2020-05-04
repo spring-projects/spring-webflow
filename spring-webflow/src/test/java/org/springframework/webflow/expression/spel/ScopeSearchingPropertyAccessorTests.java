@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,18 @@
  */
 package org.springframework.webflow.expression.spel;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.expression.TypedValue;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.View;
-import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.test.MockFlowSession;
 import org.springframework.webflow.test.MockRequestContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ScopeSearchingPropertyAccessorTests {
 
@@ -79,10 +78,8 @@ public class ScopeSearchingPropertyAccessorTests {
 
 	protected void initView(MockRequestContext requestContext) {
 		((MockFlowSession) requestContext.getFlowExecutionContext().getActiveSession()).setState(new ViewState(
-				requestContext.getRootFlow(), "view", new ViewFactory() {
-					public View getView(RequestContext context) {
-						throw new UnsupportedOperationException("Not implemented");
-					}
+				requestContext.getRootFlow(), "view", context -> {
+					throw new UnsupportedOperationException("Not implemented");
 				}));
 	}
 

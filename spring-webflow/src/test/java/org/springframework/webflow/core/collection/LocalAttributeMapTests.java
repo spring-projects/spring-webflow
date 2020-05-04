@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ public class LocalAttributeMapTests {
 		attributeMap.put("integer", 12345);
 		attributeMap.put("boolean", true);
 		attributeMap.put("long", 12345L);
-		attributeMap.put("double", new Double(12345));
-		attributeMap.put("float", new Float(12345));
+		attributeMap.put("double", 12345d);
+		attributeMap.put("float", 12345f);
 		attributeMap.put("bigDecimal", new BigDecimal("12345.67"));
 		attributeMap.put("bean", new TestBean());
 		attributeMap.put("stringArray", new String[] { "1", "2", "3" });

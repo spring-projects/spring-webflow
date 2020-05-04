@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class TransitionExecutingFlowExecutionExceptionHandler implements FlowExe
 	/**
 	 * The exceptionType to targetStateResolver map.
 	 */
-	private Map<Class<? extends Throwable>, TargetStateResolver> exceptionTargetStateMappings = new HashMap<Class<? extends Throwable>, TargetStateResolver>();
+	private Map<Class<? extends Throwable>, TargetStateResolver> exceptionTargetStateMappings = new HashMap<>();
 
 	/**
 	 * The list of actions to execute when this handler handles an exception.

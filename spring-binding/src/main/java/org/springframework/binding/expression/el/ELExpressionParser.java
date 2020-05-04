@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class ELExpressionParser implements ExpressionParser {
 
 	private ExpressionFactory expressionFactory;
 
-	private Map<Class<?>, ELContextFactory> contextFactories = new HashMap<Class<?>, ELContextFactory>();
+	private Map<Class<?>, ELContextFactory> contextFactories = new HashMap<>();
 
 	private ConversionService conversionService = new DefaultConversionService();
 

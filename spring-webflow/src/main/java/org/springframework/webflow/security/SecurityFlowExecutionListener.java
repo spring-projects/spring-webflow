@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ public class SecurityFlowExecutionListener implements FlowExecutionListener {
 	}
 
 	private AbstractAccessDecisionManager createManager(SecurityRule rule) {
-		List<AccessDecisionVoter<? extends Object>> voters = new ArrayList<AccessDecisionVoter<? extends Object>>();
+		List<AccessDecisionVoter<? extends Object>> voters = new ArrayList<>();
 		voters.add(new RoleVoter());
 		if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
 			return new AffirmativeBased(voters);

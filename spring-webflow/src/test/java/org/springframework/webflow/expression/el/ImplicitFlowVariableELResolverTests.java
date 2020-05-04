@@ -1,19 +1,14 @@
 package org.springframework.webflow.expression.el;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.el.ELResolver;
 import javax.el.PropertyNotWritableException;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.binding.message.MessageContext;
 import org.springframework.util.ClassUtils;
 import org.springframework.webflow.context.ExternalContext;
@@ -26,6 +21,11 @@ import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockFlowExecutionContext;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 import org.springframework.webflow.test.MockRequestContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolverTestCase {
 
@@ -261,9 +261,7 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 	@Test
 	public void testIsReadOnly_AllVars() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		Iterator<String> i = vars.iterator();
-		while (i.hasNext()) {
-			String var = i.next();
+		for (String var : vars) {
 			assertTrue(context.getELResolver().isReadOnly(context, null, var));
 		}
 	}
@@ -271,9 +269,7 @@ public class ImplicitFlowVariableELResolverTests extends FlowDependentELResolver
 	@Test
 	public void testSetValue_AllVars() {
 		RequestContextHolder.setRequestContext(new MockRequestContext());
-		Iterator<String> i = vars.iterator();
-		while (i.hasNext()) {
-			String var = i.next();
+		for (String var : vars) {
 			try {
 				context.getELResolver().setValue(context, null, var, new Object());
 				fail("setValue should not be allowed");

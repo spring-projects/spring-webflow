@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 package org.springframework.webflow.conversation.impl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -134,8 +132,7 @@ public class ConversationContainer implements Serializable {
 	 * Remove identified conversation from this container.
 	 */
 	public synchronized void removeConversation(ConversationId id) {
-		for (Iterator<ContainedConversation> it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = it.next();
+		for (ContainedConversation conversation : conversations) {
 			if (conversation.getId().equals(id)) {
 				conversations.remove(conversation);
 				break;

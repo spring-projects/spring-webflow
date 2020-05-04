@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,21 +50,11 @@ public class FlowVariablePropertyAccessor implements PropertyAccessor {
 	private static Map<String, FlowVariableAccessor> variables = new HashMap<>();
 
 	static {
-		variables.put("currentUser", new FlowVariableAccessor() {
-			public Object getVariable() {
-				return RequestContextHolder.getRequestContext().getExternalContext().getCurrentUser();
-			}
-		});
-		variables.put("flowRequestContext", new FlowVariableAccessor() {
-			public Object getVariable() {
-				return RequestContextHolder.getRequestContext();
-			}
-		});
-		variables.put("resourceBundle", new FlowVariableAccessor() {
-			public Object getVariable() {
-				return RequestContextHolder.getRequestContext().getActiveFlow().getApplicationContext();
-			}
-		});
+		variables.put("currentUser", () ->
+				RequestContextHolder.getRequestContext().getExternalContext().getCurrentUser());
+		variables.put("flowRequestContext", RequestContextHolder::getRequestContext);
+		variables.put("resourceBundle", () ->
+				RequestContextHolder.getRequestContext().getActiveFlow().getApplicationContext());
 	}
 
 	public Class<?>[] getSpecificTargetClasses() {

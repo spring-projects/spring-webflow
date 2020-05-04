@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,13 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	private MessageSource messageSource;
 
 	@SuppressWarnings("serial")
-	private Map<Object, List<Message>> sourceMessages = new AbstractCachingMapDecorator<Object, List<Message>>(
-			new LinkedHashMap<Object, List<Message>>()) {
+	private Map<Object, List<Message>> sourceMessages =
+			new AbstractCachingMapDecorator<Object, List<Message>>(new LinkedHashMap<>()) {
 
-		protected List<Message> create(Object source) {
-			return new ArrayList<>();
-		}
-	};
+				protected List<Message> create(Object source) {
+					return new ArrayList<>();
+				}
+			};
 
 	/**
 	 * Creates a new default message context. Defaults to a message source that simply resolves default text and cannot
@@ -130,7 +130,7 @@ public class DefaultMessageContext implements StateManageableMessageContext {
 	// implementing state manageable message context
 
 	public Serializable createMessagesMemento() {
-		return new LinkedHashMap<Object, List<Message>>(sourceMessages);
+		return new LinkedHashMap<>(sourceMessages);
 	}
 
 	@SuppressWarnings("unchecked")

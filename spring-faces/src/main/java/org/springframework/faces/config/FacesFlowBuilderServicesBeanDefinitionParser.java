@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParser extends AbstractSingle
 	private boolean parseEnableManagedBeans(Element element, BeanDefinitionBuilder definitionBuilder) {
 		String enableManagedBeans = element.getAttribute(ENABLE_MANAGED_BEANS_ATTR);
 		if (StringUtils.hasText(enableManagedBeans)) {
-			return Boolean.valueOf(enableManagedBeans);
+			return Boolean.parseBoolean(enableManagedBeans);
 		} else {
 			return false;
 		}

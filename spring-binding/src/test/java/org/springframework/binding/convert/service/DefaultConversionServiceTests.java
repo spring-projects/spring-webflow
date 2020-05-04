@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,11 +164,7 @@ public class DefaultConversionServiceTests {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Principal.class, String.class);
-		assertEquals("name", executor.execute(new Principal() {
-			public String getName() {
-				return "name";
-			}
-		}));
+		assertEquals("name", executor.execute((Principal) () -> "name"));
 	}
 
 	@Test
@@ -197,16 +193,8 @@ public class DefaultConversionServiceTests {
 		DefaultConversionService service = new DefaultConversionService();
 		service.addConverter("princy", new CustomTwoWayConverter());
 		ConversionExecutor executor = service.getConversionExecutor("princy", Principal[].class, String[].class);
-		final Principal princy1 = new Principal() {
-			public String getName() {
-				return "princy1";
-			}
-		};
-		final Principal princy2 = new Principal() {
-			public String getName() {
-				return "princy2";
-			}
-		};
+		final Principal princy1 = () -> "princy1";
+		final Principal princy2 = () -> "princy2";
 		String[] p = (String[]) executor.execute(new Principal[] { princy1, princy2 });
 		assertEquals("princy1", p[0]);
 		assertEquals("princy2", p[1]);
@@ -567,11 +555,7 @@ public class DefaultConversionServiceTests {
 	private static class CustomConverter implements Converter {
 
 		public Object convertSourceToTargetClass(final Object source, Class<?> targetClass) throws Exception {
-			return new Principal() {
-				public String getName() {
-					return (String) source;
-				}
-			};
+			return (Principal) () -> (String) source;
 		}
 
 		public Class<?> getSourceClass() {
