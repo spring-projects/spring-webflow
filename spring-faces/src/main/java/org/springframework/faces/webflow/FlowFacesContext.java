@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 the original author or authors.
+ * Copyright 2004-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -38,7 +39,6 @@ import javax.faces.context.PartialViewContextFactory;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.springframework.binding.message.Message;
-import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
@@ -230,8 +230,9 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 */
 	public List<FacesMessage> getMessageList(final String clientId) {
 		final FacesMessageSource source = new FacesMessageSource(clientId);
-		Message[] messages = this.context.getMessageContext().getMessagesByCriteria(message -> ObjectUtils.nullSafeEquals(message.getSource(), source)
-				|| ObjectUtils.nullSafeEquals(message.getSource(), clientId));
+		Message[] messages = this.context.getMessageContext().getMessagesByCriteria(message ->
+				ObjectUtils.nullSafeEquals(message.getSource(), source)
+						|| ObjectUtils.nullSafeEquals(message.getSource(), clientId));
 		return asFacesMessages(messages);
 	}
 
