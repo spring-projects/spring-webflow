@@ -19,7 +19,7 @@ This pattern provides isolation of intermediate edits by committing changes to t
 This pattern is often used in conjunction with an optimistic locking strategy to protect the integrity of data modified in parallel by multiple users.
 To support saving and restarting the progress of a flow over an extended period of time, a durable store for flow state must be used.
 If a save and restart capability is not required, standard HTTP session-based storage of the flow state is sufficient.
-In that case, session expiration or termination before commit could potentially result in changes being lost.
+In that case, a session expiring or ending before commit could potentially result in changes being lost.
 
 To use the flow-scoped `PersistenceContext` pattern, first mark your flow as a `persistence-context`, as follows:
 
