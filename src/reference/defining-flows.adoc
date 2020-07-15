@@ -100,7 +100,7 @@ Use the `end-state` element to define a flow outcome:
 <end-state id="bookingCancelled" />
 ----
 
-When a flow transitions to a end-state it terminates and the outcome is returned.
+When a flow transitions to a end-state, it ends and the outcome is returned.
 
 === Checkpoint: Essential language elements
 
