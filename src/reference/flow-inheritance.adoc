@@ -4,7 +4,7 @@ Flow inheritance lets one flow inherit the configuration of another flow.
 Inheritance can occur at both the flow and state levels.
 A common use case is for a parent flow to define global transitions and exception handlers, and then each child flow can inherit those settings.
 
-In order for a parent flow to be found, it must be added to the `flow-registry` like any other flow.
+In order for a parent flow to be found, it must be added to the `flow-registry`, as any other flow.
 
 [[_flow_inheritance_java_comparison]]
 === Is Flow Inheritance Similar to Java Inheritance?
@@ -31,20 +31,21 @@ Spring Web Flow has two types of inheritance:
 ==== Flow-level Inheritance
 
 Flow level inheritance is defined by the `parent` attribute on the `flow` element.
-The attribute contains a comma separated list of flow identifiers to inherit from.
-The child flow will inherit from each parent in the order it is listed adding elements and content to the resulting flow.
-The resulting flow from the first merge will be considered the child in the second merge, and so on.
+The attribute contains a comma-separated list of flow identifiers from which to inherit.
+The child flow inherits from each parent in the order it is listed, adding elements and content to the resulting flow.
+The resulting flow from the first merge is considered the child in the second merge, and so on.
 
+====
 [source,xml]
 ----
-
 <flow parent="common-transitions, common-states">
 ----
+====
 
 [[_flow_inheritance_level_state]]
 === State-level Inheritance
 
-State level inheritance is similar to flow level inheritance, except only one state inherits from the parent, instead of the entire flow.
+State-level inheritance is similar to flow-level inheritance, except only one state inherits from the parent, instead of the entire flow.
 
 Unlike flow inheritance, only a single parent is allowed.
 Additionally, the identifier of the flow state to inherit from must also be defined.
@@ -83,9 +84,10 @@ If an abstract flow attempts to run, a `FlowBuilderException` is thrown.
 When a child flow inherits from its parent,  the parent and child are merged together to create a new flow.
 There are rules for every element in the Web Flow definition language that govern how that particular element is merged.
 
-There are two types of elements: _mergeable_ and _non-mergeable_.
-Mergeable elements always attempt to merge together if the elements are similar.
-Non-mergeable elements in a parent or child flow are always contained in the resulting flow intact.
+There are two types of elements:
+
+* Mergeable: Mergeable elements always attempt to merge together if the elements are similar.
+* Non-mergeable:Non-mergeable elements in a parent or child flow are always contained in the resulting flow intact.
 They are not modified as part of the merge process.
 
 NOTE: Paths to external resources in the parent flow should be absolute.
@@ -107,8 +109,8 @@ The mergeable elements are:
 
 * `action-state`: Merges on the ID
 * `attribute`: Merges on the name
-* `decision-state`: ID
-* `end-state`: ID
+* `decision-state`: Merges on the ID
+* `end-state`: Merges on the ID
 * `flow`: Always merges
 * `if`: Test
 * `on-end`: Always merges

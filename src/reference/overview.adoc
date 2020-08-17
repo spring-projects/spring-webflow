@@ -6,27 +6,26 @@ It covers implementing flows in end-user applications and working with the featu
 It also covers extending the framework and the overall architectural model.
 
 [[_system_requirements]]
-=== What Web Flow Requires to Run
+=== Web Flow Requirements
 
-Java 1.8 or higher.
-
-Spring 5.0 or higher.
+* Java 1.8 or higher.
+* Spring 5.0 or higher.
 
 === Resources
 
 You can ask questions and interact on StackOverflow by using the designated tags.
-See https://spring.io/questions[Spring at StackOverflow].
+See https://stackoverflow.com/questions/tagged/spring-webflow[Spring Web Flow at StackOverflow].
 
 You can report bugs and make requests by using the https://jira.spring.io[Spring Issue Tracker].
 
 You can submit pull requests and work with the source code.
-See https://github.com/spring-projects/spring-webflow[Web Flow on Github].
+See https://github.com/spring-projects/spring-webflow[Spring Web Flow on Github].
 
 [[_jars_mvn_central]]
-=== Accessing Web Flow artifacts from Maven Central
+=== Accessing Web Flow Artifacts from Maven Central
 
 Each jar in the Web Flow distribution is available in the https://search.maven.org[Maven Central Repository].
-This lets you easily integrate Web Flow into your application if you are already using Maven as the build system for your web development project.
+This lets you easily integrate Web Flow into your application if you already use Maven as the build system for your web development project.
 
 To access Web Flow jars from Maven Central, declare the following dependency in your pom:
 
@@ -42,7 +41,7 @@ To access Web Flow jars from Maven Central, declare the following dependency in 
 ----
 ====
 
-If you use JavaServer Faces, declare the following dependency in your pom (includes the `spring-binding`, `spring-webflow` transitive dependencies):
+If you use JavaServer Faces, declare the following dependency in your pom (includes the `spring-binding` and `spring-webflow` transitive dependencies):
 
 ====
 [source,xml]
@@ -59,7 +58,7 @@ If you use JavaServer Faces, declare the following dependency in your pom (inclu
 === Accessing Nightly Builds and Milestone Releases
 
 Nightly snapshots of Web Flow development branches are available by using Maven.
-These snapshot builds are useful for testing out fixes you depend on in advance of the next release and provide a convenient way for you to provide feedback about whether a fix meets your needs.
+These snapshot builds are useful for testing fixes you depend on in advance of the next release and provide a convenient way for you to provide feedback about whether a fix meets your needs.
 
 ==== Accessing Snapshots and Milestones with Maven
 

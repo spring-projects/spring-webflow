@@ -15,6 +15,7 @@ In the following example, we map all URLs that begin with `/spring/` to the serv
 The servlet needs to be configured.
 An `init-param` is used in the servlet to pass the `contextConfigLocation`.
 This is the location of the Spring configuration for your web application.
+The following listing shows the configuration details:
 
 ====
 [source,xml]
@@ -36,13 +37,13 @@ This is the location of the Spring configuration for your web application.
 ----
 ====
 
-In order for JSF to bootstrap correctly, the `FacesServlet` must be configured in `web.xml` as it normally would, even though you generally do not need to route requests through it at all when you use JSF with Spring Web Flow.
+For JSF to bootstrap correctly, the `FacesServlet` must be configured in `web.xml` as it normally would be, even though you generally do not need to route requests through it at all when you use JSF with Spring Web Flow.
 The following listing shows the configuration details:
 
 ====
 [source,xml]
 ----
-<!-- Just here so the JSF implementation can initialize, *not* used at runtime -->
+<!-- Just here so the JSF implementation can initialize. *Not* used at runtime. -->
 <servlet>
 	<servlet-name>Faces Servlet</servlet-name>
 	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -174,7 +175,7 @@ In a JSF environment, you also need the following Spring MVC-related configurati
 
 The `resources` custom namespace element delegates JSF resource requests to the JSF resource API.
 The `JsfFlowHandlerAdapter` is a replacement for the `FlowHandlerAdapter` normally used with Web Flow.
-This adapter initializes itself with a `JsfAjaxHandler` instead of the `SpringJavaSciprtAjaxHandler`.
+This adapter initializes itself with a `JsfAjaxHandler` instead of the `SpringJavaScriptAjaxHandler`.
 
 When you use Java configuration, the `AbstractFacesFlowConfiguration` base class automatically registers `JsfResourceRequestHandler`, so there is nothing further to do.
 
@@ -183,12 +184,12 @@ When you use Java configuration, the `AbstractFacesFlowConfiguration` base class
 
 When you use JSF with Spring Web Flow, you can completely replace the JSF managed bean facility with a combination of Web Flow managed variables and Spring managed beans.
 It gives you a good deal more control over the lifecycle of your managed objects with well-defined hooks for initialization and execution of your domain model.
-Additionally, since you are presumably already using Spring for your business layer, it reduces the conceptual overhead of having to maintain two different managed bean models.
+Additionally, since you presumably already use Spring for your business layer, it reduces the conceptual overhead of having to maintain two different managed bean models.
 
-If you are doing pure JSF development, you may quickly find that request scope is not long-lived enough for storing conversational model objects that drive complex event-driven views.
-In JSF, the usual option is to begin putting things into session scope, with the extra burden of needing to clean the objects up before progressing to another view or functional area of the application.
+If you do pure JSF development, you may quickly find that request scope is not long-lived enough for storing conversational model objects that drive complex event-driven views.
+In JSF, the usual option is to begin putting things into session scope, with the extra burden of needing to clean up the objects before progressing to another view or functional area of the application.
 What is really needed is a managed scope that is somewhere between request and session scope.
-JSF provides flash and view scopes that can be accessed programmatically through UIViewRoot.getViewMap().
+JSF provides flash and view scopes that can be accessed programmatically through `UIViewRoot.getViewMap()`.
 Spring Web Flow provides access to flash, view, flow, and conversation scopes.
 These scopes are seamlessly integrated through JSF variable resolvers and work the same in all JSF applications.
 
@@ -234,7 +235,7 @@ To define a view instance variable, you can use the `var` element inside a `view
 [[_spring_faces_spring_beans]]
 ==== Using Scoped Spring Beans
 
-Though defining autowired flow instance variables provides nice modularization and readability, occasions may arise where you want to utilize the other capabilities of the Spring container, such as Aspect-oriented Programming (AOP).
+Though defining autowired flow instance variables provides nice modularization and readability, occasions may arise where you want to use the other capabilities of the Spring container, such as Aspect-oriented Programming (AOP).
 In these cases, you can define a bean in your Spring `ApplicationContext` and give it a specific web flow scope, as follows:
 
 ====
@@ -306,7 +307,7 @@ For example, on postback from a view where the action event was fired by a compo
 
 Spring Web Flow provides two custom DataModel types: `OneSelectionTrackingListDataModel` and `ManySelectionTrackingListDataModel`.
 As the names indicate, they keep track of one or multiple selected rows.
-This is done with the help of a `SelectionTrackingActionListener` listener, which responds to JSF action events and invokes the appropriate methods on the `SelectinAware` data models to record the currently clicked row.
+This is done with the help of a `SelectionTrackingActionListener` listener, which responds to JSF action events and invokes the appropriate methods on the `SelectionAware` data models to record the currently clicked row.
 
 To understand how this is configured, keep in mind that the `FacesConversionService` registers a `DataModelConverter` against the alias `dataModel` on startup.
 When `result-type="dataModel"` is used in a flow definition, it causes the `DataModelConverter` to be used.
@@ -343,7 +344,7 @@ The initial `view-state` definition to load and display the list would be as fol
 ----
 ====
 
-You can construct a JSF DataTable that displays the current `hotels` list and then place a "`More Results`" link below the table, as follows:
+You can construct a JSF DataTable that displays the current `hotels` list and then place a `More Results` link below the table, as follows:
 
 ====
 [source,xml]
@@ -352,7 +353,7 @@ You can construct a JSF DataTable that displays the current `hotels` list and th
 ----
 ====
 
-This `commandLink` signals a "`next`" event from its `action` attribute.
+This `commandLink` signals a `next` event from its `action` attribute.
 You can then handle the event by adding to the `view-state` definition, as follows:
 
 ====
@@ -380,7 +381,7 @@ The same view is re-rendered, since there was no `to` attribute on the `transiti
 The next logical level beyond in-page events are events that require navigation to another view, with some manipulation of the model along the way.
 Achieving this with pure JSF would require adding a navigation rule to `faces-config.xml` and likely some intermediary Java code in a JSF managed bean (both tasks requiring a re-deploy). With the flow definition language, you can handle such a case concisely in one place in a way similar to how in-page events are handled.
 
-Continuing on with our use case of manipulating a paged list of results, suppose we want each row in the displayed `DataTable` to contain a link to a detail page for that row instance.
+Continuing with our use case of manipulating a paged list of results, suppose we want each row in the displayed `DataTable` to contain a link to a detail page for that row instance.
 You can add a column to the table containing the following `commandLink` component, as follows:
 
 ====
@@ -410,7 +411,7 @@ This raises the `select` event, which you can then handle by adding another `tra
 ----
 ====
 
-Here, the `select` event is handled by pushing the currently selected hotel instance from the `DataTable` into flow scope so that it may be referenced by the "reviewHotel" `view-state` .
+Here, the `select` event is handled by pushing the currently selected hotel instance from the `DataTable` into flow scope so that it may be referenced by the `reviewHotel` `view-state` .
 
 [[_spring_faces_model_validation]]
 ==== Performing Model Validation
@@ -419,9 +420,9 @@ JSF provides useful facilities for validating input at field-level before change
 However, when you need to then perform more complex validation at the model-level after the updates have been applied, you are generally left with having to add more custom code to your JSF action methods in the managed bean.
 Validation of this sort is something that is generally a responsibility of the domain model itself, but it is difficult to get any error messages propagated back to the view without introducing an undesirable dependency on the JSF API in your domain layer.
 
-With Web Flow, you can utilize the generic and low-level `MessageContext` in your business code, and any messages added there are then available to the `FacesContext` at render time.
+With Web Flow, you can use the generic and low-level `MessageContext` in your business code, and any messages added there are then available to the `FacesContext` at render time.
 
-For example, suppose you have a view where the user enters the necessary details to complete a hotel booking, and you need to ensure the "`Check In`" and "`Check Out`" dates adhere to a given set of business rules.
+For example, suppose you have a view where the user enters the necessary details to complete a hotel booking, and you need to ensure the `Check In` and `Check Out` dates adhere to a given set of business rules.
 You can invoke such model-level validation from a `transition` element, as follows:
 
 ====
@@ -465,12 +466,12 @@ In Spring Web Flow, you also have the option to specify the IDs to use for parti
 [[_spring_faces_embedded_mode]]
 === Embedding a Flow On a Page
 
-By default, when a flow enters a view state, it executes a client-side redirect before rendering the view.
+By default, when a flow enters a view state, it runs a client-side redirect before rendering the view.
 This approach is known as "`POST-REDIRECT-GET`".
 It has the advantage of separating the form processing for one view from the rendering of the next view.
-As a result, the browser "`Back`" and "`Refresh`" buttons work seamlessly without causing any browser warnings.
+As a result, the browser Back and Refresh buttons work seamlessly without causing any browser warnings.
 
-Normally the client-side redirect is transparent from a user's perspective.
+Normally, the client-side redirect is transparent from a user's perspective.
 However, there are situations where "`POST-REDIRECT-GET`" may not bring the same benefits.
 For example, it may sometimes be useful to embed a flow on a page and drive it with Ajax requests, to refresh only the area of the page where the flow is rendered.
 Not only is it unnecessary to use client-side redirects in this case, it is also not the desired behavior with regards to keeping the surrounding content of the page intact.
@@ -489,28 +490,27 @@ To indicate a flow should execute in "`page embedded`" mode, you can pass an ext
 When launched in "`page embedded`" mode, the sub-flow does not issue flow execution redirects during Ajax requests.
 
 For examples of an embedded flow, see the `webflow-primefaces-showcase` project.
-You can check out the source code locally, build it as you would a Maven project, and import it into Eclipse, as follows:
+You can check out the source code locally, build it as you would a Maven project, and import it into Eclipse or another IDE, as follows:
 
 ====
 [source,xml]
 ----
 cd some-directory
-svn co https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase
-cd webflow-primefaces-showcase
+git clone https://github.com/spring-projects/spring-webflow-samples.git
+cd primefaces-showcase
 mvn package
 # import into Eclipse
 ----
 ====
-//TODO The URL and `svn` need to be updated.
 
 The specific example you need to look at is under the "`Advanced Ajax`" tab and is called "`Top Flow with Embedded Sub-Flow`".
 
 [[_spring_faces_redirect_in_same_state]]
 === Redirect In the Same State
 
-By default Web Flow does a client-side redirect even it it remains in the same view state, as long as the current request is not an Ajax request.
+By default, Web Flow does a client-side redirect even it it remains in the same view state, as long as the current request is not an Ajax request.
 This is quite useful after form validation failures (for example).
-If the user hits "`Refresh`" or "`Back`", they do not see any browser warnings.
+If the user hits Refresh or Back, they do not see any browser warnings.
 They would if the Web Flow did not do a redirect.
 
 This can lead to a problem specific to JSF environments where a specific Sun Mojarra listener component caches the `FacesContext`, assuming the same instance is available throughout the JSF lifecycle.
@@ -534,8 +534,8 @@ However, if you experience this issue, you can disable client-side redirects wit
 [[_spring_faces_file_upload]]
 === Handling File Uploads with JSF
 
-Most JSF component providers include some form of 'file upload' component.
-Generally when working with these components JSF must take complete control of parsing multi-part requests and Spring MVC's `MultipartResolver` cannot be used.
+Most JSF component providers include some form of file upload component.
+Generally, when working with these components, JSF must take complete control of parsing multi-part requests and Spring MVC's `MultipartResolver` cannot be used.
 
 Spring Web Flow has been tested with file upload components from PrimeFaces.
 Check the documentation of your JSF component library for other providers to see how to configure file upload.
@@ -572,7 +572,7 @@ For more details, see the https://primefaces.org/documentation.html[PrimeFaces d
 
 To use the library, you need to create a `taglib.xml` file and register it in `web.xml`.
 
-You need to create the file `/WEB-INF/springsecurity.taglib.xml` with the following content:
+You need to create a file called `/WEB-INF/springsecurity.taglib.xml` with the following content:
 
 ====
 [source,xml]
@@ -684,4 +684,4 @@ You can also use one of several EL functions in the rendered or other attribute 
 The Spring Web Flow JSF integration strives to be compatible with any third-party JSF component library.
 By honoring all of the standard semantics of the JSF specification within the SWF-driven JSF lifecycle, third-party libraries in general should "`just work`". The main thing to remember is that configuration in `web.xml` changes slightly, since Web Flow requests are not routed through the standard `FacesServlet`.
 Typically, anything that is traditionally mapped to the `FacesServlet` should be mapped to the Spring `DispatcherServlet` instead.
-(You can also map to both if, for example, you are migrating a legacy JSF application page-by-page.)
+(You can also map to both if, for example, you need to migrate a legacy JSF application page-by-page.)

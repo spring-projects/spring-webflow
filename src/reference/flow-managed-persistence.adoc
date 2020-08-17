@@ -39,8 +39,8 @@ To use the flow-scoped `PersistenceContext` pattern, first mark your flow as a `
 ====
 
 Then configure the correct `FlowExecutionListener` to apply this pattern to your flow.
-If using Hibernate, register the `HibernateFlowExecutionListener`.
-If using JPA, register the `JpaFlowExecutionListener`.
+If you use Hibernate, register the `HibernateFlowExecutionListener`.
+If you use JPA, register the `JpaFlowExecutionListener`.
 The following example uses JPA:
 
 ====

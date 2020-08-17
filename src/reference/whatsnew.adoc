@@ -12,12 +12,12 @@ This section covers the changes that have been included in the last few versions
 === Spring Web Flow 2.5
 
 This release provides an upgrade path to Spring Framework 5 that in turn requires Java 8+, Servlet 3.1, Hibernate 5, Tiles 3.
-See the https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-5.x[Spring Framework wiki]			for more details.
+See the https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-5.x[Spring Framework wiki] for more details.
 The https://github.com/spring-projects/spring-webflow-samples[samples repository] has been upgraded to Spring Web Flow 2.5.
 
 As of 2.5, there is no longer a `spring-js` module.
 The classes from that module have been kept but moved to new packages in the `spring-webflow` module.
-The `spring-js-resources` module is available as an optional module that you explicitly include.
+The `spring-js-resources` module is available as an optional module that you can explicitly include.
 
 This release requires JSF 2.2 or higher.
 
@@ -194,7 +194,7 @@ The following features that were not supported in 2.1 are now available:
 * JSF 2 resource request handling
 * JSF 2 Ajax requests
 
-At this point, support for JSF 2 is considered comprehensive although not it does not cover every JSF 2 feature.
+At this point, support for JSF 2 is considered comprehensive, although not it does not cover every JSF 2 feature.
 The excluded items are mostly features that overlap with the core value that Web Flow provides, such as those relating to navigation and state management.
 
 See <<_spring_faces_webflow_config>> for important configuration changes.
@@ -252,7 +252,7 @@ The `spring-js` artifact has been split in two. The new artifact (`spring-js-res
 
 Applications preparing their own custom Dojo build have an option now to avoid including `spring-js-resources` and put `Spring.js` and `Spring-Dojo.js` directly under the root of their web application.
 
-===== Client resources moved into META-INF/web-resources
+===== Client Resources Moved into META-INF/web-resources
 
 Bundled client resources (`.js`, `.css`, and so on) have been moved to `META-INF/web-resources` from their previous location under `META-INF`.
 This change is transparent for applications but results in simpler and safer configuration when using the new resource handling mechanism available in Spring 3.0.4.

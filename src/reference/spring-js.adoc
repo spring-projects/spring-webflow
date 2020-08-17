@@ -11,7 +11,7 @@ Use of the Spring JS API is demonstrated in the https://github.com/spring-projec
 
 The Spring Framework provides a mechanism for serving static resources.
 See the https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-config-static-resources[Spring Framework documentation]).
-With the new `<mvc:resources>` element, resource requests (.js, .css, and others) are handled by the `DispatcherSevlet`.
+With the new `<mvc:resources>` element, resource requests (`.js`, `.css`, and others) are handled by the `DispatcherSevlet`.
 The following example shows how to configure the module in XML (Java configuration is also available):
 
 ====
@@ -34,9 +34,9 @@ The following example shows how to configure the module in XML (Java configurati
 ----
 ====
 
-This incoming maps requests for `/resources` to resources found under `/META-INF/web-resources` on the classpath.
+This maps incoming requests for `/resources` to resources found under `/META-INF/web-resources` on the classpath.
 That is where Spring JavaScript resources are bundled.
-However, you can modify the location attribute in the preceding configuration in order to serve resources from any classpath or web application relative location.
+However, you can modify the location attribute in the preceding configuration to serve resources from any location relative to the classpath or web application.
 
 Note that the full resource URL depends on how your `DispatcherServlet` is mapped.
 In the `mvc-booking` sample, we have chosen to map it with the default servlet mapping (`/`), as follows:
@@ -135,7 +135,7 @@ This approach lets you use a common decoration model to integrate any widget fro
 See the `booking-mvc` reference application for more examples of applying decorations to do things from suggestions to client-side validation.
 
 When using the `ElementDecoration` to apply widgets that have rich validation behavior, a common need is to prevent the form from being submitted to the server until validation passes.
-This can be done with the `ValidateAllDecoration`, as follows:
+This can be done with `ValidateAllDecoration`, as follows:
 
 ====
 [source,xml]
@@ -226,13 +226,13 @@ Thus, no special knowledge of an Ajax request is needed directly in the code, an
 ==== Providing a Library-Specific `AjaxHandler`
 
 The key interface for integrating various Ajax libraries with the Ajax-aware behavior of Web Flow (such as not redirecting for a partial page update) is `org.springframework.js.AjaxHandler`.
-By default, a `SpringJavascriptAjaxHandler` is configured that is able to detect an Ajax request submitted through the Spring JS client-side API and can respond appropriately in the case where a redirect is required.
+By default, a `SpringJavascriptAjaxHandler` is configured. It can detect an Ajax request submitted through the Spring JS client-side API and can respond appropriately when a redirect is required.
 To integrate a different Ajax library (be it a pure JavaScript library or a higher-level abstraction, such as an Ajax-capable JSF component library), you can inject a custom `AjaxHandler` into the `FlowHandlerAdapter` or `FlowController`.
 
 [[_spring_js_ajax_mvc]]
 ==== Handling Ajax Requests with Spring MVC Controllers
 
-To handle Ajax requests with Spring MVC controllers, you need to configure the provided Spring MVC extensions in your Spring application context for rendering the partial response (note that these extensions require the use of Tiles for templating), as follows:
+To handle Ajax requests with Spring MVC controllers, you need to configure the provided Spring MVC extensions in your Spring application context for rendering the partial response (note that these extensions require the use of tiles for templating), as follows:
 
 ====
 [source,xml]
@@ -245,8 +245,8 @@ To handle Ajax requests with Spring MVC controllers, you need to configure the p
 
 This configures the `AjaxUrlBasedViewResolver`, which, in turn, interprets Ajax requests and creates `FlowAjaxTilesView` objects to handle rendering of the appropriate fragments.
 Note that `FlowAjaxTilesView` is capable of handling the rendering for both Web Flow and pure Spring MVC requests.
-The fragments correspond to individual attributes of a Tiles view definition.
-For example, consider the following Tiles view definition:
+The fragments correspond to individual attributes of a tiles view definition.
+For example, consider the following tiles view definition:
 
 ====
 [source,xml]
@@ -267,9 +267,9 @@ An Ajax request could specify the `body`, `hotelSearchForm` or `bookingsTable` t
 [[_spring_js_ajax_mvc_webflow]]
 ==== Handling Ajax Requests with Spring MVC and Spring Web Flow
 
-Spring Web Flow handles the optional rendering of fragments directly in the flow definition language through use of the `render` element.
+Spring Web Flow handles the optional rendering of fragments directly in the flow definition language through the use of the `render` element.
 The benefit of this approach is that the selection of fragments is completely decoupled from client-side code, such that no special parameters need to be passed with the request the way they currently must be with the pure Spring MVC controller approach.
-For example, if you wanted to render the `hotelSearchForm` fragment from the previous example Tiles view into a rich Javascript popup, you could define the following `view-state`:
+For example, if you wanted to render the `hotelSearchForm` fragment from the previous example tiles view into a rich Javascript popup, you could define the following `view-state`:
 
 ====
 [source,xml]

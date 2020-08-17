@@ -18,7 +18,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 |_action_
 |_*_
-|use <evaluate />
+|Use `<evaluate />`.
 
 ^| bean
 | *
@@ -48,7 +48,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _argument_
 | _*_
-| Use <evaluate expression="func(arg1, arg2, ...)"/>
+| Use `<evaluate expression="func(arg1, arg2, ...)"/>`.
 
 ^| expression
 |
@@ -76,11 +76,11 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _attribute-mapper_
 | _*_
-| input and output elements can be in flows or sub-flows directly
+| Input and output elements can be in flows or sub-flows directly.
 
 ^| bean
 | *
-| Now `subflow-attribute-mapper` attribute on `subflow-state`
+| Now `subflow-attribute-mapper` attribute on `subflow-state`.
 
 | _bean-action_
 | _*_
@@ -148,7 +148,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 ^| name
 | *
-| Use <evaluate ...> <attribute name=`"name`" value="..." /> </evaluate>
+| Use `<evaluate ...> <attribute name=`"name`" value="..." /> </evaluate>`.
 
 ^| *
 | result
@@ -160,7 +160,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _evaluation-result_
 | _*_
-| Use <evaluate result="..." />
+| Use `<evaluate result="..." />`.
 
 ^| name
 | *
@@ -244,7 +244,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 ^| scope
 | *
-| Prefix name with scope <input name="flowScope.foo" />
+| Prefix name with scope `<input name="flowScope.foo" />`.
 
 ^| required
 | required
@@ -260,7 +260,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _input-mapper_
 | _*_
-| Inputs can be in flows and subflows directly
+| Inputs can be in flows and subflows directly.
 
 | _mapping_
 | _input or output_
@@ -268,11 +268,11 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 ^| source
 | name or value
-| Name when in flow element, value when in subflow-state element
+| Name when in flow element, value when in the `subflow-state` element.
 
 ^| target
 | name or value
-| Value when in flow element, name when in subflow-state element
+| Value when in flow element, name when in the `subflow-state` element.
 
 ^| target-collection
 | *
@@ -292,11 +292,11 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _method-argument_
 | _*_
-| Use <evaluate expression="func(arg1, arg2, ...)"/>
+| Use `<evaluate expression="func(arg1, arg2, ...)"/>`.
 
 | _method-result_
 | _*_
-| Use <evaluate result="..." />
+| Use `<evaluate result="..." />`.
 
 ^| name
 | *
@@ -316,7 +316,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 ^| scope
 | *
-| Prefix name with scope <output name="flowScope.foo" />
+| Prefix name with scope `<output name="flowScope.foo" />`.
 
 ^| required
 | required
@@ -332,7 +332,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _output-mapper_
 | _*_
-| Output can be in flows and subflows directly
+| Output can be in flows and subflows directly.
 
 | _render-actions_
 | _on-render_
@@ -348,7 +348,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 ^| scope
 | *
-| Prefix name with scope <set name="flowScope.foo" />
+| Prefix name with scope `<set name="flowScope.foo" />`.
 
 ^| value
 | value
@@ -356,7 +356,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 ^| name
 | *
-| Use <set ...> <attribute name=`"name`" value="..." /> </set>
+| Use `<set ...> <attribute name=`"name`" value="..." /> </set>`.
 
 ^| *
 | type
@@ -368,7 +368,7 @@ See the upgrade guide for more details about changes between Web Flow 1.0 and 2.
 
 | _start-state_
 | _*_
-| Now <flow start-state="...">, or defaults to the first state in the flow
+| Now `<flow start-state="...">` or defaults to the first state in the flow.
 
 ^| idref
 | *
