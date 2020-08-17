@@ -2,7 +2,7 @@
 == Securing Flows
 
 Security is an important concept for any application.
-End users should not be able to access any portion of a site simply by guessing the URL.
+End users should not be able to access any portion of a site by simply guessing the URL.
 Areas of a site that are sensitive must ensure that only authorized requests are processed.
 Spring Security is a proven security platform that can integrate with your application at multiple levels.
 This section focuses on securing flow execution.
@@ -10,13 +10,13 @@ This section focuses on securing flow execution.
 [[_flow_security_how_to]]
 === How Do I Secure a Flow?
 
-Securing a flow is a three step process:
+Securing a flow is a three-step process:
 
 . Configure Spring Security with authentication and authorization rules.
 . Annotate the flow definition with the secured element to define the security rules.
 . Add the `SecurityFlowExecutionListener` to process the security rules.
 
-Each of these steps must be completed or flow security rules are not applied.
+Each of these steps must be completed, or flow security rules are not applied.
 
 [[_flow_security_secured_element]]
 === The `secured` Element
@@ -27,7 +27,7 @@ This may not occur more than once per stage of the flow execution that is secure
 Three phases of a flow can be secured: flows, states, and transitions.
 In each case, the syntax for the `secured` element is identical.
 The `secured` element is located inside the element it secures.
-For example, to secure a state, the secured element occurs directly inside that state, as follows:
+For example, to secure a state, the `secured` element occurs directly inside that state, as follows:
 
 ====
 [source,xml]
@@ -42,7 +42,7 @@ For example, to secure a state, the secured element occurs directly inside that 
 [[_flow_security_secured_element_attributes]]
 ==== Security Attributes
 
-The `attributes` attribute is a comma separated list of Spring Security authorization attributes.
+The value of `attributes` is a comma separated list of Spring Security authorization attributes.
 Often, these are specific security roles.
 The attributes are compared against the user's granted attributes by a Spring Security access decision manager.
 
@@ -79,7 +79,7 @@ The `match` attribute is respected only if the default access decision manager i
 === The `SecurityFlowExecutionListener`
 
 Defining security rules in the flow by themselves does not protect the flow.
-A `SecurityFlowExecutionListener` must also be defined in the webflow configuration and applied to the flow executor, as follows:
+You must also define a `SecurityFlowExecutionListener` in the webflow configuration and apply it to the flow executor, as follows:
 
 ====
 [source,xml]
@@ -166,9 +166,9 @@ The following example configures Spring Security for a web flow:
 ==== `web.xml` Configuration
 
 In the `web.xml` file, a `filter` is defined to intercept all requests.
-This filter listens for login/logout requests and processes them accordingly.
-It will also catch `AccesDeniedException` instances and redirect the user to the login page.
-The follwoing example defines such filters:
+This filter listens for login and logout requests and processes them accordingly.
+It also catches `AccesDeniedException` instances and redirects the user to the login page.
+The following example defines such filters:
 
 ====
 [source,xml]

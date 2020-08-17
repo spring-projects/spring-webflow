@@ -8,7 +8,7 @@ By the end of this chapter, you should have a good understanding of language con
 == What Is a Flow?
 
 A flow encapsulates a reusable sequence of steps that you can use in different contexts.
-The following a http://www.jjg.net/ia/visvocab/[Garrett Information Architecture] diagram shows a reference to a flow that encapsulates the steps of a hotel booking process:
+The following http://www.jjg.net/ia/visvocab/[Garrett Information Architecture] diagram shows a reference to a flow that encapsulates the steps of a hotel booking process:
 
 image::images/hotels-site.png[]
 
@@ -27,7 +27,7 @@ image::images/hotels-site-bookhotel-flow.png[]
 [[_flow_authoring]]
 == How Are Flows Authored?
 
-Flows are authored by web application developers by using a simple XML-based flow definition language.
+Flows are authored by using a simple XML-based flow definition language.
 The next steps of this guide walk you through the elements of this language.
 
 [[_essential_flow_elements]]
@@ -45,6 +45,7 @@ There are four essential flow elements:
 
 Every flow begins with the following root element:
 
+====
 [source,xml]
 ----
 
@@ -56,6 +57,7 @@ Every flow begins with the following root element:
 
 </flow>
 ----
+====
 
 All states of the flow are defined within this element.
 The first state defined becomes the flow's starting point.
@@ -63,22 +65,25 @@ The first state defined becomes the flow's starting point.
 [[_view_state_element]]
 === The `view-state` Element
 
-Use the `view-state` element to define a step of the flow that renders a view:
+The `view-state` element defines a step of the flow that renders a view:
 
+====
 [source,xml]
 ----
 
 <view-state id="enterBookingDetails" />
 ----
+====
 
 By convention, a view-state maps its id to a view template in the directory where the flow is located.
-For example, the state above might render [path]_/WEB-INF/hotels/booking/enterBookingDetails.xhtml_				if the flow itself was located in the [path]_/WEB-INF/hotels/booking_ directory.
+For example, the preceding state might render `/WEB-INF/hotels/booking/enterBookingDetails.xhtml` if the flow itself was located in the `/WEB-INF/hotels/booking` directory.
 
 [[_transition_element]]
 === The `transition` Element
 
-Use the `transition` element to handle events that occur within a state:
+The `transition` element handles events that occur within a state:
 
+====
 [source,xml]
 ----
 
@@ -86,19 +91,22 @@ Use the `transition` element to handle events that occur within a state:
     <transition on="submit" to="reviewBooking" />
 </view-state>
 ----
+====
 
 These transitions drive view navigations.
 
 [[_end_state_element]]
 === The `end-state` Element
 
-Use the `end-state` element to define a flow outcome:
+The `end-state` element defines a flow outcome:
 
+====
 [source,xml]
 ----
 
 <end-state id="bookingCancelled" />
 ----
+====
 
 When a flow transitions to a end-state, it ends and the outcome is returned.
 
@@ -151,14 +159,14 @@ Within a flow, there are several points where you can execute actions:
 * On flow end
 
 Actions are defined by using a concise expression language.
-Spring Web Flow uses the Unified EL by default.
+By default, Spring Web Flow uses the Unified EL.
 The next few sections cover the essential language elements for defining actions.
 
 [[_evaluate_element]]
 === The `evaluate` Element
 
-The most-often-used action element is the `evaluate` element.
-You can use the `evaluate` element to evaluate an expression at a point within your flow.
+The most often used action element is the `evaluate` element.
+The `evaluate` element evaluates an expression at a point within your flow.
 With this single element, you can invoke methods on Spring beans or any other flow variable.
 The following listing shows an example:
 
@@ -173,7 +181,7 @@ The following listing shows an example:
 [[_evaluate_element_result]]
 ==== Assigning an `evaluate` Result
 
-If the expression returns a value, that value can be saved in the flow's data model called `flowScope`, as follows:
+If the expression returns a value, that value can be saved in the flow's data model, called `flowScope`, as follows:
 
 ====
 [source,xml]
@@ -266,7 +274,7 @@ public interface FlowOutcome {
 [[_input_element]]
 === input
 
-You can use the `input` element to declare a flow input attribute, as follows:
+The `input` element declares a flow input attribute, as follows:
 
 ====
 [source,xml]
@@ -276,12 +284,12 @@ You can use the `input` element to declare a flow input attribute, as follows:
 ====
 
 Input values are saved in flow scope under the name of the attribute.
-For example, the input in the prececing example is saved under a name of `hotelId`.
+For example, the input in the preceding example is saved under a name of `hotelId`.
 
 [[_input_element_type]]
 ==== Declaring an Input Type
 
-Use the `type` attribute to declare the input attribute's type:
+The `type` attribute declares the input attribute's type:
 
 ====
 [source,xml]
@@ -295,7 +303,7 @@ If an input value does not match the declared type, a type conversion is attempt
 [[_input_element_value]]
 ==== Assigning an Input Value
 
-You can use the `value` attribute to specify an expression to which to assign the input value, as follows:
+The `value` attribute specifies an expression to which to assign the input value, as follows:
 
 ====
 [source,xml]
@@ -309,7 +317,7 @@ If the expression's value type can be determined, that metadata is used for type
 [[_input_element_required]]
 ==== Marking an input as required
 
-You can use the `required` attribute to enforce the input is not null or empty, as follows:
+The `required` attribute enforces that the input is not null or empty, as follows:
 
 ====
 [source,xml]
@@ -321,7 +329,7 @@ You can use the `required` attribute to enforce the input is not null or empty, 
 [[_output_element]]
 === The `output` Element
 
-You can use the `output` element to declare a flow output attribute.
+The `output` element declares a flow output attribute.
 Output attributes are declared within end-states that represent specific flow outcomes.
 The following listing defines an `output` element:
 
@@ -340,7 +348,7 @@ For example, the output in the preceding example would be assigned the value of 
 [[_output_element_value]]
 ==== Specifying the Source of an `output` Value
 
-You can use the `value` attribute to denote a specific output value expression, as follows:
+The `value` attribute denotes a specific output value expression, as follows:
 
 ====
 [source,xml]
@@ -401,7 +409,7 @@ Any `@Autowired` transient references the variable holds are also rewired when t
 [[_var_element]]
 === The `var` Element
 
-You can use the `var` element to declare a flow variable, as follows:
+The `var` element declares a flow variable, as follows:
 
 ====
 [source,xml]
@@ -450,13 +458,13 @@ With the default implementation, any objects stored in flash scope need to be se
 [[_scopes_conversation_scope]]
 === Conversation Scope
 
-Conversation scope gets allocated when a top-level flow starts and destroyed when the top-level flow ends.
+Conversation scope gets allocated when a top-level flow starts and gets destroyed when the top-level flow ends.
 Conversation scope is shared by a top-level flow and all of its sub-flows.
 With the default implementation, conversation-scoped objects are stored in the HTTP session and should generally be serializable to account for typical session replication.
 
 === Choosing a Scope
 
-The scope to use is often determined contextually, for example depending on where a variable is defined -- at the start of the flow definition (flow scope), inside a a view state (view scope), and so on.
+The scope to use is often determined contextually -- for example, depending on where a variable is defined: at the start of the flow definition (flow scope), inside a a view state (view scope), and so on.
 In other cases (for example, in EL expressions and Java code), you must specify it explicitly.
 Subsequent sections explain how this is done.
 
@@ -468,7 +476,7 @@ The flow waits until the sub-flow returns and responds to the sub-flow outcome.
 [[_subflow_state_element]]
 === The `subflow-state` Element
 
-You can use the `subflow-state` element to call another flow as a subflow, as follows:
+The `subflow-state` element calls another flow as a subflow, as follows:
 
 ====
 [source,xml]
@@ -488,7 +496,7 @@ When the flow returns with a `guestCreated` outcome, the new guest is added to t
 [[_subflow_state_element_input]]
 ==== Passing a Sub-flow Input
 
-You can use the `input` element to pass input to the subflow, as follows:
+The `input` element passes input to the subflow, as follows:
 
 ====
 [source,xml]

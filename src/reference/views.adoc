@@ -6,7 +6,7 @@ This chapter shows you how to use the `view-state` element to render views withi
 [[_view_convention]]
 === Defining View States
 
-You can use the `view-state` element to define a step of the flow that renders a view and waits for a user event to resume, as follows:
+The `view-state` element defines a step of the flow that renders a view and waits for a user event to resume, as follows:
 
 ====
 [source,xml]
@@ -44,7 +44,7 @@ The view ID may be a relative path to view resource in the flow's working direct
 [[_view_explicit_absolute]]
 ==== Absolute View IDs
 
-The view id may be a absolute path to a view resource in the webapp root directory, as follows:
+The view ID may be a absolute path to a view resource in the webapp root directory, as follows:
 
 ====
 [source,xml]
@@ -133,7 +133,7 @@ The following example pages through a search results list:
 [[_view_on_render]]
 === Running Render Actions
 
-Use the `on-render` element to run one or more actions before view rendering.
+The `on-render` element runs one or more actions before view rendering.
 Render actions are run on the initial render as well as on any subsequent refreshes, including any partial re-renderings of the view.
 The following listing defines an `on-render` element:
 
@@ -149,11 +149,11 @@ The following listing defines an `on-render` element:
 [[_view_model]]
 === Binding to a Model
 
-You can use the `model` attribute to declare to which a model object the view binds.
+You can use the `model` attribute to declare a model to which object the view binds.
 This attribute is typically used in conjunction with views that render data controls, such as forms.
-It enables form data binding and validation behaviors to be driven from metadata on your model object.
+It lets form data binding and validation behaviors to be driven from metadata on your model object.
 
-The following example declares an `enterBookingDetails` state manipulates the `booking` model:
+The following example declares an `enterBookingDetails` state that manipulates the `booking` model:
 
 ====
 [source,xml]
@@ -162,13 +162,13 @@ The following example declares an `enterBookingDetails` state manipulates the `b
 ----
 ====
 
-The model may be an object in any accessible scope, such as `flowScope` or ``viewScope``.
+The model may be an object in any accessible scope, such as `flowScope` or `viewScope`.
 Specifying a `model` triggers the following behavior when a view event occurs:
 
 . View-to-model binding. On view postback, user input values are bound to model object properties for you.
 . Model validation. After binding, if the model object requires validation, that validation logic is invoked.
 
-For a flow event to be generated that can drive a view state transition, model binding must successfully complete.
+For a flow event that can drive a view state transition to be generated, model binding must successfully complete.
 If model binding fails, the view is re-rendered to let the user revise their edits.
 
 [[_view_type_conversion]]
@@ -176,23 +176,23 @@ If model binding fails, the view is re-rendered to let the user revise their edi
 
 When request parameters are used to populate the model (commonly referred to as data binding), type conversion is required to parse string-based request parameter values before setting target model properties.
 Default type conversion is available for many common Java types such as numbers, primitives, enums, and Dates.
-Users also have the ability to register their own type conversion logic for user-defined types and to override the default converters.
+Users can also register their own type conversion logic for user-defined types and to override the default converters.
 
 [[_converter_options]]
 ==== Type Conversion Options
 
 Starting with version 2.1, Spring Web Flow uses the https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#validation[type conversion] and https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#format[formatting] system for nearly all type conversion needs.
 Previously, Web Flow applications used a type conversion mechanism that was different from the one in Spring MVC, which relied on the `java.beans.PropertyEditor` abstraction.
-Spring's' type conversion was actually influenced by Web Flow's own type conversion system.
+Spring's type conversion was actually influenced by Web Flow's own type conversion system.
 Hence, Web Flow users should find it natural to work with Spring type conversion.
-Another obvious and very important benefit of this change is that you can now use a single type conversion mechanism across Spring MVC And Spring Web Flow.
+Another obvious and important benefit of this change is that you can now use a single type conversion mechanism across Spring MVC And Spring Web Flow.
 
 [[_converter_upgrade_to_spring_3]]
 ==== Upgrading to Spring 3 Type Conversion And Formatting
 
-What does this practically mean for existing applications? Existing applications are likely registering their own converters of type `org.springframework.binding.convert.converters.Converter` through a sub-class of `DefaultConversionService` available in Spring Binding.
+What does this mean, in practical terms, for existing applications? Existing applications are likely registering their own converters of type `org.springframework.binding.convert.converters.Converter` through a sub-class of `DefaultConversionService` available in Spring Binding.
 Those converters can continue to be registered as before.
-They has been adapted as the Spring `GenericConverter` types and registered with a Spring `org.springframework.core.convert.ConversionService` instance.
+They have been adapted as the Spring `GenericConverter` types and registered with a Spring `org.springframework.core.convert.ConversionService` instance.
 In other words, existing converters are invoked through Spring's type conversion service.
 
 The only exception to this rule are named converters, which you can reference from a `binding` element in a `view-state`, as follows:
@@ -226,7 +226,7 @@ However, this mechanism is deprecated, and applications are encouraged to favor 
 Also note that the existing Spring Binding `DefaultConversionService` no longer registers any default converters.
 Instead, Web Flow now relies on the default type converters and formatters in Spring.
 
-In summary, the Spring type conversion and formatting is now used almost exclusively in Web Flow.
+In summary, Spring type conversion and formatting is now used almost exclusively in Web Flow.
 Although existing applications should work without any changes, we encourage moving towards unifying the type conversion needs of Spring MVC and Spring Web Flow parts of applications.
 
 [[_converter_configuration]]
@@ -251,7 +251,7 @@ In Spring MVC, an instance of a `FormattingConversionService` is created automat
 ----
 ====
 
-Internally that is done with the help of ``FormattingConversionServiceFactoryBean``, which registers a default set of converters and formatters.
+Internally, that is done with the help of ``FormattingConversionServiceFactoryBean``, which registers a default set of converters and formatters.
 You can customize the conversion service instance used in Spring MVC through the `conversion-service` attribute, as follows:
 
 ====
@@ -275,7 +275,7 @@ You can customize the `DefaultConversionService` used in Web Flow through the fl
 ----
 ====
 
-By connecting the dots in order to register your own formatters for use in both Spring MVC and in Spring Web Flow you can do the following:
+You can do the following to register your own formatters for use in both Spring MVC and in Spring Web Flow :
 
 . Create a class to register your custom formatters:
 +
@@ -292,7 +292,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
 }
 ----
 ====
-. Configure it for use in Spring MVC:
+. Configure the class for use in Spring MVC:
 +
 ====
 [source,xml]
@@ -319,7 +319,7 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
     <bean id="applicationConversionService" class="somepackage.ApplicationConversionServiceFactoryBean">
 ----
 ====
-. Connect the Web Flow `DefaultConversionService` to the same "applicationConversionService" bean used in Spring MVC:
+. Connect the Web Flow `DefaultConversionService` to the same `applicationConversionService` bean used in Spring MVC:
 +
 ====
 [source,xml]
@@ -340,7 +340,7 @@ You can register existing Spring Binding `Converter` types through the `defaultC
 
 [[_converter_working_with]]
 ==== Working With Spring Type Conversion And Formatting
-
+``
 An important concept to understand is the difference between type converters and formatters.
 
 Type converters in Spring, provided in ``org.springframework.core``, are for general-purpose type conversion between any two object types.
@@ -359,7 +359,7 @@ In fact, `Formatters` are registered as `GenericConverter` types with Spring's `
 
 One of the best features of the type conversion is the ability to use annotations for better control over formatting in a concise manner.
 You can place annotations on model attributes and on the arguments of `@Controller` methods that are mapped to requests.
-Spring provides two annotations (`@NumberFormat` and `@DateTimeFormat`), but you can create your own and have them registered along with the associated formatting logic.
+Spring provides two annotations (`@NumberFormat` and `@DateTimeFormat`), but you can create your own and have them be registered, along with the associated formatting logic.
 You can see examples of the `@DateTimeFormat` annotation in the https://src.springframework.org/svn/spring-samples/travel[Spring Travel] sample and in the https://src.springframework.org/svn/spring-samples/petcare[Petcare] sample, along with other samples in the https://src.springframework.org/svn/spring-samples[Spring Samples] repository.
 // TODO These URLs are wrong, but I can't find the right ones.
 
@@ -416,7 +416,7 @@ The following example uses a `binder` element:
 ====
 
 Each binding may also apply a converter to format the model property value for display in a custom manner.
-If no converter is specified, the default converter for the model property's type will be used.
+If no converter is specified, the default converter for the model property's type is used.
 The following example shows two `binding` elements with `converter` attributes:
 
 ====
@@ -507,7 +507,7 @@ private String name;
 ----
 ====
 
-In a flow definition, you can specify validation hints on a view state or on a transition, and those will be resolved to validation groups.
+In a flow definition, you can specify validation hints on a view state or on a transition, and those are resolved to validation groups.
 The following example defines validation hints:
 
 ====
@@ -526,7 +526,7 @@ You can also provide fully qualified type names.
 
 A hint with a value of `default` has a special meaning and is translated to the default validation group in Bean Validation:  `javax.validation.groups.Default`.
 
-A custom `ValidationHintResolver` can be configured, if necessary, through the `validationHintResolver` property of the `flow-builder-services` element, as follows:
+You can configure a custom `ValidationHintResolver`, if necessary, through the `validationHintResolver` property of the `flow-builder-services` element, as follows:
 
 ====
 [source,xml]
@@ -551,7 +551,7 @@ Both ways provide you with a `ValidationContext` to record error messages and ac
 Defining validation logic in your model object is the simplest way to validate its state.
 Once such logic is structured according to Web Flow conventions, Web Flow automatically invokes that logic during the `view-state` postback lifecycle.
 Web Flow conventions have you structure model validation logic by `view-state`, letting you validate the subset of model properties that are editable on that view.
-To do this, create a public method with a name of `validate${state}`, where `${state}` is the ID of your `view-state` where you want validation to run.
+To do this, create a public method with a name of `validate${state}`, where `${state}` is the ID of your `view-state` for which you want validation to run.
 The following example performs model validation:
 
 ====
@@ -588,15 +588,15 @@ The following example shows such a `view-state`:
 ----
 ====
 
-Any number of validation methods are defined.
+You can define any number of validation methods.
 Generally, a flow edits a model over a series of views.
-In that case, you would define a validate method for each `view-state` where validation needs to run.
+In that case, you would define a validate method for each `view-state` for which validation needs to run.
 
 [[_view_validation_programmatic_validator]]
 ===== Implementing a Validator
 
 The second way to perform programmatic validation is to define a separate object, called a _validator_, which validates your model object.
-To do this, first create a class whose name has the pattern `${model}Validator`, where `${model}` is the capitalized form of the model expression, such as `booking`.
+To do this, first create a class whose name has the pattern `${model}Validator`, where `${model}` is the capitalized form of the model expression, such as `Booking`.
 Then define a public method with a name of `validate${state}`, where `${state}` is the ID of your `view-state`, such as `enterBookingDetails`.
 The class should then be deployed as a Spring bean.
 Any number of validation methods can be defined.
@@ -631,7 +631,7 @@ Then, any time the `booking` model needs to be validated, this `bookingValidator
 
 ===== Default Validate Method
 
-A _validator_ class can also define a method called `validate` not associated (by convention) with any specific `view-state`.
+A _validator_ class can also define a method called `validate` that is not associated (by convention) with any specific `view-state`.
 The following example defines such a method:
 
 ====
@@ -646,7 +646,7 @@ public class BookingValidator {
 ----
 ====
 
-In the preceding code sample, the method `validate` is called every time a model of type `Booking` is validated (unless validation has been suppressed for that transition). If needed, the default method can also be called in addition to an existing state-specific method.
+In the preceding code sample, the `validate` method is called every time a model of type `Booking` is validated (unless validation has been suppressed for that transition). If needed, the default method can also be called in addition to an existing state-specific method.
 Consider the following example:
 
 ====
@@ -672,7 +672,7 @@ The default `validate` method is called next.
 
 A `ValidationContext` lets you obtain a `MessageContext` to record messages during validation.
 It also exposes information about the current user, such as the signaled `userEvent` and the current user's `Principal` identity.
-This information can be used to customize validation logic based on what button or link was activated in the UI or who is authenticated.
+You can use this information to customize validation logic based on what button or link was activated in the UI or who is authenticated.
 See the API Javadoc for https://docs.spring.io/spring-webflow/docs/current/api/org/springframework/binding/validation/ValidationContext.html[`ValidationContext`] for more information.
 
 [[_view_validation_suppression]]
@@ -700,7 +700,7 @@ A transition may take the user to another view, or it may run an action and re-r
 A transition may also request the rendering of parts of a view (called "`fragments`") when handling an Ajax event.
 Finally, you can also define "`global`" transitions that are shared across all views.
 
-The following sections discuss how to implementing view transitions.
+The following sections discuss how to implement view transitions.
 
 ==== Transition Actions
 
@@ -708,8 +708,8 @@ A `view-state` transition can invoke one or more actions before running.
 These actions may return an error result to prevent the transition from exiting the current `view-state`.
 If an error result occurs, the view re-renders and should display an appropriate message to the user.
 
-If the transition action invokes a plain Java method, the invoked method may return a boolean, whose value, `true` or `false`, indicates whether the transition should take place or be prevented from running.
-A method may also return a `String` where literal values of `success`, `yes`, or `true` indicate the transition should occur, and any other value means the opposite.
+If the transition action invokes a plain Java method, the invoked method may return a boolean, whose value (`true` or `false`) indicates whether the transition should take place or be prevented from running.
+A method can also return a `String` where literal values of `success`, `yes`, or `true` indicate the transition should occur, and any other value means the opposite.
 You can use this technique to handle exceptions thrown by service-layer methods.
 The following example invokes an action that calls a service and handles an exceptional situation:
 
@@ -738,7 +738,7 @@ public class BookingAction {
 ----
 ====
 
-When there is more than one action defined on a transition, if one returns an error result. the remaining actions in the set are _not_ executed.
+When there is more than one action defined on a transition, if one returns an error result, the remaining actions in the set are _not_ executed.
 If you need to ensure one transition action's result cannot impact the execution of another, define a single transition action that invokes a method that encapsulates all the action logic.
 
 [[_event_handlers_global]]
@@ -793,7 +793,7 @@ You can use the `render` element within a transition to request partial re-rende
 ----
 ====
 
-The `fragments` attribute should reference the ID(s) of the view element(s) you wish to re-render.
+The `fragments` attribute should reference the IDs of the view elements you wish to re-render.
 You can specify multiple elements to re-render by separating them with a comma delimiter.
 
 Such partial rendering is often used with events signaled by Ajax to update a specific zone of the view.
@@ -802,7 +802,7 @@ Such partial rendering is often used with events signaled by Ajax to update a sp
 === Working with Messages
 
 Spring Web Flow's `MessageContext` is an API for recording messages during the course of flow executions.
-Plain text messages can be added to the context, as well as internationalized messages resolved by a Spring `MessageSource`.
+You can add plain text messages to the context, as well as internationalized messages resolved by a Spring `MessageSource`.
 Messages are renderable by views and automatically survive flow execution redirects.
 Three distinct message severities are provided: `info`, `warning`, and `error`.
 In addition, a convenient `MessageBuilder` exists for fluently constructing messages.
@@ -850,7 +850,7 @@ context.addMessage(builder.info().code("reservationConfirmation").build());
 ==== Using Message Bundles
 
 Internationalized messages are defined in message bundles accessed by a Spring `MessageSource`.
-To create a flow-specific message bundle, define `messages.properties` file(s) in your flow's directory.
+To create a flow-specific message bundle, define `messages.properties` files in your flow's directory.
 Create a default `messages.properties` file and a `.properties` file for each additional `Locale` you need to support.
 The following example defines a few messages:
 
@@ -929,7 +929,7 @@ You can use the `popup` attribute to render a view in a modal popup dialog, as f
 ----
 ====
 
-When using Web Flow with the Spring Javascript, no client side code is necessary for the popup to display.
+When using Web Flow with the Spring Javascript library, no client-side code is necessary for the popup to display.
 Web Flow sends a response to the client to request a redirect to the view from a popup, and the client honors the request.
 
 === View Backtracking
@@ -952,7 +952,7 @@ You can set the `history` attribute to `discard` to prevent backtracking to a vi
 [[_history_invalidate]]
 ==== Invalidating History
 
-You can set the `history` attribute to `invalidate` to prevent backtracking to a view as well all previously displayed views, as follows:
+You can set the `history` attribute to `invalidate` to prevent backtracking to a view as well as all previously displayed views, as follows:
 
 ====
 [source,xml]

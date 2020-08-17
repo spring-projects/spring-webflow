@@ -1,14 +1,14 @@
 [[_actions]]
 == Executing Actions
 
-This chapter shows you how to use the `action-state` element to control the execution of an action at a point within a flow.
+This chapter shows you how to use the `action-state` element to control the invocation of an action at a point within a flow.
 It also shows how to use the `decision-state` element to make a flow routing decision.
 Finally, several examples of invoking actions from the various points possible within a flow are discussed.
 
 [[_action_state]]
 === Defining Action States
 
-You can use the `action-state` element when you wish to invoke an action and then transition to another state based on the action's outcomem, as follows:
+You can use the `action-state` element when you wish to invoke an action and then transition to another state based on the action's outcome, as follows:
 
 ====
 [source,xml]
@@ -21,7 +21,7 @@ You can use the `action-state` element when you wish to invoke an action and the
 ----
 ====
 
-The following example shows an interview flow that uses the preceding `action-state` above to determine if more answers are needed to complete the interview:
+The following example shows an interview flow that uses the preceding `action-state` to determine if more answers are needed to complete the interview:
 
 ====
 [source,xml]
@@ -56,20 +56,20 @@ The following example shows an interview flow that uses the preceding `action-st
 ----
 ====
 
-After the execution of each action, the `action-state` checks the result to see if it matches a declared transition to another state.
-That means that, if more than one action is configured, they are executed in an ordered chain until one returns a single result event that matches a state transition out of the action-state while the rest are ignored.
+After the invocation of each action, the `action-state` checks the result to see if it matches a declared transition to another state.
+That means that, if more than one action is configured, they are invoked in an ordered chain until one returns a single result event that matches a state transition out of the action-state while the rest are ignored.
 This is a form of the "`Chain of Responsibility`" (CoR) pattern.
 
-The result of an action's execution is typically the criteria for a transition out of this state.
+The result of an action's invocation is typically the criteria for a transition out of this state.
 You can also test additional information in the current `RequestContext` as part of custom transitional criteria that allow for sophisticated transition expressions that reason on contextual state.
 
-Note also that an `action-state` (as any other state) can have more on-entry actions that are executed as a list from start to end.
+Note also that an `action-state` (as any other state) can have more on-entry actions that are invoked as a list from start to end.
 
 [[_decision_state]]
 === Defining Decision States
 
-You can use the `decision-state` element as an alternative to the `action-state` to make a routing decision using a convenient if-else syntax.
-The following example shows the `moreAnswersNeeded` state (from the example in the preceding section) now implemented as a decision state instead of an action-state:
+You can use the `decision-state` element as an alternative to the `action-state` element to make a routing decision by using a convenient if-else syntax.
+The following example shows the `moreAnswersNeeded` state (from the example in the preceding section), now implemented as a decision state instead of an action-state:
 
 ====
 [source,xml]
@@ -103,7 +103,7 @@ The following table describes how common return value types are mapped to `Event
 |`java.lang.Enum`
 |the `Enum` name
 
-|any other type
+|Any other type
 |success
 |===
 
@@ -125,7 +125,7 @@ The following example invokes a method that returns a boolean value:
 While writing action code as POJO logic is the most common, there are several other action implementation options.
 Sometimes, you need to write action code that needs access to the flow context.
 You can always invoke a POJO and pass it the `flowRequestContext` as an EL variable.
-Alternatively, you may implement the `Action` interface or extend from the `MultiAction` base class.
+Alternatively, you can implement the `Action` interface or extend from the `MultiAction` base class.
 These options provide stronger type safety when you have a natural coupling between your action code and Spring Web Flow APIs.
 The following sections show examples of each of these approaches.
 
@@ -198,7 +198,7 @@ public class CustomMultiAction extends MultiAction {
 === Action Exceptions
 
 Actions often invoke services that encapsulate complex business logic.
-These services may throw business exceptions that the action code should handle.
+These services can throw business exceptions that the action code should handle.
 
 ==== Handling a Business Exception with a POJO Action
 
@@ -261,7 +261,7 @@ public Event makeBooking(RequestContext context) {
 
 ==== Using an `exception-handler` Element
 
-In general, it is recommended to catch exceptions in actions and return result events that drive standard transitions.
+In general, you should catch exceptions in actions and return result events that drive standard transitions.
 You can also add an `exception-handler` sub-element to any state type with a `bean` attribute that references a bean of type `FlowExecutionExceptionHandler`.
 This is an advanced option that, if used incorrectly, can leave the flow execution in an invalid state.
 Consider the built-in `TransitionExecutingFlowExecutionExceptionHandler` as an example of a correct implementation.
@@ -336,7 +336,7 @@ The following example shows a state exit action that releases a lock on a record
 
 ==== The `on-end` Element
 
-The following example shows object locking behavior that is equivalent to the example in the preceding section using flow start and end actions:
+The following example shows object locking behavior that is equivalent to the example in the preceding section but uses flow start and end actions:
 
 ====
 [source,xml]
@@ -427,7 +427,7 @@ In this example, the flow transitions to `showResults` when `thingTwo` completes
 
 ==== Streaming Actions
 
-Sometimes, an Action needs to stream a custom response back to the client.
+Sometimes, an action needs to stream a custom response back to the client.
 An example might be a flow that renders a PDF document when handling a print event.
 This can be achieved by having the action stream the content and then record a status of `Response Complete` status on the `ExternalContext`.
 The `responseComplete` flag tells the pausing `view-state` not to render the response because another object has taken care of it.
@@ -464,7 +464,7 @@ The action renders the PDF and then marks the response as complete.
 ==== Handling File Uploads
 
 Another common task is to use Web Flow to handle multipart file uploads in combination with Spring MVC's `MultipartResolver`.
-Once the resolver is set up correctly https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart[as described here] and the submitting HTML form is configured with `enctype="multipart/form-data"`, you can easily handle the file upload in a transition action.
+Once the resolver is set up correctly, https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart[as described here], and the submitting HTML form is configured with `enctype="multipart/form-data"`, you can handle the file upload in a transition action.
 
 NOTE: The file upload example shown in the next listing is not relevant when you use Web Flow with JSF.
 See <<_spring_faces_file_upload>> for details of how to upload files using JSF.

@@ -7,7 +7,7 @@ This chapter shows you how to set up the Web Flow system for use in any web envi
 
 Web Flow provides dedicated configuration support for both Java- and XML-based configuration.
 
-To get started with XML based configuration, declare the webflow config XML namespace, as follows:
+To get started with XML based configuration, declare the `webflow` config XML namespace, as follows:
 
 ====
 [source,xml]
@@ -81,16 +81,19 @@ public FlowDefinitionRegistry flowRegistry() {
 [[_basic_setup_flow_executor]]
 ==== Deploying a `FlowExecutor`
 
-You can deploy a FlowExecutor, the central service for executing flows in XML, as follows:
+You can deploy a `FlowExecutor`, the central service for executing flows in XML, as follows:
 
+====
 [source,xml]
 ----
 
 <webflow:flow-executor id="flowExecutor" />
 ----
+====
 
-Deploy a FlowExecutor, the central service for executing flows in Java:
+You can deploy a `FlowExecutor`, the central service for executing flows in Java:
 
+====
 [source,java]
 ----
 
@@ -99,6 +102,7 @@ public FlowExecutor flowExecutor() {
     return getFlowExecutorBuilder(flowRegistry()).build();
 }
 ----
+====
 
 See the <<_spring_mvc>> and <<_spring_faces>> sections of this guide on how to integrate the Web Flow system with the MVC and JSF environment, respectively.
 
@@ -138,7 +142,7 @@ return getFlowDefinitionRegistryBuilder()
 
 You can specify an ID to assign a custom registry identifier to a flow.
 
-The following example show how to assign custom flow identifiers in XML:
+The following example shows how to assign custom flow identifiers in XML:
 
 ====
 [source,xml]
@@ -248,7 +252,7 @@ With a base path defined, the algorithm that assigns flow identifiers changes sl
 Flows are now  assigned registry identifiers equal to the the path segment between their base path and their file name.
 For example, if a flow definition is located at `/WEB-INF/hotels/booking/booking-flow.xml` and the base path is `/WEB-INF`, the remaining path to this flow is `hotels/booking`, which becomes the flow ID.
 
-.Directory per flow definition
+.A directory for each flow definition
 TIP: It is a best practice to package each flow definition in a unique directory.
 This improves modularity, letting dependent resources be packaged with the flow definition.
 It also prevents two flows from having the same identifiers when using the convention.
@@ -441,9 +445,9 @@ See <<_view_type_conversion>> for important information on how to provide custom
 [[_builder_service_expression_parser]]
 ===== Using the Expression Parser
 
-You can use the `expression-parser` attribute (in XML) or the ExpressionParser interface (in Java) to customize the `ExpressionParser` used by the Web Flow system.
-The default `ExpressionParser` uses the Unified EL if available on the classpath.
-Otherwise, it uses Spring EL.
+You can use the `expression-parser` attribute (in XML) or the `ExpressionParser` interface (in Java) to customize the `ExpressionParser` used by the Web Flow system.
+The default `ExpressionParser` uses the Unified Expression Language if available on the classpath.
+Otherwise, it uses the Spring Expression Language.
 
 [[_builder_service_view_factory_creator]]
 ===== Using the View Factory Creator
@@ -461,7 +465,7 @@ When you create a flow builder services object, you can turn on development mode
 Development mode switches on hot-reloading of flow definition changes, including changes to dependent flow resources such as message bundles.
 
 To turn on development mode in XML, set the `development` attribute on the `flow-builder-services` element to `true`.
-To turn on development mode in XML, use `setDevelopment(true)` on the `FlowBuilderServices` object.
+To turn on development mode in Java, use `setDevelopment(true)` on the `FlowBuilderServices` object.
 
 [[_flow_executor]]
 === Setting Flow Executor options
@@ -573,5 +577,5 @@ To disable snapshotting, set this value to 0.
 To enable an unlimited number of snapshots, set this value to -1.
 
 NOTE: History snapshots enable browser back button support.
-When snapshotting is disabled, pressing the browser back button will not work.
+When snapshotting is disabled, pressing the browser back button does not work.
 Doing so results in using an execution key that points to a snapshot that has not been recorded.

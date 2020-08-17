@@ -64,7 +64,7 @@ protected FlowDefinitionResource[] getModelResources(FlowDefinitionResourceFacto
 [[_testing_flowstartup]]
 === Testing Flow Startup
 
-The following exampel shows how to have your first test exercise the startup of your flow:
+The following example shows how to have your first test exercise the startup of your flow:
 
 ====
 [source,java]
@@ -91,8 +91,8 @@ Assertions generally verify that the flow is in the state you expect.
 === Testing Flow Event Handling
 
 You can define additional tests to exercise flow event-handling behavior.
-You goal should be to exercise all paths through the flow.
-You can use the convenient `setCurrentState(String)` method to jump to the flow state where you wish to begin your test, as follows
+Your goal should be to exercise all paths through the flow.
+You can use the convenient `setCurrentState(String)` method to jump to the flow state where you wish to begin your test, as follows:
 
 ====
 [source,java]
