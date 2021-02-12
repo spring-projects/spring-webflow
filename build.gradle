@@ -1,9 +1,10 @@
 buildscript {
 	repositories {
+		gradlePluginPortal()
 		maven { url "https://repo.spring.io/plugins-release" }
 	}
 	dependencies {
-		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+		classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
 		classpath("io.spring.gradle:spring-io-plugin:0.0.5.RELEASE")
 		classpath("io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE")
 		classpath("io.spring.gradle:docbook-reference-plugin:0.3.1")
@@ -33,8 +34,7 @@ configure(subprojects.findAll {it.name != "spring-build-src"}) { subproject ->
 	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
 
 	repositories {
-		maven { url "https://repo.spring.io/libs-release" }
-		maven { url "https://repo.spring.io/libs-snapshot" }
+		mavenCentral()
 	}
 
 	jar {
@@ -76,8 +76,8 @@ configure(subprojects.findAll {
 	}
 
 	subproject.ext {
-		springVersion = "4.3.24.RELEASE"
-		springSecurityVersion = "4.1.5.RELEASE"
+		springVersion = "4.3.30.RELEASE"
+		springSecurityVersion = "4.2.20.RELEASE"
 		slf4jVersion = "1.7.21"
 		log4jVersion = "1.2.17"
 		tiles2Version = "2.2.2"
