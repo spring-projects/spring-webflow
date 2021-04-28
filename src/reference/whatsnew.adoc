@@ -32,7 +32,7 @@ This release requires JDK 1.6.
 Spring Web Flow now supports a Java-based alternative for its system configuration.
 See the updated <<_system_setup>>.
 
-See the https://github.com/spring-projects/spring-webflow-samples/tree/master/booking-mvc[booking-mvc] and https://github.com/spring-projects/spring-webflow-samples/tree/master/booking-faces[booking-faces] samples that have been updated to use all Java configuration.
+See the https://github.com/spring-projects/spring-webflow-samples/tree/main/booking-mvc[booking-mvc] and https://github.com/spring-projects/spring-webflow-samples/tree/main/booking-faces[booking-faces] samples that have been updated to use all Java configuration.
 
 [[_whatsnew_swf_mvcflash]]
 ==== Spring MVC Flash Scope Integration

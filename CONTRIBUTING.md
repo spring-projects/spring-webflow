@@ -50,11 +50,11 @@ future pull requests as well, simply so that the Spring Framework team knows
 immediately that this process is complete.
 
 
-## Create your branch from `master`
+## Create your branch from `main`
 
 If your pull request addresses a bug or improvement, please create your branch
-from Spring Web Flow's `master` branch. Rest assured that if your pull
-request is accepted and merged into `master`, these changes will also 
+from Spring Web Flow's `main` branch. Rest assured that if your pull
+request is accepted and merged into `main`, these changes will also 
 considered as back-port candidates.
 
 
