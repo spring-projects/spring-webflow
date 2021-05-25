@@ -2,14 +2,13 @@ buildscript {
 	repositories {
 		maven { url "https://repo.spring.io/plugins-release" }
 	}
-	dependencies {
-		classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2")
-		classpath "org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16"
-	}
 }
 
 plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE' apply false
+	id 'org.asciidoctor.jvm.pdf' version '3.3.0'
+	id 'org.asciidoctor.jvm.gems' version '3.3.0'
+	id 'org.asciidoctor.jvm.convert' version '3.3.0'
 }
 
 ext {
@@ -166,7 +165,7 @@ configure(rootProject) {
 	}
 
 	ext {
-		docResourcesVersion = "0.2.1.RELEASE"
+		docResourcesVersion = "0.2.5"
 	}
 
 	dependencies {
@@ -185,54 +184,62 @@ configure(rootProject) {
 		into "$buildDir/asciidoc/build"
 	}
 
-	apply plugin: 'org.asciidoctor.convert'
-
-	task('makePDF', type: org.asciidoctor.gradle.AsciidoctorTask) {
+	asciidoctorPdf {
 		dependsOn prepareAsciidocBuild
-		onlyIf { !project.version.endsWith("SNAPSHOT") }
-		backends 'pdf'
-		sourceDir "$buildDir/asciidoc/build"
-		sources {
-			include 'index.adoc'
-		}
-		options doctype: 'book', eruby: 'erubis'
-		logDocuments = true
-		attributes 'icons': 'font',
+		baseDirFollowsSourceFile()
+
+		asciidoctorj {
+			sourceDir "$buildDir/asciidoc/build"
+			inputs.dir(sourceDir)
+			sources {
+				include 'index.adoc'
+			}
+			options doctype: 'book'
+			attributes 'icons': 'font',
 			'sectanchors': '',
+			'sectnums': '',
 			'toc': '',
 			'source-highlighter' : 'coderay',
-			revnumber: project.version
+			revnumber: project.version,
+			'project-version': project.version
+		}
 	}
 
 	asciidoctor {
-		dependsOn makePDF
-		// run asciidoctor from that directory
+		dependsOn asciidoctorPdf
+
+		baseDirFollowsSourceFile()
+
 		sourceDir "$buildDir/asciidoc/build"
-		sources {
-			include 'index.adoc'
-		}
+		inputs.dir(sourceDir)
 		resources {
 			from(sourceDir) {
 				include 'images/*', 'css/**', 'js/**'
 			}
 		}
-		logDocuments = true
-		backends = ["html5"]
-		options doctype: 'book', eruby: 'erubis'
-		attributes  'docinfo': 'shared',
-			// use provided stylesheet
-			stylesdir: "css/",
+		options doctype: 'book'
+
+		attributes 'docinfo': 'shared',
+			stylesdir: 'css/',
 			stylesheet: 'spring.css',
 			'linkcss': true,
 			'icons': 'font',
-			// use provided highlighter
-			'source-highlighter=highlight.js',
-			'highlightjsdir=js/highlight',
-			'highlightjs-theme=github',
-			revnumber: project.version
+			'sectanchors': '',
+			'source-highlighter': 'highlight.js',
+			'highlightjsdir': 'js/highlight',
+			'highlightjs-theme': 'github',
+			'idprefix': '',
+			'idseparator': '-',
+			'spring-version': project.version,
+			'allow-uri-read': '',
+			'toc': 'left',
+			'toclevels': '4',
+			revnumber: project.version,
+			'project-version': project.version
 	}
 
-	// don"t publish the default jar for the root project
+
+	// don't publish the default jar for the root project
 	configurations.archives.artifacts.clear()
 
 	artifacts {
@@ -275,7 +282,7 @@ configure(rootProject) {
 			into "reference"
 		}
 
-		from (makePDF) {
+		from (asciidoctorPdf) {
 			include "*.pdf"
 			into "reference"
 		}
