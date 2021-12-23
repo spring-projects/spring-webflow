@@ -295,6 +295,8 @@ configure(rootProject) {
 		description = "Builds -${archiveClassifier} archive containing all " +
 			"XSDs for deployment at static.springframework.org/schema."
 
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
 		subprojects.each { subproject ->
 			Properties schemas = new Properties()
 
