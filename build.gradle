@@ -267,7 +267,7 @@ configure(rootProject) {
 		group = "Distribution"
 		archiveBaseName = "spring-webflow"
 		archiveClassifier = "docs"
-		description = "Builds -${archiveClassifier} archive containing api and reference " +
+		description = "Builds -${archiveClassifier.get()} archive containing api and reference " +
 			"for deployment at static.springframework.org/spring-webflow/docs."
 
 		from (api) {
@@ -292,7 +292,7 @@ configure(rootProject) {
 		group = "Distribution"
 		archiveBaseName = "spring-webflow"
 		archiveClassifier = "schema"
-		description = "Builds -${archiveClassifier} archive containing all " +
+		description = "Builds -${archiveClassifier.get()} archive containing all " +
 			"XSDs for deployment at static.springframework.org/schema."
 
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -330,7 +330,7 @@ configure(rootProject) {
 		group = "Distribution"
 		archiveBaseName = "spring-webflow"
 		archiveClassifier = "dist"
-		description = "Builds -${archiveClassifier} archive, containing all jars and docs, " +
+		description = "Builds -${archiveClassifier.get()} archive, containing all jars and docs, " +
 					  "suitable for community download page."
 
 		def baseDir = "${archiveBaseName}-${project.version}"
