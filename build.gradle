@@ -333,7 +333,7 @@ configure(rootProject) {
 		description = "Builds -${archiveClassifier.get()} archive, containing all jars and docs, " +
 					  "suitable for community download page."
 
-		def baseDir = "${archiveBaseName}-${project.version}"
+		def baseDir = "${archiveBaseName.get()}-${project.version}"
 
 		from("src/dist") {
 			include "notice.txt"
