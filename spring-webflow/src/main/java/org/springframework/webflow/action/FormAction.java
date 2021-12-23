@@ -165,7 +165,7 @@ import org.springframework.webflow.execution.ScopeType;
  *     &lt;/evaluate&gt;
  * </pre>
  * 
- * Would result in the <tt>public void validateSearchCriteria(SearchCriteria, Errors)</tt> method of the registered
+ * Would result in the <code>public void validateSearchCriteria(SearchCriteria, Errors)</code> method of the registered
  * validator being called if the form object class would be <code>SearchCriteria</code>.</li>
  * <li>If you want to do full validation using the
  * {@link org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
@@ -910,7 +910,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * display on a user interface such as a HTML page.
 	 * <p>
 	 * This default implementation will call the {@link #registerPropertyEditors(PropertyEditorRegistry) simpler form}
-	 * of the method not taking a <tt>RequestContext</tt> parameter.
+	 * of the method not taking a <code>RequestContext</code> parameter.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @param registry the property editor registry to register editors in
 	 * @see #registerPropertyEditors(PropertyEditorRegistry)
@@ -927,7 +927,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * Property editors give you full control over how objects are transformed to and from a formatted String form for
 	 * display on a user interface such as a HTML page.
 	 * <p>
-	 * This default implementation will simply call <tt>registerCustomEditors</tt> on the
+	 * This default implementation will simply call <code>registerCustomEditors</code> on the
 	 * {@link #getPropertyEditorRegistrar() propertyEditorRegistrar} object that has been set for the action, if any.
 	 * @param registry the property editor registry to register editors in
 	 */

@@ -55,7 +55,7 @@ public interface MutableAttributeMap<V> extends AttributeMap<V> {
 	/**
 	 * Remove an attribute from this map.
 	 * @param attributeName the name of the attribute to remove
-	 * @return previous value associated with specified attribute name, or <tt>null</tt> if there was no mapping for the
+	 * @return previous value associated with specified attribute name, or <code>null</code> if there was no mapping for the
 	 * name
 	 */
 	Object remove(String attributeName);

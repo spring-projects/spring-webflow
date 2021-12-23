@@ -289,9 +289,9 @@ public class FlowFacesContext extends FacesContextWrapper {
 
 	/**
 	 * Adapter class to convert a {@link FacesMessage} to a Spring {@link Message}. This adapter is required to allow
-	 * <tt>FacesMessages</tt> to be registered with Spring whilst still retaining their mutable nature. It is not
-	 * uncommon for <tt>FacesMessages</tt> to be changed after they have been added to a <tt>FacesContext</tt>, for
-	 * example, from a <tt>PhaseListener</tt>.
+	 * <code>FacesMessages</code> to be registered with Spring whilst still retaining their mutable nature. It is not
+	 * uncommon for <code>FacesMessages</code> to be changed after they have been added to a <code>FacesContext</code>, for
+	 * example, from a <code>PhaseListener</code>.
 	 * <p>
 	 * NOTE: Only {@link javax.faces.application.FacesMessage} instances are directly adapted, any subclasses will be
 	 * converted to the standard FacesMessage implementation. This is to protect against bugs such as SWF-1073.
