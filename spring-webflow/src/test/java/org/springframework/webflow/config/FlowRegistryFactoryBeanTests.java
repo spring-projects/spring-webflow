@@ -42,7 +42,7 @@ public class FlowRegistryFactoryBeanTests {
 		assertNotNull(def);
 		assertEquals("flow1", def.getId());
 		assertEquals("bar", def.getAttributes().get("foo"));
-		assertEquals(new Integer(2), def.getAttributes().getInteger("bar"));
+		assertEquals(Integer.valueOf(2), def.getAttributes().getInteger("bar"));
 		def = registry.getFlowDefinition("flow2");
 		assertNotNull(def);
 		assertEquals("flow2", def.getId());

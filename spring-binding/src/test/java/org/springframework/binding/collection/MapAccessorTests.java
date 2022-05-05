@@ -41,8 +41,8 @@ public class MapAccessorTests {
 
 	@Test
 	public void testGetInteger() {
-		assertEquals(new Integer(9), accessor.getInteger("integer"));
-		assertEquals(new Integer(9), accessor.getRequiredInteger("integer"));
+		assertEquals(Integer.valueOf(9), accessor.getInteger("integer"));
+		assertEquals(Integer.valueOf(9), accessor.getRequiredInteger("integer"));
 	}
 
 	@Test

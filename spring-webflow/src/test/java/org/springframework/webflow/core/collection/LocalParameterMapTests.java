@@ -75,7 +75,7 @@ public class LocalParameterMapTests {
 	@Test
 	public void testGetRequiredWithConversion() {
 		Integer value = parameterMap.getRequired("integer", Integer.class);
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
@@ -142,9 +142,9 @@ public class LocalParameterMapTests {
 
 	public void getArrayWithConversion() {
 		Integer[] values = parameterMap.getArray("stringArray", Integer.class);
-		assertEquals(new Integer(1), values[0]);
-		assertEquals(new Integer(2), values[1]);
-		assertEquals(new Integer(3), values[2]);
+		assertEquals(Integer.valueOf(1), values[0]);
+		assertEquals(Integer.valueOf(2), values[1]);
+		assertEquals(Integer.valueOf(3), values[2]);
 	}
 
 	@Test
@@ -178,77 +178,77 @@ public class LocalParameterMapTests {
 	@Test
 	public void testGetConversion() {
 		Integer i = parameterMap.getInteger("integer");
-		assertEquals(new Integer(12345), i);
+		assertEquals(Integer.valueOf(12345), i);
 	}
 
 	@Test
 	public void testGetArrayConversion() {
 		Integer[] i = parameterMap.getArray("stringArray", Integer.class);
 		assertEquals(i.length, 3);
-		assertEquals(new Integer(1), i[0]);
-		assertEquals(new Integer(2), i[1]);
-		assertEquals(new Integer(3), i[2]);
+		assertEquals(Integer.valueOf(1), i[0]);
+		assertEquals(Integer.valueOf(2), i[1]);
+		assertEquals(Integer.valueOf(3), i[2]);
 	}
 
 	public void getRequiredArrayWithConversion() {
 		Integer[] values = parameterMap.getRequiredArray("stringArray", Integer.class);
-		assertEquals(new Integer(1), values[0]);
-		assertEquals(new Integer(2), values[1]);
-		assertEquals(new Integer(3), values[2]);
+		assertEquals(Integer.valueOf(1), values[0]);
+		assertEquals(Integer.valueOf(2), values[1]);
+		assertEquals(Integer.valueOf(3), values[2]);
 	}
 
 	@Test
 	public void testGetNumber() {
 		Integer value = parameterMap.getNumber("integer", Integer.class);
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetRequiredNumber() {
 		Integer value = parameterMap.getRequiredNumber("integer", Integer.class);
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetNumberWithDefault() {
 		Integer value = parameterMap.getNumber("bogus", Integer.class, 12345);
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetInteger() {
 		Integer value = parameterMap.getInteger("integer");
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetRequiredInteger() {
 		Integer value = parameterMap.getRequiredInteger("integer");
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetIntegerWithDefault() {
 		Integer value = parameterMap.getInteger("bogus", 12345);
-		assertEquals(new Integer(12345), value);
+		assertEquals(Integer.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetLong() {
 		Long value = parameterMap.getLong("integer");
-		assertEquals(new Long(12345), value);
+		assertEquals(Long.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetRequiredLong() {
 		Long value = parameterMap.getRequiredLong("integer");
-		assertEquals(new Long(12345), value);
+		assertEquals(Long.valueOf(12345), value);
 	}
 
 	@Test
 	public void testGetLongWithDefault() {
 		Long value = parameterMap.getLong("bogus", 12345L);
-		assertEquals(new Long(12345), value);
+		assertEquals(Long.valueOf(12345), value);
 	}
 
 	@Test
