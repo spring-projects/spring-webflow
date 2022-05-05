@@ -134,8 +134,11 @@ subprojects { subproject ->
 
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
-	sourceCompatibility=1.8
-	targetCompatibility=1.8
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
 
 	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
 
