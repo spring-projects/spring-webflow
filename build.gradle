@@ -99,30 +99,6 @@ allprojects {
 
 }
 
-subprojects { subproject ->
-
-	apply from: "${rootProject.projectDir}/publish-maven.gradle"
-
-	sourceCompatibility=1.8
-	targetCompatibility=1.8
-
-	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
-
-	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
-
-	jar {
-		manifest.attributes["Implementation-Title"] = subproject.name
-		manifest.attributes["Implementation-Version"] = subproject.version
-
-		from("${rootProject.projectDir}/src/dist") {
-			include "license.txt"
-			include "notice.txt"
-			into "META-INF"
-			expand(copyright: new Date().format("yyyy"), version: project.version)
-		}
-	}
-}
-
 configure(javaProjects) { javaProject ->
 
 	test {
@@ -151,6 +127,30 @@ configure(javaProjects) { javaProject ->
 	artifacts {
 		archives sourcesJar
 		archives javadocJar
+	}
+}
+
+subprojects { subproject ->
+
+	apply from: "${rootProject.projectDir}/publish-maven.gradle"
+
+	sourceCompatibility=1.8
+	targetCompatibility=1.8
+
+	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
+
+	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
+
+	jar {
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+
+		from("${rootProject.projectDir}/src/dist") {
+			include "license.txt"
+			include "notice.txt"
+			into "META-INF"
+			expand(copyright: new Date().format("yyyy"), version: project.version)
+		}
 	}
 }
 
