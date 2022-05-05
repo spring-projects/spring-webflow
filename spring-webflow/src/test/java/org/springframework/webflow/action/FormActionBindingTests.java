@@ -111,7 +111,7 @@ public class FormActionBindingTests {
 		TestBean formObject = (TestBean) new FormObjectAccessor(context).getFormObject("formObject", ScopeType.FLOW);
 		errors = new FormObjectAccessor(context).getFormErrors("formObject", ScopeType.FLASH);
 		assertNotNull(formObject);
-		assertEquals(new Long(1), formObject.getProp());
+		assertEquals(Long.valueOf(1), formObject.getProp());
 		assertEquals(1L, errors.getFieldValue("prop"));
 		assertEquals("value", formObject.otherProp);
 		assertEquals("value", errors.getFieldValue("otherProp"));

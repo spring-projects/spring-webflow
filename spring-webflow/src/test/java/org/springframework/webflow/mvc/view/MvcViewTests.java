@@ -207,7 +207,7 @@ public class MvcViewTests {
 		assertFalse(context.getFlashScope().contains(ViewActionStateHolder.KEY));
 		assertEquals("submit", view.getFlowEvent().getId());
 		assertEquals("foo", bindBean.getStringProperty());
-		assertEquals(new Integer(5), bindBean.getIntegerProperty());
+		assertEquals(Integer.valueOf(5), bindBean.getIntegerProperty());
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(Calendar.YEAR, 2007);
@@ -219,9 +219,9 @@ public class MvcViewTests {
 		assertEquals("bar", bindBean.getStringArrayProperty()[1]);
 		assertEquals("baz", bindBean.getStringArrayProperty()[2]);
 		assertEquals(3, bindBean.getIntegerArrayProperty().length);
-		assertEquals(new Integer(1), bindBean.getIntegerArrayProperty()[0]);
-		assertEquals(new Integer(2), bindBean.getIntegerArrayProperty()[1]);
-		assertEquals(new Integer(3), bindBean.getIntegerArrayProperty()[2]);
+		assertEquals(Integer.valueOf(1), bindBean.getIntegerArrayProperty()[0]);
+		assertEquals(Integer.valueOf(2), bindBean.getIntegerArrayProperty()[1]);
+		assertEquals(Integer.valueOf(3), bindBean.getIntegerArrayProperty()[2]);
 		assertEquals(3, bindBean.getPrimitiveArrayProperty().length);
 		assertEquals(1, bindBean.getPrimitiveArrayProperty()[0]);
 		assertEquals(2, bindBean.getPrimitiveArrayProperty()[1]);
@@ -460,7 +460,7 @@ public class MvcViewTests {
 		assertTrue(view.hasFlowEvent());
 		assertEquals("submit", view.getFlowEvent().getId());
 		assertEquals("foo", bindBean.getStringProperty());
-		assertEquals(new Integer(3), bindBean.getIntegerProperty());
+		assertEquals(Integer.valueOf(3), bindBean.getIntegerProperty());
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.set(Calendar.YEAR, 2008);

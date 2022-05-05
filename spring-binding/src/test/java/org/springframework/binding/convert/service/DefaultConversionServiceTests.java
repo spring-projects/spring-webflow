@@ -90,7 +90,7 @@ public class DefaultConversionServiceTests {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3");
-		assertEquals(new Integer(3), three);
+		assertEquals(Integer.valueOf(3), three);
 
 		ConversionExecutor executor2 = service.getConversionExecutor(Integer.class, String.class);
 		String threeString = (String) executor2.execute(3);
@@ -107,7 +107,7 @@ public class DefaultConversionServiceTests {
 		service.addConverter(converter);
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3,000");
-		assertEquals(new Integer(3000), three);
+		assertEquals(Integer.valueOf(3000), three);
 		ConversionExecutor executor2 = service.getConversionExecutor(Integer.class, String.class);
 		String string = (String) executor2.execute(3000);
 		assertEquals("3,000", string);
@@ -123,7 +123,7 @@ public class DefaultConversionServiceTests {
 		service.addConverter("usaNumber", converter);
 		ConversionExecutor executor = service.getConversionExecutor("usaNumber", String.class, Integer.class);
 		Integer three = (Integer) executor.execute("3,000");
-		assertEquals(new Integer(3000), three);
+		assertEquals(Integer.valueOf(3000), three);
 		ConversionExecutor executor2 = service.getConversionExecutor("usaNumber", Integer.class, String.class);
 		String string = (String) executor2.execute(3000);
 		assertEquals("3,000", string);
@@ -413,7 +413,7 @@ public class DefaultConversionServiceTests {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String.class, int.class);
 		Integer three = (Integer) executor.execute("3");
-		assertEquals(new Integer(3), three);
+		assertEquals(Integer.valueOf(3), three);
 	}
 
 	@Test
@@ -421,9 +421,9 @@ public class DefaultConversionServiceTests {
 		DefaultConversionService service = new DefaultConversionService();
 		ConversionExecutor executor = service.getConversionExecutor(String[].class, Integer[].class);
 		Integer[] result = (Integer[]) executor.execute(new String[] { "1", "2", "3" });
-		assertEquals(new Integer(1), result[0]);
-		assertEquals(new Integer(2), result[1]);
-		assertEquals(new Integer(3), result[2]);
+		assertEquals(Integer.valueOf(1), result[0]);
+		assertEquals(Integer.valueOf(2), result[1]);
+		assertEquals(Integer.valueOf(3), result[2]);
 	}
 
 	@Test
@@ -490,9 +490,9 @@ public class DefaultConversionServiceTests {
 			// list.add("2");
 			// list.add("3");
 			// Integer[] result = (Integer[]) executor.execute(list);
-			// assertEquals(new Integer(1), result[0]);
-			// assertEquals(new Integer(2), result[1]);
-			// assertEquals(new Integer(3), result[2]);
+			// assertEquals(Integer.valueOf(1), result[0]);
+			// assertEquals(Integer.valueOf(2), result[1]);
+			// assertEquals(Integer.valueOf(3), result[2]);
 
 		} catch (ConversionExecutorNotFoundException e) {
 			// This is expected
@@ -549,7 +549,7 @@ public class DefaultConversionServiceTests {
 		ConversionExecutor executor = service.getConversionExecutor(String.class, Integer[].class);
 		Integer[] result = (Integer[]) executor.execute("123");
 		assertEquals(1, result.length);
-		assertEquals(new Integer(123), result[0]);
+		assertEquals(Integer.valueOf(123), result[0]);
 	}
 
 	private static class CustomConverter implements Converter {
