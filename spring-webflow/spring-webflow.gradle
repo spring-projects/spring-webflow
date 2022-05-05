@@ -13,12 +13,6 @@ dependencies {
 	optional("org.springframework.security:spring-security-core")
 	optional("org.springframework:spring-orm")
 	optional("org.springframework:spring-tx")
-	optional("org.apache.tiles:tiles-api")
-	optional("org.apache.tiles:tiles-core")
-	optional("org.apache.tiles:tiles-servlet")
-	optional("org.apache.tiles:tiles-jsp")
-	optional("org.apache.tiles:tiles-el")
-	optional("org.apache.tiles:tiles-extras")
 
 	testImplementation("junit:junit")
 	testImplementation("org.junit.jupiter:junit-jupiter")

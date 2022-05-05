@@ -49,16 +49,6 @@ allprojects {
 				entry 'jsf-api'
 				entry 'jsf-impl'
 			}
-			dependencySet(group: 'org.apache.tiles', version: '3.0.8') {
-				entry 'tiles-api'
-				entry('tiles-core', withoutJclOverSlf4j)
-				entry('tiles-servlet', withoutJclOverSlf4j)
-				entry('tiles-jsp', withoutJclOverSlf4j)
-				entry('tiles-el', withoutJclOverSlf4j)
-				entry('tiles-extras') {
-					exclude group: "org.springframework", name: "spring-web"
-				}
-			}
 			dependency "org.apache.myfaces.core:myfaces-impl:2.2.14"
 			dependency "com.sun.facelets:jsf-facelets:1.1.14"
 			dependency "org.hsqldb:hsqldb:2.5.0"
