@@ -202,7 +202,7 @@ Note that partial state saving is only supported with Sun Mojarra 2.0.3 or later
 It is not yet supported with Apache MyFaces.
 This is due to the fact MyFaces was not as easy to customize with regards to how component state is stored.
 We will work with Apache MyFaces to provide this support.
-In the meantime, you need to use the `javax.faces.PARTIAL_STATE_SAVING` context parameter in `web.xml` to disable partial state saving with Apache MyFaces.
+In the meantime, you need to use the `jakarta.faces.PARTIAL_STATE_SAVING` context parameter in `web.xml` to disable partial state saving with Apache MyFaces.
 
 ===== Travel Sample With the PrimeFaces Components
 

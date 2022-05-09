@@ -3,7 +3,7 @@ description = "Spring Binding"
 dependencies {
 	implementation("org.springframework:spring-context")
 
-	compileOnly("javax.el:javax.el-api")
+	compileOnly("jakarta.el:jakarta.el-api")
 
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.hamcrest:hamcrest")

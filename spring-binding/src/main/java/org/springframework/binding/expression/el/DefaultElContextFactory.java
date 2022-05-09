@@ -15,7 +15,7 @@
  */
 package org.springframework.binding.expression.el;
 
-import javax.el.ELContext;
+import jakarta.el.ELContext;
 
 /**
  * A factory for a DefaultELContext.

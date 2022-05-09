@@ -55,7 +55,7 @@ public class BeanValidationHintResolver implements ValidationHintResolver {
 		List<Class<?>> result = new ArrayList<>();
 		for (String hint : hints) {
 			if (hint.equalsIgnoreCase("Default")) {
-				hint = "javax.validation.groups.Default";
+				hint = "jakarta.validation.groups.Default";
 			}
 			Class<?> resolvedHint = toClass(hint);
 			if ((resolvedHint == null) && (model != null)) {

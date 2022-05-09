@@ -4,9 +4,9 @@ import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 import java.util.Locale;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.PropertyNotWritableException;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
+import jakarta.el.PropertyNotWritableException;
 
 import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;

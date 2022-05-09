@@ -533,7 +533,7 @@ The model object this view is bound to.  Typically used as the source of form fi
 A comma-separated list of validation hints such as validation groups against a JSR-303 provider.
 Each hint is used to find an inner Class either in the Class of the model or its parent classes.
 For example, given org.example.MyModel with inner type MyGroup, the hint "MyGroup" can be used.
-The hint "default" is reserved as the default validation group, i.e. "javax.validation.groups.Default".
+The hint "default" is reserved as the default validation group, i.e. "jakarta.validation.groups.Default".
 A hint can also be a fully qualified class name.
 The validation hints string is evaluated as an expression before hints are resolved.
 The result of the expression can be a String or an Object[] with Class instances.
@@ -1491,7 +1491,7 @@ Indicates whether model validation should occur before this transition executes.
 A comma-separated list of validation hints such as validation groups against a JSR-303 provider.
 Each hint is used to find an inner Class either in the Class of the model or its parent classes.
 For example, given org.example.MyModel with inner type MyGroup, the hint "MyGroup" can be used.
-The hint "default" is reserved as the default validation group, i.e. "javax.validation.groups.Default".
+The hint "default" is reserved as the default validation group, i.e. "jakarta.validation.groups.Default".
 A hint can also be a fully qualified class name.
 The validation hints string is evaluated as an expression before hints are resolved.
 The result of the expression can be a String or an Object[] with Class instances.

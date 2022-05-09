@@ -18,8 +18,8 @@ package org.springframework.webflow.mvc.servlet;
 import java.io.IOException;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -167,7 +167,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * <p>
 	 * Many HTTP 1.1 clients treat 302 just like 303, not making any difference. However, some clients depend on 303
 	 * when redirecting after a POST request; turn this flag off in such a scenario.
-	 * @see javax.servlet.http.HttpServletResponse#sendRedirect
+	 * @see jakarta.servlet.http.HttpServletResponse#sendRedirect
 	 */
 	public void setRedirectHttp10Compatible(boolean redirectHttp10Compatible) {
 		this.redirectHttp10Compatible = redirectHttp10Compatible;
