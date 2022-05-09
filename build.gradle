@@ -23,7 +23,7 @@ ext {
 allprojects {
 	group = "org.springframework.webflow"
 
-	apply plugin: "java"
+	apply plugin: "java-library"
 	apply plugin: "io.spring.dependency-management"
 	apply plugin: "org.springframework.build.optional-dependencies"
 	apply from: "${rootProject.projectDir}/ide.gradle"

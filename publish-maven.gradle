@@ -10,7 +10,7 @@ publishing {
       }
       versionMapping {
         usage('java-api') {
-          fromResolutionOf('runtimeClasspath')
+          fromResolutionOf('compileClasspath')
         }
         usage('java-runtime') {
           fromResolutionResult()

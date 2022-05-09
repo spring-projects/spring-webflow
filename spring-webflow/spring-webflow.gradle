@@ -1,7 +1,7 @@
 description = "Spring Web Flow"
 
 dependencies {
-	implementation(project(":spring-binding"))
+	api(project(":spring-binding"))
 	implementation("org.springframework:spring-web")
 	implementation("org.springframework:spring-webmvc")
 
