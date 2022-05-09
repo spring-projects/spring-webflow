@@ -4,8 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.el.ELResolver;
-import javax.el.PropertyNotWritableException;
+import jakarta.el.ELResolver;
+import jakarta.el.PropertyNotWritableException;
 
 import org.junit.jupiter.api.Test;
 

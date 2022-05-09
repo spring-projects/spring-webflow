@@ -15,9 +15,9 @@
  */
 package org.springframework.binding.expression.el;
 
-import javax.el.ELContext;
-import javax.el.ELException;
-import javax.el.ValueExpression;
+import jakarta.el.ELContext;
+import jakarta.el.ELException;
+import jakarta.el.ValueExpression;
 
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
@@ -63,7 +63,7 @@ public class ELExpression implements Expression {
 				}
 			}
 			return result;
-		} catch (javax.el.PropertyNotFoundException e) {
+		} catch (jakarta.el.PropertyNotFoundException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (ELException e) {
 			throw new EvaluationException(context.getClass(), getExpressionString(),
@@ -81,7 +81,7 @@ public class ELExpression implements Expression {
 						+ getExpressionString() + "' did not resolve... is the base variable ''" + getBaseVariable()
 						+ "' spelled correctly?");
 			}
-		} catch (javax.el.PropertyNotFoundException e) {
+		} catch (jakarta.el.PropertyNotFoundException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (ELException e) {
 			throw new EvaluationException(context.getClass(), getExpressionString(),
@@ -94,7 +94,7 @@ public class ELExpression implements Expression {
 		ELContext ctx = elContextFactory.getELContext(context);
 		try {
 			return valueExpression.getType(ctx);
-		} catch (javax.el.PropertyNotFoundException e) {
+		} catch (jakarta.el.PropertyNotFoundException e) {
 			throw new PropertyNotFoundException(context.getClass(), getExpressionString(), e);
 		} catch (ELException e) {
 			throw new EvaluationException(context.getClass(), getExpressionString(),

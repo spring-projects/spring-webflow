@@ -15,8 +15,8 @@
  */
 package org.springframework.webflow.persistence;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.transaction.PlatformTransactionManager;

@@ -20,7 +20,7 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.WebUtils;

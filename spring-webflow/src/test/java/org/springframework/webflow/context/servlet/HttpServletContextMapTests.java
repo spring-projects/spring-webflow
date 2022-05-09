@@ -44,7 +44,7 @@ public class HttpServletContextMapTests {
 		context = new MockServletContext();
 		// a fresh MockServletContext seems to already contain an element;
 		// that's confusing, so we remove it
-		context.removeAttribute("javax.servlet.context.tempdir");
+		context.removeAttribute("jakarta.servlet.context.tempdir");
 		tested = new HttpServletContextMap(context);
 		tested.put("SomeKey", "SomeValue");
 	}

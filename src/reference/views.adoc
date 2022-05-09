@@ -524,7 +524,7 @@ To do that, it looks for matching inner types in the model or its parent.
 For example, given `org.example.MyModel` with inner types `Group1` and `Group2`, it is sufficient to supply the simple type names -- that is, `group1` and `group2`.
 You can also provide fully qualified type names.
 
-A hint with a value of `default` has a special meaning and is translated to the default validation group in Bean Validation:  `javax.validation.groups.Default`.
+A hint with a value of `default` has a special meaning and is translated to the default validation group in Bean Validation:  `jakarta.validation.groups.Default`.
 
 You can configure a custom `ValidationHintResolver`, if necessary, through the `validationHintResolver` property of the `flow-builder-services` element, as follows:
 

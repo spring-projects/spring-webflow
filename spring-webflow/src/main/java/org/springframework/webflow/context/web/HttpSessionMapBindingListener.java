@@ -17,8 +17,8 @@ package org.springframework.webflow.context.web;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
 import org.springframework.webflow.core.collection.AttributeMapBindingEvent;
 import org.springframework.webflow.core.collection.AttributeMapBindingListener;

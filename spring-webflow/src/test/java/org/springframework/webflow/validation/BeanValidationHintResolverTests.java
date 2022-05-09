@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import javax.validation.groups.Default;
+import jakarta.validation.groups.Default;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

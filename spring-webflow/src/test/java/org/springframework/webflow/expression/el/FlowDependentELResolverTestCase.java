@@ -2,8 +2,8 @@ package org.springframework.webflow.expression.el;
 
 import java.util.List;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,9 @@
 package org.springframework.binding.expression.el;
 
-import javax.el.ELContext;
-import javax.el.ELException;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
+import jakarta.el.ELContext;
+import jakarta.el.ELException;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
 
 import org.springframework.binding.convert.ConversionException;
 import org.springframework.binding.convert.ConversionService;

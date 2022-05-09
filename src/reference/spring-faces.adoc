@@ -46,7 +46,7 @@ The following listing shows the configuration details:
 <!-- Just here so the JSF implementation can initialize. *Not* used at runtime. -->
 <servlet>
 	<servlet-name>Faces Servlet</servlet-name>
-	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+	<servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
 </servlet>
 
@@ -65,7 +65,7 @@ The use of Facelets instead of JSP typically requires the following element in `
 ----
 !-- Use JSF view templates saved as *.xhtml, for use with Facelets -->
 <context-param>
-	<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+	<param-name>jakarta.faces.DEFAULT_SUFFIX</param-name>
 	<param-value>.xhtml</param-value>
 </context-param>
 ----
@@ -617,7 +617,7 @@ Next, you need to register the taglib file (in the preceding listing) in `web.xm
 [source,xml]
 ----
 <context-param>
-	<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+	<param-name>jakarta.faces.FACELETS_LIBRARIES</param-name>
 	<param-value>/WEB-INF/springsecurity.taglib.xml</param-value>
 </context-param>
 ----
