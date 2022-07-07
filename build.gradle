@@ -9,6 +9,7 @@ plugins {
 	id 'org.asciidoctor.jvm.pdf' version '3.3.0'
 	id 'org.asciidoctor.jvm.gems' version '3.3.0'
 	id 'org.asciidoctor.jvm.convert' version '3.3.0'
+	id 'de.undercouch.download' version '4.1.2'
 }
 
 ext {
@@ -160,25 +161,24 @@ configure(rootProject) {
 		maven { url "https://repo.spring.io/plugins-release" }
 	}
 
-	configurations {
-		docs
+	task downloadResources(type: Download) {
+		def version = "0.2.5"
+		src "https://repo.spring.io/release/io/spring/docresources/" +
+				"spring-doc-resources/$version/spring-doc-resources-${version}.zip"
+		dest project.file("$buildDir/docs/spring-doc-resources.zip")
+		onlyIfModified true
+		useETag "all"
 	}
 
-	ext {
-		docResourcesVersion = "0.2.5"
-	}
-
-	dependencies {
-		docs "io.spring.docresources:spring-doc-resources:${docResourcesVersion}@zip"
+	task extractDocResources(type: Copy, dependsOn: downloadResources) {
+		dependsOn downloadResources
+		from project.zipTree(downloadResources.dest);
+		into "$buildDir/asciidoc/build/"
 	}
 
 	task prepareAsciidocBuild(type: Sync) {
-		dependsOn configurations.docs
-		// copy doc resources
-		from {
-			configurations.docs.collect { zipTree(it) }
-		}
-		// and doc sources
+		dependsOn extractDocResources
+		// copy doc sources
 		from "src/reference/"
 		// to a build directory of your choice
 		into "$buildDir/asciidoc/build"
