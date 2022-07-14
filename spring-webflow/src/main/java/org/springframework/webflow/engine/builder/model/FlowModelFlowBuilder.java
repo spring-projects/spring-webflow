@@ -263,7 +263,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	public boolean hasFlowChanged() {
 		return flowModelHolder.hasFlowModelChanged();
 	}
-
+	
 	public String getFlowResourceString() {
 		return flowModelHolder.getFlowModelResource().getDescription();
 	}
@@ -282,6 +282,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	protected FlowModel getFlowModel() {
 		return flowModel;
+	}
+
+	protected FlowModelHolder getFlowModelHolder() {
+		return flowModelHolder;
 	}
 
 	protected LocalFlowBuilderContext getLocalContext() {
@@ -303,11 +307,23 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	protected void registerFlowBeans(ConfigurableBeanFactory beanFactory) {
 	}
 
+	/**
+	 * Build a {@link GenericApplicationContext} for the flow definition being build.
+	 * 
+	 * <p>Subclasses may override this method to fully control the nature and behavior of the
+	 * Spring context for the flow.</p>
+	 * 
+	 * @return the built and refreshed context
+	 */
+	protected GenericApplicationContext createFlowApplicationContext() {
+		Resource[] contextResources = parseContextResources(getFlowModel().getBeanImports());
+		return createFlowApplicationContext(contextResources);
+	}
+	
 	// internal helpers
 
 	private void initLocalFlowContext() {
-		Resource[] contextResources = parseContextResources(getFlowModel().getBeanImports());
-		GenericApplicationContext flowContext = createFlowApplicationContext(contextResources);
+		GenericApplicationContext flowContext = createFlowApplicationContext();
 		setLocalContext(new LocalFlowBuilderContext(getContext(), flowContext));
 	}
 
