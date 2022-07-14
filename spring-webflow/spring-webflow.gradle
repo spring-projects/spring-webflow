@@ -25,7 +25,7 @@ dependencies {
 	testImplementation("org.hibernate:hibernate-validator")
 	testImplementation("org.hsqldb:hsqldb")
 	testImplementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api")
-	testImplementation("javax.servlet:jstl")
+	testImplementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api")
 	testImplementation("jakarta.servlet:jakarta.servlet-api")
 	testImplementation("jakarta.validation:jakarta.validation-api")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
@@ -33,12 +33,10 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
 
 	//
-	// To use Hibernate 5 in the context of the Jakarta EE 9 namespace,
-	// we need to use hibernate-core-jakarta instead of hibernate-core.
-	// Unfortunately the hibernate-entitymanager module directly
-	// references hibernate-core and we don't want both versions
-	// in the classpath. To avoid this, explicitly exclude the
-	// plain hibernate-core module in all configurations.
+	// We need hibernate-core-jakarta instead of hibernate-core for Jakarta EE,
+	// but hibernate-entitymanager module depends on hibernate-core and we
+	// don't want both on the classpath, so we explicitly exclude hibernate-core
+	// in all configurations.
 	//
 	// This wrinkle will probably go away again in Hibernate 6.
 	//

@@ -30,28 +30,30 @@ allprojects {
 
 	dependencyManagement {
 		imports {
-			mavenBom "org.springframework:spring-framework-bom:6.0.0-M4"
+			mavenBom "org.springframework:spring-framework-bom:6.0.0-M5"
 			mavenBom "org.springframework.security:spring-security-bom:5.5.6"
 			mavenBom "org.junit:junit-bom:5.7.1"
 		}
 		dependencies {
 			dependency "jakarta.servlet:jakarta.servlet-api:5.0.0"
-			dependency "javax.servlet:jstl:1.2"
+			dependency "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0"
 			dependency "jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.0.0"
 			dependency "jakarta.el:jakarta.el-api:4.0.0"
 			dependency "jakarta.validation:jakarta.validation-api:3.0.0"
-			dependencySet(group: 'org.hibernate', version: '5.6.6.Final') {
+			dependencySet(group: 'org.hibernate', version: '5.6.10.Final') {
 				entry 'hibernate-core-jakarta'
 				entry 'hibernate-entitymanager'
 			}
 			dependency "org.hibernate:hibernate-validator:7.0.4.Final"
+
+			/*
 			dependencySet(group: 'com.sun.faces', version: '2.2.20') {
 				entry 'jsf-api'
 				entry 'jsf-impl'
 			}
 			dependency "org.apache.myfaces.core:myfaces-impl:3.0.1"
 			dependency "com.sun.facelets:jsf-facelets:1.1.14"
-			dependency "org.hsqldb:hsqldb:2.5.0"
+			*/
 
 			dependencySet(group: 'org.apache.logging.log4j', version: '2.14.0') {
 				entry 'log4j-api'
@@ -65,7 +67,11 @@ allprojects {
 			dependency "org.easymock:easymock:4.2"
 			dependency "org.hamcrest:hamcrest:2.1"
 			dependency "org.apache.tomcat:tomcat-jasper-el:10.0.20"
+			dependency "org.hsqldb:hsqldb:2.5.0"
+
+			/*
 			dependency "org.apache.myfaces.test:myfaces-test22:1.0.8"
+			*/
 		}
 		generatedPomCustomization {
 			enabled = false
