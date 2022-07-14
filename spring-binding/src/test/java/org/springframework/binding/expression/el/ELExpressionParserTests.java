@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.FunctionMapper;
-import javax.el.VariableMapper;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
+import jakarta.el.FunctionMapper;
+import jakarta.el.VariableMapper;
 
 import org.apache.el.ExpressionFactoryImpl;
 import org.junit.jupiter.api.BeforeEach;

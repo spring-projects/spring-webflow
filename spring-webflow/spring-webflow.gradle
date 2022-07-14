@@ -1,40 +1,48 @@
 description = "Spring Web Flow"
 
 dependencies {
-	compile(project(":spring-binding"))
-	compile("org.springframework:spring-web")
-	compile("org.springframework:spring-webmvc")
+	api(project(":spring-binding"))
+	implementation("org.springframework:spring-web")
+	implementation("org.springframework:spring-webmvc")
 
-	compileOnly("javax.el:javax.el-api")
-	compileOnly("javax.servlet:javax.servlet-api")
+	compileOnly("jakarta.el:jakarta.el-api")
+	compileOnly("jakarta.servlet:jakarta.servlet-api")
 	compileOnly("junit:junit")
 
-	optional("org.hibernate:hibernate-core")
+	optional("org.hibernate:hibernate-core-jakarta")
 	optional("org.springframework.security:spring-security-core")
 	optional("org.springframework:spring-orm")
 	optional("org.springframework:spring-tx")
-	optional("org.apache.tiles:tiles-api")
-	optional("org.apache.tiles:tiles-core")
-	optional("org.apache.tiles:tiles-servlet")
-	optional("org.apache.tiles:tiles-jsp")
-	optional("org.apache.tiles:tiles-el")
-	optional("org.apache.tiles:tiles-extras")
 
-	testCompile("junit:junit")
-	testCompile("org.junit.jupiter:junit-jupiter")
-	testCompile("org.easymock:easymock")
-	testCompile("org.apache.tomcat:tomcat-jasper-el")
-	testCompile("org.springframework:spring-aop")
-	testCompile("org.springframework:spring-jdbc")
-	testCompile("org.springframework:spring-test")
-	testCompile("org.hibernate:hibernate-entitymanager")
-	testCompile("org.hibernate:hibernate-validator")
-	testCompile("org.hsqldb:hsqldb")
-	testCompile("javax.servlet.jsp:javax.servlet.jsp-api")
-	testCompile("javax.servlet:jstl")
-	testCompile("javax.servlet:javax.servlet-api")
-	testCompile("javax.validation:validation-api")
-	testRuntime("org.apache.logging.log4j:log4j-core")
-	testRuntime("org.apache.logging.log4j:log4j-slf4j-impl")
-	testRuntime("org.apache.logging.log4j:log4j-jul")
+	testImplementation("junit:junit")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.easymock:easymock")
+	testImplementation("org.apache.tomcat:tomcat-jasper-el")
+	testImplementation("org.springframework:spring-aop")
+	testImplementation("org.springframework:spring-jdbc")
+	testImplementation("org.springframework:spring-test")
+	testImplementation("org.hibernate:hibernate-entitymanager")
+	testImplementation("org.hibernate:hibernate-validator")
+	testImplementation("org.hsqldb:hsqldb")
+	testImplementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api")
+	testImplementation("javax.servlet:jstl")
+	testImplementation("jakarta.servlet:jakarta.servlet-api")
+	testImplementation("jakarta.validation:jakarta.validation-api")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
+
+	//
+	// To use Hibernate 5 in the context of the Jakarta EE 9 namespace,
+	// we need to use hibernate-core-jakarta instead of hibernate-core.
+	// Unfortunately the hibernate-entitymanager module directly
+	// references hibernate-core and we don't want both versions
+	// in the classpath. To avoid this, explicitly exclude the
+	// plain hibernate-core module in all configurations.
+	//
+	// This wrinkle will probably go away again in Hibernate 6.
+	//
+	configurations.all {
+		exclude group: 'org.hibernate', module: 'hibernate-core'
+	}
 }

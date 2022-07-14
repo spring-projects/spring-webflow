@@ -17,7 +17,7 @@ package org.springframework.webflow.context.servlet;
 
 import java.util.Iterator;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.springframework.binding.collection.SharedMap;
 import org.springframework.binding.collection.StringKeyedMapAdapter;

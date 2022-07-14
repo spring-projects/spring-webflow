@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.context.servlet;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.webflow.core.collection.AttributeMap;
 

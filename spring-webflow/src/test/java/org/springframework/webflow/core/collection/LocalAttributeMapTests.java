@@ -179,7 +179,7 @@ public class LocalAttributeMapTests {
 	@Test
 	public void testGetInteger() {
 		Integer i = attributeMap.getInteger("integer");
-		assertEquals(new Integer(12345), i);
+		assertEquals(Integer.valueOf(12345), i);
 	}
 
 	@Test
@@ -191,7 +191,7 @@ public class LocalAttributeMapTests {
 	@Test
 	public void testGetIntegerRequired() {
 		Integer i = attributeMap.getRequiredInteger("integer");
-		assertEquals(new Integer(12345), i);
+		assertEquals(Integer.valueOf(12345), i);
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class LocalAttributeMapTests {
 	@Test
 	public void testGetLong() {
 		Long i = attributeMap.getLong("long");
-		assertEquals(new Long(12345), i);
+		assertEquals(Long.valueOf(12345), i);
 	}
 
 	@Test
@@ -219,7 +219,7 @@ public class LocalAttributeMapTests {
 	@Test
 	public void testGetLongRequired() {
 		Long i = attributeMap.getRequiredLong("long");
-		assertEquals(new Long(12345), i);
+		assertEquals(Long.valueOf(12345), i);
 	}
 
 	@Test

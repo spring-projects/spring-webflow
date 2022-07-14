@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.el.BeanELResolver;
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.PropertyNotWritableException;
+import jakarta.el.BeanELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
+import jakarta.el.PropertyNotWritableException;
 
 import org.springframework.binding.expression.el.DefaultELContext;
 import org.springframework.webflow.execution.RequestContext;

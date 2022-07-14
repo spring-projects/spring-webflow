@@ -18,11 +18,11 @@ package org.springframework.webflow.expression.el;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.el.FunctionMapper;
-import javax.el.VariableMapper;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.FunctionMapper;
+import jakarta.el.VariableMapper;
 
 import org.springframework.binding.expression.el.DefaultELResolver;
 import org.springframework.binding.expression.el.ELContextFactory;

@@ -76,7 +76,7 @@ public class HttpServletRequestMapTests {
 	@Test
 	public void testGetAttributeNames() {
 		request.setAttribute("Some key", "Some value");
-		request.removeAttribute("javax.servlet.context.tempdir");
+		request.removeAttribute("jakarta.servlet.context.tempdir");
 		// perform test
 		Iterator<String> names = tested.getAttributeNames();
 		assertNotNull(names, "Null result unexpected");

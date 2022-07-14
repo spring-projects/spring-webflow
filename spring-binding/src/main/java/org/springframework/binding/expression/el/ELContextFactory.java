@@ -15,8 +15,8 @@
  */
 package org.springframework.binding.expression.el;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 
 /**
  * A factory for creating a EL context object that will be used to evaluate a target object of an EL expression.
