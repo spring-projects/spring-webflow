@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the original author or authors.
+ * Copyright 2004-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	public static final String VALIDATION_HINT_RESOLVER_FLOW_ATTR = FlowModelFlowBuilder.class.getSimpleName() + ".validationHintResolver";
 
-	private FlowModelHolder flowModelHolder;
+	private final FlowModelHolder flowModelHolder;
 
 	private FlowModel flowModel;
 
@@ -284,6 +284,10 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		return flowModel;
 	}
 
+	/**
+	 * Return the {@link FlowModelHolder} that holds the Flow model.
+	 * @since 3.0
+	 */
 	protected FlowModelHolder getFlowModelHolder() {
 		return flowModelHolder;
 	}
@@ -314,6 +318,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 	 * Spring context for the flow.</p>
 	 * 
 	 * @return the built and refreshed context
+	 * @since 3.0
 	 */
 	protected GenericApplicationContext createFlowApplicationContext() {
 		Resource[] contextResources = parseContextResources(getFlowModel().getBeanImports());
