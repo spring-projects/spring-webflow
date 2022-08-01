@@ -6,9 +6,9 @@ buildscript {
 
 plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE' apply false
-	id 'org.asciidoctor.jvm.pdf' version '3.3.0'
-	id 'org.asciidoctor.jvm.gems' version '3.3.0'
-	id 'org.asciidoctor.jvm.convert' version '3.3.0'
+	id 'org.asciidoctor.jvm.pdf' version '3.3.2'
+	id 'org.asciidoctor.jvm.gems' version '3.3.2'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'de.undercouch.download' version '4.1.2'
 }
 
@@ -23,7 +23,7 @@ ext {
 allprojects {
 	group = "org.springframework.webflow"
 
-	apply plugin: "java"
+	apply plugin: "java-library"
 	apply plugin: "io.spring.dependency-management"
 	apply plugin: "org.springframework.build.optional-dependencies"
 	apply from: "${rootProject.projectDir}/ide.gradle"
@@ -99,30 +99,6 @@ allprojects {
 
 }
 
-subprojects { subproject ->
-
-	apply from: "${rootProject.projectDir}/publish-maven.gradle"
-
-	sourceCompatibility=1.8
-	targetCompatibility=1.8
-
-	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
-
-	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
-
-	jar {
-		manifest.attributes["Implementation-Title"] = subproject.name
-		manifest.attributes["Implementation-Version"] = subproject.version
-
-		from("${rootProject.projectDir}/src/dist") {
-			include "license.txt"
-			include "notice.txt"
-			into "META-INF"
-			expand(copyright: new Date().format("yyyy"), version: project.version)
-		}
-	}
-}
-
 configure(javaProjects) { javaProject ->
 
 	test {
@@ -151,6 +127,30 @@ configure(javaProjects) { javaProject ->
 	artifacts {
 		archives sourcesJar
 		archives javadocJar
+	}
+}
+
+subprojects { subproject ->
+
+	apply from: "${rootProject.projectDir}/publish-maven.gradle"
+
+	sourceCompatibility=1.8
+	targetCompatibility=1.8
+
+	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
+
+	sourceSets.test.resources.srcDirs = ["src/main/java", "src/test/resources", "src/test/java"]
+
+	jar {
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
+
+		from("${rootProject.projectDir}/src/dist") {
+			include "license.txt"
+			include "notice.txt"
+			into "META-INF"
+			expand(copyright: new Date().format("yyyy"), version: project.version)
+		}
 	}
 }
 
@@ -267,7 +267,7 @@ configure(rootProject) {
 		group = "Distribution"
 		archiveBaseName = "spring-webflow"
 		archiveClassifier = "docs"
-		description = "Builds -${archiveClassifier} archive containing api and reference " +
+		description = "Builds -${archiveClassifier.get()} archive containing api and reference " +
 			"for deployment at static.springframework.org/spring-webflow/docs."
 
 		from (api) {
@@ -292,8 +292,10 @@ configure(rootProject) {
 		group = "Distribution"
 		archiveBaseName = "spring-webflow"
 		archiveClassifier = "schema"
-		description = "Builds -${archiveClassifier} archive containing all " +
+		description = "Builds -${archiveClassifier.get()} archive containing all " +
 			"XSDs for deployment at static.springframework.org/schema."
+
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
 		subprojects.each { subproject ->
 			Properties schemas = new Properties()
@@ -328,7 +330,7 @@ configure(rootProject) {
 		group = "Distribution"
 		archiveBaseName = "spring-webflow"
 		archiveClassifier = "dist"
-		description = "Builds -${archiveClassifier} archive, containing all jars and docs, " +
+		description = "Builds -${archiveClassifier.get()} archive, containing all jars and docs, " +
 					  "suitable for community download page."
 
 		def baseDir = "${archiveBaseName}-${project.version}"
