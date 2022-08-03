@@ -42,7 +42,7 @@ publishing {
           developer {
             id = "rstoyanchev"
             name = "Rossen Stoyanchev"
-            email = "rstoyanchev@pivotal.io"
+            email = "rstoyanchev@vmware.com"
           }
         }
         issueManagement {

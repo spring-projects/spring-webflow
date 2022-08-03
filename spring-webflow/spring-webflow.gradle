@@ -44,3 +44,4 @@ dependencies {
 		exclude group: 'org.hibernate', module: 'hibernate-core'
 	}
 }
+
