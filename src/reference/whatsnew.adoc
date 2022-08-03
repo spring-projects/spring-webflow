@@ -67,8 +67,6 @@ Java ServerFaces version 1.2 and earlier are no longer supported by Spring Web F
 If you have not done so already, you need to upgrade to JSF 2.0 or later.
 In addition, the Spring Faces components that were previously provided with JSF 1.2 for progressive AJAX enhancements have been removed in this release.
 
-See <<_spring_faces_upgrade_from_swf23>>.
-
 [[_whatsnew_swf_jsf20_portlet]]
 ==== Portlet API 2.0 and JSF 2.0 support
 
@@ -262,5 +260,4 @@ This change is transparent for applications but results in simpler and safer con
 
 In previous versions of Spring Web Flow, support for JSF Portlets relied on a Portlet Bridge for JSF implementation and was considered experimental.
 Spring Web Flow 2.2 adds support for JSF Portlets based on its own internal Portlet integration targeting Portlet API 2.0 and JSF 1.2 environments.
-See <<_portlet_jsf>> for more details.
 The Spring Web Flow Travel JSF Portlets sample has been successfully tested on the Apache Pluto portal container.
