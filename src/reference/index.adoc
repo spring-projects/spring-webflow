@@ -26,8 +26,6 @@ This reference guide shows you how to use and extend Spring Web Flow.
 
 include::overview.adoc[]
 
-include::whatsnew.adoc[]
-
 include::defining-flows.adoc[]
 
 include::el.adoc[]
@@ -51,5 +49,3 @@ include::spring-js.adoc[]
 include::spring-faces.adoc[]
 
 include::testing.adoc[]
-
-include::flow-definition-field-mappings.adoc[]

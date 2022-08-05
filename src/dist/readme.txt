@@ -20,7 +20,7 @@ It is a powerful controller engine that addresses the "C" in MVC.
 
 2. RELEASE NOTES
 ----------------
-Spring Web Flow 2.5 requires JDK 1.8 and Spring Framework 5.0 to run.
+Spring Web Flow 3.0 requires JDK 17 and Spring Framework 6.0 to run.
 
 Release distribution contents:
 

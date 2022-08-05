@@ -8,18 +8,18 @@ It also covers extending the framework and the overall architectural model.
 [[_system_requirements]]
 === Web Flow Requirements
 
-* Java 1.8 or higher.
-* Spring 5.0 or higher.
+* Java 17 or higher.
+* Spring Framework 6.0 or higher.
 
 === Resources
 
 You can ask questions and interact on StackOverflow by using the designated tags.
 See https://stackoverflow.com/questions/tagged/spring-webflow[Spring Web Flow at StackOverflow].
 
-You can report bugs and make requests by using the https://jira.spring.io[Spring Issue Tracker].
+You can report bugs and make requests by using the project https://jira.spring.io/projects/SWF[issue tracker].
 
 You can submit pull requests and work with the source code.
-See https://github.com/spring-projects/spring-webflow[Spring Web Flow on Github].
+See https://github.com/spring-projects/spring-webflow[spring-webflow on GitHub].
 
 [[_jars_mvn_central]]
 === Accessing Web Flow Artifacts from Maven Central
@@ -36,11 +36,12 @@ To access Web Flow jars from Maven Central, declare the following dependency in 
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
-    <version>x.y.z.RELEASE</version>
+    <version>x.y.z</version>
 </dependency>
 ----
 ====
 
+////
 If you use JavaServer Faces, declare the following dependency in your pom (includes the `spring-binding` and `spring-webflow` transitive dependencies):
 
 ====
@@ -50,10 +51,11 @@ If you use JavaServer Faces, declare the following dependency in your pom (inclu
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-faces</artifactId>
-    <version>x.y.z.RELEASE</version>
+    <version>x.y.z</version>
 </dependency>
 ----
 ====
+////
 
 === Accessing Nightly Builds and Milestone Releases
 
@@ -86,11 +88,12 @@ Then you need to declare the following dependency:
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
-    <version>x.y.z.BUILD-SNAPSHOT</version>
+    <version>x.y.z-SNAPSHOT</version>
 </dependency>
 ----
 ====
 
+////
 Also, if you use JSF, you need to add the following dependency:
 
 ====
@@ -104,3 +107,4 @@ Also, if you use JSF, you need to add the following dependency:
 </dependency>
 ----
 ====
+////
