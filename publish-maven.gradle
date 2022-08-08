@@ -1,4 +1,5 @@
 apply plugin: "maven-publish"
+apply plugin: "com.jfrog.artifactory"
 
 publishing {
   publications {
@@ -52,6 +53,10 @@ publishing {
       }
     }
   }
+}
+
+artifactoryPublish {
+  publications(publishing.publications.mavenJava)
 }
 
 // Disable generation of Gradle Module Metadata for compatibility
