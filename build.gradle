@@ -1,6 +1,7 @@
 buildscript {
 	repositories {
 		maven { url "https://repo.spring.io/plugins-release" }
+		maven {url "https://repo.spring.io/release" }
 	}
 }
 
@@ -163,23 +164,16 @@ configure(rootProject) {
 		maven { url "https://repo.spring.io/plugins-release" }
 	}
 
-	task downloadResources(type: Download) {
-		def version = "0.2.5"
-		src "https://repo.spring.io/release/io/spring/docresources/" +
-				"spring-doc-resources/$version/spring-doc-resources-${version}.zip"
-		dest project.file("$buildDir/docs/spring-doc-resources.zip")
-		onlyIfModified true
-		useETag "all"
+	configurations {
+		asciidoctorExtensions
 	}
 
-	task extractDocResources(type: Copy, dependsOn: downloadResources) {
-		dependsOn downloadResources
-		from project.zipTree(downloadResources.dest);
-		into "$buildDir/asciidoc/build/"
+	dependencies {
+		asciidoctorExtensions "io.spring.asciidoctor.backends:spring-asciidoctor-backends:0.0.3"
 	}
 
 	task prepareAsciidocBuild(type: Sync) {
-		dependsOn extractDocResources
+		dependsOn configurations.asciidoctorExtensions
 		// copy doc sources
 		from "src/reference/"
 		// to a build directory of your choice
@@ -211,6 +205,11 @@ configure(rootProject) {
 		dependsOn asciidoctorPdf
 
 		baseDirFollowsSourceFile()
+
+		configurations "asciidoctorExtensions"
+		outputOptions {
+			backends "spring-html"
+		}
 
 		sourceDir "$buildDir/asciidoc/build"
 		inputs.dir(sourceDir)
