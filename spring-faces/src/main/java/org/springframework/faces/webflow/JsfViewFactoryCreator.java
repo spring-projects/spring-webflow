@@ -15,7 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.Lifecycle;
 
 import org.springframework.binding.convert.ConversionService;
 import org.springframework.binding.expression.Expression;

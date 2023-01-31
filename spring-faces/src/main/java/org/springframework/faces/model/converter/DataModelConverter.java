@@ -18,11 +18,11 @@ package org.springframework.faces.model.converter;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import javax.faces.model.DataModel;
-
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.faces.model.OneSelectionTrackingListDataModel;
 import org.springframework.util.ClassUtils;
+
+import jakarta.faces.model.DataModel;
 
 /**
  * A {@link Converter} implementation that converts an Object, Object array, or {@link List} into a JSF

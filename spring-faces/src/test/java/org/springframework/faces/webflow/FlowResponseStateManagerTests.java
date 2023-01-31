@@ -61,7 +61,7 @@ public class FlowResponseStateManagerTests {
 
 		assertEquals(state, viewMap.get(FlowResponseStateManager.FACES_VIEW_STATE));
 		assertEquals(
-				"<input type=\"hidden\" name=\"javax.faces.ViewState\" id=\"javax.faces.ViewState\" value=\"e1s1\" />",
+				"<input type=\"hidden\" name=\"jakarta.faces.ViewState\" id=\"jakarta.faces.ViewState\" value=\"e1s1\" />",
 				this.jsfMock.contentAsString());
 		EasyMock.verify(this.flowExecutionContext, this.requestContext);
 	}

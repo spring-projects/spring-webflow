@@ -15,10 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationWrapper;
-import javax.faces.application.StateManager;
-import javax.faces.application.ViewHandler;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.ApplicationWrapper;
+import jakarta.faces.application.StateManager;
+import jakarta.faces.application.ViewHandler;
 
 import org.springframework.util.Assert;
 

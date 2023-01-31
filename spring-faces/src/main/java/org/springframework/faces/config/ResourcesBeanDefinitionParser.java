@@ -76,7 +76,7 @@ public class ResourcesBeanDefinitionParser implements BeanDefinitionParser {
 
 	private void registerHandlerMappings(Element element, Object source, ParserContext parserContext) {
 		Map<String, String> urlMap = new ManagedMap<>();
-		urlMap.put("/javax.faces.resource/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);
+		urlMap.put("/jakarta.faces.resource/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);
 
 		if (isRichFacesPresent) {
 			urlMap.put("/rfRes/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);

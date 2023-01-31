@@ -29,14 +29,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.el.ELContext;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextWrapper;
-import javax.faces.context.PartialViewContext;
-import javax.faces.context.PartialViewContextFactory;
-import javax.faces.lifecycle.Lifecycle;
+import jakarta.el.ELContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextWrapper;
+import jakarta.faces.context.PartialViewContext;
+import jakarta.faces.context.PartialViewContextFactory;
+import jakarta.faces.lifecycle.Lifecycle;
 
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageResolver;
@@ -130,7 +130,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 
 	public boolean getRenderResponse() {
 		Boolean renderResponse = this.context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
-		return (renderResponse == null ? false : renderResponse);
+		return (renderResponse != null && renderResponse);
 	}
 
 	public boolean getResponseComplete() {
@@ -170,7 +170,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 		Set<String> clientIds = new LinkedHashSet<>();
 		for (Message message : this.context.getMessageContext().getAllMessages()) {
 			Object source = message.getSource();
-			if (source != null && source instanceof String) {
+			if (source instanceof String) {
 				clientIds.add((String) source);
 			} else if (message.getSource() instanceof FacesMessageSource) {
 				clientIds.add(((FacesMessageSource) source).getClientId());
@@ -293,9 +293,8 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * uncommon for <code>FacesMessages</code> to be changed after they have been added to a <code>FacesContext</code>, for
 	 * example, from a <code>PhaseListener</code>.
 	 * <p>
-	 * NOTE: Only {@link javax.faces.application.FacesMessage} instances are directly adapted, any subclasses will be
+	 * NOTE: Only {@link jakarta.faces.application.FacesMessage} instances are directly adapted, any subclasses will be
 	 * converted to the standard FacesMessage implementation. This is to protect against bugs such as SWF-1073.
-	 * 
 	 * For convenience this class also implements the {@link MessageResolver} interface.
 	 */
 	protected static class FlowFacesMessage extends Message implements MessageResolver {
@@ -310,8 +309,8 @@ public class FlowFacesContext extends FacesContextWrapper {
 		/**
 		 * Use standard faces message as required to protect against bugs such as SWF-1073.
 		 * 
-		 * @param message {@link javax.faces.application.FacesMessage} or subclass.
-		 * @return {@link javax.faces.application.FacesMessage} instance
+		 * @param message {@link jakarta.faces.application.FacesMessage} or subclass.
+		 * @return {@link jakarta.faces.application.FacesMessage} instance
 		 */
 		private FacesMessage asStandardFacesMessageInstance(FacesMessage message) {
 			if (FacesMessage.class.equals(message.getClass())) {

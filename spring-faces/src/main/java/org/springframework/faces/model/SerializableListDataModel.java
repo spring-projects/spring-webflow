@@ -22,9 +22,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.ListDataModel;
-
 import org.springframework.util.Assert;
+
+import jakarta.faces.model.ListDataModel;
 
 /**
  * A simple {@link ListDataModel List-to-JSF-DataModel} adapter that is also {@link Serializable}.
@@ -32,7 +32,6 @@ import org.springframework.util.Assert;
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
-@SuppressWarnings("serial")
 public class SerializableListDataModel<T> extends ListDataModel<T> implements Serializable {
 
 

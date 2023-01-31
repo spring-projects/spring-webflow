@@ -18,12 +18,12 @@ package org.springframework.faces.webflow;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.NavigationHandler;
-import javax.faces.component.ActionSource2;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+import jakarta.faces.application.NavigationHandler;
+import jakarta.faces.component.ActionSource2;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.ActionListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +43,6 @@ import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
- *
  * This implementation bypasses the JSF {@link NavigationHandler} mechanism to instead let the event be handled directly
  * by Web Flow.
  * <p>

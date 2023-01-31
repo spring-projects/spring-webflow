@@ -15,9 +15,9 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitWrapper;
-import javax.faces.render.ResponseStateManager;
+import jakarta.faces.render.RenderKit;
+import jakarta.faces.render.RenderKitWrapper;
+import jakarta.faces.render.ResponseStateManager;
 
 /**
  * A render kit implementation that ensures use of Web Flow's FlowViewResponseStateManager, which takes over reading and

@@ -16,10 +16,10 @@
 package org.springframework.faces.webflow;
 
 import java.util.Locale;
-import javax.faces.application.ViewHandler;
-import javax.faces.application.ViewHandlerWrapper;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.application.ViewHandlerWrapper;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ContextResource;

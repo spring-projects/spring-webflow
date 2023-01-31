@@ -18,11 +18,11 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Serializable;
 
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.view.StateManagementStrategy;
-import javax.faces.view.ViewDeclarationLanguage;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.view.StateManagementStrategy;
+import jakarta.faces.view.ViewDeclarationLanguage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +48,7 @@ public class JsfView implements View {
 
 	private final RequestContext requestContext;
 
-	private String viewId;
+	private final String viewId;
 
 	/**
 	 * Creates a new JSF view.
@@ -97,7 +97,7 @@ public class JsfView implements View {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
 		if (facesContext != null) {
 			// Use ExternalContext for multipart request parsing by component libraries
-			return facesContext.getExternalContext().getRequestParameterMap().containsKey("javax.faces.ViewState");
+			return facesContext.getExternalContext().getRequestParameterMap().containsKey("jakarta.faces.ViewState");
 		}
 		return false;
 	}

@@ -17,7 +17,7 @@ package org.springframework.faces.model;
 
 import java.util.List;
 
-import javax.faces.model.DataModel;
+import jakarta.faces.model.DataModel;
 
 /**
  * Interface for {@link DataModel} implementations that need to track selected rows.

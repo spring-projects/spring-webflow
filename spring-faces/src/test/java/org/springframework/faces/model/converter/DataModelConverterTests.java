@@ -9,8 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
+import jakarta.faces.model.DataModel;
+import jakarta.faces.model.ListDataModel;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.converters.Converter;

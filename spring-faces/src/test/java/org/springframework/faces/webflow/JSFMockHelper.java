@@ -4,16 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKitFactory;
-
-import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.base.junit.AbstractJsfTestCase;
 import org.apache.myfaces.test.mock.MockApplicationFactory;
 import org.apache.myfaces.test.mock.MockExternalContext;
 import org.apache.myfaces.test.mock.MockHttpServletRequest;
@@ -29,6 +20,15 @@ import org.apache.myfaces.test.mock.MockServletContext;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
 import org.apache.myfaces.test.mock.visit.MockVisitContextFactory;
+
+import jakarta.faces.FactoryFinder;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.ApplicationFactory;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.lifecycle.LifecycleFactory;
+import jakarta.faces.render.RenderKitFactory;
 
 /**
  * Helper for using the mock JSF environment provided by shale-test inside unit tests that do not extend
@@ -106,7 +106,7 @@ public class JSFMockHelper {
 		private ClassLoader threadContextClassLoader;
 
 		public JSFMock() {
-			super("JSFMock");
+			super();
 		}
 
 		FacesContext facesContext;

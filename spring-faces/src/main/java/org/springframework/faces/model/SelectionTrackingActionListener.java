@@ -19,18 +19,18 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIData;
-import javax.faces.component.UIViewRoot;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.faces.webflow.FlowActionListener;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
+
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIData;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.ActionListener;
 
 /**
  * Custom {@link ActionListener} that inspects the {@link UIComponent} that signaled the current {@link ActionEvent} to
@@ -72,7 +72,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 			Method valueAccessor = getValueMethod(parent.getClass());
 			if (valueAccessor != null) {
 				Object value = ReflectionUtils.invokeMethod(valueAccessor, parent);
-				if (value != null && value instanceof SelectionAware) {
+				if (value instanceof SelectionAware) {
 					((SelectionAware<?>) value).setCurrentRowSelected(true);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Row selection has been set on the current SelectionAware data model.");

@@ -6,14 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import javax.faces.FacesException;
-import javax.faces.component.UIForm;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlForm;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.context.FacesContext;
-import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.easymock.EasyMock;
@@ -27,6 +19,15 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
 import org.springframework.webflow.test.MockParameterMap;
+
+import jakarta.faces.FacesException;
+import jakarta.faces.component.UIForm;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.component.html.HtmlForm;
+import jakarta.faces.component.html.HtmlInputText;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.lifecycle.Lifecycle;
 
 public class JsfViewTests {
 
@@ -44,9 +45,7 @@ public class JsfViewTests {
 
 	private final RequestContext context = EasyMock.createMock(RequestContext.class);
 	private final FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
-	@SuppressWarnings("unchecked")
 	private final MutableAttributeMap<Object> flashScope = EasyMock.createMock(MutableAttributeMap.class);
-	@SuppressWarnings("unchecked")
 	private final MutableAttributeMap<Object> flowMap = EasyMock.createMock(MutableAttributeMap.class);
 
 	private final FlowExecutionKey key = new FlowExecutionKey() {
@@ -130,7 +129,7 @@ public class JsfViewTests {
 
 		try {
 			this.view.render();
-		} catch (Exception ex) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -145,7 +144,7 @@ public class JsfViewTests {
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		Lifecycle lifecycle = new NoEventLifecycle(this.jsfMock.lifecycle());
+		NoEventLifecycle lifecycle = new NoEventLifecycle(this.jsfMock.lifecycle());
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -157,7 +156,7 @@ public class JsfViewTests {
 		restoredView.processUserEvent();
 
 		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
-		assertTrue(((NoEventLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
+		assertTrue(lifecycle.executed, "The lifecycle should have been invoked");
 	}
 
 	/**
@@ -171,7 +170,7 @@ public class JsfViewTests {
 		EasyMock.expect(this.flashScope.put(EasyMock.matches(FlowFacesContext.RENDER_RESPONSE_KEY), EasyMock.anyObject()))
 				.andStubReturn(null);
 
-		Lifecycle lifecycle = new EventSignalingLifecycle(this.jsfMock.lifecycle());
+		EventSignalingLifecycle lifecycle = new EventSignalingLifecycle(this.jsfMock.lifecycle());
 
 		UIViewRoot existingRoot = new UIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -184,7 +183,7 @@ public class JsfViewTests {
 
 		assertTrue(restoredView.hasFlowEvent(), "No event was signaled,");
 		assertEquals(this.event, restoredView.getFlowEvent().getId(), "Event should be " + this.event);
-		assertTrue(((EventSignalingLifecycle) lifecycle).executed, "The lifecycle should have been invoked");
+		assertTrue(lifecycle.executed, "The lifecycle should have been invoked");
 	}
 
 	@Test
@@ -205,7 +204,7 @@ public class JsfViewTests {
 	public final void testUserEventQueued_FormSubmitted() {
 
 		this.jsfMock.request().addParameter("execution", "e1s1");
-		this.jsfMock.request().addParameter("javax.faces.ViewState", "e1s1");
+		this.jsfMock.request().addParameter("jakarta.faces.ViewState", "e1s1");
 
 		EasyMock.replay(this.context, this.flowExecutionContext, this.flowMap, this.flashScope);
 
@@ -214,13 +213,13 @@ public class JsfViewTests {
 		assertTrue(createdView.userEventQueued(), "User event should be queued");
 	}
 
-	private class ExceptionalViewHandler extends MockViewHandler {
+	private static class ExceptionalViewHandler extends MockViewHandler {
 		public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
 			throw new IOException("Rendering blew up");
 		}
 	}
 
-	private class NoEventLifecycle extends FlowLifecycle {
+	private static class NoEventLifecycle extends FlowLifecycle {
 
 		boolean executed = false;
 

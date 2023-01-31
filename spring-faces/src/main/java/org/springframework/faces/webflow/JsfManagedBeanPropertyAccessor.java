@@ -15,10 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
-import javax.faces.context.FacesContext;
+import jakarta.el.ELContext;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
+import jakarta.faces.context.FacesContext;
 
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;

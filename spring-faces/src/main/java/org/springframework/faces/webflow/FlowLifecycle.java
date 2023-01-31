@@ -15,11 +15,11 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.FacesException;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
+import jakarta.faces.FacesException;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,10 +74,8 @@ public class FlowLifecycle extends LifecycleWrapper {
 	private boolean skipPhase(FacesContext context, PhaseId phaseId) {
 		if (context.getResponseComplete()) {
 			return true;
-		} else if (context.getRenderResponse()) {
-			return true;
 		} else {
-			return false;
+			return context.getRenderResponse();
 		}
 	}
 

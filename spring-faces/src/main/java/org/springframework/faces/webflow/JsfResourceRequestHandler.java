@@ -16,13 +16,14 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
-import javax.faces.application.ResourceHandler;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
+
+import jakarta.faces.application.ResourceHandler;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Handles a request by delegating to the JSF ResourceHandler, which serves web

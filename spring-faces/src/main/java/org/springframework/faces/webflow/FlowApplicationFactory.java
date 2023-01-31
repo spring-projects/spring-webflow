@@ -15,10 +15,10 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
-
 import org.springframework.util.Assert;
+
+import jakarta.faces.application.Application;
+import jakarta.faces.application.ApplicationFactory;
 
 /**
  * Custom {@link ApplicationFactory} that ensures the FlowApplication is the first {@link Application} in the chain,

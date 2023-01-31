@@ -17,9 +17,9 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.ExternalContextWrapper;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.ExternalContextWrapper;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

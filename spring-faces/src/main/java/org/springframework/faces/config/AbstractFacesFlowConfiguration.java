@@ -46,7 +46,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * </ul>
  * <p>
  * Also registers a HandlerMapping bean to provide JSF 2 resource handling at
- * {@code "/javax.faces.resource/**"} or Rich Faces at {@code "/rfRes/**"}.
+ * {@code "/jakarta.faces.resource/**"} or Rich Faces at {@code "/rfRes/**"}.
 
  * @author Rossen Stoyanchev
  * @since 2.4
@@ -107,7 +107,7 @@ public class AbstractFacesFlowConfiguration implements ApplicationContextAware {
 	public SimpleUrlHandlerMapping jsrResourceHandlerMapping() {
 
 		Map<String, Object> urlMap = new HashMap<>();
-		urlMap.put("/javax.faces.resource/**", jsfResourceRequestHandler());
+		urlMap.put("/jakarta.faces.resource/**", jsfResourceRequestHandler());
 		if (isRichFacesPresent) {
 			urlMap.put("/rfRes/**", jsfResourceRequestHandler());
 		}

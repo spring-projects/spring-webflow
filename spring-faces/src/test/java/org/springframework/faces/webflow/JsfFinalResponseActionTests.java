@@ -8,20 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.faces.FacesException;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.faces.lifecycle.Lifecycle;
-
+import org.apache.el.ExpressionFactoryImpl;
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.apache.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -35,6 +26,15 @@ import org.springframework.webflow.execution.View;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
 
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
+import jakarta.faces.lifecycle.Lifecycle;
+
 public class JsfFinalResponseActionTests {
 
 	private static final String VIEW_ID = "/testView.xhtml";
@@ -46,10 +46,6 @@ public class JsfFinalResponseActionTests {
 	private final RequestContext context = EasyMock.createMock(RequestContext.class);
 
 	private final ViewHandler viewHandler = new NoRenderViewHandler();
-
-	private TestLifecycle lifecycle;
-
-	private PhaseListener trackingListener;
 
 	ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
@@ -68,13 +64,13 @@ public class JsfFinalResponseActionTests {
 
 		this.jsfMock.setUp();
 
-		this.trackingListener = new TrackingPhaseListener();
-		this.jsfMock.lifecycle().addPhaseListener(this.trackingListener);
+		PhaseListener trackingListener = new TrackingPhaseListener();
+		this.jsfMock.lifecycle().addPhaseListener(trackingListener);
 		this.jsfMock.facesContext().setViewRoot(null);
 		this.jsfMock.facesContext().getApplication().setViewHandler(this.viewHandler);
-		this.lifecycle = new TestLifecycle(this.jsfMock.lifecycle());
+		TestLifecycle lifecycle = new TestLifecycle(this.jsfMock.lifecycle());
 		this.factory = new JsfViewFactory(this.parser.parseExpression("#{'" + VIEW_ID + "'}", new FluentParserContext()
-				.template().evaluate(RequestContext.class).expectResult(String.class)), this.lifecycle);
+				.template().evaluate(RequestContext.class).expectResult(String.class)), lifecycle);
 		RequestContextHolder.setRequestContext(this.context);
 		MockExternalContext ext = new MockExternalContext();
 		ext.setNativeContext(new MockServletContext());
@@ -97,7 +93,7 @@ public class JsfFinalResponseActionTests {
 		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(false);
 
-		EasyMock.replay(new Object[] { this.context });
+		EasyMock.replay(this.context);
 
 		View view = this.factory.getView(this.context);
 		((JsfView) view).getViewRoot().setTransient(true);
@@ -107,7 +103,7 @@ public class JsfFinalResponseActionTests {
 		assertTrue(((NoRenderViewHandler) this.viewHandler).rendered);
 	}
 
-	private class TestLifecycle extends FlowLifecycle {
+	private static class TestLifecycle extends FlowLifecycle {
 
 		boolean executed = false;
 
@@ -123,7 +119,7 @@ public class JsfFinalResponseActionTests {
 
 	}
 
-	private class TrackingPhaseListener implements PhaseListener {
+	private static class TrackingPhaseListener implements PhaseListener {
 
 		private final List<String> phaseCallbacks = new ArrayList<>();
 
@@ -146,10 +142,10 @@ public class JsfFinalResponseActionTests {
 		}
 	}
 
-	private class NoRenderViewHandler extends MockViewHandler {
+	private static class NoRenderViewHandler extends MockViewHandler {
 		boolean rendered = false;
 
-		public void renderView(FacesContext context, UIViewRoot viewToRender) throws IOException, FacesException {
+		public void renderView(FacesContext context, UIViewRoot viewToRender) throws FacesException {
 			this.rendered = true;
 		}
 

@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.Locale;
 
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +18,9 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.StaticWebApplicationContext;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
 
 public class JsfViewTests {
 
@@ -59,7 +59,7 @@ public class JsfViewTests {
 		view.render(new HashMap<>(), new MockHttpServletRequest(), new MockHttpServletResponse());
 	}
 
-	private class ResourceCheckingViewHandler extends MockViewHandler {
+	private static class ResourceCheckingViewHandler extends MockViewHandler {
 
 		public UIViewRoot createView(FacesContext context, String viewId) {
 			assertNotNull(viewId);

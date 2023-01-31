@@ -18,11 +18,11 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.faces.FacesWrapper;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.render.ResponseStateManager;
+import jakarta.faces.FacesWrapper;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.render.RenderKitFactory;
+import jakarta.faces.render.ResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -94,7 +94,7 @@ public class FlowResponseStateManager extends ResponseStateManager
 	}
 
 	/**
-	 * This method returns the flow execution key to be used as the value for the "javax.faces.ViewState" hidden input
+	 * This method returns the flow execution key to be used as the value for the "jakarta.faces.ViewState" hidden input
 	 * field. The value of this key is not important because JSF state is stored in a Web Flow managed view scoped
 	 * variable. However the presence of the view state parameter alone is important for triggering actions. Hence we
 	 * return the most logical value, which is the flow execution key.

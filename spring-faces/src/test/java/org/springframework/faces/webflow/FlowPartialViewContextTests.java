@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.faces.context.PartialViewContext;
-import javax.faces.context.PartialViewContextWrapper;
+import jakarta.faces.context.PartialViewContext;
+import jakarta.faces.context.PartialViewContextWrapper;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

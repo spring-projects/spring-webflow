@@ -15,12 +15,12 @@
  */
 package org.springframework.faces.support;
 
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
 
 /**
  * {@link PhaseListener} that logs the execution of the individual phases of the JSF lifecycle. Useful during JSF
@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Jeremy Grelle
  */
-@SuppressWarnings("serial")
 public class RequestLoggingPhaseListener implements PhaseListener {
 
 	private static final Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
