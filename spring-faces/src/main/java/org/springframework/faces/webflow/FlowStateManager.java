@@ -15,9 +15,9 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.application.StateManager;
-import javax.faces.application.StateManagerWrapper;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.StateManager;
+import jakarta.faces.application.StateManagerWrapper;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Custom {@link StateManager} that manages ensures web flow's state is always stored server side.
@@ -33,6 +33,7 @@ public class FlowStateManager extends StateManagerWrapper {
 	private final StateManager wrapped;
 
 	public FlowStateManager(StateManager wrapped) {
+		super(wrapped);
 		this.wrapped = wrapped;
 	}
 

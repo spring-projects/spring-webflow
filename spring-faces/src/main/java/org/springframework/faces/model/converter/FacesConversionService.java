@@ -15,7 +15,7 @@
  */
 package org.springframework.faces.model.converter;
 
-import javax.faces.model.DataModel;
+import jakarta.faces.model.DataModel;
 
 import org.springframework.binding.convert.service.DefaultConversionService;
 import org.springframework.core.convert.ConversionService;

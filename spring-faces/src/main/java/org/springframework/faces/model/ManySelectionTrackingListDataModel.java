@@ -18,9 +18,9 @@ package org.springframework.faces.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.DataModel;
-
 import org.springframework.util.Assert;
+
+import jakarta.faces.model.DataModel;
 
 /**
  * A {@link DataModel} implementation that tracks the currently selected rows, allowing any number of rows to be

@@ -15,8 +15,8 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.el.CompositeELResolver;
-import javax.el.ELResolver;
+import jakarta.el.CompositeELResolver;
+import jakarta.el.ELResolver;
 
 import org.springframework.binding.expression.el.MapAdaptableELResolver;
 import org.springframework.webflow.expression.el.FlowResourceELResolver;

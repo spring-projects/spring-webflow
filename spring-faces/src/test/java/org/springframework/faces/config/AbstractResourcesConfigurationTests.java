@@ -42,7 +42,7 @@ public abstract class AbstractResourcesConfigurationTests {
 		map = this.context.getBeansOfType(SimpleUrlHandlerMapping.class);
 		assertEquals(1, map.values().size());
 		SimpleUrlHandlerMapping handlerMapping = (SimpleUrlHandlerMapping) map.values().iterator().next();
-		assertSame(resourceHandler, handlerMapping.getHandlerMap().get("/javax.faces.resource/**"));
+		assertSame(resourceHandler, handlerMapping.getHandlerMap().get("/jakarta.faces.resource/**"));
 		assertEquals(0, handlerMapping.getOrder());
 	}
 

@@ -17,23 +17,23 @@ package org.springframework.faces.webflow;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.visit.VisitContextFactory;
-import javax.faces.context.ExceptionHandlerFactory;
-import javax.faces.context.ExternalContextFactory;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.context.PartialViewContextFactory;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.view.ViewDeclarationLanguageFactory;
-import javax.faces.view.facelets.FaceletCacheFactory;
-import javax.faces.view.facelets.TagHandlerDelegateFactory;
+import jakarta.faces.FactoryFinder;
+import jakarta.faces.application.ApplicationFactory;
+import jakarta.faces.component.visit.VisitContextFactory;
+import jakarta.faces.context.ExceptionHandlerFactory;
+import jakarta.faces.context.ExternalContextFactory;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.context.PartialViewContextFactory;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleFactory;
+import jakarta.faces.render.RenderKitFactory;
+import jakarta.faces.view.ViewDeclarationLanguageFactory;
+import jakarta.faces.view.facelets.FaceletCacheFactory;
+import jakarta.faces.view.facelets.TagHandlerDelegateFactory;
 
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContextHolder;
@@ -67,19 +67,11 @@ public class JsfUtils {
 	}
 
 	public static boolean isFlowRequest() {
-		if (RequestContextHolder.getRequestContext() != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return RequestContextHolder.getRequestContext() != null;
 	}
 
 	public static boolean isAsynchronousFlowRequest() {
-		if (isFlowRequest() && RequestContextHolder.getRequestContext().getExternalContext().isAjaxRequest()) {
-			return true;
-		} else {
-			return false;
-		}
+		return isFlowRequest() && RequestContextHolder.getRequestContext().getExternalContext().isAjaxRequest();
 	}
 
 	/**

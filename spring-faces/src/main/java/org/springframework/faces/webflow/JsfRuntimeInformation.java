@@ -16,10 +16,10 @@
 
 package org.springframework.faces.webflow;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextWrapper;
-
 import org.springframework.util.ClassUtils;
+
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextWrapper;
 
 /**
  * Helper class to provide information about the JSF runtime environment such as

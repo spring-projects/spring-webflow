@@ -15,7 +15,7 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.context.FacesContext;
+import jakarta.faces.context.FacesContext;
 
 import org.springframework.webflow.execution.FlowExecutionListener;
 import org.springframework.webflow.execution.RequestContext;

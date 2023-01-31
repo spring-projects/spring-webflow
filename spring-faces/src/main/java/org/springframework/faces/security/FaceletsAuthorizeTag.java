@@ -15,18 +15,18 @@
  */
 package org.springframework.faces.security;
 
-import javax.el.ValueExpression;
-import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.FaceletContext;
-import javax.faces.view.facelets.TagAttribute;
-import javax.faces.view.facelets.TagHandler;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 import org.springframework.security.taglibs.authz.AbstractAuthorizeTag;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import jakarta.el.ValueExpression;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.facelets.FaceletContext;
+import jakarta.faces.view.facelets.TagAttribute;
+import jakarta.faces.view.facelets.TagHandler;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 /**
  * A concrete implementation of {@link AbstractAuthorizeTag} for use with standard Facelets rendering technology.
@@ -131,7 +131,7 @@ public class FaceletsAuthorizeTag extends AbstractAuthorizeTag {
 		if (tagAttribute != null) {
 			if (evaluate) {
 				ValueExpression expression = tagAttribute.getValueExpression(faceletContext, String.class);
-				value = (String) expression.getValue(faceletContext.getFacesContext().getELContext());
+				value = expression.getValue(faceletContext.getFacesContext().getELContext());
 			} else {
 				value = tagAttribute.getValue();
 			}

@@ -16,9 +16,9 @@
 
 package org.springframework.faces.webflow;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.lifecycle.Lifecycle;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.lifecycle.Lifecycle;
 
 /**
  * Provides helper methods for getting a FacesContext that is suitable for use outside of Web Flow. Inside a running
@@ -44,7 +44,7 @@ public class FacesContextHelper {
 	 * @see #release
 	 */
 	public FacesContext getFacesContext(Object context, Object request, Object response) {
-		FacesContext facesContext = null;
+		FacesContext facesContext;
 		if (FacesContext.getCurrentInstance() != null) {
 			facesContext = FacesContext.getCurrentInstance();
 		} else {

@@ -18,16 +18,16 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.PartialResponseWriter;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.webflow.context.servlet.AbstractAjaxHandler;
+
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.PartialResponseWriter;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.render.RenderKit;
+import jakarta.faces.render.RenderKitFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Ajax handler for JSF 2 requests that can identify JSF 2 Ajax requests and send redirect instructions back to the
@@ -54,7 +54,7 @@ public class JsfAjaxHandler extends AbstractAjaxHandler {
 			return facesContext.getPartialViewContext().isAjaxRequest();
 		} else {
 			String header = request.getHeader("Faces-Request");
-			String param = request.getParameter("javax.faces.partial.ajax");
+			String param = request.getParameter("jakarta.faces.partial.ajax");
 			return "partial/ajax".equals(header) || "true".equals(param);
 		}
 	}

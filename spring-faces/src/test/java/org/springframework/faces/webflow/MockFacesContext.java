@@ -17,15 +17,16 @@ package org.springframework.faces.webflow;
 
 import java.util.Iterator;
 
-import javax.faces.application.Application;
-import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseStream;
-import javax.faces.context.ResponseWriter;
-import javax.faces.render.RenderKit;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.application.FacesMessage.Severity;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseStream;
+import jakarta.faces.context.ResponseWriter;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.render.RenderKit;
 
 /**
  * Mock implementation of the <code>FacesContext</code> class to facilitate standalone Action unit tests.
@@ -35,7 +36,7 @@ import javax.faces.render.RenderKit;
  * Fowler's</a> reasoning. This class is called <i>Mock</i>FacesContext to be consistent with the naming convention in
  * the rest of the Spring framework (e.g. MockHttpServletRequest, ...).
  * 
- * @see javax.faces.context.FacesContext
+ * @see jakarta.faces.context.FacesContext
  * 
  * @author Ulrik Sandberg
  */
@@ -59,6 +60,11 @@ public class MockFacesContext extends FacesContext {
 	}
 
 	public Iterator<String> getClientIdsWithMessages() {
+		return null;
+	}
+
+	@Override
+	public Lifecycle getLifecycle() {
 		return null;
 	}
 

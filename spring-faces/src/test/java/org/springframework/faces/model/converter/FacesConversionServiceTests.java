@@ -3,11 +3,11 @@ package org.springframework.faces.model.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.DataModel;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.binding.convert.ConversionExecutor;
+
+import jakarta.faces.model.DataModel;
 
 public class FacesConversionServiceTests {
 	private FacesConversionService service;

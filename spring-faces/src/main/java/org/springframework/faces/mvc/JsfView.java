@@ -16,20 +16,21 @@
 package org.springframework.faces.mvc;
 
 import java.util.Map;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.faces.webflow.FacesContextHelper;
 import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
+
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.lifecycle.Lifecycle;
+import jakarta.faces.lifecycle.LifecycleFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * JSF View that renders a transient (stateless) JSF view template. The UIViewRoot will not be saved and thus the JSF
@@ -47,7 +48,7 @@ public class JsfView extends AbstractUrlBasedView {
 	}
 
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response) {
 
 		FacesContextHelper facesContextHelper = new FacesContextHelper();
 		FacesContext facesContext = facesContextHelper.getFacesContext(getServletContext(), request, response);
@@ -83,6 +84,7 @@ public class JsfView extends AbstractUrlBasedView {
 		Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
 		for (Map.Entry<String, Object> entry : model.entrySet()) {
 			// JSF does not insist that putAll is implemented, hence we use individual put calls
+			//noinspection UseBulkOperation
 			requestMap.put(entry.getKey(), entry.getValue());
 		}
 	}

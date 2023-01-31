@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
@@ -44,7 +45,7 @@ public class FlowFacesContextTests {
 	@BeforeEach
 	public void setUp() throws Exception {
 		this.jsf.setUp();
-		this.requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
+		this.requestContext = EasyMock.createMock(RequestContext.class);
 		this.facesContext = new FlowFacesContext(this.requestContext, this.jsf.facesContext());
 		setupMessageContext();
 	}
@@ -286,7 +287,7 @@ public class FlowFacesContextTests {
 
 		this.facesContext.addMessage("foo", new FacesMessage(FacesMessage.SEVERITY_ERROR, "foo", "bar"));
 
-		assertEquals(true, this.facesContext.isValidationFailed());
+		assertTrue(this.facesContext.isValidationFailed());
 	}
 
 	private void setupMessageContext() {

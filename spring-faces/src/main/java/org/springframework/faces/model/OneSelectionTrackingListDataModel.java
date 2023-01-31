@@ -18,16 +18,15 @@ package org.springframework.faces.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.DataModel;
-
 import org.springframework.util.Assert;
+
+import jakarta.faces.model.DataModel;
 
 /**
  * A {@link DataModel} implementation that tracks the currently selected row, allowing only one selection at a time.
  *
  * @author Jeremy Grelle
  */
-@SuppressWarnings("serial")
 public class OneSelectionTrackingListDataModel<T> extends SerializableListDataModel<T> implements SelectionAware<T> {
 
 	/**
@@ -70,7 +69,7 @@ public class OneSelectionTrackingListDataModel<T> extends SerializableListDataMo
 
 		if (!rowSelected) {
 			this.selections.remove(getRowData());
-		} else if (rowSelected && !this.selections.contains(getRowData())) {
+		} else if (!this.selections.contains(getRowData())) {
 			this.selections.clear();
 			this.selections.add(getRowData());
 		}

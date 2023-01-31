@@ -10,23 +10,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.faces.FacesException;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIOutput;
-import javax.faces.component.UIPanel;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.ExceptionQueuedEvent;
-import javax.faces.event.ExceptionQueuedEventContext;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.faces.event.PostRestoreStateEvent;
-import javax.faces.event.SystemEvent;
-import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.el.ExpressionFactoryImpl;
 import org.apache.myfaces.test.mock.MockApplication20;
@@ -50,6 +33,24 @@ import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
+
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.component.UIInput;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.component.UIPanel;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ComponentSystemEvent;
+import jakarta.faces.event.ExceptionQueuedEvent;
+import jakarta.faces.event.ExceptionQueuedEventContext;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
+import jakarta.faces.event.PostRestoreStateEvent;
+import jakarta.faces.event.SystemEvent;
+import jakarta.faces.lifecycle.Lifecycle;
 
 public class JsfViewFactoryTests {
 
@@ -184,10 +185,15 @@ public class JsfViewFactoryTests {
 		UIPanel panel = new UIPanel();
 		panel.setId("panel1");
 		UIOutput output = new UIOutput();
-		output.setValueBinding("binding", this.jsfMock.facesContext().getApplication().createValueBinding("#{myBean.output}"));
+		FacesContext facesContext = this.jsfMock.facesContext();
+		output.setValueExpression("binding",
+				facesContext.getApplication().getExpressionFactory().createValueExpression(
+						facesContext.getELContext(), "#{myBean.output}", UIOutput.class));
 		output.setId("output1");
 		UIInput input = new UIInput();
-		input.setValueBinding("binding", this.jsfMock.facesContext().getApplication().createValueBinding("#{myBean.input}"));
+		input.setValueExpression("binding",
+				facesContext.getApplication().getExpressionFactory().createValueExpression(
+						facesContext.getELContext(), "#{myBean.input}", UIInput.class));
 		input.setId("input1");
 
 		existingRoot.getChildren().add(panel);
@@ -245,7 +251,7 @@ public class JsfViewFactoryTests {
 
 		assertNotNull(restoredView, "A View was not restored");
 		assertTrue(restoredView instanceof JsfView, "A JsfView was expected");
-		assertTrue(((JsfView) restoredView).getViewRoot() != null, "An ViewRoot was not set");
+		assertNotNull(((JsfView) restoredView).getViewRoot(), "An ViewRoot was not set");
 		assertEquals(VIEW_ID, ((JsfView) restoredView).getViewRoot().getViewId(), "View name did not match");
 		assertFalse(restoredView.hasFlowEvent(), "An unexpected event was signaled,");
 		assertTrue(existingRoot.isPostRestoreStateEventSeen(), "The PostRestoreViewEvent was not seen");
@@ -302,7 +308,7 @@ public class JsfViewFactoryTests {
 				application.getExceptionQueuedEventContext().getException(), "Expected same exception");
 	}
 
-	private class NoExecutionLifecycle extends FlowLifecycle {
+	private static class NoExecutionLifecycle extends FlowLifecycle {
 
 		public NoExecutionLifecycle(Lifecycle delegate) {
 			super(delegate);
@@ -313,7 +319,7 @@ public class JsfViewFactoryTests {
 		}
 	}
 
-	private class TrackingPhaseListener implements PhaseListener {
+	private static class TrackingPhaseListener implements PhaseListener {
 
 		private final List<String> phaseCallbacks = new ArrayList<>();
 
@@ -336,7 +342,7 @@ public class JsfViewFactoryTests {
 		}
 	}
 
-	private class NormalViewState implements StateDefinition {
+	private static class NormalViewState implements StateDefinition {
 
 		public boolean isViewState() {
 			return true;
@@ -363,7 +369,7 @@ public class JsfViewFactoryTests {
 		}
 	}
 
-	protected class TestBean {
+	public static class TestBean {
 
 		UIOutput output;
 		UIInput input;

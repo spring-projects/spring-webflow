@@ -16,7 +16,6 @@
 
 package org.springframework.faces.webflow;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.Principal;
@@ -27,7 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.faces.context.ExternalContext;
+import jakarta.faces.context.ExternalContext;
 
 public class MockJsfExternalContext extends ExternalContext {
 
@@ -39,7 +38,7 @@ public class MockJsfExternalContext extends ExternalContext {
 
 	private Map<String, String> requestParameterMap = Collections.emptyMap();
 
-	public void dispatch(String arg0) throws IOException {
+	public void dispatch(String arg0) {
 	}
 
 	public String encodeActionURL(String arg0) {
@@ -51,6 +50,11 @@ public class MockJsfExternalContext extends ExternalContext {
 	}
 
 	public String encodeResourceURL(String arg0) {
+		return null;
+	}
+
+	@Override
+	public String encodeWebsocketURL(String url) {
 		return null;
 	}
 
@@ -70,7 +74,7 @@ public class MockJsfExternalContext extends ExternalContext {
 		return null;
 	}
 
-	public Map<String, Object> getInitParameterMap() {
+	public Map<String, String> getInitParameterMap() {
 		return null;
 	}
 
@@ -184,6 +188,11 @@ public class MockJsfExternalContext extends ExternalContext {
 	public void log(String arg0, Throwable arg1) {
 	}
 
-	public void redirect(String arg0) throws IOException {
+	public void redirect(String arg0) {
+	}
+
+	@Override
+	public void release() {
+
 	}
 }

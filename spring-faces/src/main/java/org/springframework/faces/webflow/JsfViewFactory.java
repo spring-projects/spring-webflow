@@ -17,19 +17,19 @@ package org.springframework.faces.webflow;
 
 import java.util.EnumSet;
 import java.util.Iterator;
-import javax.el.ValueExpression;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.EditableValueHolder;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.visit.VisitContext;
-import javax.faces.component.visit.VisitHint;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ExceptionQueuedEvent;
-import javax.faces.event.ExceptionQueuedEventContext;
-import javax.faces.event.PhaseId;
-import javax.faces.lifecycle.Lifecycle;
+import jakarta.el.ValueExpression;
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.component.EditableValueHolder;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.component.visit.VisitContext;
+import jakarta.faces.component.visit.VisitHint;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ExceptionQueuedEvent;
+import jakarta.faces.event.ExceptionQueuedEventContext;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.lifecycle.Lifecycle;
 
 import com.sun.faces.component.CompositeComponentStackManager;
 import org.apache.commons.logging.Log;
@@ -159,7 +159,7 @@ public class JsfViewFactory implements ViewFactory {
 	 */
 	private void processTree(FacesContext context, UIComponent component) {
 
-		Object mojarraTreeHandler = null;
+		MojarraProcessTreeHandler mojarraTreeHandler = null;
 		if (isMojarraPresent() && !JsfRuntimeInformation.isMyFacesInUse()) {
 			mojarraTreeHandler = new MojarraProcessTreeHandler().handleBefore(context, component);
 		}
@@ -181,7 +181,7 @@ public class JsfViewFactory implements ViewFactory {
 		}
 
 		if (mojarraTreeHandler != null) {
-			((MojarraProcessTreeHandler) mojarraTreeHandler).handleAfter();
+			mojarraTreeHandler.handleAfter();
 		}
 	}
 
@@ -193,7 +193,7 @@ public class JsfViewFactory implements ViewFactory {
 		catch (IllegalArgumentException ex) {
 			// JSF < 2.1
 		}
-		String name = "javax.faces.visit.SKIP_ITERATION";
+		String name = "jakarta.faces.visit.SKIP_ITERATION";
 		facesContext.getAttributes().put(name, true);
 		try {
 			VisitContext visitContext = (visitHint != null ?

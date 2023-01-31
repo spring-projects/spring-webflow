@@ -18,10 +18,10 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.util.Locale;
 
-import javax.faces.FacesException;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ViewHandler;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
 
 public class MockViewHandler extends ViewHandler {
 	private UIViewRoot createViewRoot;
@@ -65,6 +65,11 @@ public class MockViewHandler extends ViewHandler {
 	}
 
 	public String getResourceURL(FacesContext context, String path) {
+		return null;
+	}
+
+	@Override
+	public String getWebsocketURL(FacesContext context, String channel) {
 		return null;
 	}
 

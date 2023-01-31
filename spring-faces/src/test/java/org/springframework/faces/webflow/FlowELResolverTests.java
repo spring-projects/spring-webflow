@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.el.ELContext;
+import jakarta.el.ELContext;
 
 import org.apache.myfaces.test.el.MockELContext;
 import org.junit.jupiter.api.AfterEach;

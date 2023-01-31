@@ -4,27 +4,27 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKitFactory;
-
-import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.base.junit.AbstractJsfTestCase;
 import org.apache.myfaces.test.mock.MockApplicationFactory;
-import org.apache.myfaces.test.mock.MockFacesContext20;
+import org.apache.myfaces.test.mock.MockFacesContext;
 import org.apache.myfaces.test.mock.MockFacesContextFactory;
 import org.apache.myfaces.test.mock.MockRenderKitFactory;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
 import org.junit.Test;
 
+import jakarta.faces.application.ApplicationFactory;
+import jakarta.faces.context.FacesContextFactory;
+import jakarta.faces.event.PhaseEvent;
+import jakarta.faces.event.PhaseId;
+import jakarta.faces.event.PhaseListener;
+import jakarta.faces.lifecycle.LifecycleFactory;
+import jakarta.faces.render.RenderKitFactory;
+
 public class JsfUtilsTests extends AbstractJsfTestCase {
 
-	public JsfUtilsTests(String name) {
-		super(name);
+	public JsfUtilsTests() {
+		super();
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		lifecycle.addPhaseListener(listener2);
 		PhaseListener listener3 = new OrderVerifyingPhaseListener(null, list);
 		lifecycle.addPhaseListener(listener3);
-		JsfUtils.notifyBeforeListeners(PhaseId.ANY_PHASE, lifecycle, new MockFacesContext20());
+		JsfUtils.notifyBeforeListeners(PhaseId.ANY_PHASE, lifecycle, new MockFacesContext());
 		assertEquals(listener1, list.get(0));
 		assertEquals(listener2, list.get(1));
 		assertEquals(listener3, list.get(2));
@@ -53,7 +53,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		lifecycle.addPhaseListener(listener2);
 		PhaseListener listener3 = new OrderVerifyingPhaseListener(list, null);
 		lifecycle.addPhaseListener(listener3);
-		JsfUtils.notifyAfterListeners(PhaseId.ANY_PHASE, lifecycle, new MockFacesContext20());
+		JsfUtils.notifyAfterListeners(PhaseId.ANY_PHASE, lifecycle, new MockFacesContext());
 		assertEquals(listener3, list.get(0));
 		assertEquals(listener2, list.get(1));
 		assertEquals(listener1, list.get(2));
@@ -78,7 +78,7 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		}
 	}
 
-	private class OrderVerifyingPhaseListener implements PhaseListener {
+	private static class OrderVerifyingPhaseListener implements PhaseListener {
 
 		private final List<OrderVerifyingPhaseListener> afterPhaseList;
 		private final List<OrderVerifyingPhaseListener> beforePhaseList;

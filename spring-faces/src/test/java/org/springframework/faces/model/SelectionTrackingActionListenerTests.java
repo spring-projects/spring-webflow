@@ -1,22 +1,13 @@
 package org.springframework.faces.model;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.faces.component.UIColumn;
-import javax.faces.component.UICommand;
-import javax.faces.component.UIData;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-
 
 import org.apache.myfaces.test.mock.MockFacesContext;
 import org.junit.jupiter.api.AfterEach;
@@ -26,6 +17,15 @@ import org.springframework.faces.webflow.JSFMockHelper;
 import org.springframework.util.ReflectionUtils;
 
 import com.sun.faces.facelets.component.UIRepeat;
+
+import jakarta.faces.component.UIColumn;
+import jakarta.faces.component.UICommand;
+import jakarta.faces.component.UIData;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.ActionListener;
 
 public class SelectionTrackingActionListenerTests {
 
@@ -92,7 +92,7 @@ public class SelectionTrackingActionListenerTests {
 
 		this.dataModel.setRowIndex(2);
 		assertFalse(this.dataModel.isCurrentRowSelected());
-		assertTrue(this.dataModel.getSelectedRow() != this.dataModel.getRowData());
+		assertNotSame(this.dataModel.getSelectedRow(), this.dataModel.getRowData());
 	}
 
 	@Test
@@ -120,14 +120,14 @@ public class SelectionTrackingActionListenerTests {
 
 		ReflectionUtils.invokeMethod(indexMutator, uiRepeat, new MockFacesContext(), 2);
 		assertFalse(this.dataModel.isCurrentRowSelected());
-		assertTrue(this.dataModel.getSelectedRow() != this.dataModel.getRowData());
+		assertNotSame(this.dataModel.getSelectedRow(), this.dataModel.getRowData());
 	}
 
-	private class TestRowData {
+	private static class TestRowData {
 
 	}
 
-	private class TestDelegateActionListener implements ActionListener {
+	private static class TestDelegateActionListener implements ActionListener {
 
 		public boolean processedEvent = false;
 

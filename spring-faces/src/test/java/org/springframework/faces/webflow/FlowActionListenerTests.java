@@ -4,12 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.el.ELContext;
-import javax.el.MethodExpression;
-import javax.el.MethodInfo;
-import javax.faces.component.UICommand;
-import javax.faces.event.ActionEvent;
-
 import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +13,12 @@ import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+
+import jakarta.el.ELContext;
+import jakarta.el.MethodExpression;
+import jakarta.el.MethodInfo;
+import jakarta.faces.component.UICommand;
+import jakarta.faces.event.ActionEvent;
 
 public class FlowActionListenerTests {
 
@@ -78,7 +78,7 @@ public class FlowActionListenerTests {
 				"An unexpected event was signaled");
 	}
 
-	private class MethodExpressionStub extends MethodExpression {
+	private static class MethodExpressionStub extends MethodExpression {
 
 		String result;
 
@@ -117,7 +117,7 @@ public class FlowActionListenerTests {
 		}
 	}
 
-	private class MockViewState extends ViewState {
+	private static class MockViewState extends ViewState {
 
 		public MockViewState() {
 			super(new Flow("mockFlow"), "mockView", context -> {

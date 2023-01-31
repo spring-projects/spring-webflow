@@ -17,16 +17,17 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 import java.net.URL;
-import javax.faces.FacesException;
-import javax.faces.application.ResourceHandler;
-import javax.faces.application.ResourceHandlerWrapper;
-import javax.faces.application.ViewResource;
-import javax.faces.context.FacesContext;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
+
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ResourceHandler;
+import jakarta.faces.application.ResourceHandlerWrapper;
+import jakarta.faces.application.ViewResource;
+import jakarta.faces.context.FacesContext;
 
 /**
  * Resolves Facelets resources using Spring Resource paths such as "classpath:foo.xhtml".

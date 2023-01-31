@@ -2,13 +2,13 @@ package org.springframework.faces.webflow;
 
 import java.util.Map;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.ExternalContext;
-import javax.faces.lifecycle.Lifecycle;
-
 import org.apache.myfaces.test.mock.MockFacesContext20;
+
+import jakarta.faces.FactoryFinder;
+import jakarta.faces.application.Application;
+import jakarta.faces.application.ApplicationFactory;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.lifecycle.Lifecycle;
 
 public class MockBaseFacesContext extends MockFacesContext20 {
 
@@ -28,6 +28,11 @@ public class MockBaseFacesContext extends MockFacesContext20 {
 
 	public Map<Object, Object> getAttributes() {
 		return super.getAttributes();
+	}
+
+	@Override
+	public Lifecycle getLifecycle() {
+		return null;
 	}
 
 	public Application getApplication() {

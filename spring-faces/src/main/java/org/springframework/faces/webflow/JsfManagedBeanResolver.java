@@ -18,10 +18,10 @@ package org.springframework.faces.webflow;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.faces.application.Application;
-import javax.faces.context.FacesContext;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
+import jakarta.faces.application.Application;
+import jakarta.faces.context.FacesContext;
 
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContext;
@@ -109,8 +109,7 @@ public class JsfManagedBeanResolver extends ELResolver {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		Assert.notNull(requestContext, "RequestContext cannot be null - This resolver is only intended to be invoked "
 				+ "from an active Flow Execution.");
-		FacesContext facesContext = FlowFacesContext.newInstance(requestContext, FlowLifecycle.newInstance());
-		return facesContext;
+		return FlowFacesContext.newInstance(requestContext, FlowLifecycle.newInstance());
 	}
 
 	/**
