@@ -11,7 +11,6 @@ import org.apache.myfaces.test.mock.MockFacesContextFactory;
 import org.apache.myfaces.test.mock.MockRenderKitFactory;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
 import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
-import org.junit.Test;
 
 import jakarta.faces.application.ApplicationFactory;
 import jakarta.faces.context.FacesContextFactory;
@@ -20,6 +19,11 @@ import jakarta.faces.event.PhaseId;
 import jakarta.faces.event.PhaseListener;
 import jakarta.faces.lifecycle.LifecycleFactory;
 import jakarta.faces.render.RenderKitFactory;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsfUtilsTests extends AbstractJsfTestCase {
 

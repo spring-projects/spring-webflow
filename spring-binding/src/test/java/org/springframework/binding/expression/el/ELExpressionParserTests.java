@@ -1,11 +1,5 @@
 package org.springframework.binding.expression.el;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.beans.FeatureDescriptor;
-import java.util.Iterator;
-
 import jakarta.el.ELContext;
 import jakarta.el.ELResolver;
 import jakarta.el.FunctionMapper;
@@ -14,12 +8,16 @@ import jakarta.el.VariableMapper;
 import org.apache.el.ExpressionFactoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionVariable;
 import org.springframework.binding.expression.ParserException;
 import org.springframework.binding.expression.ValueCoercionException;
 import org.springframework.binding.expression.support.FluentParserContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ELExpressionParserTests {
 
@@ -231,10 +229,6 @@ public class ELExpressionParserTests {
 					return new ELResolver() {
 						public Class<?> getCommonPropertyType(ELContext arg0, Object arg1) {
 							return Object.class;
-						}
-
-						public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext arg0, Object arg1) {
-							return null;
 						}
 
 						public Class<?> getType(ELContext arg0, Object arg1, Object arg2) {
