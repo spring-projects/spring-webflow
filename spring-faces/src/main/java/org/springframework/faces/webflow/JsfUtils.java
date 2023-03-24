@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.springframework.faces.webflow;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import jakarta.faces.FactoryFinder;
 import jakarta.faces.application.ApplicationFactory;
 import jakarta.faces.component.visit.VisitContextFactory;
@@ -67,11 +68,11 @@ public class JsfUtils {
 	}
 
 	public static boolean isFlowRequest() {
-		return RequestContextHolder.getRequestContext() != null;
+		return (RequestContextHolder.getRequestContext() != null);
 	}
 
 	public static boolean isAsynchronousFlowRequest() {
-		return isFlowRequest() && RequestContextHolder.getRequestContext().getExternalContext().isAjaxRequest();
+		return (isFlowRequest() && RequestContextHolder.getRequestContext().getExternalContext().isAjaxRequest());
 	}
 
 	/**

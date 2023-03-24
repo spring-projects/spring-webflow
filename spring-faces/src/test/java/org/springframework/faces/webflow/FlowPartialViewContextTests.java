@@ -1,20 +1,20 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import jakarta.faces.context.PartialViewContext;
 import jakarta.faces.context.PartialViewContextWrapper;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
 import org.springframework.webflow.test.MockRequestContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FlowPartialViewContextTests {
 

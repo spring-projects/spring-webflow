@@ -4,14 +4,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.myfaces.test.base.junit.AbstractJsfTestCase;
-import org.apache.myfaces.test.mock.MockApplicationFactory;
-import org.apache.myfaces.test.mock.MockFacesContext;
-import org.apache.myfaces.test.mock.MockFacesContextFactory;
-import org.apache.myfaces.test.mock.MockRenderKitFactory;
-import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
-import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
-
 import jakarta.faces.application.ApplicationFactory;
 import jakarta.faces.context.FacesContextFactory;
 import jakarta.faces.event.PhaseEvent;
@@ -19,6 +11,13 @@ import jakarta.faces.event.PhaseId;
 import jakarta.faces.event.PhaseListener;
 import jakarta.faces.lifecycle.LifecycleFactory;
 import jakarta.faces.render.RenderKitFactory;
+import org.apache.myfaces.test.base.junit.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockApplicationFactory;
+import org.apache.myfaces.test.mock.MockFacesContext;
+import org.apache.myfaces.test.mock.MockFacesContextFactory;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.lifecycle.MockLifecycle;
+import org.apache.myfaces.test.mock.lifecycle.MockLifecycleFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

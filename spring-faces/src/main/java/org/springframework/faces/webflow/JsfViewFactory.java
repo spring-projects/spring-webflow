@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package org.springframework.faces.webflow;
 
 import java.util.EnumSet;
 import java.util.Iterator;
+
+import com.sun.faces.component.CompositeComponentStackManager;
 import jakarta.el.ValueExpression;
 import jakarta.faces.application.ViewHandler;
 import jakarta.faces.component.EditableValueHolder;
@@ -30,8 +32,6 @@ import jakarta.faces.event.ExceptionQueuedEvent;
 import jakarta.faces.event.ExceptionQueuedEventContext;
 import jakarta.faces.event.PhaseId;
 import jakarta.faces.lifecycle.Lifecycle;
-
-import com.sun.faces.component.CompositeComponentStackManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -157,9 +157,10 @@ public class JsfViewFactory implements ViewFactory {
 	/**
 	 * Walk the component tree to perform any required per-component operations.
 	 */
+	@SuppressWarnings("CastCanBeRemovedNarrowingVariableType")
 	private void processTree(FacesContext context, UIComponent component) {
 
-		MojarraProcessTreeHandler mojarraTreeHandler = null;
+		Object mojarraTreeHandler = null;
 		if (isMojarraPresent() && !JsfRuntimeInformation.isMyFacesInUse()) {
 			mojarraTreeHandler = new MojarraProcessTreeHandler().handleBefore(context, component);
 		}
@@ -181,7 +182,7 @@ public class JsfViewFactory implements ViewFactory {
 		}
 
 		if (mojarraTreeHandler != null) {
-			mojarraTreeHandler.handleAfter();
+			((MojarraProcessTreeHandler) mojarraTreeHandler).handleAfter();
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.webflow.context.servlet.AjaxHandler;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.webflow.context.servlet.AjaxHandler;
 import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 
 /**

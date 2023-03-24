@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,6 @@ package org.springframework.faces.mvc;
 
 import java.util.Map;
 
-import org.springframework.faces.webflow.FacesContextHelper;
-import org.springframework.faces.webflow.JsfUtils;
-import org.springframework.util.Assert;
-import org.springframework.web.servlet.support.RequestContextUtils;
-import org.springframework.web.servlet.view.AbstractUrlBasedView;
-
 import jakarta.faces.application.ViewHandler;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
@@ -31,6 +25,12 @@ import jakarta.faces.lifecycle.Lifecycle;
 import jakarta.faces.lifecycle.LifecycleFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.faces.webflow.FacesContextHelper;
+import org.springframework.faces.webflow.JsfUtils;
+import org.springframework.util.Assert;
+import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 /**
  * JSF View that renders a transient (stateless) JSF view template. The UIViewRoot will not be saved and thus the JSF
@@ -47,8 +47,8 @@ public class JsfView extends AbstractUrlBasedView {
 		this.facesLifecycle = createFacesLifecycle();
 	}
 
-	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
-			HttpServletResponse response) {
+	protected void renderMergedOutputModel(
+			Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		FacesContextHelper facesContextHelper = new FacesContextHelper();
 		FacesContext facesContext = facesContextHelper.getFacesContext(getServletContext(), request, response);

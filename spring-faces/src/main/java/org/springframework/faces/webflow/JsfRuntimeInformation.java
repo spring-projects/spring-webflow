@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2017 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package org.springframework.faces.webflow;
 
-import org.springframework.util.ClassUtils;
-
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.FacesContextWrapper;
+
+import org.springframework.util.ClassUtils;
 
 /**
  * Helper class to provide information about the JSF runtime environment such as

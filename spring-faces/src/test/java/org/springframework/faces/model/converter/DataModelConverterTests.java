@@ -1,20 +1,20 @@
 package org.springframework.faces.model.converter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.faces.model.DataModel;
 import jakarta.faces.model.ListDataModel;
-
 import org.junit.jupiter.api.Test;
+
 import org.springframework.binding.convert.converters.Converter;
 import org.springframework.faces.model.SerializableListDataModel;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DataModelConverterTests {
 

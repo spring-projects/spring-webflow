@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2016 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.springframework.webflow.context.servlet.AbstractAjaxHandler;
-
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.PartialResponseWriter;
@@ -28,6 +26,8 @@ import jakarta.faces.render.RenderKit;
 import jakarta.faces.render.RenderKitFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.webflow.context.servlet.AbstractAjaxHandler;
 
 /**
  * Ajax handler for JSF 2 requests that can identify JSF 2 Ajax requests and send redirect instructions back to the

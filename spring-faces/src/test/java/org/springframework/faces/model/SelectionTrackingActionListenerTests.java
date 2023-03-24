@@ -1,23 +1,10 @@
 package org.springframework.faces.model;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.myfaces.test.mock.MockFacesContext;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.faces.webflow.JSFMockHelper;
-import org.springframework.util.ReflectionUtils;
-
 import com.sun.faces.facelets.component.UIRepeat;
-
 import jakarta.faces.component.UIColumn;
 import jakarta.faces.component.UICommand;
 import jakarta.faces.component.UIData;
@@ -26,6 +13,18 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.AbortProcessingException;
 import jakarta.faces.event.ActionEvent;
 import jakarta.faces.event.ActionListener;
+import org.apache.myfaces.test.mock.MockFacesContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.faces.webflow.JSFMockHelper;
+import org.springframework.util.ReflectionUtils;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SelectionTrackingActionListenerTests {
 

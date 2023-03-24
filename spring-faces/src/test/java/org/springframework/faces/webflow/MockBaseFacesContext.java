@@ -2,13 +2,12 @@ package org.springframework.faces.webflow;
 
 import java.util.Map;
 
-import org.apache.myfaces.test.mock.MockFacesContext20;
-
 import jakarta.faces.FactoryFinder;
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationFactory;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.lifecycle.Lifecycle;
+import org.apache.myfaces.test.mock.MockFacesContext20;
 
 public class MockBaseFacesContext extends MockFacesContext20 {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class FlowResourceFlowViewResolver implements FlowViewResolver {
 
-	private static final boolean JSTL_PRESENT = ClassUtils.isPresent("jakarta.servlet.jsp.jstl.fmt.LocalizationContext", FlowResourceFlowViewResolver.class.getClassLoader());
+	private static final boolean JSTL_PRESENT = ClassUtils.isPresent(
+			"jakarta.servlet.jsp.jstl.fmt.LocalizationContext", FlowResourceFlowViewResolver.class.getClassLoader());
 
 	private String defaultViewSuffix = ".jsp";
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2018 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.net.URL;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
-
 import jakarta.faces.FacesException;
 import jakarta.faces.application.ResourceHandler;
 import jakarta.faces.application.ResourceHandlerWrapper;
 import jakarta.faces.application.ViewResource;
 import jakarta.faces.context.FacesContext;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Resolves Facelets resources using Spring Resource paths such as "classpath:foo.xhtml".

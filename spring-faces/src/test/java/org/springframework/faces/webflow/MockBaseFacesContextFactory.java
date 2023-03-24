@@ -1,8 +1,5 @@
 package org.springframework.faces.webflow;
 
-import org.apache.myfaces.test.mock.MockExternalContext;
-import org.apache.myfaces.test.mock.MockHttpServletResponse;
-
 import jakarta.faces.FacesException;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
@@ -11,6 +8,8 @@ import jakarta.faces.lifecycle.Lifecycle;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.myfaces.test.mock.MockExternalContext;
+import org.apache.myfaces.test.mock.MockHttpServletResponse;
 
 public class MockBaseFacesContextFactory extends FacesContextFactory {
 

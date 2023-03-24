@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2015 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  */
 package org.springframework.faces.security;
 
-import org.springframework.security.taglibs.authz.AbstractAuthorizeTag;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
 import jakarta.el.ValueExpression;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.facelets.FaceletContext;
@@ -27,6 +23,10 @@ import jakarta.faces.view.facelets.TagHandler;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+
+import org.springframework.security.taglibs.authz.AbstractAuthorizeTag;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * A concrete implementation of {@link AbstractAuthorizeTag} for use with standard Facelets rendering technology.

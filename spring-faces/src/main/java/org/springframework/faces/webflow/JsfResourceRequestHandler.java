@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 
-import org.springframework.web.HttpRequestHandler;
-import org.springframework.web.context.support.WebApplicationObjectSupport;
-
 import jakarta.faces.application.ResourceHandler;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.web.HttpRequestHandler;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 /**
  * Handles a request by delegating to the JSF ResourceHandler, which serves web

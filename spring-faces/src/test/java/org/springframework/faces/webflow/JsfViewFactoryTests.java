@@ -1,38 +1,8 @@
 package org.springframework.faces.webflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.apache.el.ExpressionFactoryImpl;
-import org.apache.myfaces.test.mock.MockApplication20;
-import org.easymock.EasyMock;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.binding.expression.ExpressionParser;
-import org.springframework.binding.expression.support.FluentParserContext;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.webflow.core.collection.LocalAttributeMap;
-import org.springframework.webflow.core.collection.LocalParameterMap;
-import org.springframework.webflow.core.collection.MutableAttributeMap;
-import org.springframework.webflow.definition.FlowDefinition;
-import org.springframework.webflow.definition.StateDefinition;
-import org.springframework.webflow.execution.RequestContext;
-import org.springframework.webflow.execution.RequestContextHolder;
-import org.springframework.webflow.execution.View;
-import org.springframework.webflow.execution.ViewFactory;
-import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
-import org.springframework.webflow.test.MockExternalContext;
 
 import jakarta.faces.FacesException;
 import jakarta.faces.application.ViewHandler;
@@ -51,6 +21,36 @@ import jakarta.faces.event.PhaseListener;
 import jakarta.faces.event.PostRestoreStateEvent;
 import jakarta.faces.event.SystemEvent;
 import jakarta.faces.lifecycle.Lifecycle;
+import org.apache.el.ExpressionFactoryImpl;
+import org.apache.myfaces.test.mock.MockApplication20;
+import org.easymock.EasyMock;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.binding.expression.ExpressionParser;
+import org.springframework.binding.expression.support.FluentParserContext;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.webflow.core.collection.LocalAttributeMap;
+import org.springframework.webflow.core.collection.LocalParameterMap;
+import org.springframework.webflow.core.collection.MutableAttributeMap;
+import org.springframework.webflow.definition.FlowDefinition;
+import org.springframework.webflow.definition.StateDefinition;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.View;
+import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
+import org.springframework.webflow.test.MockExternalContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsfViewFactoryTests {
 
