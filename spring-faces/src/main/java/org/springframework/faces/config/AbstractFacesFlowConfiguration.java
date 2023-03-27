@@ -23,7 +23,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.faces.webflow.JsfResourceRequestHandler;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 import org.springframework.webflow.config.FlowDefinitionRegistryBuilder;
@@ -52,11 +51,6 @@ import org.springframework.webflow.executor.FlowExecutor;
  * @since 2.4
  */
 public class AbstractFacesFlowConfiguration implements ApplicationContextAware {
-
-	private static final boolean isRichFacesPresent =
-			ClassUtils.isPresent("org.richfaces.application.CoreConfiguration",
-					ResourcesBeanDefinitionParser.class.getClassLoader());
-
 
 	private ApplicationContext applicationContext;
 
@@ -108,9 +102,6 @@ public class AbstractFacesFlowConfiguration implements ApplicationContextAware {
 
 		Map<String, Object> urlMap = new HashMap<>();
 		urlMap.put("/jakarta.faces.resource/**", jsfResourceRequestHandler());
-		if (isRichFacesPresent) {
-			urlMap.put("/rfRes/**", jsfResourceRequestHandler());
-		}
 
 		SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
 		handlerMapping.setUrlMap(urlMap);

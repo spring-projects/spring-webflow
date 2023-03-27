@@ -25,7 +25,6 @@ import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
@@ -40,10 +39,6 @@ import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 public class ResourcesBeanDefinitionParser implements BeanDefinitionParser {
 
 	private static final String SERVLET_RESOURCE_HANDLER_BEAN_NAME = "jsfResourceRequestHandler";
-
-	private static final boolean isRichFacesPresent =
-			ClassUtils.isPresent("org.richfaces.application.CoreConfiguration",
-					ResourcesBeanDefinitionParser.class.getClassLoader());
 
 
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -77,10 +72,6 @@ public class ResourcesBeanDefinitionParser implements BeanDefinitionParser {
 	private void registerHandlerMappings(Element element, Object source, ParserContext parserContext) {
 		Map<String, String> urlMap = new ManagedMap<>();
 		urlMap.put("/jakarta.faces.resource/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);
-
-		if (isRichFacesPresent) {
-			urlMap.put("/rfRes/**", SERVLET_RESOURCE_HANDLER_BEAN_NAME);
-		}
 
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(SimpleUrlHandlerMapping.class);
 		beanDefinition.setSource(source);
