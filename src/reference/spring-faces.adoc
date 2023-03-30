@@ -5,7 +5,7 @@ Spring Web Flow provides a JavaServer Faces (JSF) integration that lets you use 
 Web Flow also provides a Spring Security tag library for use in JSF environments.
 See <<_spring_faces_security_taglib>> for more details.
 
-Spring Web Flow 2.5 requires JSF 2.2 or higher.
+Spring Web Flow 3.0 requires JSF 4.0 or higher.
 
 [[_spring_faces_config_web.xml]]
 === Configuring `web.xml`
@@ -540,32 +540,9 @@ Generally, when working with these components, JSF must take complete control of
 Spring Web Flow has been tested with file upload components from PrimeFaces.
 Check the documentation of your JSF component library for other providers to see how to configure file upload.
 
-==== File Uploads with PrimeFaces
-
-PrimeFaces provides a `<p:fileUpload>` component for uploading files.
-To use the component, you need to configure the `org.primefaces.webapp.filter.FileUploadFilter` servlet filter.
-The filter needs to be configured against Spring MVC's `DispatcherServlet` in your `web.xml`, as follows:
-
-====
-[source,xml]
-----
-<filter>
-	<filter-name>PrimeFaces FileUpload Filter</filter-name>
-	<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-</filter>
-<filter-mapping>
-	<filter-name>PrimeFaces FileUpload Filter</filter-name>
-	<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-</filter-mapping>
-
-<context-param>
-	<param-name>primefaces.UPLOADER</param-name>
-	<param-value>commons</param-value>
-</context-param>
-----
-====
-
-For more details, see the https://primefaces.org/documentation.html[PrimeFaces documentation].
+Generally, you'll need to enable multipart support in the Servlet container,
+either by adding a "multipart-config" element to the the `DispatcherServlet` declaration in web.xml,
+or by using a `jakarta.servlet.MultipartConfigElement` in programmatic servlet registration
 
 [[_spring_faces_security_taglib]]
 === Using the Spring Security Facelets Tag Library
