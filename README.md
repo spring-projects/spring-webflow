@@ -37,8 +37,8 @@ See the current
 
 # Samples
 
-Samples can be found in the spring-webflow-samples
-[Github repository](https://github.com/SpringSource/spring-webflow-samples).
+Samples can be found in the
+[spring-webflow-samples](https://github.com/SpringSource/spring-webflow-samples) repository.
 
 ## Code of Conduct
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
@@ -50,18 +50,10 @@ Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
 Download [instructions](https://github.com/SpringSource/spring-webflow/wiki/Downloading-Spring-Web-Flow-Artifacts)
 for Spring Web Flow artifacts via Maven and other build systems are available via the project wiki.
 
-# Issue Tracking
-
-Spring Web Flow's JIRA issue tracker can be found [here](https://jira.springsource.org/browse/SWF). 
-If you think you've found a bug, please consider helping to reproduce it by submitting an issue
-reproduction project via the [spring-webflow-issues](https://github.com/springsource/spring-webflow-issues) repository.
-The [readme](https://github.com/springsource/spring-webflow-issues#readme) provides simple step-by-step instructions.
-
 # Getting support
 
-Check out the [Spring forums](https://forum.spring.io/forumdisplay.php?36-Web-Flow) and the 
-[spring-webflow tag](https://stackoverflow.com/questions/tagged/spring-webflow) on StackOverflow.
-[Commercial support](https://springsource.com/support/springsupport) is available too.
+Please, use the [spring-webflow](https://stackoverflow.com/questions/tagged/spring-webflow) tag on StackOverflow.
+[Commercial support](https://tanzu.vmware.com/spring-runtime) is available too.
 
 # Building from source
 
@@ -101,7 +93,8 @@ creating a new one if necessary, and discuss your ideas with the Spring Web Flow
 
 # License
 
-Spring Web Flow is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+Spring Web Flow is released under version 2.0 of the
+[Apache License](https://www.apache.org/licenses/LICENSE-2.0).
 
 
 
