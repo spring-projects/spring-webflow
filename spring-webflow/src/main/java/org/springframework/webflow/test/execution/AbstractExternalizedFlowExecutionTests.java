@@ -37,7 +37,9 @@ import org.springframework.webflow.test.MockFlowBuilderContext;
  * 
  * @author Keith Donald
  * @author Scott Andrews
+ * @deprecated
  */
+@Deprecated
 public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlowExecutionTests {
 
 	/**
@@ -140,6 +142,7 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 		return new DefaultResourceLoader();
 	}
 
+	@Override
 	protected final FlowDefinition getFlowDefinition() {
 		if (isCacheFlowDefinition() && cachedFlowDefinition != null) {
 			return cachedFlowDefinition;
