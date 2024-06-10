@@ -45,7 +45,7 @@ Samples can be found in the
 ## Code of Conduct
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
 By participating, you  are expected to uphold this code.
-Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+Please report unacceptable behavior to spring-code-of-conduct@spring.io.
 
 # Downloading artifacts
 

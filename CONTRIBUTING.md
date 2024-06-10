@@ -8,7 +8,7 @@ request; this will save time for everyone!_
 
 ## Code of Conduct
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
-By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+By participating, you  are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@spring.io.
 
 ## Understand the basics
 
