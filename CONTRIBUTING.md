@@ -16,10 +16,11 @@ Not sure what a pull request is, or how to submit one?  Take a look at GitHub's
 excellent [help documentation][] first.
 
 
-## Search JIRA first; create an issue if necessary
+## Search existing issues first; create an issue if necessary
 
 Is there already an issue that addresses your concern?  Do a bit of searching
-in our [JIRA issue tracker][] to see if you can find something similar. If not,
+in our [issue tracker](https://github.com/spring-projects/spring-webflow/issues)
+to see if you can find something similar. If not,
 please create a new issue before submitting a pull request unless the change is
 truly trivial, e.g. typo fixes, removing compiler warnings, etc.
 
@@ -29,25 +30,6 @@ If you're considering anything more than correcting a typo or fixing a minor
 bug, please discuss it before submitting a pull request. We're happy to provide
 guidance, but please spend an hour or two researching the subject on your own
 including searching the mailing list for prior discussions.
-
-## Sign the Contributor License Agreement
-
-If you have not previously done so, please fill out and submit the
-[SpringSource CLA form][]. You'll receive a token when this process is complete.
-Keep track of this; you may be asked for it later!
-
-Note that emailing/postal mailing a signed copy is _not_ necessary. Submission
-of the web form is all that is required.
-
-Once you've completed the web form, simply add the following in a comment on
-your pull request:
-
-    I have signed and agree to the terms of the SpringSource Individual
-    Contributor License Agreement.
-
-You do not need to include your token/id. Please add the statement above to all
-future pull requests as well, simply so that the Spring Framework team knows
-immediately that this process is complete.
 
 
 ## Create your branch from `main`
@@ -61,7 +43,7 @@ considered as back-port candidates.
 ## Use short branch names
 
 Branches used when submitting pull requests should preferably be named
-according to JIRA issues, e.g. 'SPR-1234'. Otherwise, use succinct, lower-case,
+according to GitHub issues, e.g. 'gh-1234'. Otherwise, use succinct, lower-case,
 dash (-) delimited names, such as 'fix-warnings', 'fix-typo', etc. In
 [fork-and-edit][] cases, the GitHub default 'patch-1' is fine as well. This is
 important, because branch names show up in the merge commits that result from
@@ -89,7 +71,7 @@ present in the framework.
 
 ```java
 /*
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,10 +98,10 @@ modified a file in 2013 whose header still reads
  * Copyright 2002-2011 the original author or authors.
 ```
 
-then be sure to update it to 2013 appropriately
+then be sure to update it to 2024 appropriately
 
 ```java
- * Copyright 2002-2013 the original author or authors.
+ * Copyright 2002-2024 the original author or authors.
 ```
 
 ## Use @since tags for newly-added public API types and methods
@@ -131,7 +113,7 @@ e.g.
  * ...
  *
  * @author First Last
- * @since 3.2
+ * @since 3.0.1
  * @see ...
  */
 ```
@@ -139,26 +121,26 @@ e.g.
 ## Submit JUnit test cases for all behavior changes
 
 Search the codebase to find related unit tests and add additional @Test methods
-within. It is also acceptable to submit test cases on a per JIRA issue basis,
+within. It is also acceptable to submit test cases on a per GitHub issue basis,
 e.g.
 
 ```java
 package org.springframework.beans.factory.support;
 
 /**
- * Unit tests for SPR-8954, in which a custom {@link InstantiationAwareBeanPostProcessor}
+ * Unit tests for gh-8954, in which a custom {@link InstantiationAwareBeanPostProcessor}
  * forces the predicted type of a FactoryBean, effectively preventing retrieval of the
  * bean from calls to #getBeansOfType(FactoryBean.class). The implementation of
  * {@link AbstractBeanFactory#isFactoryBean(String, RootBeanDefinition)} now ensures
  * that not only the predicted bean type is considered, but also the original bean
  * definition's beanClass.
  *
- * @author Chris Beams
+ * @author First Last
  */
-public class Spr8954Tests {
+public class Gh8954Tests {
 
     @Test
-    public void cornerSpr8954() {
+    public void cornerGh8954() {
         // ...
     }
 }
@@ -225,7 +207,7 @@ Most importantly, please format your commit messages in the following way
      - Typically a hyphen or asterisk is used for the bullet, preceded by a
        single space, with blank lines in between, but conventions vary here
 
-    Issue: SPR-1234, SPR-1235
+    Closes: gh-1234
 
 
 1. Use imperative statements in the subject line, e.g. "Fix broken Javadoc link"
@@ -234,7 +216,7 @@ Most importantly, please format your commit messages in the following way
 1. Do not end the subject line with a period
 1. Keep the subject line to 50 characters or less if possible
 1. Wrap lines in the body at 72 characters or less
-1. Mention associated JIRA issue(s) at the end of the commit comment, prefixed
+1. Mention associated GitHub issue(s) at the end of the commit comment, prefixed
    with "Issue: " as above
 1. In the body of the commit message, explain how things worked before this
    commit, what has changed, and how things work now
@@ -265,20 +247,13 @@ In the body:
 1. Explain your use case. What led you to submit this change? Why were existing
     mechanisms in the framework insufficient? Make a case that this is a
     general-purpose problem and that yours is a general-purpose solution, etc.
-1. Add any additional information and ask questions; start a conversation, or
-    continue one from JIRA
-1. Mention the JIRA issue ID
-1. Also mention that you have submitted the CLA as described above
+1. Add any additional information and ask questions
+1. Mention related any GitHub issue ID's
 
 Note that for pull requests containing a single commit, GitHub will default the
 subject line and body of the pull request to match the subject line and body of
 the commit message. This is fine, but please also include the items above in the
 body of the request.
-
-
-## Mention your pull request on the associated JIRA issue
-
-Add a comment to the associated JIRA issue(s) linking to your new pull request.
 
 
 ## Expect discussion and rework
@@ -297,8 +272,6 @@ against the branch used to submit your pull request. i.e. you do not need to
 issue a new pull request when asked to make changes.
 
 [help documentation]: https://help.github.com/send-pull-requests
-[JIRA issue tracker]: https://jira.springsource.org/browse/SWF
-[SpringSource CLA form]: https://support.springsource.com/spring_committer_signup
 [fork-and-edit]: https://github.com/blog/844-forking-with-the-edit-button
 [commit guidelines section of Pro Git]: https://progit.org/book/ch5-2.html#commit_guidelines
 [building from source]: https://github.com/SpringSource/spring-webflow#building-from-source
