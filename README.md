@@ -69,6 +69,9 @@ Compile and test, build all jars, distribution zips and docs:
 ./gradlew build
 ````
 
+Access to https://repo.spring.io/plugins-release requires authetication.
+The `SPRING_REPOSITORY_USERNAME` and `SPRING_REPOSITORY_PASSWORD` environment variables should be exposed to the build.
+
 Install into your local Maven repository:
 ````
 ./gradlew install

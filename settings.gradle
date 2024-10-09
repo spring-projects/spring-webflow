@@ -1,7 +1,14 @@
 pluginManagement {
 	repositories {
 		gradlePluginPortal()
-		maven { url 'https://repo.spring.io/plugins-release' }
+		maven {
+			name "spring-plugins"
+			url "https://repo.spring.io/plugins-release/"
+			credentials {
+				username System.env.SPRING_REPOSITORY_USERNAME
+				password System.env.SPRING_REPOSITORY_PASSWORD
+			}
+		}
 	}
 }
 
