@@ -1,6 +1,5 @@
 plugins {
 	id 'io.spring.dependency-management' version '1.1.3' apply false
-	id 'com.jfrog.artifactory' version '5.1.4' apply false
 	id 'org.asciidoctor.jvm.pdf' version '3.3.2'
 	id 'org.asciidoctor.jvm.gems' version '3.3.2'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
@@ -19,6 +18,7 @@ allprojects {
 	apply plugin: "io.spring.dependency-management"
 	apply plugin: "org.springframework.build.optional-dependencies"
 	apply from: "${rootProject.projectDir}/ide.gradle"
+	apply from: "${rootDir}/gradle/publications.gradle"
 
 	dependencyManagement {
 		imports {
@@ -111,15 +111,18 @@ configure(javaProjects) { javaProject ->
 		from javadoc
 	}
 
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				from components.java
+				artifact sourcesJar
+				artifact javadocJar
+			}
+		}
 	}
 }
 
 subprojects { subproject ->
-
-	apply from: "${rootDir}/gradle/publish-maven.gradle"
 
 	java {
 		toolchain {
