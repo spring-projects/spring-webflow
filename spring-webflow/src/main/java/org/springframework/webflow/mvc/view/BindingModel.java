@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.Severity;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.BindingResult;
@@ -125,6 +126,12 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 			messageCriteria = new FieldErrorMessage(field);
 		}
 		return toErrors(messageContext.getMessagesByCriteria(messageCriteria), FIELD_ERRORS);
+	}
+
+	// Override to ensure use of overridden getFieldErrors(String)
+	public FieldError getFieldError(String field) {
+		List<FieldError> fieldErrors = getFieldErrors(field);
+		return (!fieldErrors.isEmpty() ? fieldErrors.get(0) : null);
 	}
 
 	public Class<?> getFieldType(String field) {
