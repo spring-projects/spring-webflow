@@ -1,5 +1,4 @@
 apply plugin: "maven-publish"
-apply plugin: "com.jfrog.artifactory"
 
 configurations {
     asciidoctorExtensions
@@ -178,8 +177,4 @@ publishing {
             artifact distZip
         }
     }
-}
-
-artifactoryPublish {
-    publications(publishing.publications.mavenJava)
 }
