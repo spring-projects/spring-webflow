@@ -145,8 +145,10 @@ public abstract class AbstractBindingModelTests {
 	@Test
 	public void testGetFieldErrorsWildcard() {
 		messages.addMessage(new MessageBuilder().source("datum2").error().defaultText("Error").build());
+		List<FieldError> fieldErrors = model.getFieldErrors("da*");
 		assertEquals(1, model.getFieldErrorCount("da*"));
-		FieldError error = model.getFieldError("da*");
+		assertEquals(1, fieldErrors.size());
+		FieldError error = fieldErrors.get(0);
 		assertEquals(null, error.getCode());
 		assertEquals(null, error.getCodes());
 		assertEquals(null, error.getArguments());
