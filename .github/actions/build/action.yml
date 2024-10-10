@@ -24,6 +24,9 @@ inputs:
     description: 'Whether to publish artifacts ready for deployment to Artifactory'
     required: false
     default: 'false'
+  spring-framework-version:
+    description: 'Spring Framework version to use'
+    required: false
 outputs:
   build-scan-url:
     description: 'URL, if any, of the build scan produced by the build'
@@ -46,7 +49,7 @@ runs:
       id: build
       if: ${{ inputs.publish == 'false' }}
       shell: bash
-      run: ./gradlew check
+      run: ./gradlew check ${{ inputs.spring-framework-version != '' && format('-PspringFrameworkVersion={0}', inputs.spring-framework-version) || '' }}
     - name: Publish
       id: publish
       if: ${{ inputs.publish == 'true' }}

@@ -1,0 +1,44 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  ci:
+    name: 'Java ${{ matrix.java.version}} | Spring Framework ${{ matrix.spring.generation}}'
+    if: ${{ github.repository == 'spring-projects/spring-webflow' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java:
+          - version: 17
+            toolchain: false
+        spring:
+          - generation: 6.1.x
+            version: 6.0.13
+          - generation: 6.2.x
+            version: 6.2.0-SNAPSHOT
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v4
+      - name: Build
+        id: build
+        uses: ./.github/actions/build
+        with:
+          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+          java-early-access: ${{ matrix.java.early-access || 'false' }}
+          java-distribution: ${{ matrix.java.distribution }}
+          java-toolchain: ${{ matrix.java.toolchain }}
+          java-version: ${{ matrix.java.version }}
+          spring-framework-version: ${{ matrix.spring.version }}
+      - name: Send Notification
+        if: always()
+        uses: ./.github/actions/send-notification
+        with:
+          build-scan-url: ${{ steps.build.outputs.build-scan-url }}
+          run-name: ${{ format('{0} | Java {1} | Spring Framework {2}', github.ref_name, matrix.java.version,matrix.spring.version) }}
+          status: ${{ job.status }}
+          webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
