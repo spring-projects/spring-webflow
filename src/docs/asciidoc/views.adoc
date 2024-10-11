@@ -360,8 +360,6 @@ In fact, `Formatters` are registered as `GenericConverter` types with Spring's `
 One of the best features of the type conversion is the ability to use annotations for better control over formatting in a concise manner.
 You can place annotations on model attributes and on the arguments of `@Controller` methods that are mapped to requests.
 Spring provides two annotations (`@NumberFormat` and `@DateTimeFormat`), but you can create your own and have them be registered, along with the associated formatting logic.
-You can see examples of the `@DateTimeFormat` annotation in the https://src.springframework.org/svn/spring-samples/travel[Spring Travel] sample and in the https://src.springframework.org/svn/spring-samples/petcare[Petcare] sample, along with other samples in the https://src.springframework.org/svn/spring-samples[Spring Samples] repository.
-// TODO These URLs are wrong, but I can't find the right ones.
 
 [[_converter_dates]]
 ==== Working With Dates
