@@ -22,8 +22,6 @@ jobs:
         env:
           CI: 'true'
           GRADLE_ENTERPRISE_URL: 'https://ge.spring.io'
-          SPRING_REPOSITORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          SPRING_REPOSITORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
         run: ./gradlew -Dorg.gradle.internal.launcher.welcomeMessageEnabled=false --no-daemon --no-parallel --continue build
       - name: Print JVM Thread Dumps When Cancelled
         if: cancelled()
