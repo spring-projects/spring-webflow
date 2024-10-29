@@ -53,7 +53,7 @@ The attributes are compared against the user's granted attributes by a Spring Se
 ----
 ====
 
-By default, a role-based access-decision manager is used to determine if the user is allowed access.
+By default, an authority-based `AuthorizationManager` is used to determine if the user is allowed access.
 This needs to be overridden if your application is not using authorization roles.
 
 [[_flow_security_secured_element_match]]
@@ -100,23 +100,37 @@ This exception is later caught by Spring Security and used to prompt the user to
 It is important that this exception be allowed to travel up the execution stack uninhibited.
 Otherwise, the end user may not be prompted to authenticate.
 
+[[_flow_security_listener_am]]
+==== Custom Authorization Managers
+
+If your application uses authorities that are not role-based, you need to configure a custom `AuthorizaitonManager`.
+You can override the `AuthorityAuthorizationManager` used by default through
+the `authorizationManagerInitializer` property on the security listener. For example:
+
+====
+[source,java]
+----
+@Bean
+SecurityFlowExecutionListener securityFlowExecutionListener() {
+	SecurityFlowExecutionListener listener = new SecurityFlowExecutionListener();
+	listener.setAuthorizationManagerInitializer(securityRule -> {
+		// ...
+	});
+	return listener;
+}
+----
+====
+
 [[_flow_security_listener_adm]]
 ==== Custom Access Decision Managers
 
-If your application uses authorities that are not role-based, you need to configure a custom `AccessDecisionManager`.
-You can override the default decision manager by setting the `accessDecisionManager` property on the security listener.
-See the https://docs.spring.io/spring-security/site/docs/current/reference/html5/[Spring Security reference documentation] to learn more about decision managers.
-The following example defines a custom access decision manager:
+Spring Security's `AccessDecisionManager` is deprecated and will be removed in a future version.
+Therefore, it is recommended to configure an `AuthorizationManager` instead.
+However, if you must use an `AccessDecisionManager`, you can either set the `accessDecisionManager` property of the security listener,
+or override the `createAccessDecisionManager(SecurityRule)` protected method.
 
-====
-[source,xml]
-----
-<bean id="securityFlowExecutionListener"
-      class="org.springframework.webflow.security.SecurityFlowExecutionListener">
-    <property name="accessDecisionManager" ref="myCustomAccessDecisionManager" />
-</bean>
-----
-====
+To learn more about Spring Security's `AuthorizationManager` API, see
+https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html#_the_authorizationmanager[Spring Security reference documentation].
 
 [[_flow_security_configuration]]
 === Configuring Spring Security
