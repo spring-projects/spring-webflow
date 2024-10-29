@@ -38,6 +38,7 @@ import org.springframework.webflow.execution.RequestContext;
  * Flow security integration with Spring Security
  * 
  * @author Scott Andrews
+ * @author Rossen Stoyanchev
  */
 @SuppressWarnings("deprecation")
 public class SecurityFlowExecutionListener implements FlowExecutionListener {
@@ -62,7 +63,10 @@ public class SecurityFlowExecutionListener implements FlowExecutionListener {
 	/**
 	 * Get the access decision manager that makes flow authorization decisions.
 	 * @return the decision manager
+	 * @deprecated in favor of using an {@code AuthorizationManager} by setting
+	 * {@link #setAuthorizationManagerInitializer(Function)} instead
 	 */
+	@Deprecated(since = "3.0.1", forRemoval = true)
 	public AccessDecisionManager getAccessDecisionManager() {
 		return this.accessDecisionManager;
 	}
@@ -70,7 +74,10 @@ public class SecurityFlowExecutionListener implements FlowExecutionListener {
 	/**
 	 * Set the access decision manager that makes flow authorization decisions.
 	 * @param accessDecisionManager the decision manager to user
+	 * @deprecated in favor of using an {@code AuthorizationManager} by setting
+	 * {@link #setAuthorizationManagerInitializer(Function)} instead
 	 */
+	@Deprecated(since = "3.0.1", forRemoval = true)
 	public void setAccessDecisionManager(AccessDecisionManager accessDecisionManager) {
 		this.accessDecisionManager = accessDecisionManager;
 	}
