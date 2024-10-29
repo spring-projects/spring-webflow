@@ -1,13 +1,11 @@
 package org.springframework.webflow.security;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +22,8 @@ import org.springframework.webflow.engine.ViewState;
 import org.springframework.webflow.engine.support.DefaultTargetStateResolver;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.test.MockRequestContext;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class SecurityFlowExecutionListenerTests {
 
@@ -167,8 +167,10 @@ public class SecurityFlowExecutionListenerTests {
 	}
 
 	private Authentication getAuthentication() {
-		List<GrantedAuthority> authorities = Arrays.<GrantedAuthority> asList(new SimpleGrantedAuthority("ROLE_1"),
-				new SimpleGrantedAuthority("ROLE_2"), new SimpleGrantedAuthority("ROLE_3"));
-		return new UsernamePasswordAuthenticationToken("test", "", authorities);
+		return new UsernamePasswordAuthenticationToken("test", "",
+				List.<GrantedAuthority>of(
+						new SimpleGrantedAuthority("ROLE_1"),
+						new SimpleGrantedAuthority("ROLE_2"),
+						new SimpleGrantedAuthority("ROLE_3")));
 	}
 }

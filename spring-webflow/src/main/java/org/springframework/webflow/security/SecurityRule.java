@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.springframework.webflow.security;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationManagers;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,6 +48,8 @@ public class SecurityRule {
 	private Collection<String> attributes;
 
 	private short comparisonType = COMPARISON_ANY;
+
+	private AuthorizationManager<Object> authorizationManager;
 
 	/**
 	 * Convert attributes to comma separated String
@@ -102,4 +107,24 @@ public class SecurityRule {
 	public void setComparisonType(short comparisonType) {
 		this.comparisonType = comparisonType;
 	}
+
+	/**
+	 * Return an {@link AuthorizationManager} for this security config based on
+	 * {@link AuthorityAuthorizationManager}.
+	 */
+	@SuppressWarnings("unchecked")
+	public AuthorizationManager<Object> getAuthorizationManager() {
+		if (this.authorizationManager == null) {
+			this.authorizationManager = switch (this.comparisonType) {
+				case SecurityRule.COMPARISON_ANY ->
+						AuthorityAuthorizationManager.hasAnyAuthority(this.attributes.toArray(new String[0]));
+				case SecurityRule.COMPARISON_ALL -> AuthorizationManagers.allOf(this.attributes.stream()
+						.map(AuthorityAuthorizationManager::hasAuthority)
+						.toArray(AuthorizationManager[]::new));
+				default -> throw new IllegalStateException("Unknown SecurityRule match type: " + this.comparisonType);
+			};
+		}
+		return this.authorizationManager;
+	}
+
 }

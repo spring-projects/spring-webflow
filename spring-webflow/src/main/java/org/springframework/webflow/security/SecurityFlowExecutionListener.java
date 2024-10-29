@@ -18,17 +18,15 @@ package org.springframework.webflow.security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.security.access.AccessDecisionManager;
-import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.access.vote.AbstractAccessDecisionManager;
-import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.RoleVoter;
-import org.springframework.security.access.vote.UnanimousBased;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Assert;
 import org.springframework.webflow.definition.FlowDefinition;
 import org.springframework.webflow.definition.StateDefinition;
 import org.springframework.webflow.definition.TransitionDefinition;
@@ -41,9 +39,25 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Scott Andrews
  */
+@SuppressWarnings("deprecation")
 public class SecurityFlowExecutionListener implements FlowExecutionListener {
 
+	private Function<SecurityRule, AuthorizationManager<Object>> authorizationManagerInitializer =
+			SecurityRule::getAuthorizationManager;
+
 	private AccessDecisionManager accessDecisionManager;
+
+	/**
+	 * Provide a function that determines the {@link AuthorizationManager} to use
+	 * for a given {@link SecurityRule}.
+	 * <p>By default, {@link SecurityRule#getAuthorizationManager()} is used.
+	 * @param initializer the function to use
+	 * @since 3.0.1
+	 */
+	public void setAuthorizationManagerInitializer(Function<SecurityRule, AuthorizationManager<Object>> initializer) {
+		Assert.notNull(initializer, "'initializer' is required");
+		this.authorizationManagerInitializer = initializer;
+	}
 
 	/**
 	 * Get the access decision manager that makes flow authorization decisions.
@@ -89,33 +103,45 @@ public class SecurityFlowExecutionListener implements FlowExecutionListener {
 	 * @param rule the rule to base the decision
 	 * @param object the execution listener phase
 	 */
+	@SuppressWarnings("deprecation")
 	protected void decide(SecurityRule rule, Object object) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Collection<ConfigAttribute> configAttributes = getConfigAttributes(rule);
-		if (accessDecisionManager != null) {
-			accessDecisionManager.decide(authentication, object, configAttributes);
+
+		AccessDecisionManager decisionManager =
+				(this.accessDecisionManager != null ? this.accessDecisionManager : createAccessDecisionManager(rule));
+
+		if (decisionManager != null) {
+			accessDecisionManager.decide(authentication, object, getConfigAttributes(rule));
 		} else {
-			createManager(rule).decide(authentication, object, configAttributes);
+			AuthorizationManager<Object> manager = this.authorizationManagerInitializer.apply(rule);
+			manager.verify(() -> authentication, object);
 		}
 	}
 
-	private AbstractAccessDecisionManager createManager(SecurityRule rule) {
-		List<AccessDecisionVoter<? extends Object>> voters = new ArrayList<>();
-		voters.add(new RoleVoter());
-		if (rule.getComparisonType() == SecurityRule.COMPARISON_ANY) {
-			return new AffirmativeBased(voters);
-		} else if (rule.getComparisonType() == SecurityRule.COMPARISON_ALL) {
-			return new UnanimousBased(voters);
-		} else {
-			throw new IllegalStateException("Unknown SecurityRule match type: " + rule.getComparisonType());
-		}
+	/**
+	 * Return an {@link AccessDecisionManager} for the SecurityRule.
+	 * <p>By default, returns {@code null} in which case an
+	 * {@link AuthorizationManager} is used instead of {@code AccessDecisionManager}.
+	 * @param rule the rule to check
+	 * @return the manager to use, or {@code null}
+	 * @deprecated in favor of using an {@code AuthorizationManager} by setting
+	 * {@link #setAuthorizationManagerInitializer(Function)} instead
+	 */
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@Deprecated(since = "3.0.1", forRemoval = true)
+	protected AccessDecisionManager createAccessDecisionManager(SecurityRule rule) {
+		return null;
 	}
 
 	/**
 	 * Convert SecurityRule into a form understood by Spring Security
 	 * @param rule the rule to convert
 	 * @return list of ConfigAttributes for Spring Security
+	 * @deprecated in favor of using an {@code AuthorizationManager} by setting
+	 * {@link #setAuthorizationManagerInitializer(Function)} instead
 	 */
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@Deprecated(since = "3.0.1", forRemoval = true)
 	protected Collection<ConfigAttribute> getConfigAttributes(SecurityRule rule) {
 		List<ConfigAttribute> configAttributes = new ArrayList<>();
 		for (String attribute : rule.getAttributes()) {
