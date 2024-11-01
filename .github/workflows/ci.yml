@@ -18,7 +18,7 @@ jobs:
             toolchain: false
         spring:
           - generation: 6.1.x
-            version: 6.0.13
+            version: 6.0.23
           - generation: 6.2.x
             version: 6.2.0-SNAPSHOT
     steps:
