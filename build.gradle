@@ -23,7 +23,7 @@ allprojects {
 		imports {
 			mavenBom "org.springframework:spring-framework-bom:${springFrameworkVersion}"
 			mavenBom "org.springframework.security:spring-security-bom:6.0.8"
-			mavenBom "org.junit:junit-bom:5.7.2"
+			mavenBom "org.junit:junit-bom:5.11.3"
 		}
 		dependencies {
 			dependency "jakarta.servlet:jakarta.servlet-api:6.0.0"
@@ -49,13 +49,13 @@ allprojects {
 				entry 'log4j-slf4j-impl'
 				entry 'log4j-jul'
 			}
-			dependency "org.slf4j:slf4j-api:2.0.6"
+			dependency "org.slf4j:slf4j-api:2.0.16"
 
 			dependency("junit:junit:4.13.2")
-			dependency "org.easymock:easymock:4.2"
-			dependency "org.hamcrest:hamcrest:2.2"
-			dependency "org.apache.tomcat:tomcat-jasper-el:10.1.7"
-			dependency "org.hsqldb:hsqldb:2.7.1"
+			dependency "org.easymock:easymock:5.4.0"
+			dependency "org.hamcrest:hamcrest:3.0"
+			dependency "org.apache.tomcat:tomcat-jasper-el:10.1.31"
+			dependency "org.hsqldb:hsqldb:2.7.3"
 
 			/*
 			dependency "org.apache.myfaces.test:myfaces-test22:1.0.8"
