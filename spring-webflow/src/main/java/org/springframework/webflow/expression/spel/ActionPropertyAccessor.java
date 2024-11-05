@@ -15,13 +15,17 @@
  */
 package org.springframework.webflow.expression.spel;
 
+import java.lang.reflect.Method;
+
 import org.springframework.expression.AccessException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.PropertyAccessor;
 import org.springframework.expression.TypedValue;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.action.MultiAction;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.AnnotatedAction;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * <p>
@@ -32,6 +36,7 @@ import org.springframework.webflow.execution.AnnotatedAction;
  * @see org.springframework.webflow.action.EvaluateAction
  *
  * @author Rossen Stoyanchev
+ * @author Sam Brannen
  * @since 2.1
  */
 public class ActionPropertyAccessor implements PropertyAccessor {
@@ -43,7 +48,16 @@ public class ActionPropertyAccessor implements PropertyAccessor {
 
 	@Override
 	public boolean canRead(EvaluationContext context, Object target, String name) {
-		return true;
+		// Ensure the target is an Action.
+		if (!(target instanceof Action)) {
+			return false;
+		}
+		// Ensure the method adheres to the signature required by:
+		// Action: execute(RequestContext)
+		// or
+		// MultiAction: <method name>(RequestContext)
+		Method method = ReflectionUtils.findMethod(target.getClass(), name, RequestContext.class);
+		return (method != null);
 	}
 
 	@Override

@@ -1,0 +1,15 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/webflow https://www.springframework.org/schema/webflow/spring-webflow.xsd">
+
+	<on-start>
+		<!-- Property Access: handled by org.springframework.expression.spel.support.ReflectivePropertyAccessor -->
+		<evaluate expression="countingMultiAction.incrementWithoutRequestContext" />
+
+		<!-- Method Invocation: handled by org.springframework.expression.spel.ast.MethodReference -->
+		<evaluate expression="countingMultiAction.incrementWithoutRequestContext()" />
+	</on-start>
+
+	<end-state id="end" />
+
+</flow>
