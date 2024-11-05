@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,12 +48,13 @@ class DispatchMethodInvoker {
 	 */
 	@SuppressWarnings("serial")
 	private Map<String, Method> methodCache = new AbstractCachingMapDecorator<String, Method>() {
+		@Override
 		public Method create(String key) {
 			String methodName = key;
 			try {
 				return new MethodKey(target.getClass(), methodName, parameterTypes).getMethod();
 			} catch (InvalidMethodKeyException e) {
-				throw new MethodLookupException("Unable to resolve dispatch method " + e.getMethodKey()
+				throw new MethodLookupException("Unable to resolve dispatch method '" + e.getMethodKey()
 						+ "'; make sure the method name is correct and such a method is defined on targetClass "
 						+ target.getClass().getName(), e);
 			}

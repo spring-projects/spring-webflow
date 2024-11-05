@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2012 the original author or authors.
+ * Copyright 2004-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,32 +28,37 @@ import org.springframework.webflow.execution.AnnotatedAction;
  * Spring EL Property Accessor that allows invocation of methods against a resolved Web Flow action, typically a
  * {@link MultiAction} in expressions.
  * </p>
- * 
+ *
  * @see org.springframework.webflow.action.EvaluateAction
- * 
+ *
  * @author Rossen Stoyanchev
  * @since 2.1
  */
 public class ActionPropertyAccessor implements PropertyAccessor {
 
+	@Override
 	public Class<?>[] getSpecificTargetClasses() {
 		return new Class[] { Action.class };
 	}
 
+	@Override
 	public boolean canRead(EvaluationContext context, Object target, String name) {
 		return true;
 	}
 
+	@Override
 	public TypedValue read(EvaluationContext context, Object target, String name) {
 		AnnotatedAction annotated = new AnnotatedAction((Action) target);
 		annotated.setMethod(name);
 		return new TypedValue(annotated);
 	}
 
+	@Override
 	public boolean canWrite(EvaluationContext context, Object target, String name) {
 		return false;
 	}
 
+	@Override
 	public void write(EvaluationContext context, Object target, String name, Object newValue) throws AccessException {
 		throw new AccessException("The Action cannot be set with an expression.");
 	}
