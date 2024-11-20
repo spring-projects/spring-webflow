@@ -48,16 +48,8 @@ public class ActionPropertyAccessor implements PropertyAccessor {
 
 	@Override
 	public boolean canRead(EvaluationContext context, Object target, String name) {
-		// Ensure the target is an Action.
-		if (!(target instanceof Action)) {
-			return false;
-		}
-		// Ensure the method adheres to the signature required by:
-		// Action: execute(RequestContext)
-		// or
-		// MultiAction: <method name>(RequestContext)
-		Method method = ReflectionUtils.findMethod(target.getClass(), name, RequestContext.class);
-		return (method != null);
+		return (target instanceof Action &&
+				ReflectionUtils.findMethod(target.getClass(), name, RequestContext.class) != null);
 	}
 
 	@Override
