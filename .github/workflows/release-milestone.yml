@@ -1,0 +1,86 @@
+name: Release Milestone
+on:
+  push:
+    tags:
+      - v4.0.0-M[1-9]
+      - v4.0.0-RC[1-9]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  build-and-stage-release:
+    name: Build and Stage Release
+    if: ${{ github.repository == 'spring-projects/spring-webflow' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v5
+      - name: Build and Publish
+        id: build-and-publish
+        uses: ./.github/actions/build
+        with:
+          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+          opensource-repository-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          opensource-repository-username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          publish: true
+      - name: Stage Release
+        uses: spring-io/artifactory-deploy-action@926d7f7cc810569395346bf3a4d91b380b3e355b # v0.0.4
+        with:
+          artifact-properties: |
+            /**/webflow-*.zip::zip.name=spring-webflow,zip.deployed=false
+            /**/webflow-*-docs.zip::zip.type=docs
+            /**/webflow-*-dist.zip::zip.type=dist
+            /**/webflow-*-schema.zip::zip.type=schema
+          build-name: ${{ format('spring-webflow-{0}', steps.build-and-publish.outputs.version)}}
+          folder: 'deployment-repository'
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          repository: 'libs-staging-local'
+          signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          uri: 'https://repo.spring.io'
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+    outputs:
+      version: ${{ steps.build-and-publish.outputs.version }}
+  sync-to-maven-central:
+    name: Sync to Maven Central
+    needs:
+      - build-and-stage-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v5
+      - name: Sync to Maven Central
+        uses: ./.github/actions/sync-to-maven-central
+        with:
+          jfrog-cli-config-token: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+          ossrh-s01-staging-profile: ${{ secrets.OSSRH_S01_STAGING_PROFILE }}
+          ossrh-s01-token-password: ${{ secrets.OSSRH_S01_TOKEN_PASSWORD }}
+          ossrh-s01-token-username: ${{ secrets.OSSRH_S01_TOKEN_USERNAME }}
+          spring-webflow-version: ${{ needs.build-and-stage-release.outputs.version }}
+  promote-release:
+    name: Promote Release
+    needs:
+      - build-and-stage-release
+      - sync-to-maven-central
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JFrog CLI
+        uses: jfrog/setup-jfrog-cli@5b06f730cc5a6f55d78b30753f8583454b08c0aa # v4.8.1
+        env:
+          JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
+      - name: Promote build
+        run: jfrog rt build-promote ${{ format('spring-webflow-{0}', needs.build-and-stage-release.outputs.version)}} ${{ github.run_number }} libs-milestone-local
+  create-github-release:
+    name: Create GitHub Release
+    needs:
+      - build-and-stage-release
+      - promote-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v5
+      - name: Create GitHub Release
+        uses: ./.github/actions/create-github-release
+        with:
+          milestone: ${{ needs.build-and-stage-release.outputs.version }}
+          pre-release: true
+          token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
