@@ -28,7 +28,7 @@ jobs:
             /**/webflow-*-docs.zip::zip.type=docs
             /**/webflow-*-dist.zip::zip.type=dist
             /**/webflow-*-schema.zip::zip.type=schema
-          build-name: 'spring-webflow-3.0.x'
+          build-name: 'spring-webflow-4.0.x'
           folder: 'deployment-repository'
           password: ${{ secrets.ARTIFACTORY_PASSWORD }}
           repository: 'libs-snapshot-local'
