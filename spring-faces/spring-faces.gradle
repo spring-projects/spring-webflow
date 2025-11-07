@@ -27,4 +27,5 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
