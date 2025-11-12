@@ -7,20 +7,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   ci:
-    name: 'Java ${{ matrix.java.version}} | Spring Framework ${{ matrix.spring.generation}}'
+    name: 'Java ${{ matrix.java.version}}'
     if: ${{ github.repository == 'spring-projects/spring-webflow' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         java:
-          - version: 17
+          - version: 21
             toolchain: false
-        spring:
-          - generation: 6.1.x
-            version: 6.1.21
-          - generation: 6.2.x
-            version: 6.2.12
+          - version: 25
+            toolchain: false
     steps:
       - name: Check Out Code
         uses: actions/checkout@v5
@@ -33,12 +30,11 @@ jobs:
           java-distribution: ${{ matrix.java.distribution }}
           java-toolchain: ${{ matrix.java.toolchain }}
           java-version: ${{ matrix.java.version }}
-          spring-framework-version: ${{ matrix.spring.version }}
       - name: Send Notification
         if: always()
         uses: ./.github/actions/send-notification
         with:
           build-scan-url: ${{ steps.build.outputs.build-scan-url }}
-          run-name: ${{ format('{0} | Java {1} | Spring Framework {2}', github.ref_name, matrix.java.version,matrix.spring.version) }}
+          run-name: ${{ format('{0} | Java {1}', github.ref_name, matrix.java.version) }}
           status: ${{ job.status }}
           webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
