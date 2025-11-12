@@ -21,7 +21,6 @@ dependencies {
 	testImplementation("org.springframework:spring-aop")
 	testImplementation("org.springframework:spring-jdbc")
 	testImplementation("org.springframework:spring-test")
-	testImplementation("org.hibernate.orm:hibernate-entitymanager")
 	testImplementation("org.hibernate.validator:hibernate-validator")
 	testImplementation("org.hsqldb:hsqldb")
 	testImplementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api")

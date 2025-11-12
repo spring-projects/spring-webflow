@@ -40,7 +40,6 @@ allprojects {
 			dependency "org.hibernate.validator:hibernate-validator:9.1.0.Final"
 
 			dependency "org.hibernate.orm:hibernate-core:7.2.0.CR1"
-			dependency "org.hibernate.orm:hibernate-entitymanager:6.0.0.Alpha7"
 
 			dependencySet(group: 'org.apache.logging.log4j', version: '2.25.1') {
 				entry 'log4j-api'
