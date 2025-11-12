@@ -121,17 +121,6 @@ SecurityFlowExecutionListener securityFlowExecutionListener() {
 ----
 ====
 
-[[_flow_security_listener_adm]]
-==== Custom Access Decision Managers
-
-Spring Security's `AccessDecisionManager` is deprecated and will be removed in a future version.
-Therefore, it is recommended to configure an `AuthorizationManager` instead.
-However, if you must use an `AccessDecisionManager`, you can either set the `accessDecisionManager` property of the security listener,
-or override the `createAccessDecisionManager(SecurityRule)` protected method.
-
-To learn more about Spring Security's `AuthorizationManager` API, see
-https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html#_the_authorizationmanager[Spring Security reference documentation].
-
 [[_flow_security_configuration]]
 === Configuring Spring Security
 
