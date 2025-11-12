@@ -9,8 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
+import org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.webflow.execution.Action;
 import org.springframework.webflow.execution.Event;
@@ -34,7 +34,7 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends AbstractFlo
 			public Event execute(RequestContext context) {
 				assertSessionBound();
 				Session session = (Session) context.getFlowScope().get("persistenceContext");
-				TestBean bean = session.get(TestBean.class, 0L);
+				TestBean bean = session.find(TestBean.class, 0L);
 				bean.incrementCount();
 				return new Event(this, "success");
 			}
@@ -48,7 +48,7 @@ public class HibernateFlowManagedPersistenceIntegrationTests extends AbstractFlo
 			public void execute(RequestContext context, int expected) {
 				assertSessionBound();
 				Session session = (Session) context.getFlowScope().get("persistenceContext");
-				TestBean bean = session.get(TestBean.class, 0L);
+				TestBean bean = session.find(TestBean.class, 0L);
 				assertEquals(expected, bean.getCount());
 			}
 		};

@@ -42,7 +42,8 @@ public class HibernatePersistenceContextPropagationTests extends AbstractPersist
 	@Override
 	protected void assertCommitState(boolean insertRow, boolean isCommited) {
 		if (insertRow) {
-			hibernate.templateSave(new TestBean(rowCount++, "Keith Donald"));
+			rowCount++;
+			hibernate.templateSave(new TestBean("Keith Donald"));
 		}
 		if (!isCommited) {
 			assertEquals(1, getCount(), "Nothing should be committed yet");

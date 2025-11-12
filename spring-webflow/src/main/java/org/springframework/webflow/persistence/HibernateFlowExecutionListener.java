@@ -19,7 +19,9 @@ import org.hibernate.FlushMode;
 import org.hibernate.Interceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.engine.spi.SessionImplementor;
 
+import org.springframework.orm.jpa.hibernate.SessionHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -122,7 +124,9 @@ public class HibernateFlowExecutionListener implements FlowExecutionListener {
 		if (isPersistenceContext(context.getActiveFlow())) {
 			Session session = getHibernateSession(context.getFlowExecutionContext().getActiveSession());
 			unbind(session);
-			session.disconnect();
+			if (session instanceof SessionImplementor sessionImpl) {
+				sessionImpl.getJdbcCoordinator().getLogicalConnection().manualDisconnect();
+			}
 		}
 	}
 
@@ -199,8 +203,7 @@ public class HibernateFlowExecutionListener implements FlowExecutionListener {
 	}
 
 	private void bind(Session session) {
-		Object sessionHolder = new org.springframework.orm.hibernate5.SessionHolder(session);
-		TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
+		TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
 	}
 
 	private void unbind(Session session) {

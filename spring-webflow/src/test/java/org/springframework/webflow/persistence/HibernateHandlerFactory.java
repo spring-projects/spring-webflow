@@ -16,12 +16,17 @@
 package org.springframework.webflow.persistence;
 
 import java.io.Serializable;
+import java.util.function.Function;
+
 import javax.sql.DataSource;
 
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.orm.hibernate5.HibernateCallback;
+import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
+import org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
 public class HibernateHandlerFactory {
@@ -32,36 +37,54 @@ public class HibernateHandlerFactory {
 	
 	private static class Hibernate5Handler implements HibernateHandler {
 
-		private final org.springframework.orm.hibernate5.HibernateTemplate template;
-
-		private final PlatformTransactionManager tranasactionManager;
+		private final PlatformTransactionManager transactionManager;
 		
 		private final SessionFactory sessionFactory;
 
 		private Hibernate5Handler(DataSource dataSource) throws Exception {
 			sessionFactory = getSessionFactory(dataSource);
-			template = new org.springframework.orm.hibernate5.HibernateTemplate(sessionFactory);
-			template.setCheckWriteOperations(false);
-			tranasactionManager = new org.springframework.orm.hibernate5.HibernateTransactionManager(sessionFactory);
+			transactionManager = new HibernateTransactionManager(sessionFactory);
 		}
 
 		public void templateSave(Object entity) {
-			template.save(entity);
+			doExecuteWithNativeSession(session -> {
+				this.sessionFactory.getCurrentSession().persist(entity);
+				return null;
+			});
 		}
 
 		public <T> T templateGet(Class<T> entityClass, Serializable id) {
-			return template.get(entityClass, id);
+			return doExecuteWithNativeSession(session ->
+					this.sessionFactory.getCurrentSession().find(entityClass, id));
 		}
 
 		public void templateExecuteWithNativeSession(final SessionCallback callback) {
-			template.executeWithNativeSession((HibernateCallback<Void>) session -> {
+			doExecuteWithNativeSession(session -> {
 				callback.doWithSession(session);
 				return null;
 			});
 		}
 
+		private <T> T doExecuteWithNativeSession(Function<Session, T> callback) {
+			Session session = getSessionFactory().getCurrentSession();
+			boolean isNew = false;
+			if (session == null) {
+				session = getSessionFactory().openSession();
+				session.setHibernateFlushMode(FlushMode.MANUAL);
+				isNew = true;
+			}
+			try {
+				return callback.apply(session);
+			}
+			finally {
+				if (isNew) {
+					session.close();
+				}
+			}
+		}
+
 		public PlatformTransactionManager getTransactionManager() {
-			return tranasactionManager;
+			return transactionManager;
 		}
 		
 		public SessionFactory getSessionFactory() {
@@ -69,8 +92,7 @@ public class HibernateHandlerFactory {
 		}
 
 		private SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-			org.springframework.orm.hibernate5.LocalSessionFactoryBean factory =
-					new org.springframework.orm.hibernate5.LocalSessionFactoryBean();
+			LocalSessionFactoryBean factory = new LocalSessionFactoryBean();
 			factory.setDataSource(dataSource);
 			factory.setMappingLocations(
 					new ClassPathResource("org/springframework/webflow/persistence/TestBean.hbm.xml"),

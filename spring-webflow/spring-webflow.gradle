@@ -9,7 +9,7 @@ dependencies {
 	compileOnly("jakarta.servlet:jakarta.servlet-api")
 	compileOnly("junit:junit")
 
-	optional("org.hibernate:hibernate-core-jakarta")
+	optional("org.hibernate.orm:hibernate-core")
 	optional("org.springframework.security:spring-security-core")
 	optional("org.springframework:spring-orm")
 	optional("org.springframework:spring-tx")
@@ -21,7 +21,7 @@ dependencies {
 	testImplementation("org.springframework:spring-aop")
 	testImplementation("org.springframework:spring-jdbc")
 	testImplementation("org.springframework:spring-test")
-	testImplementation("org.hibernate:hibernate-entitymanager")
+	testImplementation("org.hibernate.orm:hibernate-entitymanager")
 	testImplementation("org.hibernate.validator:hibernate-validator")
 	testImplementation("org.hsqldb:hsqldb")
 	testImplementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api")
@@ -33,16 +33,5 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-	//
-	// We need hibernate-core-jakarta instead of hibernate-core for Jakarta EE,
-	// but hibernate-entitymanager module depends on hibernate-core and we
-	// don't want both on the classpath, so we explicitly exclude hibernate-core
-	// in all configurations.
-	//
-	// This wrinkle will probably go away again in Hibernate 6.
-	//
-	configurations.all {
-		exclude group: 'org.hibernate', module: 'hibernate-core'
-	}
 }
 

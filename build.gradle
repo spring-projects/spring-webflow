@@ -23,12 +23,12 @@ allprojects {
 		imports {
 			mavenBom "org.springframework:spring-framework-bom:${springFrameworkVersion}"
 			mavenBom "org.springframework.security:spring-security-bom:6.0.8"
-			mavenBom "org.junit:junit-bom:5.11.3"
+			mavenBom "org.junit:junit-bom:6.0.1"
 		}
 		dependencies {
-			dependency "jakarta.servlet:jakarta.servlet-api:6.0.0"
-			dependency "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0"
-			dependency "jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.1"
+			dependency "jakarta.servlet:jakarta.servlet-api:6.1.0"
+			dependency "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.2"
+			dependency "jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0"
 			dependency "jakarta.el:jakarta.el-api:5.0.1"
 
 			dependency "org.glassfish:jakarta.faces:4.0.6"
@@ -36,20 +36,19 @@ allprojects {
 			dependency "org.apache.myfaces.core:myfaces-test:4.0.2"
 			dependency "jakarta.enterprise:jakarta.enterprise.cdi-api:4.0.1"
 
-			dependency "jakarta.validation:jakarta.validation-api:3.0.2"
-			dependencySet(group: 'org.hibernate', version: '5.6.15.Final') {
-				entry 'hibernate-core-jakarta'
-				entry 'hibernate-entitymanager'
-			}
-			dependency "org.hibernate.validator:hibernate-validator:8.0.0.Final"
+			dependency "jakarta.validation:jakarta.validation-api:3.1.0"
+			dependency "org.hibernate.validator:hibernate-validator:9.1.0.Final"
 
-			dependencySet(group: 'org.apache.logging.log4j', version: '2.14.0') {
+			dependency "org.hibernate.orm:hibernate-core:7.2.0.CR1"
+			dependency "org.hibernate.orm:hibernate-entitymanager:6.0.0.Alpha7"
+
+			dependencySet(group: 'org.apache.logging.log4j', version: '2.25.1') {
 				entry 'log4j-api'
 				entry 'log4j-core'
 				entry 'log4j-slf4j-impl'
 				entry 'log4j-jul'
 			}
-			dependency "org.slf4j:slf4j-api:2.0.16"
+			dependency "org.slf4j:slf4j-api:2.0.17"
 
 			dependency("junit:junit:4.13.2")
 			dependency "org.easymock:easymock:5.4.0"
