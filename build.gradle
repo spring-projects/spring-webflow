@@ -41,7 +41,7 @@ allprojects {
 
 			dependency "org.hibernate.orm:hibernate-core:7.2.0.CR1"
 
-			dependencySet(group: 'org.apache.logging.log4j', version: '2.25.1') {
+			dependencySet(group: 'org.apache.logging.log4j', version: '2.25.2') {
 				entry 'log4j-api'
 				entry 'log4j-core'
 				entry 'log4j-slf4j-impl'
