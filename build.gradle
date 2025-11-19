@@ -31,10 +31,11 @@ allprojects {
 			dependency "jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0"
 			dependency "jakarta.el:jakarta.el-api:5.0.1"
 
-			dependency "org.glassfish:jakarta.faces:4.0.6"
-			dependency "org.apache.myfaces.core:myfaces-impl:4.0.2"
-			dependency "org.apache.myfaces.core:myfaces-test:4.0.2"
-			dependency "jakarta.enterprise:jakarta.enterprise.cdi-api:4.0.1"
+			dependency "org.glassfish:jakarta.faces:4.1.4"
+			dependency "org.apache.myfaces.core:myfaces-impl:4.1.2"
+			dependency "org.apache.myfaces.core:myfaces-test:4.1.2"
+			dependency "jakarta.enterprise:jakarta.enterprise.cdi-api:5.0.0-M1"
+			dependency "jakarta.enterprise:jakarta.enterprise.cdi-el-api:5.0.0-M1"
 
 			dependency "jakarta.validation:jakarta.validation-api:3.1.0"
 			dependency "org.hibernate.validator:hibernate-validator:9.1.0.Final"

@@ -24,6 +24,7 @@ dependencies {
 	testImplementation("org.apache.myfaces.core:myfaces-impl")
 	testImplementation("org.apache.myfaces.core:myfaces-test")
 	testImplementation("jakarta.enterprise:jakarta.enterprise.cdi-api")
+	testImplementation("jakarta.enterprise:jakarta.enterprise.cdi-el-api")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")

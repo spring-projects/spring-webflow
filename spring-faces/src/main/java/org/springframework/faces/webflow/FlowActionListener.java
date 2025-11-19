@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.faces.application.NavigationHandler;
-import jakarta.faces.component.ActionSource2;
+import jakarta.faces.component.ActionSource;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.AbortProcessingException;
 import jakarta.faces.event.ActionEvent;
@@ -71,7 +71,7 @@ public class FlowActionListener implements ActionListener {
 			return;
 		}
 		FacesContext context = FacesContext.getCurrentInstance();
-		ActionSource2 source = (ActionSource2) actionEvent.getSource();
+		ActionSource source = (ActionSource) actionEvent.getSource();
 		String eventId = null;
 		if (source.getActionExpression() != null) {
 			if (logger.isDebugEnabled()) {
