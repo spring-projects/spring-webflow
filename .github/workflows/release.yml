@@ -18,8 +18,6 @@ jobs:
         uses: ./.github/actions/build
         with:
           develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
-          opensource-repository-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          opensource-repository-username: ${{ secrets.ARTIFACTORY_USERNAME }}
           publish: true
       - name: Stage Release
         uses: spring-io/artifactory-deploy-action@926d7f7cc810569395346bf3a4d91b380b3e355b # v0.0.4
