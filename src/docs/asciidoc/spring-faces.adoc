@@ -5,7 +5,7 @@ Spring Web Flow provides a JavaServer Faces (JSF) integration that lets you use 
 Web Flow also provides a Spring Security tag library for use in JSF environments.
 See <<_spring_faces_security_taglib>> for more details.
 
-Spring Web Flow 3.0 requires JSF 4.0 or higher.
+Spring Web Flow 4.0 requires JSF 4.1 or higher.
 
 [[_spring_faces_config_web.xml]]
 === Configuring `web.xml`

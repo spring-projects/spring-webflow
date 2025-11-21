@@ -6,10 +6,11 @@ It covers implementing flows in end-user applications and working with the featu
 It also covers extending the framework and the overall architectural model.
 
 [[_system_requirements]]
-=== Web Flow Requirements
+=== Web Flow 4.0 Baseline
 
 * Java 17 or higher.
-* Spring Framework 6.0 or higher.
+* Spring Framework 7.0 baseline
+* Servlet 6.1
 
 === Resources
 
