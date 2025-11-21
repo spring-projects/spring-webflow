@@ -34,8 +34,8 @@ allprojects {
 			dependency "org.glassfish:jakarta.faces:4.1.4"
 			dependency "org.apache.myfaces.core:myfaces-impl:4.1.2"
 			dependency "org.apache.myfaces.core:myfaces-test:4.1.2"
-			dependency "jakarta.enterprise:jakarta.enterprise.cdi-api:5.0.0-M1"
-			dependency "jakarta.enterprise:jakarta.enterprise.cdi-el-api:5.0.0-M1"
+			dependency "jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0"
+			dependency "jakarta.enterprise:jakarta.enterprise.cdi-el-api:4.1.0"
 
 			dependency "jakarta.validation:jakarta.validation-api:3.1.0"
 			dependency "org.hibernate.validator:hibernate-validator:9.1.0.Final"
