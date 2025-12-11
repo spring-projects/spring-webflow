@@ -62,18 +62,9 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 
 	/**
 	 * Constructs a default XML flow execution test.
-	 * @see #setName(String)
 	 */
 	public AbstractXmlFlowExecutionTests() {
 		super();
-	}
-
-	/**
-	 * Constructs an XML flow execution test with given name.
-	 * @param name the name of the test
-	 */
-	public AbstractXmlFlowExecutionTests(String name) {
-		super(name);
 	}
 
 	protected final FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
