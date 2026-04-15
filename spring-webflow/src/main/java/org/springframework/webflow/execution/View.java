@@ -42,7 +42,7 @@ public interface View {
 
 	/**
 	 * Render this view's content.
-	 * @throws IOException if an IO Exception occured rendering the view
+	 * @throws IOException if an IO Exception occurred rendering the view
 	 */
 	void render() throws IOException;
 

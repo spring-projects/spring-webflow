@@ -34,7 +34,7 @@ public class EnterStateVetoException extends FlowExecutionException {
 	/**
 	 * Create a new enter state veto exception.
 	 * @param flowId the active flow
-	 * @param sourceStateId the current state when the veto operation occured
+	 * @param sourceStateId the current state when the veto operation occurred
 	 * @param vetoedStateId the state for which entering is vetoed
 	 * @param message a descriptive message
 	 */
@@ -46,7 +46,7 @@ public class EnterStateVetoException extends FlowExecutionException {
 	/**
 	 * Create a new enter state veto exception.
 	 * @param flowId the active flow
-	 * @param sourceStateId the current state when the veto operation occured
+	 * @param sourceStateId the current state when the veto operation occurred
 	 * @param vetoedStateId the state for which entering is vetoed
 	 * @param message a descriptive message
 	 * @param cause the underlying cause

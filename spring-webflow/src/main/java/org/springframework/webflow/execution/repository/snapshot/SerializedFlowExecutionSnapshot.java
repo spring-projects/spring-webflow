@@ -150,7 +150,7 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 	/**
 	 * Return the flow execution data in its raw byte[] form. Will decompress if necessary.
 	 * @return the byte array
-	 * @throws IOException a problem occured with decompression
+	 * @throws IOException a problem occurred with decompression
 	 */
 	protected byte[] getFlowExecutionData() throws IOException {
 		if (isCompressed()) {

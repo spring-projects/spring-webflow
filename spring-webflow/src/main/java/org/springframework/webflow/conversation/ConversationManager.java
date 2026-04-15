@@ -27,7 +27,7 @@ public interface ConversationManager {
 	 * Begin a new conversation.
 	 * @param conversationParameters descriptive conversation parameters
 	 * @return a service interface allowing access to the conversation context
-	 * @throws ConversationException an exception occured
+	 * @throws ConversationException an exception occurred
 	 */
 	Conversation beginConversation(ConversationParameters conversationParameters) throws ConversationException;
 
@@ -67,7 +67,7 @@ public interface ConversationManager {
 	 * {@link ConversationId#toString()}.
 	 * @param encodedId the encoded id
 	 * @return the parsed conversation id
-	 * @throws ConversationException an exception occured parsing the id
+	 * @throws ConversationException an exception occurred parsing the id
 	 */
 	ConversationId parseConversationId(String encodedId) throws ConversationException;
 }

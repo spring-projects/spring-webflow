@@ -215,7 +215,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return the non-<code>null</code> action result, in which case the <code>doExecute()</code> will not be called,
 	 * or <code>null</code> if the <code>doExecute()</code> method should be called to obtain the action result
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occurred, either checked or unchecked
 	 */
 	protected Event doPreExecute(RequestContext context) throws Exception {
 		return null;
@@ -225,7 +225,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * Template hook method subclasses should override to encapsulate their specific action execution logic.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return the action result event
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occurred, either checked or unchecked
 	 */
 	protected abstract Event doExecute(RequestContext context) throws Exception;
 
@@ -235,7 +235,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * <p>
 	 * This implementation does nothing.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occurred, either checked or unchecked
 	 */
 	protected void doPostExecute(RequestContext context) throws Exception {
 	}
