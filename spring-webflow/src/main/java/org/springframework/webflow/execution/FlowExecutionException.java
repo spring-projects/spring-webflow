@@ -53,8 +53,8 @@ public class FlowExecutionException extends FlowException {
 
 	/**
 	 * Creates a new flow execution exception.
-	 * @param flowId the flow where the exception occured
-	 * @param stateId the state where the exception occured
+	 * @param flowId the flow where the exception occurred
+	 * @param stateId the state where the exception occurred
 	 * @param message a descriptive message
 	 * @param cause the root cause
 	 */
@@ -65,14 +65,14 @@ public class FlowExecutionException extends FlowException {
 	}
 
 	/**
-	 * Returns the id of the flow definition that was executing when this exception occured.
+	 * Returns the id of the flow definition that was executing when this exception occurred.
 	 */
 	public String getFlowId() {
 		return flowId;
 	}
 
 	/**
-	 * Returns the id of the state definition where the exception occured. Could be null if no state was active at the
+	 * Returns the id of the state definition where the exception occurred. Could be null if no state was active at the
 	 * time when the exception was thrown.
 	 */
 	public String getStateId() {
