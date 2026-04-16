@@ -507,7 +507,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * {@link #doBind(RequestContext, DataBinder)} hook.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return "success" if there are no binding errors, "error" otherwise
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occurred, either checked or unchecked
 	 */
 	public Event bind(RequestContext context) throws Exception {
 		if (logger.isDebugEnabled()) {
@@ -529,7 +529,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * {@link #doValidate(RequestContext, Object, Errors)} hook.
 	 * @param context the action execution context, for accessing and setting data in "flow scope" or "request scope"
 	 * @return "success" if there are no validation errors, "error" otherwise
-	 * @throws Exception an <b>unrecoverable</b> exception occured, either checked or unchecked
+	 * @throws Exception an <b>unrecoverable</b> exception occurred, either checked or unchecked
 	 * @see #getValidator()
 	 */
 	public Event validate(RequestContext context) throws Exception {
@@ -561,7 +561,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * custom methods as part of a single action chain.
 	 * @param context the request context
 	 * @return "success" if the reset action completed successfully
-	 * @throws Exception if an exception occured
+	 * @throws Exception if an exception occurred
 	 * @see #createFormObject(RequestContext)
 	 */
 	public Event resetForm(RequestContext context) throws Exception {
@@ -576,7 +576,7 @@ public class FormAction extends MultiAction implements InitializingBean {
 	 * Create the new form object and put it in the configured {@link #getFormObjectScope() scope}.
 	 * @param context the flow execution request context
 	 * @return the new form object
-	 * @throws Exception an exception occured creating the form object
+	 * @throws Exception an exception occurred creating the form object
 	 */
 	private Object initFormObject(RequestContext context) throws Exception {
 		if (logger.isDebugEnabled()) {
