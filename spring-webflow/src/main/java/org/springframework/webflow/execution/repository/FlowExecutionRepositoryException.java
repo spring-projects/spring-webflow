@@ -18,7 +18,7 @@ package org.springframework.webflow.execution.repository;
 import org.springframework.webflow.core.FlowException;
 
 /**
- * The root of the {@link FlowExecutionRepository} exception hierarchy. Indicates a problem occured either saving,
+ * The root of the {@link FlowExecutionRepository} exception hierarchy. Indicates a problem occurred either saving,
  * restoring, or invalidating a managed flow execution.
  * 
  * @author Erwin Vervaet
