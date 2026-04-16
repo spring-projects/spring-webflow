@@ -21,7 +21,7 @@ import org.springframework.webflow.execution.FlowExecutionException;
 /**
  * Thrown when no transition can be matched given the occurence of an event in the context of a flow execution request.
  * <p>
- * Typically this happens because there is no "handler" transition for the last event that occured.
+ * Typically this happens because there is no "handler" transition for the last event that occurred.
  * 
  * @author Keith Donald
  * @author Erwin Vervaet
@@ -37,7 +37,7 @@ public class NoMatchingTransitionException extends FlowExecutionException {
 	 * Create a new no matching transition exception.
 	 * @param flowId the current flow
 	 * @param stateId the state that could not be transitioned out of
-	 * @param event the event that occured that could not be matched to a transition
+	 * @param event the event that occurred that could not be matched to a transition
 	 * @param message the message
 	 */
 	public NoMatchingTransitionException(String flowId, String stateId, Event event, String message) {
@@ -49,7 +49,7 @@ public class NoMatchingTransitionException extends FlowExecutionException {
 	 * Create a new no matching transition exception.
 	 * @param flowId the current flow
 	 * @param stateId the state that could not be transitioned out of
-	 * @param event the event that occured that could not be matched to a transition
+	 * @param event the event that occurred that could not be matched to a transition
 	 * @param message the message
 	 * @param cause the underlying cause
 	 */
