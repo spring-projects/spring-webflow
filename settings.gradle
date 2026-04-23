@@ -5,6 +5,10 @@ pluginManagement {
 	}
 }
 
+plugins {
+	id 'io.spring.develocity.conventions' version '0.0.22'
+}
+
 rootProject.name = 'webflow'
 
 include 'spring-binding'
