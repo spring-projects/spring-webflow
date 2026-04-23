@@ -1,0 +1,48 @@
+name: Build and Deploy Snapshot
+on:
+  push:
+    branches:
+      - 2.5.x
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  build-and-deploy-snapshot:
+    name: Build and Deploy Snapshot
+    if: ${{ github.repository == 'spring-projects/spring-webflow' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v5
+      - name: Build and Publish
+        id: build-and-publish
+        uses: ./.github/actions/build
+        with:
+          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+          publish: true
+      - name: Deploy
+        uses: spring-io/artifactory-deploy-action@926d7f7cc810569395346bf3a4d91b380b3e355b # v0.0.4
+        with:
+          artifact-properties: |
+            /**/webflow-*.zip::zip.name=spring-webflow,zip.deployed=false
+            /**/webflow-*-docs.zip::zip.type=docs
+            /**/webflow-*-dist.zip::zip.type=dist
+            /**/webflow-*-schema.zip::zip.type=schema
+          build-name: 'spring-webflow-2.5.x'
+          folder: 'deployment-repository'
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          repository: 'libs-snapshot-local'
+          signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          uri: 'https://repo.spring.io'
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+      - name: Send Notification
+        if: always()
+        uses: ./.github/actions/send-notification
+        with:
+          build-scan-url: ${{ steps.build-and-publish.outputs.build-scan-url }}
+          run-name: ${{ format('{0} | Linux | Java 8', github.ref_name) }}
+          status: ${{ job.status }}
+          webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+    outputs:
+      version: ${{ steps.build-and-publish.outputs.version }}
