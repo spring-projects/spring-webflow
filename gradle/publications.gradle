@@ -1,0 +1,70 @@
+apply plugin: "maven-publish"
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			pom {
+				afterEvaluate {
+					name = project.description
+					description = project.description
+				}
+				url = "https://github.com/spring-projects/spring-webflow"
+				organization {
+					name = "Spring IO"
+					url = "https://spring.io/projects/spring-webflow"
+				}
+				licenses {
+					license {
+						name = "Apache License, Version 2.0"
+						url = "https://www.apache.org/licenses/LICENSE-2.0"
+						distribution = "repo"
+					}
+				}
+				scm {
+					url = "https://github.com/spring-projects/spring-webflow"
+					connection = "scm:git:git://github.com/spring-projects/spring-webflow"
+					developerConnection = "scm:git:git://github.com/spring-projects/spring-webflow"
+				}
+				developers {
+					developer {
+						id = "rstoyanchev"
+						name = "Rossen Stoyanchev"
+						email = "rstoyanchev@vmware.com"
+					}
+				}
+				issueManagement {
+					system = "GitHub"
+					url = "https://github.com/spring-projects/spring-webflow/issues"
+				}
+			}
+			versionMapping {
+				usage('java-api') {
+					fromResolutionResult()
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
+		}
+	}
+}
+
+configureDeploymentRepository(project)
+
+void configureDeploymentRepository(Project project) {
+	project.plugins.withType(MavenPublishPlugin.class).all {
+		PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
+		if (project.hasProperty("deploymentRepository")) {
+			publishing.repositories.maven {
+				it.url = project.property("deploymentRepository")
+				it.name = "deployment"
+			}
+		}
+	}
+}
+
+// Disable generation of Gradle Module Metadata for compatibility
+// with older versions of Spring Web Flow.
+tasks.withType(GenerateModuleMetadata) {
+	enabled = false
+}

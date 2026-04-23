@@ -1,7 +1,7 @@
 pluginManagement {
 	repositories {
 		gradlePluginPortal()
-		maven { url 'https://repo.spring.io/plugins-release' }
+		mavenCentral()
 	}
 }
 
@@ -9,8 +9,8 @@ rootProject.name = 'webflow'
 
 include 'spring-binding'
 include 'spring-webflow'
-include 'spring-faces'
 include 'spring-js-resources'
+include 'spring-faces'
 
 rootProject.children.each {project ->
 	project.buildFileName = "${project.name}.gradle"

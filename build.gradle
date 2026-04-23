@@ -1,14 +1,7 @@
-buildscript {
-	repositories {
-		maven { url "https://repo.spring.io/plugins-release" }
-	}
-}
-
 plugins {
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE' apply false
-	id 'org.asciidoctor.jvm.pdf' version '3.3.2'
-	id 'org.asciidoctor.jvm.gems' version '3.3.2'
-	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	id 'io.spring.dependency-management' version '1.1.7' apply false
+	id "org.asciidoctor.jvm.convert" version "4.0.5"
+	id "org.asciidoctor.jvm.pdf" version "4.0.5"
 	id 'de.undercouch.download' version '4.1.2'
 }
 
@@ -27,6 +20,7 @@ allprojects {
 	apply plugin: "io.spring.dependency-management"
 	apply plugin: "org.springframework.build.optional-dependencies"
 	apply from: "${rootProject.projectDir}/ide.gradle"
+	apply from: "${rootDir}/gradle/publications.gradle"
 
 	dependencyManagement {
 		imports {
@@ -87,7 +81,9 @@ allprojects {
 	repositories {
 		mavenCentral()
 		if (version.endsWith('SNAPSHOT')) {
-			maven { url "https://repo.spring.io/snapshot" }
+			maven {
+				url = "https://repo.spring.io/snapshot"
+			}
 		}
 	}
 	configurations.all {
@@ -124,18 +120,24 @@ configure(javaProjects) { javaProject ->
 		from javadoc
 	}
 
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				from components.java
+				artifact sourcesJar
+				artifact javadocJar
+			}
+		}
 	}
 }
 
 subprojects { subproject ->
 
-	apply from: "${rootProject.projectDir}/publish-maven.gradle"
-
-	sourceCompatibility=1.8
-	targetCompatibility=1.8
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(8)
+		}
+	}
 
 	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:none"]
 
@@ -157,222 +159,5 @@ subprojects { subproject ->
 configure(rootProject) {
 	description = "Spring Web Flow"
 
-	repositories {
-		maven { url "https://repo.spring.io/plugins-release" }
-	}
-
-	task downloadResources(type: Download) {
-		def version = "0.2.5"
-		src "https://repo.spring.io/release/io/spring/docresources/" +
-				"spring-doc-resources/$version/spring-doc-resources-${version}.zip"
-		dest project.file("$buildDir/docs/spring-doc-resources.zip")
-		onlyIfModified true
-		useETag "all"
-	}
-
-	task extractDocResources(type: Copy, dependsOn: downloadResources) {
-		dependsOn downloadResources
-		from project.zipTree(downloadResources.dest);
-		into "$buildDir/asciidoc/build/"
-	}
-
-	task prepareAsciidocBuild(type: Sync) {
-		dependsOn extractDocResources
-		// copy doc sources
-		from "src/reference/"
-		// to a build directory of your choice
-		into "$buildDir/asciidoc/build"
-	}
-
-	asciidoctorPdf {
-		dependsOn prepareAsciidocBuild
-		baseDirFollowsSourceFile()
-
-		asciidoctorj {
-			sourceDir "$buildDir/asciidoc/build"
-			inputs.dir(sourceDir)
-			sources {
-				include 'index.adoc'
-			}
-			options doctype: 'book'
-			attributes 'icons': 'font',
-			'sectanchors': '',
-			'sectnums': '',
-			'toc': '',
-			'source-highlighter' : 'coderay',
-			revnumber: project.version,
-			'project-version': project.version
-		}
-	}
-
-	asciidoctor {
-		dependsOn asciidoctorPdf
-
-		baseDirFollowsSourceFile()
-
-		sourceDir "$buildDir/asciidoc/build"
-		inputs.dir(sourceDir)
-		resources {
-			from(sourceDir) {
-				include 'images/*', 'css/**', 'js/**'
-			}
-		}
-		options doctype: 'book'
-
-		attributes 'docinfo': 'shared',
-			stylesdir: 'css/',
-			stylesheet: 'spring.css',
-			'linkcss': true,
-			'icons': 'font',
-			'sectanchors': '',
-			'source-highlighter': 'highlight.js',
-			'highlightjsdir': 'js/highlight',
-			'highlightjs-theme': 'github',
-			'idprefix': '',
-			'idseparator': '-',
-			'spring-version': project.version,
-			'allow-uri-read': '',
-			'toc': 'left',
-			'toclevels': '4',
-			revnumber: project.version,
-			'project-version': project.version
-	}
-
-
-	// don't publish the default jar for the root project
-	configurations.archives.artifacts.clear()
-
-	artifacts {
-	}
-
-	task api(type: Javadoc) {
-		group = "Documentation"
-		description = "Generates aggregated Javadoc API documentation."
-		title = "${rootProject.description} ${version} API"
-		options.memberLevel = JavadocMemberLevel.PROTECTED
-		options.author = true
-		options.header = rootProject.description
-		options.overview = "src/api/overview.html"
-		source subprojects.collect { project ->
-			project.sourceSets.main.allJava
-		}
-		destinationDir = new File(buildDir, "api")
-		classpath = files(subprojects.collect { project ->
-			project.sourceSets.main.compileClasspath
-		})
-		maxMemory = "1024m"
-	}
-
-	task docsZip(type: Zip) {
-		group = "Distribution"
-		archiveBaseName = "spring-webflow"
-		archiveClassifier = "docs"
-		description = "Builds -${archiveClassifier.get()} archive containing api and reference " +
-			"for deployment at static.springframework.org/spring-webflow/docs."
-
-		from (api) {
-			into "api"
-		}
-
-		from (asciidoctor) {
-			include "*.html"
-			include "css/**"
-			include "js/**"
-			include "images/**"
-			into "reference"
-		}
-
-		from (asciidoctorPdf) {
-			include "*.pdf"
-			into "reference"
-		}
-	}
-
-	task schemaZip(type: Zip) {
-		group = "Distribution"
-		archiveBaseName = "spring-webflow"
-		archiveClassifier = "schema"
-		description = "Builds -${archiveClassifier.get()} archive containing all " +
-			"XSDs for deployment at static.springframework.org/schema."
-
-		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-		subprojects.each { subproject ->
-			Properties schemas = new Properties()
-
-			subproject.sourceSets.main.resources.find {
-				it.path.endsWith("META-INF/spring.schemas")
-			}?.withInputStream { schemas.load(it) }
-
-			for (def key : schemas.keySet()) {
-				def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
-				assert shortName != key
-				File xsdFile = subproject.sourceSets.main.allSource.find {
-					it.path.endsWith(schemas.get(key))
-				} as File
-				assert xsdFile != null
-				into (shortName) {
-					from xsdFile.path
-				}
-			}
-		}
-
-		project(":spring-webflow").sourceSets.main.resources.matching {
-			include '**/engine/model/builder/xml/*.xsd'
-		}.each { File file ->
-			into ('webflow') {
-				from file.path
-			}
-		}
-	}
-
-	task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
-		group = "Distribution"
-		archiveBaseName = "spring-webflow"
-		archiveClassifier = "dist"
-		description = "Builds -${archiveClassifier.get()} archive, containing all jars and docs, " +
-					  "suitable for community download page."
-
-		def baseDir = "${archiveBaseName}-${project.version}"
-
-		from("src/dist") {
-			include "notice.txt"
-			into "${baseDir}"
-			expand(copyright: new Date().format("yyyy"), version: project.version)
-		}
-
-		from("src/dist") {
-			include "readme.txt"
-			include "license.txt"
-			into "${baseDir}"
-			expand(version: project.version)
-		}
-
-		from(zipTree(docsZip.archiveFile)) {
-			into "${baseDir}/docs"
-		}
-
-		from(zipTree(schemaZip.archiveFile)) {
-			into "${baseDir}/schema"
-		}
-
-
-		subprojects.each { subproject ->
-			into ("${baseDir}/libs") {
-				from subproject.jar
-				if (subproject.tasks.findByPath("sourcesJar")) {
-					from subproject.sourcesJar
-				}
-				if (subproject.tasks.findByPath("javadocJar")) {
-					from subproject.javadocJar
-				}
-			}
-		}
-	}
-
-	artifacts {
-		archives docsZip
-		archives schemaZip
-		archives distZip
-	}
+	apply from: "${rootDir}/gradle/docs.gradle"
 }
