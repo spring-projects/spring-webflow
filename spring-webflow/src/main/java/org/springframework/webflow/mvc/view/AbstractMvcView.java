@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.lang.model.SourceVersion;
 
 import org.apache.commons.logging.Log;
@@ -37,6 +38,7 @@ import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.ParserContext;
 import org.springframework.binding.expression.beanwrapper.BeanWrapperExpressionParser;
+import org.springframework.binding.expression.el.ELExpressionParser;
 import org.springframework.binding.expression.support.SimpleParserContext;
 import org.springframework.binding.expression.support.StaticExpression;
 import org.springframework.binding.mapping.MappingResult;
@@ -83,6 +85,8 @@ public abstract class AbstractMvcView implements View {
 	private RequestContext requestContext;
 
 	private ExpressionParser expressionParser;
+
+	private ExpressionParser defaultMappingExpressionParser;
 
 	private final ExpressionParser emptyValueExpressionParser = new BeanWrapperExpressionParser();
 
@@ -513,14 +517,23 @@ public abstract class AbstractMvcView implements View {
 	protected void addDefaultMapping(DefaultMapper mapper, String parameter, Object model) {
 		Expression source = new RequestParameterExpression(parameter);
 		ParserContext parserContext = new SimpleParserContext(model.getClass());
-		if (expressionParser instanceof BeanWrapperExpressionParser || checkModelProperty(parameter, model)) {
-			Expression target = expressionParser.parseExpression(parameter, parserContext);
+		ExpressionParser parser = getDefaultMappingExpressionParser();
+		if (parser instanceof BeanWrapperExpressionParser || checkModelProperty(parameter, model)) {
+			Expression target = parser.parseExpression(parameter, parserContext);
 			DefaultMapping mapping = new DefaultMapping(source, target);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Adding default mapping for parameter '" + parameter + "'");
 			}
 			mapper.addMapping(mapping);
 		}
+	}
+
+	private ExpressionParser getDefaultMappingExpressionParser() {
+		if (this.defaultMappingExpressionParser == null) {
+			this.defaultMappingExpressionParser = (this.expressionParser instanceof ELExpressionParser ?
+					new BeanWrapperExpressionParser(this.conversionService) : this.expressionParser);
+		}
+		return this.defaultMappingExpressionParser;
 	}
 
 	/**
