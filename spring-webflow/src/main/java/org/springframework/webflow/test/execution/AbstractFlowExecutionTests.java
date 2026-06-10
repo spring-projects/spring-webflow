@@ -15,7 +15,7 @@
  */
 package org.springframework.webflow.test.execution;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.util.Assert;
 import org.springframework.webflow.context.ExternalContext;
@@ -53,7 +53,7 @@ import org.springframework.webflow.test.MockExternalContext;
  * 
  * @author Keith Donald
  */
-public abstract class AbstractFlowExecutionTests extends TestCase {
+public abstract class AbstractFlowExecutionTests {
 
 	/**
 	 * The factory that will create the flow execution to test.
@@ -72,18 +72,9 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 
 	/**
 	 * Constructs a default flow execution test.
-	 * @see #setName(String)
 	 */
 	public AbstractFlowExecutionTests() {
 		super();
-	}
-
-	/**
-	 * Constructs a flow execution test with given name.
-	 * @param name the name of the test
-	 */
-	public AbstractFlowExecutionTests(String name) {
-		super(name);
 	}
 
 	/**
@@ -297,7 +288,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Assert that the entire flow execution is active; that is, it has not ended and has been started.
 	 */
 	protected void assertFlowExecutionActive() {
-		assertTrue("The flow execution is not active but it should be", getFlowExecution().isActive());
+		assertTrue(getFlowExecution().isActive(), "The flow execution is not active but it should be");
 	}
 
 	/**
@@ -314,7 +305,7 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * Assert that the flow execution has ended; that is, it is no longer active.
 	 */
 	protected void assertFlowExecutionEnded() {
-		assertTrue("The flow execution is still active but it should have ended", getFlowExecution().hasEnded());
+		assertTrue(getFlowExecution().hasEnded(), "The flow execution is still active but it should have ended");
 	}
 
 	/**
@@ -322,8 +313,8 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @param outcome the name of the flow execution outcome
 	 */
 	protected void assertFlowExecutionOutcomeEquals(String outcome) {
-		assertNotNull("There has been no flow execution outcome", flowExecutionOutcome);
-		assertEquals("The flow execution outcome is wrong", outcome, flowExecutionOutcome.getId());
+		assertNotNull(flowExecutionOutcome, "There has been no flow execution outcome");
+		assertEquals(outcome, flowExecutionOutcome.getId(), "The flow execution outcome is wrong");
 	}
 
 	/**
@@ -331,9 +322,10 @@ public abstract class AbstractFlowExecutionTests extends TestCase {
 	 * @param expectedCurrentStateId the expected current state
 	 */
 	protected void assertCurrentStateEquals(String expectedCurrentStateId) {
-		assertEquals("The current state '" + getFlowExecution().getActiveSession().getState().getId()
-				+ "' does not equal the expected state '" + expectedCurrentStateId + "'", expectedCurrentStateId,
-				getFlowExecution().getActiveSession().getState().getId());
+		assertEquals(expectedCurrentStateId,
+				getFlowExecution().getActiveSession().getState().getId(),
+				"The current state '" + getFlowExecution().getActiveSession().getState().getId()
+						+ "' does not equal the expected state '" + expectedCurrentStateId + "'");
 	}
 
 	/**

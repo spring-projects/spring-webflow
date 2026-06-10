@@ -7,14 +7,13 @@ dependencies {
 
 	compileOnly("jakarta.el:jakarta.el-api")
 	compileOnly("jakarta.servlet:jakarta.servlet-api")
-	compileOnly("junit:junit")
+	compileOnly("org.junit.jupiter:junit-jupiter-api")
 
 	optional("org.hibernate.orm:hibernate-core")
 	optional("org.springframework.security:spring-security-core")
 	optional("org.springframework:spring-orm")
 	optional("org.springframework:spring-tx")
 
-	testImplementation("junit:junit")
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.easymock:easymock")
 	testImplementation("org.apache.tomcat:tomcat-jasper-el")
