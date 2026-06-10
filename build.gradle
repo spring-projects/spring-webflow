@@ -22,7 +22,7 @@ allprojects {
 	dependencyManagement {
 		imports {
 			mavenBom "org.springframework:spring-framework-bom:${springFrameworkVersion}"
-			mavenBom "org.springframework.security:spring-security-bom:7.0.6-SNAPSHOT"
+			mavenBom "org.springframework.security:spring-security-bom:7.0.6"
 			mavenBom "org.junit:junit-bom:6.0.1"
 		}
 		dependencies {
