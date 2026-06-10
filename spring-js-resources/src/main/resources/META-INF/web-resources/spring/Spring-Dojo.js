@@ -367,7 +367,14 @@ dojo.declare("Spring.RemotingHandler", Spring.AbstractRemotingHandler, {
 				this.destroyRecursive(false);
 			});
 			dialog.domNode.style.overflow = "auto";
-			dialog.setContent(ioArgs.xhr.responseText);
+			if (ioArgs.xhr.getResponseHeader("Content-Type").includes("text/html")) {
+				dialog.setContent(ioArgs.xhr.responseText);
+			}
+			else {
+				var node = document.createElement("div");
+				node.textContent = ioArgs.xhr.responseText;
+				dialog.setContent(node);
+			}
 			dialog.show();
 		}
 		
