@@ -18,8 +18,6 @@ jobs:
         uses: ./.github/actions/build
         with:
           develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
-          opensource-repository-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          opensource-repository-username: ${{ secrets.ARTIFACTORY_USERNAME }}
           publish: true
       - name: Stage Release
         uses: spring-io/artifactory-deploy-action@926d7f7cc810569395346bf3a4d91b380b3e355b # v0.0.4
@@ -50,10 +48,9 @@ jobs:
       - name: Sync to Maven Central
         uses: ./.github/actions/sync-to-maven-central
         with:
+          central-token-password: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          central-token-username: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
           jfrog-cli-config-token: ${{ secrets.JF_ARTIFACTORY_SPRING }}
-          ossrh-s01-staging-profile: ${{ secrets.OSSRH_S01_STAGING_PROFILE }}
-          ossrh-s01-token-password: ${{ secrets.OSSRH_S01_TOKEN_PASSWORD }}
-          ossrh-s01-token-username: ${{ secrets.OSSRH_S01_TOKEN_USERNAME }}
           spring-webflow-version: ${{ needs.build-and-stage-release.outputs.version }}
   promote-release:
     name: Promote Release
