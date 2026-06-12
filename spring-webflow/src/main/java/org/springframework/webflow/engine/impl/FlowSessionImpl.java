@@ -157,7 +157,7 @@ class FlowSessionImpl implements FlowSession, Externalizable {
 	}
 
 	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeObject(flow.getId());
+		out.writeObject(flow != null ? flow.getId() : flowId);
 		out.writeObject(state != null ? state.getId() : null);
 		out.writeObject(scope);
 		out.writeObject(parent);
