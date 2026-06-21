@@ -55,7 +55,9 @@ import org.springframework.webflow.engine.model.registry.FlowModelRegistryImpl;
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Scott Andrews
+ * @deprecated
  */
+@Deprecated
 public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalizedFlowExecutionTests {
 
 	private FlowModelRegistry flowModelRegistry = new FlowModelRegistryImpl();
@@ -76,12 +78,14 @@ public abstract class AbstractXmlFlowExecutionTests extends AbstractExternalized
 		super(name);
 	}
 
+	@Override
 	protected final FlowBuilder createFlowBuilder(FlowDefinitionResource resource) {
 		registerDependentFlowModels();
 		FlowModelBuilder modelBuilder = new XmlFlowModelBuilder(resource.getPath(), flowModelRegistry);
 		FlowModelHolder modelHolder = new DefaultFlowModelHolder(modelBuilder);
 		flowModelRegistry.registerFlowModel(resource.getId(), modelHolder);
 		return new FlowModelFlowBuilder(modelHolder) {
+			@Override
 			protected void registerFlowBeans(ConfigurableBeanFactory flowBeanFactory) {
 				registerMockFlowBeans(flowBeanFactory);
 			}
