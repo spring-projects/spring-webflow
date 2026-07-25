@@ -56,7 +56,7 @@ public class EvaluationException extends RuntimeException {
 	}
 
 	/**
-	 * The string form of the expression that failed to evaluate against an instance of the the context class.
+	 * The string form of the expression that failed to evaluate against an instance of the context class.
 	 * @return the expression string
 	 */
 	public String getExpressionString() {
