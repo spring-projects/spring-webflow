@@ -10,6 +10,13 @@ ext {
 	javaProjects = subprojects - project("spring-js-resources")
 }
 
+configure(moduleProjects) {
+	tasks.withType(Jar).configureEach {
+		preserveFileTimestamps = false
+		reproducibleFileOrder = true
+	}
+}
+
 allprojects {
 	group = "org.springframework.webflow"
 
