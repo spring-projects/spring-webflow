@@ -102,7 +102,7 @@ its parent registry will be queried.
 							<xsd:documentation>
 								<![CDATA[
 The base path where flow definitions are found.  When specified, all flow locations are relative to this path.
-Also when specified, by default flows are assigned ids equal to the the path segment between their base path and file name.
+Also when specified, by default flows are assigned ids equal to the path segment between their base path and file name.
 For example, if a flow definition is located at '/WEB-INF/hotels/booking/booking-flow.xml' and the base path is '/WEB-INF', 
 the remaining path to this flow is 'hotels/booking' which then becomes the flow id.
 If a flow definition is found directly on the base path, the file name minus its extension is used as the flow id. 

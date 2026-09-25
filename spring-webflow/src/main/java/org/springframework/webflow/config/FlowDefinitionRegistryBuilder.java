@@ -97,7 +97,7 @@ public class FlowDefinitionRegistryBuilder {
 	/**
 	 * Configure the base path where flow definitions are found. When specified, all
 	 * flow locations are relative to this path. Also when specified, by default flows
-	 * are assigned an id equal to the the path segment between their base path and
+	 * are assigned an id equal to the path segment between their base path and
 	 * file name.
 	 * <p>
 	 * For example, if a flow definition is located at
