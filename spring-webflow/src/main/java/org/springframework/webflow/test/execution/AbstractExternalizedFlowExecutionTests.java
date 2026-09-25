@@ -63,18 +63,8 @@ public abstract class AbstractExternalizedFlowExecutionTests extends AbstractFlo
 
 	/**
 	 * Constructs a default externalized flow execution test.
-	 * @see #setName(String)
 	 */
 	public AbstractExternalizedFlowExecutionTests() {
-		init();
-	}
-
-	/**
-	 * Constructs an externalized flow execution test with given name.
-	 * @param name the name of the test
-	 */
-	public AbstractExternalizedFlowExecutionTests(String name) {
-		super(name);
 		init();
 	}
 
