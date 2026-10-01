@@ -17,6 +17,8 @@ package org.springframework.webflow.mvc.servlet;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -69,6 +71,11 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private static final String CONTEXT_RELATIVE_LOCATION_PREFIX = "contextRelative:";
 
 	private static final String SERVER_RELATIVE_LOCATION_PREFIX = "serverRelative:";
+
+	/**
+	 * Matches strings that start with an RFC 3986 URL scheme followed by a colon.
+	 */
+	private static final Predicate<String> URL_MATCHER = Pattern.compile("^[a-zA-Z][a-zA-Z0-9+.-]*:.*").asMatchPredicate();
 
 	/**
 	 * The entry point into Spring Web Flow.
@@ -507,7 +514,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 				url = "/" + url;
 			}
 			sendRedirect(url, request, response);
-		} else if (location.startsWith("http://") || location.startsWith("https://")) {
+		} else if (URL_MATCHER.test(location)) {
 			sendRedirect(location, request, response);
 		} else {
 			if (isRedirectServletRelative(request)) {
