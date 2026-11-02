@@ -24,17 +24,19 @@ runs:
   using: composite
   steps:
     - name: Set Up Java
-      uses: actions/setup-java@v5
+      uses: actions/setup-java@v6
       with:
         distribution: ${{ inputs.java-early-access == 'true' && 'temurin' || (inputs.java-distribution || 'liberica') }}
         java-version: |
           ${{ inputs.java-early-access == 'true' && format('{0}-ea', inputs.java-version) || inputs.java-version }}
           ${{ inputs.java-toolchain == 'true' && '17' || '' }}
     - name: Set Up Gradle
-      uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+      uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
       with:
+        cache-provider: basic
         cache-read-only: false
         develocity-access-key: ${{ inputs.develocity-access-key }}
+        develocity-token-expiry: 4
     - name: Configure Gradle Properties
       shell: bash
       run: |
