@@ -154,6 +154,9 @@ subprojects { subproject ->
 
 		from("${rootProject.projectDir}/src/dist") {
 			include "license.txt"
+			into "META-INF"
+		}
+		from("${rootProject.projectDir}/src/dist") {
 			include "notice.txt"
 			into "META-INF"
 			expand(copyright: new Date().format("yyyy"), version: project.version)

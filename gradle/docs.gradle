@@ -145,9 +145,12 @@ task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
     }
     from("src/dist") {
         include "readme.txt"
-        include "license.txt"
         into "${baseDir}"
         expand(version: project.version)
+    }
+    from("src/dist") {
+        include "license.txt"
+        into "${baseDir}"
     }
     from(zipTree(docsZip.archiveFile)) {
         into "${baseDir}/docs"
