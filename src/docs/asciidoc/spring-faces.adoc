@@ -541,7 +541,7 @@ Spring Web Flow has been tested with file upload components from PrimeFaces.
 Check the documentation of your JSF component library for other providers to see how to configure file upload.
 
 Generally, you'll need to enable multipart support in the Servlet container,
-either by adding a "multipart-config" element to the the `DispatcherServlet` declaration in web.xml,
+either by adding a "multipart-config" element to the `DispatcherServlet` declaration in web.xml,
 or by using a `jakarta.servlet.MultipartConfigElement` in programmatic servlet registration
 
 [[_spring_faces_security_taglib]]
