@@ -52,7 +52,9 @@ import org.springframework.webflow.test.MockExternalContext;
  * typically with a mock service layer.
  * 
  * @author Keith Donald
+ * @deprecated
  */
+@Deprecated
 public abstract class AbstractFlowExecutionTests extends TestCase {
 
 	/**
