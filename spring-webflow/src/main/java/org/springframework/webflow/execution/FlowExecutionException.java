@@ -53,7 +53,7 @@ public class FlowExecutionException extends FlowException {
 
 	/**
 	 * Creates a new flow execution exception.
-	 * @param flowId the flow where the exception occured
+	 * @param flowId the flow where the exception occurred
 	 * @param stateId the state where the exception occured
 	 * @param message a descriptive message
 	 * @param cause the root cause
