@@ -16,18 +16,25 @@
 package org.springframework.webflow.expression.spel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Date;
 import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.binding.expression.EvaluationException;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
+import org.springframework.binding.expression.support.SimpleParserContext;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.webflow.TestBean;
 import org.springframework.webflow.engine.Flow;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockExternalContext;
@@ -75,6 +82,26 @@ public class WebFlowSpringELExpressionParserTests {
 		expressionString = "#{resourceBundle['myCode.myCode']}";
 		exp = parser.parseExpression(expressionString, new FluentParserContext().template());
 		assertEquals("myCode myCode message", exp.getValue(requestContext));
+	}
+
+	@Test
+	public void testDataBindingCannotReachFlowVariablesOrBeans() {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("testBean", TestBean.class);
+		applicationContext.refresh();
+		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
+
+		TestBean model = new TestBean();
+
+		Expression exp = parser.parseExpression("datum1.flowRequestContext.flowScope.injected",
+				new SimpleParserContext(TestBean.class));
+		assertThrows(EvaluationException.class, () -> exp.setValue(model, "bar"));
+		assertFalse(requestContext.getFlowScope().contains("injected"));
+
+		Expression beanExp = parser.parseExpression("datum1.testBean.datum3",
+				new SimpleParserContext(TestBean.class));
+		assertThrows(EvaluationException.class, () -> beanExp.setValue(model, new Date(0)));
+		assertNull(applicationContext.getBean(TestBean.class).getDatum3());
 	}
 
 }

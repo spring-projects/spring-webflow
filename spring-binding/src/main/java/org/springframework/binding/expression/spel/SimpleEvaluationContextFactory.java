@@ -15,6 +15,7 @@
  */
 package org.springframework.binding.expression.spel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.binding.convert.ConversionService;
@@ -58,10 +59,16 @@ public class SimpleEvaluationContextFactory implements EvaluationContextFactory 
 	}
 
 	private PropertyAccessor[] getAccessorsArray() {
-		int length = propertyAccessors.size() + 1;
-		PropertyAccessor[] result = propertyAccessors.toArray(new PropertyAccessor[length]);
-		result[length - 1] = dataBindingPropertyAccessor;
-		return result;
+		List<PropertyAccessor> result = new ArrayList<>(propertyAccessors.size() + 1);
+		for (PropertyAccessor accessor : propertyAccessors) {
+			// Accessors without target classes (e.g. for flow variables or beans) apply to
+			// any object, which would let a binding path reach beyond the model
+			if (accessor.getSpecificTargetClasses() != null) {
+				result.add(accessor);
+			}
+		}
+		result.add(dataBindingPropertyAccessor);
+		return result.toArray(new PropertyAccessor[0]);
 	}
 
 }
