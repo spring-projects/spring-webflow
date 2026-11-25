@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.webflow.config.FlowDefinitionResource;
 import org.springframework.webflow.config.FlowDefinitionResourceFactory;
@@ -91,7 +92,7 @@ public class SearchFlowExecutionTests extends AbstractXmlFlowExecutionTests {
 	protected void configureFlowBuilderContext(MockFlowBuilderContext builderContext) {
 		Flow mockDetailFlow = new Flow("detail-flow");
 		mockDetailFlow.setInputMapper((source, target) -> {
-			assertEquals("id of value 1 not provided as input by calling search flow", 1L, ((AttributeMap<?>) source).get("id"));
+			assertEquals(1L, ((AttributeMap<?>) source).get("id"), "id of value 1 not provided as input by calling search flow");
 			return null;
 		});
 		// test responding to finish result
