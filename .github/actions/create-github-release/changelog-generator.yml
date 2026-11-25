@@ -1,6 +1,12 @@
 changelog:
-  repository: spring-projects/spring-webflow
   sections:
+    - title: ":warning: Attention Required"
+      labels:
+        - "for: upgrade-attention"
+      summary:
+        mode: "member-comment"
+        config:
+          prefix: "Attention required:"
     - title: ":star: New Features"
       labels:
         - "type: enhancement"
@@ -21,3 +27,5 @@ changelog:
         - "bclozel"
         - "rstoyanchev"
         - "snicoll"
+  issues:
+    generate_links: true

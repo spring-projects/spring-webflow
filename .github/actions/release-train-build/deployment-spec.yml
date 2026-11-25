@@ -1,0 +1,18 @@
+artifactory:
+  artifacts:
+    - pattern: "/**/webflow-*.zip"
+      properties:
+        zip.deployed: "false"
+        zip.name: "spring-webflow"
+    - pattern: "/**/webflow-*-docs.zip"
+      properties:
+        zip.type: "docs"
+    - pattern: "/**/webflow-*-dist.zip"
+      properties:
+        zip.type: "dist"
+    - pattern: "/**/webflow-*-schema.zip"
+      properties:
+        zip.type: "schema"
+maven-central:
+  excludes:
+    - "org/springframework/webflow/webflow/**"

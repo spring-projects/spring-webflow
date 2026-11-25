@@ -63,6 +63,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.FlowExecutionKey;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
+import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 import org.springframework.webflow.validation.BeanValidationHintResolver;
 import org.springframework.webflow.validation.ValidationHelper;
 import org.springframework.webflow.validation.ValidationHintResolver;
@@ -79,6 +80,9 @@ public abstract class AbstractMvcView implements View {
 	private static final MappingResultsCriteria PROPERTY_NOT_FOUND_ERROR = new PropertyNotFoundError();
 
 	private static final MappingResultsCriteria MAPPING_ERROR = new MappingError();
+
+	private static final String SPRING_FACES_PARSER_CLASS_NAME =
+			"org.springframework.faces.webflow.FacesSpringELExpressionParser";
 
 	private org.springframework.web.servlet.View view;
 
@@ -530,10 +534,27 @@ public abstract class AbstractMvcView implements View {
 
 	private ExpressionParser getDefaultMappingExpressionParser() {
 		if (this.defaultMappingExpressionParser == null) {
-			this.defaultMappingExpressionParser = (this.expressionParser instanceof ELExpressionParser ?
+			this.defaultMappingExpressionParser = (isUnifiedElParser(this.expressionParser) ?
 					new BeanWrapperExpressionParser(this.conversionService) : this.expressionParser);
 		}
 		return this.defaultMappingExpressionParser;
+	}
+
+	private static boolean isUnifiedElParser(ExpressionParser parser) {
+		return (parser instanceof ELExpressionParser || isFacesSpringELExpressionParser(parser));
+	}
+
+	private static boolean isFacesSpringELExpressionParser(ExpressionParser parser) {
+		// this should be the case but check for completeness
+		for (Class<?> clazz = parser.getClass();
+			 clazz != null && !clazz.equals(WebFlowSpringELExpressionParser.class);
+			 clazz = clazz.getSuperclass()) {
+
+			if (SPRING_FACES_PARSER_CLASS_NAME.equals(clazz.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
