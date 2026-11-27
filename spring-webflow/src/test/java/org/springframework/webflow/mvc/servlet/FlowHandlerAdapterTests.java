@@ -231,14 +231,14 @@ public class FlowHandlerAdapterTests {
 	@Test
 	public void testLaunchFlowWithExternalHttpRedirect() throws Exception {
 		setupRequest("/springtravel", "/app", "/foo", "GET");
-		context.requestExternalRedirect("https://www.paypal.com");
+		context.requestExternalRedirect("http://www.paypal.com");
 		flowExecutor.launchExecution("foo", flowInput, context);
 		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
 		EasyMock.expectLastCall().andReturn(result);
 		EasyMock.replay(flowExecutor);
 		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(flowExecutor);
-		assertEquals("https://www.paypal.com", response.getRedirectedUrl());
+		assertEquals("http://www.paypal.com", response.getRedirectedUrl());
 		EasyMock.verify(flowExecutor);
 	}
 
@@ -253,6 +253,48 @@ public class FlowHandlerAdapterTests {
 		flowHandlerAdapter.handle(request, response, flowHandler);
 		EasyMock.verify(flowExecutor);
 		assertEquals("https://www.paypal.com", response.getRedirectedUrl());
+		EasyMock.verify(flowExecutor);
+	}
+
+	@Test
+	public void testLaunchFlowWithExternalMailtoRedirect() throws Exception {
+		setupRequest("/springtravel", "/app", "/foo", "GET");
+		context.requestExternalRedirect("mailto:help@mail.test");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(flowExecutor);
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(flowExecutor);
+		assertEquals("mailto:help@mail.test", response.getRedirectedUrl());
+		EasyMock.verify(flowExecutor);
+	}
+
+	@Test
+	public void testLaunchFlowWithExternalTelRedirect() throws Exception {
+		setupRequest("/springtravel", "/app", "/foo", "GET");
+		context.requestExternalRedirect("tel:+1.800.555.1212");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(flowExecutor);
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(flowExecutor);
+		assertEquals("tel:+1.800.555.1212", response.getRedirectedUrl());
+		EasyMock.verify(flowExecutor);
+	}
+
+	@Test
+	public void testLaunchFlowWithExternalCustomSchemeRedirect() throws Exception {
+		setupRequest("/springtravel", "/app", "/foo", "GET");
+		context.requestExternalRedirect("my-mobile-app://redirect/target/path");
+		flowExecutor.launchExecution("foo", flowInput, context);
+		FlowExecutionResult result = FlowExecutionResult.createPausedResult("foo", "12345");
+		EasyMock.expectLastCall().andReturn(result);
+		EasyMock.replay(flowExecutor);
+		flowHandlerAdapter.handle(request, response, flowHandler);
+		EasyMock.verify(flowExecutor);
+		assertEquals("my-mobile-app://redirect/target/path", response.getRedirectedUrl());
 		EasyMock.verify(flowExecutor);
 	}
 
